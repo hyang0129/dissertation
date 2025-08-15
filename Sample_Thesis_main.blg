@@ -1,0 +1,60 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Sample_Thesis_main.aux
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+A level-1 auxiliary file: CoverPage.aux
+Reallocating 'name_of_file' (item size: 1) to 13 items.
+A level-1 auxiliary file: Abstract.aux
+Reallocating 'name_of_file' (item size: 1) to 21 items.
+A level-1 auxiliary file: Acknowledgements.aux
+Reallocating 'name_of_file' (item size: 1) to 15 items.
+A level-1 auxiliary file: Dedication.aux
+Reallocating 'name_of_file' (item size: 1) to 20 items.
+The style file: iclr2025_conference.bst
+Reallocating 'name_of_file' (item size: 1) to 13 items.
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+A level-1 auxiliary file: AppendixA.aux
+Database file #1: Bibliography.bib
+Warning--can't use both volume and number fields in esmaeilpour2022zero
+You've used 82 entries,
+            2773 wiz_defined-function locations,
+            1011 strings with 22080 characters,
+and the built_in function-call counts, 47333 in all, are:
+= -- 4024
+> -- 3593
+< -- 36
++ -- 1206
+- -- 1122
+* -- 4086
+:= -- 7281
+add.period$ -- 253
+call.type$ -- 82
+change.case$ -- 611
+chr.to.int$ -- 80
+cite$ -- 165
+duplicate$ -- 1937
+empty$ -- 3337
+format.name$ -- 1224
+if$ -- 9862
+int.to.chr$ -- 3
+int.to.str$ -- 1
+missing$ -- 79
+newline$ -- 419
+num.names$ -- 328
+pop$ -- 1249
+preamble$ -- 1
+purify$ -- 529
+quote$ -- 0
+skip$ -- 1651
+stack$ -- 0
+substring$ -- 1545
+swap$ -- 309
+text.length$ -- 21
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 902
+warning$ -- 1
+while$ -- 345
+width$ -- 0
+write$ -- 1051
+(There was 1 warning)

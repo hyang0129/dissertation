@@ -1,0 +1,342 @@
+% **********************************************
+%  This is the style file created for RIT GCCIS*
+%  Ph.D. dissertations. It is based on the     *
+%  style file from Center for Imaging Science  *
+%  for Ph.D. degree thesis and proposal form    *
+%                                              *
+%  Front matter pages created are:             *
+%   -Declaration page                          *
+%   -Approval page                             *
+%   -Copyright page                            *
+%   -Abstract page                             *
+%   -Acknowledgments page                      *
+%   -Dedication page                           *
+%                                              *
+%  Originally created by:                      *
+%  Emmett J. Ientilucci                        *
+%  Rochester Institute of Technology           *
+%  Center for Imaging Science                  *
+%  Rochester, NY 14623                         *
+%  emmett@cis.rit.edu                          *
+%                                              *
+%  Modified by:                                *
+%    GCCIS PhD Curriculum Committee			   *
+%    Rochester Institute of Technology         *
+%    GCCIS Ph.D. Program                       *
+%    										   *
+%    9/20/2016                                 *
+%                                              *
+% **********************************************
+
+
+\NeedsTeXFormat{LaTeX2e}[1996/12/01]
+\ProvidesPackage{thesisfrontmatter}[2015/3/17 v2.0 Thesis Frontmatter Approved]
+
+% You might want to alter the page width and height
+% you can edit below.  This will alter the line width lengths
+% \setlength{\textwidth}{13cm} %Default page width for book class is about 13cm
+% \setlength{\textheight}{19cm}  %Default page height for book class is about 19cm
+
+\usepackage{geometry}
+\geometry{margin=1in} % Set one inch margin
+
+\setlength{\parindent}{0em} % Remove indentation at the beginning of a paragraph 
+\setlength{\parskip}{1em} % one line between paragraphs
+\linespread{1.25} % double line spacing
+
+\DeclareOption{phd}{\newcommand{\kind}{dissertation}
+                    \newcommand{\kindcap}{Dissertation}
+                    \newcommand{\kindallcap}{DISSERTATION}
+                    \newcommand{\kindspelledout}{Doctor of Philosophy}
+                    \newcommand{\letters}{Ph.D.}}
+\DeclareOption{proposal}{ 
+					\newcommand{\kind}{proposal}
+                    \newcommand{\kindcap}{Proposal}
+                    \newcommand{\kindallcap}{PROPOSAL}
+                    \newcommand{\kindspelledout}{Doctor of Philosophy}
+                    \newcommand{\letters}{Ph.D.}}
+
+\ProcessOptions*
+
+\newcommand{\degreetitle}[1]{\gdef \@degreetitle{#1}}
+\newcommand{\degreeauthor}[1]{\gdef \@degreeauthor{#1}}
+\newcommand{\prevdegreeA}[1]{\gdef \@prevdegreeA{#1}}
+\newcommand{\prevdegreeB}[1]{\gdef \@prevdegreeB{#1}}
+\newcommand{\prevdegreeC}[1]{\gdef \@prevdegreeC{#1}}
+\newcommand{\degreedate}[1]{\gdef \@degreedate{#1}}
+\newcommand{\advisor}[1]{\gdef \@advisor{#1}}
+\newcommand{\externalchair}[1]{\gdef \@externalchair{#1}}
+\newcommand{\memberA}[1]{\gdef \@memberA{#1}}
+\newcommand{\memberB}[1]{\gdef \@memberB{#1}}
+\newcommand{\memberC}[1]{\gdef \@memberC{#1}}
+\newcommand{\memberD}[1]{\gdef \@memberD{#1}}
+
+% **********************************************
+% *  Lets make the "proposal" declaration page *
+% **********************************************
+\newcommand*{\makeproposaldeclaration}{
+    \thispagestyle{empty}
+    \setcounter{page}{1}
+    \setlength{\topskip}{2cm}
+    \begin{center}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{14.4}{20}\selectfont
+        \@degreetitle \\
+        \vspace{0.8cm}
+        \fontsize{12}{20}\selectfont
+        by \\
+        \vspace{0.8cm}
+        \@degreeauthor \\
+        \vspace{1cm}
+        A \kind ~submitted in partial fulfillment of the \\
+        requirements for the degree of \kindspelledout \\
+        in Computing and Information Sciences \\
+         \vspace{1cm}
+        B. Thomas Golisano College of Computing and Information Sciences \\
+        Rochester Institute of Technology \\
+        \bigskip
+        \@degreedate
+        \vspace{1cm}
+    \end{center}
+}
+
+
+% ***********************************************
+% * Lets make the "PhD proposal" approval page  *
+% ***********************************************
+\newcommand*{\makePHDproposalapproval}{
+    \newpage
+    \thispagestyle{plain}
+    \setlength{\topskip}{1cm}
+    \begin{center}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{12}{20}\selectfont
+        GCCIS Ph.D. PROGRAM IN COMPUTING AND INFORMAITON SCIENCES \\
+        ROCHESTER INSTITUTE OF TECHNOLOGY \\
+        ROCHESTER, NEW YORK \\
+        \vspace{0.5cm}
+        \underline{CERTIFICATE OF APPROVAL} \\
+        \vspace{0.5cm}
+        \rule{14.5cm}{0.5pt} \\ \medskip
+        \letters ~DEGREE PROPOSAL \\
+        \rule{14.5cm}{0.5pt} \\ \medskip
+        \vspace{0.5cm}
+        \fontsize{12}{15}\selectfont
+        The \letters ~Degree Proposal ~of \@degreeauthor \\
+        has been examined and approved by the \\
+        \kind ~committee as satisfactory for the \\
+        \kind ~required for the \\
+        \letters ~degree in Computing and Information Sciences
+    \end{center}
+    \begin{flushleft}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{12}{12}\selectfont
+        \hspace*{4cm} \rule[-2.5ex]{10.4cm}{0.5pt} \\
+        \hspace*{4cm} Ph.D. Program Director  \hspace*{3.3cm} Date \\
+        \hspace*{4cm} \rule[-2.5ex]{10.4cm}{0.5pt} \\
+        \hspace*{4cm} \@advisor, \kindcap~Advisor \hspace*{0.28cm} Date \\
+        \hspace*{4cm} \rule[-2.5ex]{10.4cm}{0.5pt} \\
+        \hspace*{4cm} \@externalchair,~External Chair \hspace*{0.5cm} Date \\
+        \hspace*{4cm} \rule[-2.5ex]{10.4cm}{0.5pt} \\
+        \hspace*{4cm} \@memberA \hspace*{3.7cm} Date \\
+        \hspace*{4cm} \rule[-2.5ex]{10.4cm}{0.5pt} \\
+        \hspace*{4cm} \@memberB \hspace*{3.57cm} Date \\
+    \end{flushleft}
+}
+
+
+
+% ***********************************************
+% * Lets make the "thesis" declaration page     *
+% ***********************************************
+\newcommand*{\makedeclaration}{
+    \thispagestyle{empty}
+    \setcounter{page}{1}
+    \setlength{\topskip}{2cm}
+    \begin{center}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{14.4}{20}\selectfont
+        \@degreetitle \\
+        \vspace{0.8cm}
+        \fontsize{12}{20}\selectfont
+         by \\
+        \vspace{0.8cm}
+        \@degreeauthor \\
+        \vspace{1cm}
+        \ifx \@prevdegreeA \@empty
+        		%% Only write previous degree B if it exists
+        		\@prevdegreeA \\
+	\else
+		\PackageWarning{thesisfrontmatter}
+		{prevdegreeA is not defined}
+	\fi	
+        \ifx \@prevdegreeB \@empty
+        		%% Only write previous degree B if it exists
+        		\prevdegreeB 
+	\fi
+        \ifx \@prevdegreeB \@empty
+        		%% Only write previous degree C if it exists
+        		\@prevdegreeC
+        \fi
+        \vspace{1cm}
+        A \kind ~submitted in partial fulfillment of the \\
+        requirements for the degree of\\{\bf \kindspelledout \\
+        in Computing and Information Sciences} \\
+         \vspace{1cm}
+        B. Thomas Golisano College of Computing and \\
+        Information Sciences \\
+        \vspace{1cm}
+        Rochester Institute of Technology \\
+        Rochester, New York \\
+        %\bigskip
+        \@degreedate
+        \vspace{1cm}
+    \end{center}
+    %\begin{flushleft}
+     %   \fontsize{12}{8}\selectfont
+      %  ~Signature of the Author \hrulefill \\
+       % \mbox{ \rule{0cm}{1.5cm}Certified by } \hrulefill \\
+        %\mbox{ \hspace{2.5cm} } PhD Program Director \hspace{3cm} Date
+    %\end{flushleft}
+}
+
+
+
+% ***********************************************
+% *  Lets make the "thesis" approval page       *
+% ***********************************************
+\newcommand*{\makeapproval}{
+    \newpage
+    \thispagestyle{plain}
+%    \setlength{\topskip}{1cm}
+\begin{center}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{14.4}{20}\selectfont
+        \@degreetitle \\
+        \vspace{0.8cm}
+        \fontsize{12}{20}\selectfont
+         by \\
+        \@degreeauthor \\
+        
+\end{center}
+{
+  \fontsize{9}{10}\selectfont
+\textbf{Committee Approval:}\\
+  \fontsize{9}{10}\selectfont
+We, the undersigned committee members, certify that we have advised and/or supervised the candidate on the work described in this dissertation. We further certify that we have reviewed the dissertation manuscript and approve it in partial fulfillment of the requirements of the degree of Doctor of Philosophy in Computing and Information Sciences.
+}
+\vspace{-1.3cm}
+    \begin{flushleft}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{9}{24}\selectfont
+        \hspace*{.1cm} \rule[-2.5ex]{13cm}{0.5pt} \\
+        \vspace{-0.099cm}
+        \hspace*{.1cm} \@advisor  \hspace*{8cm} Date \\
+        \vspace{-0.4cm}
+        \hspace*{.1cm} \kindcap ~Advisor \\
+        \vspace{-0.3cm}
+        \hspace*{.1cm} \rule[-2.5ex]{13cm}{0.5pt} \\
+        \vspace{-0.099cm}
+        \hspace*{.1cm} \@memberC \hspace*{7cm} Date \\
+        \vspace{-0.4cm}
+        \hspace*{.1cm} Dissertation Committee Member \\
+        \vspace{-0.3cm}
+        \hspace*{.1cm} \rule[-2.5ex]{13cm}{0.5pt} \\
+        \vspace{-0.099cm}
+        \hspace*{.1cm} \@memberA \hspace*{6.3cm} Date \\
+        \vspace{-0.4cm}
+        \hspace*{.1cm} Dissertation Committee Member \\
+        \vspace{-0.3cm}
+        \hspace*{.1cm} \rule[-2.5ex]{13cm}{0.5pt} \\
+        \vspace{-0.099cm}
+        \hspace*{.1cm} \@memberB \hspace*{6.3cm} Date \\
+        \vspace{-0.4cm}
+        \hspace*{.1cm} Dissertation Committee Member \\
+        \vspace{-0.3cm}
+        \hspace*{.1cm} \rule[-2.5ex]{13cm}{0.5pt} \\
+        \vspace{-0.099cm}
+        \hspace*{.1cm} \@externalchair \hspace*{4.5cm} Date \\
+        \vspace{-0.4cm}
+        \hspace*{.1cm} Dissertation Defense Chairperson \\
+        \hspace*{.1cm} \textbf{Certified by:} \\
+        \vspace{-0.3cm}
+        \hspace*{.1cm} \rule[-2.5ex]{13cm}{0.5pt} \\
+        \vspace{-0.099cm}
+        \hspace*{.1cm} \@memberD \hspace*{5.8cm} Date \\
+        \vspace{-0.4cm}
+        \hspace*{.1cm} Ph.D. Program Director, Computing and Information Sciences
+    \end{flushleft}
+}
+
+
+
+
+% ***********************************************
+% *      Lets make the copyright page           *
+% ***********************************************
+\newcommand*{\makecopyright}{
+    \newpage
+   
+    \vspace*{\fill}
+    \begin{center}
+         \copyright  [Year] [Author's Name] \\
+         All rights reserved.
+    \end{center}
+  
+}
+
+% ***********************************************
+% *      Lets make the abstract page            *
+% ***********************************************
+\newcommand*{\abstract}{
+    \newpage
+    \thispagestyle{plain}
+    \setlength{\topskip}{1cm}
+    \begin{center}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{14.4}{20}\selectfont
+        \@degreetitle \\
+        \bigskip
+        \fontsize{12}{20}\selectfont
+        by \\
+        \@degreeauthor \\
+        \bigskip
+        \fontsize{12}{15}\selectfont
+        Submitted to the \\
+         B. Thomas Golisano College of Computing and Information Sciences
+       Ph.D. Program in Computing and Information Sciences \\
+        in partial fulfillment of the requirements
+        for the\\{\bf \kindspelledout \ Degree}\\ 
+        at the Rochester Institute of Technology \\
+        \vspace{1cm}
+        \textbf{Abstract}
+        \medskip
+    \end{center}
+}
+
+% ***********************************************
+% *      Lets make the acknowledgments page    *
+% ***********************************************
+\newcommand*{\acknowledgements}{
+    \newpage
+    \thispagestyle{plain}
+    \setlength{\topskip}{1cm}
+    \begin{center}
+        \renewcommand{\baselinestretch}{1.0}
+        \fontsize{12}{20}\selectfont
+        \textbf{Acknowledgments}
+        \medskip
+    \end{center}
+}
+
+% ***********************************************
+% *      Lets make the dedication page          *
+% ***********************************************
+\newcommand*{\dedication}{
+\newpage
+\thispagestyle{plain}
+\setlength{\topskip}{1cm}
+\center
+\it
+}
+

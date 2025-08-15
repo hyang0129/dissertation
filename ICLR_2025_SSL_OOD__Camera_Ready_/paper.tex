@@ -1,0 +1,1288 @@
+
+\documentclass{article} % For LaTeX2e
+
+\usepackage{iclr2025_conference}
+\usepackage{times}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+% \usepackage{url}
+\usepackage{graphicx}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+% For theorems and such
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{placeins}
+
+% if you use cleveref..
+\usepackage[capitalize,noabbrev]{cleveref}
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2024} with \usepackage[nohyperref]{icml2024} above.
+% \usepackage{hyperref}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}  
+\usepackage{enumitem}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\usepackage{wrapfig} 
+\usepackage{xcolor}
+\usepackage{colortbl}
+
+
+
+%It sets your colour line and then sets back to default (black)
+\newcommand{\grayline}{\arrayrulecolor{gray}\hline\arrayrulecolor{black}}
+
+\title{Can We Ignore Labels in Out-of-Distribution Detection?}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{Hong Yang, Qi Yu, Travis Desell \\
+%Department of Computer Science\\ %Qi: We are not affiliated with the CS department so I remove it. If needed, we can add the college info. 
+Rochester Institute of Technology\\
+1 Lomb Memorial Dr, Rochester, NY 14623, USA \\
+\texttt{\{hy3134,tjdvse,qi.yu\}@rit.edu} \\
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+    Out-of-distribution (OOD) detection methods have recently become more prominent, serving as a core element in safety-critical autonomous systems. One major purpose of OOD detection is to reject invalid inputs that could lead to unpredictable errors and compromise safety. Due to the cost of labeled data, recent works have investigated the feasibility of self-supervised learning (SSL) OOD detection, unlabeled OOD detection, and zero shot OOD detection. In this work, we identify a set of conditions for a theoretical guarantee of failure in unlabeled OOD detection algorithms from an information-theoretic perspective. These conditions are present in all OOD tasks dealing with real-world data: 
+    I) we provide theoretical proof of unlabeled OOD detection failure when there exists zero mutual information between the learning objective and the in-distribution labels, a.k.a. `label blindness', 
+    II) we define a new OOD task -- Adjacent OOD detection -- that tests for label blindness and accounts for a previously ignored safety gap in all OOD detection benchmarks, and
+    III) we perform experiments demonstrating that existing unlabeled OOD methods fail under conditions suggested by our label blindness theory and analyze the implications for future research in unlabeled OOD methods.
+\end{abstract}
+
+\vspace{-2mm}\section{Introduction}\vspace{-2mm}
+
+Safety-critical applications of deep neural networks have recently become an important area of investigation in the domain of artificial intelligence, ranging from autonomous driving \citep{ramanagopal2018failing} to biometric authentication \citep{wang2021deep} to medical diagnosis \citep{bakator2018deep}. In the setting of safety-critical systems, it is no longer possible to rely on the closed-world assumption \citep{krizhevsky2012imagenet}, where test data is drawn i.i.d. from the same distribution as the training data, known as the in-distribution (ID). These models will be deployed in an open-world scenario \citep{drummond2006open}, where test samples can be out-of-distribution (OOD) and therefore should be handled with caution. OOD detection seeks to identify inputs containing a label that was never present in the training distribution. The motivation for OOD detection is simple: we do not want safety-critical systems to act on an invalid prediction, where the predicted label cannot be correct because the label was never present in training.
+
+
+
+There is significant interest in unlabeled OOD detection due to various factors. A method that does not rely on labels can save significant costs in labeling data, as proposed by \citep{sehwag2021ssd}. It is also be possible to skip training on the in distribution data if such a model is generalizable, as proposed by \citep{wang2023clipn}. Self supervised and unlabeled learning methods can also scale to much larger datasets and it is important for these models to be robust to OOD data. Recent work in unlabeled OOD detection methods, including \citep{sehwag2021ssd, tack2020csi, liu2023unsupervised, guille2024cadet, wang2023clipn}, promise to improve safety using only unlabeled data. These methods can achieve even greater performance than a simple supervised baseline \citep{hendrycks2016baseline}, suggesting that one could replace supervised training with self-supervised learning (SSL) for a safety critical OOD detection task. This family of SSL OOD methods differ from traditional supervised OOD methods, including \citep{fort2021exploring}, by the use of only unlabeled data. The importance of labels is an active area of research in OOD detection \citep{du2024does, du2024and}. 
+
+
+When we view SSL from an information-theoretic perspective, the selection of features depends solely on the SSL objective and not on the labels. This, however, provides no guarantee that any features relevant for label prediction will be retained. Figure \ref{fig:grad} provides an example of how SSL features can be less effective for identifying a label. Our theory importantly shows that, when the label-relevant features are independent of the features relevant for the SSL algorithm's successful operation, OOD detection is guaranteed to fail due to what we call `label blindness' and that this label blindness occurs regardless of how one selects the ID dataset from the population of all data. Our \textcolor{black}{experiments} also suggest that Zero Shot OOD methods \citep{wang2023clipn, esmaeilpour2022zero} may also suffer from this issue. We show that unsupervised OOD detection methods behave in the same way as SSL in the context of information theory.
+
+\begin{wrapfigure}{r}{0.55\textwidth}
+\vspace{-4mm}
+    \includegraphics[width=0.55\textwidth]{gradcam_example_faces.png} % Adjust width as needed
+    \caption{An example failure case by visualizing the heatmaps of the gradient of a unlabeled SimCLR trained Resnet \citep{chen2020simple} using the GradCAM method \citep{selvaraju2017grad}. The OOD detection task is to detect OOD facial expressions. In this case, the OOD detection method fails as justified by our theoretical work, where the representations do not exhibit a strong gradient in regions commonly associated with facial expressions (i.e., eyebrows, mouth, etc.).}
+    \label{fig:grad}
+ \vspace{-4mm}   
+\end{wrapfigure}
+\setlength{\belowcaptionskip}{0pt}
+
+However, one can unintentionally avoid label blindness problem via the selection of the OOD dataset when constructing OOD benchmarks. Existing methods generally consider ID and OOD data from different datasets, e.g., \citep{fort2021exploring}, \citep{sehwag2021ssd}, and \citep{hendrycks2019using}. In these benchmarks, there is no significant overlap between the ID and OOD input data, allowing OOD detection algorithms to succeed on features independent of the label. To address this issue and to test for label blindness, we introduce the Adjacent OOD detection task to evaluate the performance on OOD detection algorithms when there is significant overlap between the OOD input data and ID input data. We also prove that it is impossible to guarantee that a real world system will never encounter OOD input data that significantly overlaps ID input data. 
+
+
+
+This work aims to answer the following question: \emph{can we ignore labels when engaging in OOD detection?} Through numerous experiments and theoretical proofs, we show that it is not safe to ignore labels when performing OOD detection. This is contrary to the increasing recent efforts that propose new self supervised, unsupervised, and other unlabeled OOD detection methods. This work's key contributions include: 
+\begin{itemize}[nosep,topsep=0.25pt,leftmargin=4mm]
+\item \textbf{The Label Blindness Theorem.} We theoretically prove that any SSL or Unsupervised Learning algorithm will fail when its information required for the surrogate task is independent of the information required for predicting labels. Through this proof, we conclude that there cannot be a generally applicable SSL or Unsupervised learning OOD detection algorithm as there will always exist independent labels due to the no free generalization theorem, see \textcolor{black}{theorem \ref{nofreegen}}.  
+
+\item \textbf{Adjacent OOD detection benchmarks. } We introduce the concept of bootstrapping without replacement of the ID labels to create the Adjacent OOD detection task. To the authors' knowledge, this OOD detection task is novel to and absent from research in OOD detection. This task evaluates OOD detection when there is significant overlap in OOD data and ID. We also theoretically prove that overlapping OOD and ID data is possible in every real world dataset.  
+\item \textbf{Impact on existing and future OOD methods.} We demonstrate that existing SSL and Unsupervised Learning OOD methods fail under the conditions suggested by our theory and that existing benchmarks do not capture such failures. We also evaluate zero shot OOD detection methods, which fail in a similar manner to SSL and Unsupervised Learning OOD methods. We make recommendations on the development and testing of future OOD methods.
+\end{itemize}
+% \begin{figure}[!t]
+%     \centering\includegraphics[width=11cm]{gradcam example faces(1).png}
+%     \caption{We show an example failure case by visualizing the heatmaps of the gradient of a representative SSL method SimCLR \citep{chen2020simple} using the GradCAM method \citep{selvaraju2017grad}. The OOD detection task is to detect OOD facial expressions. In this case, the OOD detection method using SimCLR to learn representations fails in the way as justified by our theoretical work, where the representations do not exhibit a strong gradient in regions commonly associated with facial expressions (i.e., eyebrows, mouth, etc.).}
+%     \label{fig:grad}
+%     %\vspace{-4mm}
+% \end{figure}
+
+\vspace{-2mm}\section{Preliminaries}
+\label{theorycontra}\vspace{-2mm}
+
+
+
+\subsection{\textcolor{black}{Labeled and Unlabeled} Out-of-Distribution Detection}\vspace{-2mm}
+
+The task of out-of-distribution detection is to identify a semantic shift in the data \citep{yang2021generalized}. This is determining when no predicted label could match the true label $\vy \notin \sY_{in}$, where $\sY_{in}$ represents the set of in-distribution training labels. In this case, we would consider the semantic space of the sample and the training distribution to be different, representing a semantic shift. We can express the probability that a sample is out-of-distribution via $P(\vy \notin \sY_{in} | \vx)$. \textcolor{black}{One baseline method to calculate $P(\vy \notin \sY_{in} | \vx)$ is to take $1 - \texttt{MSP}(\vx)$, where $\texttt{MSP}$ is the maximum softmax probability from a classifier for a particular datapoint.}
+
+
+Furthermore, we are only concerned with labels that can be generated using only $\vx$, via function $f$ which depends solely on $\vx$ and no other information. $f$ may represent human labelers that generate $\vy$. If we consider $\sY_{all}$ as the set of all possible labels that can be generated from $f(\vx \in \sX_{all})$, a subset of $\sX_{all}$ considered as $\sX_{training}$ may not contain all labels in $\sY_{all}$. For real world datasets, it is possible that $\sY_{in} \subsetneq \sY_{all}$.
+
+\textcolor{black}{We can also approach the problem of OOD detection without the use of labels. One can train a model on ID data using a surrogate task for the purposes of computing a metric. For example, \citep{sehwag2021ssd} trains a resnet with SimCLR and computes the Mahalanobis distance between the training representations and the test sample representations to compute the OOD score. Alternatively, one could utilize a pretrained model with broad knowledge to compute a metric to use as the OOD score, such as in \citep{wang2023clipn}. }
+
+\vspace{-2mm}\subsection{Self-Supervised and Unsupervised Learning}\vspace{-2mm}
+
+This section covers representation learning and its implications for SSL and unsupervised learning. If there is no mutual information between two random variables, neither can be used to reduce uncertainty about the other \citep{shannon1948mathematical}. In both self-supervised and unsupervised OOD detection, if there is no mutual information between the intermediate representations and the OOD detection task, the OOD detection system cannot reduce uncertainty with respect to the OOD detection task using the intermediate representations.  
+
+Representation learning can be formulated as finding a distribution $p(\rvz|\rvx)$ that maps the observations from $\vx \in \sX$ to $\vz \in \sZ$, while capturing relevant information for some primary task. When $\rvy$ represents some primary task, we consider only $\rvz$ that is sufficiently discriminative for accomplishing the task $\rvy$. For simplicity, we consider $\rvy$ as a classification label, but $\rvy$ can represent any objective or task.  \cite{federici2020learning} show that this sufficiency is met when the information relevant for predicting $\rvy$ is unchanged when encoding $\rvx \rightarrow \rvz$. 
+
+\begin{definition}
+    Sufficiency: A representation $\rvz \text { of } \rvx$ is sufficient for $\rvy$ if and only if $I(\rvx ; \rvy \mid \rvz)=0 $.
+    \label{definesuff}
+    \vspace{-2mm}
+\end{definition}
+
+
+Since there exists the sufficient statistic $\rvx=\rvz$, we must consider the minimal sufficient statistic which conveys only relevant information for predicting $\rvy$. An SSL algorithm seeks to learn the minimal sufficient statistic via the information bottleneck framework \citep{shwartz2023compress}. 
+
+
+\begin{definition}
+Minimal Sufficient Statistic. A sufficient statistic $\rvz$ is minimal if, for any other sufficient statistic $\rvs$, there exists a function $f$ such that $\rvz = f(\rvs)$.
+\label{defineminsuff}
+\end{definition}
+
+
+
+
+Information bottleneck optimization can be expressed as the minimization of the representation's complexity via $I(\rvx;\rvz)$ and maximizing its utility $I(\rvz;\rvy)$. This results in the information theoretic loss function below, where $\beta$ is a trade-off between complexity and utility \citep{shwartz2023compress}. In practice, learning $\rvz$ without $\rvy$ requires a surrogate task $\rvy_{s}$, e.g., \citep{chen2020simple}, with the loss defined as:
+\begin{align}
+\mathcal{L}=I(\rvx ; \rvz)-\beta I(\rvz ;\rvy).
+\end{align}
+It should be noted that the primary task $\rvy$ may be equal to the SSL task $\rvy_{s}$. In such a case, compression towards the minimal sufficient statistic still occurs. This is important because unsupervised methods for deep neural networks (DNNs) will use a surrogate task $\rvy_{u}$ to train the DNN's weights. Thus, if we assign the primary task for an unsupervised learning method to be equal to its surrogate task, it will behave identically to SSL from the perspective of information theory.
+
+When $\rvx$ has higher information content than $\rvy$, there exists information in $\rvx$ that is not relevant for predicting $\rvy$. This can be better understood by dividing $I(\rvx;\rvz)$ into two terms \citep{federici2020learning} as follows:
+\begin{align}
+I(\rvx ; \rvz)=\underbrace{I(\rvx ;\rvz \mid \rvy)}_{\text {superfluous information }}+\underbrace{I(\rvz ; \rvy)}_{\text {predictive information }}. \label{superfluous}
+\end{align}
+
+However, superfluous information is not affected by the labels of primary task, only by $\rvx$ and $\rvy_{s}$. Using information theory, we can show that any SSL OOD detection algorithm will fail when the surrogate task $\rvy_{s}$ is independent of the labels in the in-distribution dataset. This applies to unsupervised OOD detection algorithms that also use a surrogate task.
+
+
+
+\vspace{-2mm}\section{Guaranteed OOD Detection Failure}\vspace{-2mm}
+This section introduces the concept of \textbf{Label Blindness}, with one key supporting theorem and one key supporting lemma. The full proofs for these theoretical results are provided in Appendix \ref{mainproofs}. Note that $R_{\rvx}$ represents the support of random variable $\rvx$ such that $R_{\rvx} = \{\vx \in \R : P(\vx) > 0\}$. \textcolor{black}{For clarity, we refer to cases where $I(\rvx_1; \rvx_2) = 0$ as \textbf{Strict Label Blindness} and discuss \textbf{Approximate Label Blindness} $I(\rvx_1; \rvx_2) \approx 0$  at the end of section \ref{approx}.}
+
+
+\vspace{-2mm}\subsection{Label Blindness Theorem \textcolor{black}{(Strict Label Blindness)}}\vspace{-2mm}
+
+We identify a guarantee of OOD detection failure for any information bottleneck-based optimization process if the unlabeled learning objective is independent from labels used to determine the ID set, described by Corollary \ref{mainbodyfailood}. This corollary is derived from two concepts: \textcolor{black}{strict} label blindness in the minimal sufficient statistic and the independence of filtered distributions. We first consider the minimal sufficient statistic and how it leads to \textcolor{black}{strict} label blindness; see Theorem \ref{mainbodygenloss}.
+
+\begin{theorem}  \textcolor{black}{Strict} Label Blindness in the Minimal Sufficient Statistic. \\
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a surrogate task such that $H(\rvy_1|\rvx_1) = 0$. Let $\rvz$ be any sufficient representation of $\rvx$ for $\rvy_1$ that satisfies the sufficiency definition \ref{definesuff} and minimizes the loss function $\mathcal{L} = I(\rvx_1 \rvx_2; \rvz) - \beta I(\rvz;\rvy_1)$. The possible $\rvz$ that minimizes $\mathcal{L}$  and is sufficient must meet the condition $I(\rvx_2; \rvz) = 0$. 
+
+    Detailed proof in Appendix \ref{genloss}.
+
+    \label{mainbodygenloss}
+\end{theorem}
+
+Intuitively, the minimal sufficient representation cannot encode any information independent of the surrogate learning objective, otherwise it would not be minimal. This means that the representation will be blind to any label built upon the independent information. 
+
+However, Theorem \ref{mainbodygenloss} is not sufficient to guarantee OOD failure. This is because the selection of the ID training set could change the learned representation $\rvz$, possibly improving OOD detection performance by increasing mutual information, $I(\rvx_2;\rvz) > 0$. We formally disprove this possibility through Lemma \ref{mainbodyfilter}. 
+
+\begin{lemma} Independence of Filtered Distributions. \\
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. For $\rvx_2'$ where
+    $R_{\vx_2'} \subset R_{\vx_2}$, there exists no $\rvx_2'$ such that $H(\rvx_1|\rvx_2') < H(\rvx_1)$.
+
+Detailed proof in Appendix \ref{filter}.
+
+\label{mainbodyfilter}
+\end{lemma}
+
+Lemma \ref{mainbodyfilter} states that filtering on a label generated on one of two independent variables cannot provide information about the other. This applies to the selection of ID data from the population, if the selection criteria is independent of the learning objective. This means that the \textcolor{black}{strict} label blindness properties predicted by Theorem \ref{mainbodygenloss} will apply to ID training data. These two concepts bring us to our main result -- \textcolor{black}{strict} label blindness in filtered distributions; see Corollary \ref{mainbodyfailood}. 
+
+\begin{corollary}\textcolor{black}{Strict} Label Blindness in Filtered Distributions. \\
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a a surrogate task such generated by $\vy_1 = f_1(\vx_1)$ $H(\rvy_1|\rvx_1) = 0$. Let $\rvy_2$ be a label such that $H(\rvy_2|\rvx_2) = 0$ and $\vy_2 = f_2(\vx_2)$. Let $\sY_{in}$ be as subset of labels $\sY_{in} \subset R_{\rvy_2}$. Let $\rvx'$ be a subset of $\rvx$ where $R_{\rvx'} =  R_{\rvx} \cap \{\vx \in \R: f_2(\vx_2) \in \sY_{in} \}  $ such that $\rvx'$ is composed of independent variables $\rvx_1'$ and $\rvx_2'$ and $\vy_1' = f_1(\vx_1')$. The sufficient representation $\rvz$ learned by minimizing $\mathcal{L} = I(\rvx_1' \rvx_2'; \rvz) - \beta I(\rvz;\rvy_1')$ must have $I(\rvx_2;\rvz) = 0$ and $I(\rvy_2;\rvz) = 0$.
+    
+
+    % Let $\mathbf{x}$ be a joint distribution composed of two independent variables $\mathbf{x_1}$ and $\mathbf{x_2}$. Let $\mathbf{y_1}$ be an SSL objective $H(\mathbf{y_1|x_1}) = 0$ and $\mathbf{y_2}$ a label $H(\mathbf{y_2|x_2}) = 0$.  Let $\mathbf{y_{in}}$ represent a subset of  labels $\mathbb{Y}_{in} \subset \{\mathbf{y_2}\}$. Let $\mathbf{x'} = \{\mathbf{x} | \mathbf{y_2} \in \mathbf{y_{in}}$\} represent the subset of $x$ containing only labels $y_{in}$, with $x'$ composed of $x_1', x_2'$ and $y_1' = f(x_1')$. The sufficient representation $\mathbf{z}$ learned by minimizing $\mathcal{L}=I(\mathbf{x';z})-\beta I(\mathbf{z;y_1'})$ must have $I(\mathbf{x_2';z}) = 0$ and $I(\mathbf{x_2;z}) = 0$.
+    \label{mainbodyfailood}
+    
+    Detailed proof in Appendix \ref{failood}.
+    
+\end{corollary}
+
+This means that, when we select the ID training data, if the selection criteria and labels are independent of the surrogate learning objective, then we can guarantee failure in OOD detection due to the absence of any information in the learned representation $\rvz$. For simplicity, we refer to this concept, supported by Corollary \ref{mainbodyfailood}, as the problem of \textbf{ Strict Label Blindness}. 
+
+In summary, when the surrogate learning task can be achieved without learning about features relevant for the label, it will not learn any features relevant for the label. Figure \ref{fig:grad} is a visualized example of this. If the SSL or unsupervised learning method fails to learn any label-relevant features, then any OOD detection algorithm built from those representations cannot differentiate between the labels selected as ID and those not selected as ID. This guarantees failure in OOD detection because no label information passes through the information bottleneck. 
+
+%\vspace{-2mm}\subsubsection{\textcolor{black}
+
+\paragraph{{\textcolor{black}{Implications of Strict Label Blindness in Real World Situations}}}
+
+\textcolor{black}{We can utilize Fano Inequality to extend our understanding of strict label blindness to consider situations of where the variables are not fully independent. The lower bound for prediction error is defined by the entropy of the target label $\rvy$ less the mutual information between the input $\rvx$ and target label, as shown in Theorem \ref{fano}. Under strict label blindness, when $I(\rvx;\rvy) = 0$, the lower bound for error is at its maximum. When $I(\rvx;\rvy) \approx 0$, the lower bound for error is large enough to be unreliable. We refer to this condition as \textbf{Approximate Label Blindness} and we conduct experiments to evaluate this condition. Unless specified as strict, label blindness refers to the approximate case.  }
+
+\label{approx}
+
+\vspace{-4mm}
+
+\textcolor{black}{
+\begin{theorem}
+Fano's Inequality (See \citep{robert1952fano}). \\Let $\rvy$ be a discrete random variable representing the true label with $\mathcal{Y} $ possible values and cardinality of $|\mathcal{Y}| $ and $\rvx$ be a random variable used to predict $\rvy$. Let $e$ be the occurrence of an error such that $\rvy \neq \hat{ \rvy}$ where $\hat{ \rvy} = f(\rvx)$. Let $H_b$ represent the binary entropy function such that $H_b(e)=-P(e) \log P(e)-(1-P(e)) \log (1-P(e))$. The lower bound for $P(e)$ increases with lower $I(\rvx;\rvy)$. 
+\label{fano}
+\end{theorem}}
+
+\vspace{-4mm}
+\textcolor{black}{
+\begin{align}
+H_b(e) + P(e) \log(| \mathcal{Y} |-1) \geq H(\rvy) - I(\rvx; \rvy).
+\end{align}}
+
+\vspace{-4mm}
+\vspace{-2mm}\subsection{Distinctions from the State-of-the-Art}\vspace{-2mm}
+
+Previous work by \citep{federici2020learning} introduced the \emph{No Free Generalization Theorem}, which contains some similar concepts. It states that a compressed representation of $\rvx$ cannot contain information for all possible labels of $\rvx$, but does not guarantee OOD detection failure. 
+
+\begin{theorem}
+No Free Generalization (See \citep{federici2020learning}). \\
+Let $\rvx, \rvz$ and $\rvy$ be random variables with joint distribution $p(\rvx, \rvy, \rvz)$. Let $\rvz'$ be a representation of $\rvx$ that satisfies $I(\rvx ; \rvz)>I(\rvx ; \rvz')$, then it is always possible to find a label $\rvy$ for which $\rvz'$ is not predictive for $\rvy$ while $\rvz$ is.
+
+\label{nofreegen}
+
+% Detailed proof in Appendix \ref{nofreegen}.
+\end{theorem}
+
+Our theoretical work shows the exact conditions that guarantee OOD failure based on the mutual information between the labels and the loss function, when performing SSL or unsupervised learning.
+
+Recent work by \citep{du2024and} investigates how labels can improve the performance of OOD algorithms. Their work does not describe any guarantee of failure in OOD detection  in the absence of labels, but does support the idea that labels are important for OOD detection.
+
+
+
+
+
+
+\vspace{-2mm}\subsection{Theoretical Implications}\vspace{-2mm}
+
+Our work applies to deep neural networks (DNNs) trained without labels for the purpose of OOD detection. The key assumption of information bottleneck compression is generally applicable to DNNs \citep{shwartz2017opening}. Regardless of other assumptions, such as the multi-view assumption, an information bottleneck DNN trained without labels will still compress data irrelevant to its loss objective, even if that data is relevant for its intended task. It does not matter what task the training process was originally designed for because the unlabeled training process ultimately generates/adheres to its own learning objective. For any learning objective, there will exist an independent feature unless compression is not possible, as in $I(\rvx;\rvy) = I(\rvx;\rvx)$. If there is compression, then there exists labels for which OOD detection failure is guaranteed. 
+
+Our work predicts a guarantee of failure only when we consider the OOD set of all non-ID data. In our own experiments and in work by \citep{sehwag2021ssd, hendrycks2019using, liu2023unsupervised}, purely self-supervised and unsupervised OOD methods can perform well against common benchmark OOD sets. This suggests that the choice of ID set and OOD set pairs can unintentionally hide label blindness failure. Alternatively, we can also construct a test to identify if the OOD detection algorithm suffers from label blindness. To construct such a test, we rely on the insight from Corollary \ref{mainbodyfailood} and the use of a simple statistical method.  
+
+
+\vspace{-2mm}\section{Benchmarking for Label Blindness Failure}\vspace{-2mm}
+
+\subsection{Bootstrapping and the Adjacent OOD Benchmark}\vspace{-2mm}
+
+One logical consequence of Corollary \ref{mainbodyfailood} is that \textcolor{black}{one}  cannot avoid failure due to label blindness by selecting different labels for \textcolor{black}{one's} ID set, so long as the label selection is independent from the \textbf{blue}{learning} objective. To test any OOD detection algorithm for label blindness failure, this simply entails selecting different labels for \textcolor{black}{one's} ID set. To construct this benchmark, we randomly sample labels to be considered as ID and other labels to be consider OOD. This is similar to bootstrapping, but without replacement. If an OOD detection algorithm is `\textcolor{black}{approximately} label blind', its average OOD detection performance across the samples should be poor. We refer to this as the \textbf{Adjacent OOD Detection Benchmark}. 
+
+\subsection{Why Adjacent OOD is Safety-Critical to Almost All Real World Systems}
+
+The Adjacent OOD detection benchmark evaluates the performance of OOD detection algorithms when there may be a significant overlap between the ID data and OOD data. This condition applies to all systems where it is impossible to guarantee that there will be no significant overlap in the feature space between ID and OOD data. This is true for almost all real world systems and is theoretically proven below. 
+
+\begin{theorem}
+Unavoidable Risk of Overlapping OOD Data
+
+Let $\rvx$ come from a distribution. Let $f$ be some labeling function to generate labels $\rvy$ such that $\vy = f(\vx)$, where there are at least two unique labels $|R_\rvy| > 1$. Let $\rvx_{in}$ be a random subset of $\rvx$ where $R_{\rvx_{in}} \subsetneq R_\rvx$ and $|R_{\rvx_{in}}| < \infty$. Let $\rvy_{in}$ be labels generated from $\vy_{in} = f(\vx_{in})$. The probability that a randomly selected $\vx$ contains $\vy$ not present in $R_{\rvy_{in}}$ is always greater than 0. 
+\label{mainbodyoverlap}
+Detailed proof in Appendix \ref{overlaprisk}.
+\end{theorem}
+
+In theory, this risk can be reduced to an acceptable level by adding more data to the training dataset. However, this reduction in risk requires the assumption that the collected data is randomly sampled. This is almost never true for real world datasets and often the opposite is true, where the nature of sampling can significantly increase this risk. 
+
+One risk factor present in every real world dataset is the dataset creation date. By creating the dataset at any specific point in time, the dataset cannot be randomly sampled with respect to time because it is impossible to collect data from the future. For example, if one where to create a dataset of diseases today, it would not contain any future diseases. In this example, the probability that the training dataset is incomplete is 100\%, which guarantees that there will be OOD data that significantly overlaps with ID data. For most real world systems, the only safe assumption is that there may be OOD data that overlaps with ID data and it is necessary to plan accordingly.
+
+\textcolor{black}{The failure predicted by the label blindness theory is easiest to detect in the adjacent OOD situation. Where there is a likelihood of adjacent data, Theorem\ref{mainbodyfailood} predicts OOD detection failure. Where there is no adjacent data,  features independent of the label can still be used to distinguish between ID data and non adjacent OOD data, as shown in various experiments in this paper and others~\citep{sehwag2021ssd, hendrycks2019using, liu2023unsupervised}. }
+
+
+\subsection{Comparing Adjacent, Near, and Far OOD Benchmarks}
+
+Many unlabeled OOD methods generally perform quite well on far and near OOD tasks. Far OOD is often defined by ID and OOD sets with different semantic labels and styles \citep{fang2022out}. One such far OOD benchmark is MNIST as ID data and CIFAR10 as OOD data. Near OOD contains ID and OOD sets with similar semantic labels and styles \citep{fang2022out}. These tasks tend to be more difficult for existing OOD detection methods than far OOD detection tasks. One such near OOD benchmark is CIFAR10 as ID and CIFAR100 as OOD. However, the overlap in the near OOD detection benchmarks is significantly less than the adjacent OOD detection benchmark, which evaluates the maximum possible feature overlap. For example, an Adjacent OOD benchmark on the ICML Facial Expressions dataset may contain the same face with different expressions, resulting in significant feature overlap. These existing benchmarks do not provide sufficient safety guarantees in applications where there may be significant overlap between ID and OOD data.
+
+\subsection{Implications for OOD from Unlabeled Data}
+
+While methods that utilize only unlabeled data, such as \citep{sehwag2021ssd, liu2023unsupervised, guille2024cadet}, show promising results on both near and far OOD tasks, their performance in the adjacent OOD detection tasks depends on the mutual information between the learned representation and the ID labels. Our theoretical work suggests that such methods will perform poorly, if the surrogate task is independent of the labels. 
+
+The adjacent OOD detection benchmark can also evaluate the performance of zero shot OOD detection methods. While our theoretical work does not extend to pretraining due to the use of labels, it is also still important to consider the performance when OOD data overlaps ID data. 
+
+\section{Experimental Results}
+
+We conduct the following experiments to verify the existence of label blindness in unlabeled OOD detection methods. All hyperparameters and configurations were the best performing from their respective original paper implementations, unless noted otherwise. Experiments are repeated 3 times. Note that code for fully replicating experiments of this work can be found at \url{https://github.com/hyang0129/ProblematicSelfSupervisedOOD}
+
+\subsection{Experimental Setup}
+\label{expsetup}
+
+\vspace{-2mm}\paragraph{Supervised Baseline.}
+
+We use Maximum Softmax Probability (MSP) \citep{hendrycks2016baseline} as our baseline supervised method for comparison. We augment the training data using random rotation, horizontal flip, random crop, gray scale, and color jitter. Images are resized to $64\times64$. We train using stochastic gradient descent with momentum and a cosine annealing learning schedule. We train for $10$ warm up epochs followed by $150$ regular epochs, selecting the weights with the highest validation accuracy. We use a standard ResNet50 architecture.
+
+\vspace{-2mm}\paragraph{Self-supervised Baselines.}
+
+We use two SSL methods to evaluate how representations are learned, SimCLR \citep{chen2020simple} and Rotation Loss (RotLoss) \citep{hendrycks2019using}. Images are resized to $64\times64$ for both cases. For SimCLR, we augment the training data using random rotation, horizontal flip, random crop, gray scale, and color jitter. For Rotation Loss, we use only random crop and horizontal flip.  We train using stochastic gradient descent with momentum (and a cosine annealing learning schedule) and employ a standard ResNet50 architecture and train for $10$ warm up epochs followed by $500$ regular epochs, selecting the weights with the best-learned representations. We use a KNN classifier to determine the best representations during validation at the end of each epoch.
+
+To evaluate OOD performance, we use two methods to generate the OOD score of each sample, SSD \citep{sehwag2021ssd} and KNN, similar to \citep{sun2022out}. SSD considers the OOD score as the Mahalanobis distance of the sample from the center of all in-distribution training data samples. The KNN method considers the OOD score as the Euclidean distance from the $N$th nearest neighbor of the test sample to all in-distribution training samples. Both methods are distance based OOD detection and are commonly used with representation learning. We use the same representation mentioned in the previous paragraph. 
+
+\vspace{-2mm}\paragraph{Unsupervised Baseline.}
+
+To consider how an \textcolor{black}{unsupervised} OOD detection method functions, we evaluate the diffusion impainting OOD detection method proposed by \citep{liu2023unsupervised} using code provided in their paper's linked repository.  We utilize the training configuration that generated the paper's main results, which involved an alternating checkerboard mask 8 × 8, an LPIPS distance metric to calculate the OOD score, and 10 reconstructions per image. We modify only the input image size to be $64\times64$ for all datasets and run additional experiments to evaluate performance on their alternative MSE distance metric. This method is representative of other generative methods, such as \cite{xiao2020likelihood}.
+
+\vspace{-2mm}\paragraph{Zero-shot Baseline.}
+
+To consider how well zero shot learning algorithms perform, we evaluate the CLIPN model presented by \citep{wang2023clipn}. We utilize their pretrained weights provided in their paper's repository and perform zero shot OOD detection on our adjacent OOD detection benchmark. We evaluate CLIPNs performance using 3 of their paper's algorithms, Maximum Softmax Probability, Compete to Win (CTW), and Agree to Differ (ATD). 
+
+
+
+
+
+\vspace{-2mm}\subsection{Adjacent OOD Datasets}\vspace{-2mm}
+
+To create the Adjacent OOD detection task, we randomly split $25$\% of all classes into the OOD set and retain $75$\% as the ID set. We also repeat our experiments three times with different seeds to account for different splits of the ID and OOD set. Only ICML Facial expressions has a major class imbalance for one of its seven classes. \textcolor{black}{See Appendix \ref{fig:icmlface} for examples of the datasets.}
+
+% In addition to the three datasets below, we also repeat this experiment for CIFAR10 and CIFAR100.
+
+% \subsubsection{ICML Facial Expressions}
+
+The ICML Facial Expressions dataset \citep{icmlface} contains seven facial expressions split across $28,709$ faces in the train set and $7,178$ in the test set. The expressions include anger, disgust, fear, happiness, sadness, surprise, and neutral. Self-supervised algorithms may not learn relevant features for distinguishing expressions and instead learn features relevant for distinguishing faces.
+
+% \subsubsection{Stanford Cars}
+
+The Stanford Cars dataset \citep{KrauseStarkDengFei-Fei_3DRR2013} contains $16,185$ images taken from $196$ classes of cars. The data is split into $8,144$ training images and $8,041$ testing images, with each class being split roughly $50$-$50$. Classes are typically very fine-grained, at the level of Make, Model, Year, e.g., 2012 Tesla Model S or 2012 BMW M3 coupe. This creates a particularly challenging Adjacent OOD task because of the reliance on more subtle features to differentiate cars. 
+
+% \subsubsection{Food 101}
+
+The Food 101 dataset by \citep{bossard14} consists of $101$ food categories and $101,000$ images. There are $250$ manually reviewed test images and $750$ training images for each class. Note that training images were not cleaned to the same standard as the test images and will contain some mislabeled samples. We believe that this should not significantly detract from the Adjacent OOD nature of the dataset.
+
+
+% \subsection{Far OOD Datasets}
+
+% We evaluate the OOD performance of the Facial Expressions, Cars, and Food 101 ID sets using CIFAR10 and CIFAR100 \citep{krizhevsky2009learning} as the OOD sets. The training methodology is the same as previous sections and we evaluate the KNN SSL OOD method. 
+
+\vspace{-2mm}\subsection{Experimental Results}\vspace{-2mm}
+
+Experimental results for Adjacent OOD are presented in Table \ref{tab:results}. It is apparent that the baseline supervised method performs better than most unlabeled methodss on the Adjacent OOD detection task. In cases where the unlabeled methods exhibits performance as good as random guessing, it is likely that the learned representation contains little information about the semantic label. This is contrary to the reported performance improvements presented in unlabeled OOD papers \citep{sehwag2021ssd, hendrycks2019using, liu2023unsupervised}, as our experimental results suggest unlabeled OOD is significantly worse than a simple MSP baseline.
+
+It is important to note that the zero shot CLIPN method performs well when the label text's usage in pretraining is similar to the label text's usage in the ID data. In the case of the Cars dataset, the pretraining dataset CC3M \citep{sharma2018conceptual} contains many images captioned with the make and model of various cars, resulting in good performance. The Food dataset also sees similar label usage in the pretraining set. However, the Faces dataset's labels are not aligned. For example, there are multiple images associated with the emotion angry that do not contain a human face, such as an image of a angry fist. When there is little or no mutual information between the pretraining data and the ID labels, zero shot methods will perform poorly in OOD detection tasks. Examples of pretraining data are provided in the appendix \ref{clipn}.
+
+
+In appendix \ref{c10tables}, we show adjacent OOD results for CIFAR10 and CIFAR100. We observe decent OOD performance on the unlabeled SimCLR compared to the labeled supervised MSP. This is likely because the SimCLR algorithm is better at learning the relevant features in these datasets and that the classes are more visually dissimilar, resulting in less overlap of OOD and ID data. In appendix \ref{far} we show strong results far OOD performance for SimCLR based OOD detection, which confirms findings in papers that test unlabled OOD methods against a far OOD detection benchmark, \citep{sehwag2021ssd, tack2020csi, liu2023unsupervised, guille2024cadet, wang2023clipn}.
+
+\label{results}
+
+
+\renewcommand{\bfdefault}{b}
+
+
+\begin{table}[]
+
+\caption{Results from experiments across various datasets and methods. Unlabeled methods perform poorly in adjacent OOD detection. CLIPN performance is due to labels present in the pretraining dataset and is discussed in section \ref{results}. Higher AUROC and lower FPR is better.  }
+\vspace{2mm}
+\centering
+\begin{tabular}{l|ll|ll|ll}
+\toprule
+                & Faces    &          & Cars     &           & Food     &          \\ \hline
+Method          & AUROC    & FPR95    & AUROC    & FPR95     & AUROC    & FPR95    \\ \midrule
+Supervised MSP  & 70.8±0.3 & 88.2±0.2 & 69.2±0.9 & 88.8±0.8  & 78.8±1.2 & 81.1±1.6 \\ \midrule
+SimCLR KNN      & 52.0±4.2 & 95.0±1.3 & 52.5±0.4 & 94.0±0.5  & 61.1±2.8 & 91.6±1.6 \\
+SimCLR SSD      & 55.0±4.5 & 95.1±2.0 & 52.7±0.7 & 93.7±1.1  & 64.4±0.8 & 89.3±0.5 \\
+RotLoss KNN     & 46.1±2.5 & 95.8±0.4 & 51.1±0.6 & 94.8±0.7  & 49.7±3.8 & 94.9±0.9 \\
+RotLoss SSD     & 46.6±3.0 & 95.7±0.5 & 50.7±1.9 & 95.0±1.2  & 50.7±3.6 & 94.9±0.9 \\ \midrule
+Diffusion LPIPS & 54.7±4.6 & 94.2±3.7 & 53.8±1.8 & 93.9±1.2  & 52.9±2.2 & 94.4±0.6 \\
+Diffusion MSE   & 55.3±2.2 & 94.2±1.4 & 51.6±1.6 & 94.4±0.5  & 52.5±3.4 & 94.2±0.6 \\ \midrule
+CLIPN CTW       & 47.0±1.4   & 97.3±0.3 & 65.0±5.1   & 69.4±9.4  & 70.9±2.9 & 69.1±7.0   \\
+CLIPN ATD       & 44.2±1.4 & 97.5±0.2 & 81.1±4.3 & 56.6±10.4 & 84.9±0.2 & 53.9±4.5 \\
+CLIPN MSP       & 58.7±4.4 & 95.9±1.4 & 76.5±1.4 & 75.4±0.6  & 80.5±1.6 & 74.0±1.4   \\ \bottomrule
+\end{tabular}
+
+\label{tab:results}
+\end{table}
+
+
+\renewcommand{\bfdefault}{bx}
+
+\vspace{-2mm}\section{Related Work}\vspace{-2mm}
+
+\paragraph{Out-of-Distribution Detection.}
+\citep{yang2021generalized} defines OOD detection as the detection of a semantic shift. A semantic shift is a shift in the label space, where the label for a sample does not exist in the training set. OOD detection is crucial in applications where failure is very costly and/or the probability of OOD inputs are very high, as in autonomous driving \citep{huang2020survey}. Following \citep{hendrycks2016baseline}, there have been many advances in supervised OOD detection. Some of these improved methods include those based on the ODIN score \citep{liang2017enhancing}, Mahalanobis distance \citep{lee2018simple}, energy
+score \citep{liu2020energy}, minimum other score \citep{huang2021mos}, and deep Adjacent-neighbors \citep{sun2022out}. These methods differ from self-supervised methods through the use of label information during training.
+
+\paragraph{Out-of-Distribution Detection.} 
+The foundational work of \citet{hendrycks2016baseline} introduced a simple softmax confidence baseline that spurred a wave of research into more robust OOD detection methods. \citet{liang2017enhancing} proposed ODIN, which improves OOD detection via input perturbations and temperature scaling to separate in- and out-distribution predictions. \citet{lee2018simple} introduced the Mahalanobis distance-based confidence score, utilizing feature space statistics from intermediate layers of neural networks. \citet{liu2020energy} presented the energy-based score, grounded in the energy function of neural networks, which unifies logit-based confidence with a theoretically motivated alternative.
+
+Building on these ideas, \citet{huang2021mos} proposed the Minimum Other Score (MOS), which better distinguishes OOD samples by analyzing the margin between the top-1 and top-2 logit values, while \citet{sun2022out} introduced the Deep Adjacent Neighbors approach, leveraging local consistency in feature space using contrastive learning to improve OOD robustness. These developments demonstrate a shift from output-layer confidence metrics toward feature space representations and training-aware scoring functions, reflecting the increasing importance of representation quality in reliable OOD detection.
+
+
+\paragraph{Self-Supervised and Unsupervised Learning.}
+
+Unsupervised learning involves finding underlying patterns within unlabeled data. Diffusion models \citep{ho2020denoising} and generative adversarial networks (GAN) \citep{karras2017progressive} can be considered as unsupervised learning. Most DNN unsupervised learning methods define some task based learning objective, such as the reconstruction task via autoencoders \citep{baldi2012autoencoders} or the discrimination between real and fake data in GANs \citep{creswell2018generative}. 
+
+SSL can be considered a variation of unsupervised learning that focuses on learning a representation $Z$ from input $X$, with respect to task $Y$, such that $I(Z;Y)$ is maximized and $I(X;Z)$ is minimized. The unsupervised methods referenced in previous paragraph can be considered SSL with respect to their learning objectives. Notably, \citep{shwartz2023compress} provides a unified information-theoretic view of SSL. Recent advances in SSL methodology include joint embeddings based on SimCLR \citep{chen2020simple} and SimSiam \citep{chen2021exploring}, as well as those based on generative models \citep{he2022masked}. 
+
+\vspace{-2mm}\paragraph{Unlabeled Out-of-Distribution Detection.}
+
+Unlabeled OOD detection methods include self supervised and unsupervised methods. Self-supervised OOD detection methods can vary significantly in their definition of the term self-supervised. Methods that train on OOD information \citep{mohseni2020self} are inherently biased towards better performance on the trained OOD sets. Methods accessing in-distribution labels \citep{vyas2018out} are not self-supervised. We consider the self-supervised OOD detection as any OOD method that does not access in-distribution labels nor the out-of-distribution set. With this definition, all self-supervised OOD methods must contain an SSL objective and some way to determine the OOD score based on  model output, which is often times a metric based on the model's learned representation(s). Many unsupervised OOD detection methods fall under this definition as well, such as \citep{daxberger2019bayesian, liu2023unsupervised, xiao2020likelihood}.
+
+Methods based on representation and scoring were presented in the following key efforts. \citep{hendrycks2019using} combines a rotation loss and rotation score whereas \citep{sehwag2021ssd} utilizes SimCLR \citep{chen2020simple} and the Mahalanobis distance. \citep{khalid2022rodd} combines adversarial contrastive learning with singular value decomposition while \citep{zhang2021understanding}, in contrast, combines flow-based generated models with the Kolmogorov–Smirnov distance. The method of \citep{xiao2020likelihood} is based on integration of variational auto encoders with likelihood regret. 
+
+Contrastive representation learning methods have been used to improve the robustness of supervised OOD detectors. \citep{sun2022out} uses supervised contrastive learning \citep{khosla2020supervised} to improve the performance of a KNN-based OOD detector. Most recently, work by \citep{guille2024cadet} utilizes maximum mean discrepancy combined with contrastive SSL. 
+
+Zero shot OOD detection methods are a more recent development in unlabeled OOD detection. These methods utilize the CLIP model presented in \citep{radford2021learning} with two notable and recent publications \citep{esmaeilpour2022zero} and \citep{wang2023clipn}.
+
+
+
+\vspace{-2mm}\section{Discussion}\vspace{-2mm}
+
+\subsection{\textcolor{black}{Impact of Label Blindness on Future Research}}\vspace{-2mm}
+
+A consequence of the label blindness theorem is that there cannot exist a single unlabeled OOD detection algorithm for all unlabeled data. However, unlabeled learning methods, such as SimCLR, are vital for improving OOD detection. The model of \citep{sun2022out} learns representations using a supervised version of SimCLR, similar to \citep{khosla2020supervised}. The combination of a multi-view information bottleneck with supervised classes produces a more robust representation of the in-distribution data than using only a supervised loss. Recent work by \citep{du2024does} provides a strong theoretical basis for why unlabeled data can improve OOD detection performance.
+
+\textcolor{black}{Future work should focus on overcoming approximate label blindness through few or one shot methods that can better incorporate label information. Such methods could incorporate a tiny amount of labeled data to avoid the complete independence condition described in Theorem\ref{mainbodyfailood}.  More work needs to be done to determine how much label information is sufficient for the adjacent OOD detection detection benchmark.}
+
+\vspace{-2mm}\subsection{\textcolor{black}{Impact of Label Blindness on Real World Problems}}\vspace{-2mm}
+
+\textcolor{black}{One can still enjoy the benefits of unlabeled OOD methods when the consequences of label blindness are acceptable. For example, if the objective was to detect any disease at all, then detecting a novel disease as in distribution would not be problematic. Unlabeled OOD can also be used in cases where the risk of adjacent OOD data is acceptably low. The risk defined by Theorem~\ref{mainbodyoverlap} is less relevant when randomness in the collection of ID data can be ensured. For example, an ID dataset of World War 2 aircraft would not be biased by the collection date and the risk of overlapping OOD data can be reduced to effectively zero.}
+
+\textcolor{black}{Unlabeled OOD detection can also work well when the learned features are relevant for the OOD setting. In the case of adjacent OOD detection, an unlabeled method should perform well if the learning objective is closely related to the ID labels. Alternatively, unlabeled OOD detection can be in used cases where one expects only near and far OOD data.}  
+
+
+
+
+\textcolor{black}{}
+
+
+ 
+
+% We observe good unlabeled OOD detection performance on certain datasets, in both our experiments as well as the literature, such as in \citep{sehwag2021ssd, tack2020csi, liu2023unsupervised}. In addition to the lack of Adjacent OOD benchmarks, we believe part of this performance may be explained by the overlap of datasets, e.g., CIFAR10, CIFAR100, and ImageNet, between OOD detection research and SSL and unsupervised learning research. These methods may be tuned to perform well on these datasets. As a result, future OOD research would benefit greatly from additional, more diverse benchmarks. 
+
+% Advances made in image-based OOD detection have trivialized smaller near OOD benchmarks, such as CIFAR10 vs CIFAR100 \citep{fort2021exploring}. New benchmarks often utilize ImageNet or other large image datasets to construct OOD benchmarks. Although more challenging, these benchmarks create an extremely broad set of ID labels. This is counter to the many applications of OOD detection, where the set of ID labels can be limited to a specific domain, such as medical images. However, benchmarking these narrow ID sets against Imagenet or CIFAR10 will likely result in a far OOD detection task. Adjacent OOD detection solves this benchmarking problem by bootstrapping ID and OOD sets from existing data, resulting in extremely near ID and OOD sets. The Adjacent OOD task is a new way to evaluate the performance of current and future OOD detection algorithms that addresses the risk of OOD data that significantly overlaps ID data.
+
+\vspace{-6mm}\section{Conclusion}\vspace{-2mm}
+
+In this work we provide an answer to the question, can we ignore labels for OOD detection? Our theoretical work shows that the answer is no, unless the unlabeled method happens to capture the relevant features and does not need to work for different sets of labels. Due to the lack of existing benchmarks that capture the theoretically expected failure, we introduce a novel type of OOD task, Adjacent OOD detection. This task addresses the critical safety gap caused by significant overlap of ID and OOD data. We show that the Adjacent OOD task accurately captures the failure in unlabeled OOD detection that is hypothesized by our theory. We hope our work will help support more robust research into OOD detection and improve the safety of AI applications. 
+% In the unusual situation where you want a paper to appear in the
+% references without citing it in the main text, use \nocite
+% \nocite{langley00}
+
+
+
+% \subsubsection*{Author Contributions}
+% If you'd like to, you may include  a section for author contributions as is done
+% in many journals. This is optional and at the discretion of the authors.
+
+\subsubsection*{Acknowledgments}
+This material is based upon work supported by the United States National Science Foundation under grant \#2225354. 
+
+The authors acknowledge Research Computing at the Rochester Institute of Technology for providing computational resources and support that have contributed to the research results reported in this publication \citep{ritrc}.
+
+\bibliography{iclr2025_conference}
+\bibliographystyle{iclr2025_conference}
+
+\newpage
+\appendix
+
+\begin{center}
+    {\bf \large Appendix}
+\end{center}
+
+
+\section{Impact Statement}
+
+This paper presents work whose goal is to advance the field of machine learning. In particular, this paper seeks to improve the theoretical understanding of safety in machine learning based systems. We hope to positively impact society by improving the work of future researchers and practitioners in building safer AI systems. 
+
+
+\section{Properties of Mutual Information and Entropy}
+
+In this section we enumerate some of the properties of mutual information that are used to prove the theorems reported in this work. For any random variables $\rvw, \rvx, \rvy$ and $\rvz$ :
+
+$\left(P_1\right)$ Positivity:
+$$
+I(\rvx ; \rvy) \geq 0, I(\rvx ; \rvy \mid \rvz) \geq 0
+$$
+$\left(P_2\right)$ Chain rule:
+$$
+I(\rvx \rvy ; \rvz)=I(\rvy ; \rvz)+I(\rvx ; \rvz \mid \rvy)
+$$
+$\left(P_3\right)$ Chain rule (Multivariate Mutual Information):
+$$
+I(\rvx ; \rvy ; \rvz)=I(\rvy ; \rvz)-I(\rvy ; \rvz \mid \rvx)
+$$
+$\left(P_4\right)$ Positivity of discrete entropy:
+For discrete $\rvx$
+$$
+H(\rvx) \geq 0, H(\rvx \mid \rvy) \geq 0
+$$
+$\left(P_5\right)$ Entropy and Mutual Information
+$$
+H(\rvx)=H(\rvx \mid \rvy)+I(\rvx ; \rvy)
+$$
+
+$(P_6)$ Conditioning a variable cannot increase its entropy
+
+$$
+H(\rvy|\rvz) \leq H(\rvy)
+$$
+
+$(P_7)$ A variable knows about itself as much as any other variable can 
+
+$$
+I(\rvx;\rvx) \geq I(\rvx;\rvy) 
+$$
+
+$(P_8)$ Symmetry of Mutual Information
+
+$$
+I(\rvx;\rvy) = I(\rvy;\rvx) 
+$$
+
+$(P_9)$ Entropy and Conditional Mutual Information (This is simply $P_5$ conditioned on $\rvz$)
+
+$$
+I(\rvx;\rvy|\rvz)  = H(\rvx|\rvz) - H(\rvx|\rvy\rvz)
+$$
+
+$(P_{10})$ Functions of Independent Variables Remain Independent
+
+$$
+I(\rvx; \rvy) = 0 \rightarrow I(f(\rvx);\rvy) = 0
+$$
+
+\section{Theorems and Proofs of Previous Work}
+
+This section contains the supporting theorems and proofs provided by previous work \citep{federici2020learning}.
+
+When random variable $\rvz$ is defined to be a representation of another random variable $\rvx$, we state that $\rvz$ is conditionally independent from any other variable in the system once $\rvx$ is observed. This does not imply that $\rvz$ must be a deterministic function of $\rvx$, but that the source of stochasticity for $\rvz$ is independent of the other random variables. As a result whenever $\rvz$ is a representation of $\rvx$ :
+$$
+I(\rvz ; \rva \mid \rvx \rvb)=0,
+$$
+for any variable (or groups of variables) $\rva$ and $\rvb$ in the system. This condition is accounts for the randomness experienced in training neural networks and the error expected from human labelers. This condition applies to this and the following sections. 
+
+\subsection{Sufficiency}
+
+\begin{proposition}
+
+Let $\rvx$ and $\rvy$ be random variables from joint distribution $p(\rvx, \rvy)$. Let $\rvz$ be a representation of $\rvx$, then $\rvz$ is sufficient for $\rvy$ if and only if $I(\rvx ; \rvy)=I(\rvy ; \rvz)$
+
+Hypothesis:
+
+$\left(H_1\right) \rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+Thesis:
+
+$\left(T_1\right) I(\rvx ; \rvy \mid \rvz)=0 \Longleftrightarrow I(\rvx ; \rvy)=I(\rvy ; \rvz)$
+
+\begin{proof}
+$$
+\begin{aligned}
+I(\rvx ; \rvy \mid \rvz) & \stackrel{\left(P_3\right)}{=} I(\rvx ; \rvy)-I(\rvx ; \rvy ; \rvz) \stackrel{\left(P_3\right)}{=} I(\rvx ; \rvy)-I(\rvy ; \rvz)+I(\rvy ; \rvz \mid \rvx) \\
+& \stackrel{\left(H_1\right)}{=} I(\rvx ; \rvy)-I(\rvy ; \rvz)
+\end{aligned}
+$$
+
+Since both $I(\rvx ; \rvy)$ and $I(\rvy ; \rvz)$ are non-negative $\left(P_1\right), I(\rvx ; \rvy \mid \rvz)=0 \Longleftrightarrow I(\rvy ; \rvz)=I(\rvx ; \rvy)$
+
+\end{proof}
+\label{sufficiency}
+\end{proposition}
+
+
+% \subsection{No Free Generalization}
+
+% \begin{theorem} Let $\mathrm{x}, \mathrm{z}$ and $\mathrm{y}$ be random variables with joint distribution $p(\mathrm{x}, \mathrm{y}, \mathrm{z})$. Let $\mathrm{z}^{\prime}$ be a representation of $\mathbf{x}$ that satisfies $I(\mathbf{x} ; \mathbf{z})>I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right)$, then it is always possible to find a label $\mathbf{y}$ for which $\mathbf{z}^{\prime}$ is not predictive for $\mathbf{y}$ while $\mathbf{z}$ is.
+
+% Hypothesis:
+
+% $\left(H_1\right) \mathbf{z}^{\prime}$ is a representation of $\mathbf{x}: I\left(\mathbf{y} ; \mathbf{z}^{\prime} \mid \mathbf{x}\right)=0$
+% $\left(H_2\right) I(\mathbf{x} ; \mathbf{z})>I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right)$
+
+% Thesis:
+
+% $\left(T_1\right) I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right)<I(\mathbf{x} ; \mathbf{z}) \Longrightarrow \exists \mathbf{y} \cdot I(\mathbf{y} ; \mathbf{z})>I\left(\mathbf{y} ; \mathbf{z}^{\prime}\right)=0$
+
+% \begin{proof} By construction.
+
+% 1. We first factorize $\mathrm{x}$ as a function of two independent random variables (Proposition 2.1 \citep{achille2018emergence}) by picking y such that:
+% $\left(C_1\right) I\left(\mathbf{y} ; \mathbf{z}^{\prime}\right)=0$
+% $\left(C_2\right) \mathbf{x}=f\left(\mathbf{z}^{\prime}, \mathbf{y}\right)$
+% for some deterministic function $f$. Note that such $\mathbf{y}$ always exists.
+
+% 2. Since $\mathbf{x}$ is a function of $\mathbf{y}$ and $\mathbf{z}^{\prime}$ :
+% $\left(C_4\right) I\left(\mathbf{x} ; \mathbf{z} \mid \mathbf{y} \mathbf{z}^{\prime}\right)=0$
+
+% Considering $I(\mathbf{y} ; \mathbf{z})$ :
+% $$
+% \begin{aligned}
+% I(\mathbf{y} ; \mathbf{z}) & \stackrel{\left(P_3\right)}{=} I(\mathbf{y} ; \mathbf{z} \mid \mathbf{x})+I(\mathbf{x} ; \mathbf{y} ; \mathbf{z}) \\
+% & \stackrel{\left(P_1\right)}{\geq} I(\mathbf{x} ; \mathbf{y} ; \mathbf{z}) \\
+% & \stackrel{\left(P_3\right)}{=} I(\mathbf{x} ; \mathbf{z})-I(\mathbf{x} ; \mathbf{z} \mid \mathbf{y}) \\
+% & \stackrel{\left(P_3\right)}{=} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z} \mid \mathbf{y} \mathbf{z}^{\prime}\right)-I\left(\mathbf{x} ; \mathbf{z} ; \mathbf{z}^{\prime} \mid \mathbf{y}\right) \\
+% & \stackrel{\left(C_2\right)}{=} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z} ; \mathbf{z}^{\prime} \mid \mathbf{y}\right) \\
+% & \stackrel{\left(P_3\right)}{=} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z}^{\prime} \mid \mathbf{y}\right)+I\left(\mathbf{x} ; \mathbf{z}^{\prime} \mid \mathbf{y z}\right) \\
+% & \stackrel{\left(P_1\right)}{\geq} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z}^{\prime} \mid \mathbf{y}\right) \\
+% & \stackrel{\left(P_3\right)}{=} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right)+I\left(\mathbf{x} ; \mathbf{y} ; \mathbf{z}^{\prime}\right) \\
+% & \stackrel{\left(P_3\right)}{=} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right)+I\left(\mathbf{y} ; \mathbf{z}^{\prime}\right)-I\left(\mathbf{y} ; \mathbf{z}^{\prime} \mid \mathbf{x}\right) \\
+% & \stackrel{\left(P_1\right)}{\geq} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right)-I\left(\mathbf{y} ; \mathbf{z}^{\prime} \mid \mathbf{x}\right) \\
+% & \stackrel{\left(H_1\right)}{=} I(\mathbf{x} ; \mathbf{z})-I\left(\mathbf{x} ; \mathbf{z}^{\prime}\right) \\
+% & \stackrel{\left(H_2\right)}{>} 0
+% \end{aligned}
+% $$
+
+% Since $I\left(\mathbf{y} ; \mathbf{z}^{\prime}\right)=0$ by construction and $I(\mathbf{y} ; \mathbf{z})>0$, the $\mathbf{y}$ built in 1 . satisfies the conditions reported in the thesis.
+
+% \label{nofreegen}
+
+% \end{proof} 
+
+    
+% \end{theorem}
+
+
+\section{Main Theorems and Proofs}
+
+\label{mainproofs}
+
+We ignore cases where the determined variable has an entropy of 0. Generally, if $H(\rvy| \rvx) = 0 \rightarrow H(\rvy) > 0$. Also, we only consider cases where the random variables have more than zero entropy.
+
+Note that $R_{\rvx}$ represents the support of random variable $\rvx$ such that $R_{\rvx} = \{\vx \in \R : P(\vx) > 0\}$.
+
+% \subsection{Deterministic Sufficiency}
+
+% \begin{lemma}
+%     Let $\mathbf{x}$ be a random variable with label $\mathbf{y}$ such that $H(\mathbf{y|x}) = 0$ and $\mathbf{z}$ is a sufficient representation of $\mathbf{x}$ for $\mathbf{y}$ as per Proposition \ref{sufficiency}. There only exists $\mathbf{z}$ such that $H(\mathbf{y|z}) = 0$. 
+
+% Hypothesis:
+
+% $\left(H_1\right) \mathbf{z}$ is a representation of $\mathbf{x}: I(\mathbf{y} ; \mathbf{z} \mid \mathbf{x})=0$
+
+% $(H_2) \mathbf{y}$ determined by $\mathbf{x}: H(\mathbf{y|x}) = 0$
+
+% $(H_3) \mathbf{z}$ determined by $\mathbf{x}: H(\mathbf{z|x}) = 0$
+
+% Thesis 
+% $(T_1)$ $\forall \mathbf{z}.H(\mathbf{y|z}) = 0$
+
+% \begin{proof}
+%     By Construction
+
+%     We consider $I(\mathbf{x;y}) = I(\mathbf{y;z})$ from proposition \ref{sufficiency}. 
+
+%     $$
+%     \begin{aligned}
+%     I(\mathbf{x};\mathbf{y}) &\stackrel{\left(Prop B1\right)}{=} I(\mathbf{z};\mathbf{y})  \\
+%     I(\mathbf{x};\mathbf{y}) &\stackrel{\left(P5\right)}{=} H(\mathbf{y}) - H(\mathbf{y|z}) \\
+%     H(\mathbf{y}) - H(\mathbf{y|x}) &\stackrel{\left(P5\right)}{=} H(\mathbf{y}) - H(\mathbf{y|z}) \\
+%     H(\mathbf{y|x}) &=  H(\mathbf{y|z}) \\
+%     0 &\stackrel{\left(H_2\right)}{=}  H(\mathbf{y|z}) \\
+%     \end{aligned}
+%     $$
+    
+% \end{proof}
+%     \label{suffdet}
+% \end{lemma}
+
+\subsection{Lower Bound of Mutual Information for Sufficiency}
+\begin{lemma}
+    Let $\rvx$ and $\rvy$ be random variables with joint distribution $p(\rvx, \rvy)$. Let $\rvz$ be a representation of $\rvx$ that is sufficient, as per definition \ref{definesuff}. Then $I(\rvx;\rvz) \geq I(\rvz;\rvy)$ and $I(\rvx;\rvz) \geq I(\rvx;\rvy)$. 
+
+    Hypothesis: 
+
+    $(H_1)$ $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+    
+    $(H_2)$ $ \rvz$ is a sufficient representation of $\rvx: I(\rvx; \rvy| \rvz))=0$
+    
+    Thesis: 
+    
+    $(T_1)$ $\forall \rvz.I(\rvx;\rvz) \geq I(\rvz;\rvy), I(\rvx;\rvz) \geq I(\rvx;\rvy)$
+
+    \begin{proof}By Construction 
+
+    $$
+    \begin{aligned}
+    I(\rvx \rvy|\rvz)) &\stackrel{\left(H_2\right)}{=} 0 \\
+    &\stackrel{\left(P_2\right)}{=} I(\rvz \rvy; \rvx) - I(\rvz; \rvx) \\
+    &\stackrel{\left(P_2\right)}{=} I(\rvx; \rvy) + I(\rvx; \rvz|\rvy) - I(\rvz; \rvx) \\
+    &\stackrel{\left(PropB1\right)}{=} I(\rvz; \rvy) + I(\rvx; \rvz|\rvy) - I(\rvz;\rvx) \\
+    I(\rvz;\rvx) &= I(\rvz;\rvy) + I(\rvx; \rvz|\rvy)\\
+   I(\rvz;\rvx) &\stackrel{\left(P_1\right)}{\geq} I(\rvz; \rvy)\\
+    \end{aligned}
+    $$
+
+    Note that $I(\rvz; \rvy) = I(\rvx; \rvy)$ for all sufficient representations, as per proposition \ref{sufficiency}.
+
+    This supports our intuition that the information in the representation consists of relevant information $I(\rvz;\rvy)$ and irrelevant information $I(\rvx; \rvz| \rvy)$. By definition of sufficiency, there must be enough information for $I(\rvz; \rvy)$ in $I(\rvx; \rvz)$, which is to say that the size of the encoding cannot be smaller than the minimum size to encode all of $I(\rvx; \rvy)$. 
+    
+    \end{proof} 
+    \label{infobound}
+\end{lemma}
+
+
+
+
+
+\subsection{Conditional Mutual Information of Noise}
+
+\begin{lemma}
+Let $\rvx$ and $\rvy$ be independent random variables and $\rvz$ be a function of $\rvx$ with joint distribution $p(\rvx, \rvy, \rvz)$. The conditional mutual information $I(\rvx; \rvz| \rvy)$ is always equal to the mutual information $I(\rvx; \rvz)$. As in the information content is unchanged when adding noise. 
+
+Hypothesis:
+
+$(H_1)$ Independence of $\rvx$ and $\rvy$ : $I(\rvx;\rvy) = 0$
+
+$(H_2)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+Thesis: 
+
+$(T_1)$ $I(\rvx; \rvz| \rvy) = I(\rvx; \rvz)$ 
+
+\begin{proof}
+    By Construction. 
+
+    $(C_1)$ Demonstrates that $H(\rvz| \rvx \rvy) = 0$
+
+    $$
+\begin{aligned}
+0 \stackrel{\left(P_4\right)}{\leq} H(\rvz|\rvx \rvy)&\stackrel{\left(P_6\right)}{\leq}H(\rvz|\rvx)\\
+H(\rvz|\rvx \rvy)&\stackrel{\left(H_2\right)}{\leq} 0
+\end{aligned}
+$$
+
+    $(C_2)$ Demonstrates that $I(\rvz;\rvy) = 0$ 
+    $$
+\begin{aligned}
+I(\rvz; \rvy)&\stackrel{\left(H_2\right)}{=}I(f(\rvx);\rvy)\\
+&\stackrel{\left(P_{10}\right)}{=}I(\rvx ; \rvy)\\
+&\stackrel{\left(H_{1}\right)}{=}0\\
+\end{aligned}
+$$
+    
+    
+Thus 
+
+    $$
+\begin{aligned}
+I(\rvx; \rvz| \rvy) &\stackrel{\left(P_9\right)}{=} H(\rvz|\rvy) - H(\rvz|\rvx \rvy)\\
+&\stackrel{\left(C_1\right)}{=} H(\rvz| \rvy)- 0\\
+&\stackrel{\left(P_5\right)}{=} H(\rvz) - I(\rvz; \rvy) \\
+&\stackrel{\left(C_2\right)}{=}H(\rvz) - 0 \\
+&\stackrel{\left(H_2\right)}{=}H(\rvz) - H(\rvz| \rvx) \\
+&\stackrel{\left(P_5\right)}{=}I(\rvx; \rvz)
+\end{aligned}
+$$
+    
+This supports the intuition that if one added a random noise channel it will not change the mutual information. 
+
+\end{proof}
+\label{infonoise}
+\end{lemma}
+
+% \subsection{Conditional Mutual Information of an Ancestor Variable}
+
+% \begin{lemma}
+% Let $\mathbf{x}$ and $\mathbf{y}$ be independent random variables and $\mathbf{z}$ be a function of both $\mathbf{x}$ and $\mathbf{y}$ with joint distribution $p(\mathbf{x}, \mathbf{y}, \mathbf{z})$ such that $H(\mathbf{z|xy}) = 0$ while $H(\mathbf{z|x}) > 0$ and $H(\mathbf{z|y}) > 0$. The conditional mutual information $I(\mathbf{y}; \mathbf{z}| \mathbf{x})$ is equal to the entropy $H(\mathbf{z|x})$. 
+
+% Hypothesis: 
+
+% $(H_1)$ $\mathbf{z}$ is fully determined by both $\mathbf{xy}$:  $H(\mathbf{z|xy}) = 0$
+
+% $(H_2)$ $\mathbf{z}$ is cannot be determined by only $\mathbf{x}$ or $\mathbf{y}$: $H(\mathbf{z|x}) > 0, H(\mathbf{z|y}) > 0$
+
+% Thesis: 
+
+% $(T_1)$ $\forall \mathbf{z}.I(\mathbf{y;z|x}) = H(\mathbf{z|x})$
+
+% \begin{proof} By Construction
+%     $$
+%         \begin{aligned}
+%         I(\mathbf{y;z|x}) &\stackrel{\left(P_9\right)}{=} H(\mathbf{z|x}) - H(\mathbf{z|xy}) \\
+%         &\stackrel{\left(H_1\right)}{=}H(\mathbf{z|x})
+%         \end{aligned}
+%     $$
+    
+%     This supports the intuition that $I(\mathbf{y;z|x})$ represents the information outside of $x$. 
+    
+% \end{proof}
+
+% \end{lemma}
+
+
+\subsection{Factorization of Bottleneck Loss}
+
+\begin{lemma}
+    Let $\rvx$ be a random variable with label $\rvy$ such that $H(\rvy| \rvx) = 0$ and $\rvz$ is a sufficient representation of $\rvx$ for $\rvy$. The loss function 
+    $\mathcal{L}=I(\rvx; \rvz)-\beta I(\rvz; \rvy)$ is equivalent to $\mathcal{L}=H(\rvz)-\beta I(\rvz; \rvy)$, with $\beta$ as some constant. 
+
+    Hypothesis: 
+    
+    $(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+    Thesis: 
+
+    $(T_1)$ $ I(\rvx; \rvz)-\beta I(\rvz; \rvy) = H(\rvz)-\beta I(\rvz; \rvy)$
+
+    \begin{proof} By Construction. 
+    $$
+        \begin{aligned}
+        I(\rvx; \rvz)-\beta I(\rvz; \rvy) &\stackrel{\left(P_5\right)}{=} H(\rvz) - H(\rvz| \rvx) -\beta I(\rvz;\rvy) \\
+        &\stackrel{\left(H_1\right)}{=} H(\rvz) -\beta I(\rvz; \rvy)
+        \end{aligned}
+    $$
+
+    Due to the relationship between $\rvx$ and $\rvz$, we can create an intuitive factorization of the bottleneck loss function. Effectively, we want to maximize $I(\rvz; \rvy)$ while minimizing the information content of $\rvz$
+
+    \end{proof}
+
+    \label{lossfact}
+\end{lemma}
+
+\subsection{\textcolor{black}{Strict} Label Blindness in the Minimal Sufficient Statistic}
+
+\begin{theorem}
+% Let $\rvx$ be a joint distribution composed of two independent variables $\rvx_1$ and $\mathbf{x_2}$. Let $\mathbf{y}$ be a label such that $H(\mathbf{y|x_1}) = 0$. Let $\mathbf{z}$ be any sufficient representation of $\mathbf{x}$ for $\mathbf{y}$ which satisfies the sufficiency definition \ref{definesuff} and minimizes the loss function $\mathcal{L}=I(\mathbf{x_1,x_2;z})-\beta I(\mathbf{z;y})$. The possible $\mathbf{z}$ that minimizes $\mathcal{L}$ and is sufficient must meet the condition $I(\mathbf{x_2; z}) = 0$.
+
+Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a surrogate task such that $H(\rvy_1|\rvx_1) = 0$. Let $\rvz$ be any sufficient representation of $\rvx$ for $\rvy_1$ that satisfies the sufficiency definition \ref{definesuff} and minimizes the loss function $\mathcal{L} = I(\rvx_1 \rvx_2; \rvz) - \beta I(\rvz;\rvy_1)$. The possible $\rvz$ that minimizes $\mathcal{L}$  and is sufficient must meet the condition $I(\rvx_2; \rvz) = 0$. 
+
+\textcolor{black}{\paragraph{Summary} This proof uses the derivative of the loss function to establish the possible set of local minima that satisfies $\mathcal{L}$. For any possible minima of $\mathcal{L}$, the representation $\rvz$ must contain information of only  $\rvx_1 ->H(\rvz|\rvx_1)=0$ or only $\rvx_2 -> H(\rvz| \rvx_2)=0)$ or both $\rvx_1, \rvx_2 -> H(\rvz|\rvx_1, \rvx_2)=0$. We show that   possible set of all local minima must satisfy $H(\rvz|\rvx_1)=0$ by showing that the other two cases must always have greater $\mathcal{L}$. This proves the Theorem that the learned representation cannot contain information about $\rvx_2$.}
+
+
+$(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+$(H_2)$  $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+$(H_3)$  $\rvz$ is a sufficient representation of $\rvx: I(\rvx ; \rvy | \rvz)=0$
+
+$(H_4)$ $\rvx$ is composed of two independent variables $\rvx_1, \rvx_2$ : $\rvx = \rvx_1, \rvx_2, I(\rvx_1; \rvx_2) = 0$
+
+$(H_5)$ $\rvy$ is fully determined by $\rvx_1$: $H(\rvy| \rvx_1) = 0$  
+
+Thesis:
+
+$(T_1)$ $\forall \rvz.I(\rvx_2,\rvz) = 0$
+
+\begin{proof} By Construction
+
+$(C_1)$ demonstrates that $\mathcal{L}=H(\rvz) -\beta I(\rvz;\rvy)$ via factoring $I(\rvx_1 \rvx_2;\rvz)$. Alternatively, Theorem \ref{lossfact} creates the same result. 
+
+$$
+    \begin{aligned}
+    I(\rvx_1, \rvx_2; \rvz) &\stackrel{\left(P_2\right)}{=} I(\rvx_1; \rvz) + I(\rvx_2; \rvz| \rvx_1)\\
+    &\stackrel{\left(P_5\right)}{=} H(\rvz) -  H(\rvz| \rvx_1) + I(\rvx_2; \rvz| \rvx_1) \\
+    &\stackrel{\left(P_9\right)}{=} H(\rvz) -  H(\rvz| \rvx_1) + H(\rvz| \rvx_1) - H(\rvz| \rvx_1 \rvx_2) \\
+    &\stackrel{\left(H_1\right)}{=}H(\rvz) -  H(\rvz| \rvx_1) + H(\rvz| \rvx_1) - 0 \\
+    &\mathcal{L}=H(\rvz)  -\beta I(\rvz; \rvy)
+    \end{aligned}
+$$
+
+$(C_2)$ Demonstrates that $I(\rvz; \rvy) = I(\rvx; \rvy)$ as per Theorem \ref{sufficiency}. 
+
+$(C_3)$ Demonstrates that $I(\rvz; \rvy)$ is a constant across all sufficient representations because Theorem \ref{sufficiency} applies.
+
+$(C_4)$ Demonstrates that for all possible $\rvz$ satisfying $(H_3)$, their loss can be compared using only $\mathcal{L}_z = H(\rvz)$ for comparing across $\rvz$
+
+$$
+\begin{aligned}
+    \frac{d\mathcal{L}}{d\rvz}  &\stackrel{\left(C_1\right)}{=}\frac{H(\rvz)}{d\rvz} - \frac{\beta I(\rvz; \rvy)}{d\rvz} \\
+&\stackrel{\left(C_3\right)}{=}\frac{H(\rvz)}{d\rvz} - 0
+\end{aligned}
+$$
+
+$(C_5)$ Demonstrates that the value of $H(\rvz)$ at all possible $\rvz$ that minimizes $\mathcal{L}$ is the same. Even for different minimal $\rvz$, they must have the same $H(\rvz)$ to all be minimal. When comparing possible minimal solutions to $\mathcal{L}$, $H(\rvz)$ is constant across all minimal solutions. 
+
+$(C_6)$ Demonstrates that any $\rvz$ that satisfies sufficiency must satisfy $I(\rvz; \rvx) \geq I(\rvz; \rvy)$ and $I(\rvz; \rvx) \geq I(\rvx; \rvy)$ as per Theorem \ref{infobound}. 
+
+$(C_7)$ Demonstrates that minima(s) exists only where $H(\rvz) = I(\rvz; \rvy)$ and $H(\rvz| \rvx) = 0$. Note that $H(\rvz) = I(\rvx; \rvy) = I(\rvz; \rvy)$ is the most compact representation size that is sufficient. 
+
+$$
+\begin{aligned}
+    I(\rvz;\rvx) &\stackrel{\left(C_6\right)}{\geq} I(\rvz; \rvy) \\
+    H(\rvz) - H(\rvz| \rvx)  &\stackrel{\left(P_5\right)}{\geq} I(\rvz; \rvy)\\
+    \forall \rvz | C_6 \land H_3 \land I(\rvz; \rvx) > I(\rvz; \rvy) &. \exists \rvz'|\rvz' = f(\rvz) \land I(\rvz; \rvx) > I(\rvz'; \rvx) \land C_6 \land H_3
+\end{aligned}
+$$
+
+From $(C_7)$ there exists only 3 types of minimas, separated by their dependence on the variables  $\rvx_1, \rvx_2$. As per $(H_1)$, any $\rvz$ must follow one of the 3 types. 
+
+\begin{enumerate}
+    \item Dependent only on $\rvx_1$: $\forall \rvz|H(\rvz|\rvx_1)=0 \rightarrow I(\rvx_2; \rvz) = 0$
+    
+    \item Dependent only on $\rvx_2$: $\forall \rvz|H(\rvz| \rvx_2)=0 \rightarrow I(\rvx_2; \rvz) > 0$
+    
+    \item Dependent on both $\rvx_1 \rvx_2$: $\forall \rvz|H(\rvz|\rvx_1, \rvx_2)=0 \land H(\rvz| \rvx_1)>0 \land H(\rvz| \rvx_2)>0 \rightarrow I(\rvx_2; \rvz) > 0$
+\end{enumerate}
+
+From here we will show that all type 2 and type 3 minimas always fail $(H_3)$ or have greater $\mathcal{L}$ than any type 1 minima. 
+
+\textbf{Type 1} $\rvx_1$: $\forall \rvz|H(\rvz| \rvx_1)=0 \rightarrow I(\rvx_2; \rvz) = 0$
+
+$(C_8)$ Demonstrates that there exists $H(\rvz) = I(\rvz; \rvy) = I(\rvx_1; \rvz)$ and it is a set of minimas satisfying $(C_7)$. This also establishes an upper bound for solutions to $\mathcal{L}$ due to $(C_5)$. Therefore, any solution for type 1, type 2, and type 3 must satisfy $I(\rvz; \rvy) \leq I(\rvx_1; \rvz)$ to be sufficient and $I(\rvz; \rvy) = I(\rvx_1; \rvz)$ to be minimal.
+
+$$
+\begin{aligned}
+    I(\rvz; \rvy)&\stackrel{\left(C_6\right)}{\leq} I(\rvz; \rvx)  \\
+    &\stackrel{\left(H_4\right)}{\leq}  I(\rvx_1, \rvx_2; \rvz) \\
+    &\stackrel{\left(P_2\right)}{\leq} I(\rvx_2; \rvz) + I(\rvx_1; \rvz| \rvx_2)\\
+    &\stackrel{\left(Type1\right)}{\leq} 0 + I(\rvx_1; \rvz| \rvx_2)\\
+    &\stackrel{\left(Theorum\ref{infonoise}\right)}{\leq} I(\rvx_1; \rvz)\\
+    &\stackrel{\left(P_5\right)}{\leq} H(\rvz) - H(\rvz| \rvx_1)\\
+    \exists \rvz &|I(\rvx_1; \rvz)  = I(\rvz; \rvy) = I(\rvx; \rvz) = I(\rvx; \rvy)
+\end{aligned}
+$$
+
+$(C_{9})$ Demonstrates that there exists no $H(\rvz') < H(\rvz)$ that satisfies sufficiency if $\rvz$ satisfies $(C_8)$ and is also $I(\rvz; \rvx_2) = 0$. 
+
+$$
+\begin{aligned}
+    C_8 &\rightarrow  I(\rvx_1; \rvz) = I(\rvx; \rvy)\\
+    H(\rvz') < H(\rvz) & \rightarrow I(\rvx_1; \rvz') < I(\rvx_1; \rvz) \\
+    \rightarrow \neg (C_2) &: I(\rvx_1; \rvz') < I(\rvx_1; \rvz) = I(\rvy; \rvz) = I(\rvx; \rvy)
+\end{aligned}
+$$
+
+\textbf{Type 2} $\rvx_2$: $\forall \rvz|H(\rvz| \rvx_2)=0 \rightarrow I(\rvx_2; \rvz) > 0$
+
+$(C_{10})$ Demonstrates that no type 2 minima can exist, simply because it would contain no information regarding $\rvx_1$, thus failing to satisfy $(H_3)$. This is because $\rvz$ cannot contain any information about $\rvx_1$, otherwise we would not satisfy $H(\rvz|\rvx_2)=0$. If the representation $\rvz$ contains no information about $\rvy$, then it is not sufficient. 
+
+$$
+\begin{aligned}
+    H(\rvz| \rvx_2) = 0 & \rightarrow \rvz = f(\rvx_2) \\
+    0 &\stackrel{\left(H_4\right)}{=} I(\rvx_1; \rvx_2)\\
+    &\stackrel{\left(P_{10}\right)}{=} I(f(\rvx_1);\rvx_2)\\
+    &\stackrel{\left(H_5\right)}{=} I(\rvy; \rvx_2)\\
+    &\stackrel{\left(P_{10}\right)}{=} I(\rvy;f(\rvx_2))\\
+    0&=I(\rvy;\rvz)
+\end{aligned}
+$$
+
+\textbf{Type 3} $\rvx_1, \rvx_2$: $\forall \rvz|H(\rvz| \rvx_1 , \rvx_2)=0 \land H(\rvz|\rvx_1)>0 \land H(\rvz| \rvx_2)>0 \rightarrow I(\rvx_2; \rvz) > 0$
+
+$(C_{11})$ Demonstrates that any $\rvz$ that could be minimal must also satisfy $(C_8)$ for sufficiency. Note that $(C_8)$ implies that any $I(\rvx_1; \rvz) >  I(\rvz;\rvy)$ is not minimal.
+
+$$
+\begin{aligned}
+    I(\rvz; \rvy)&\stackrel{\left(C_6\right)}{\leq} I(\rvz; \rvx)  \\
+    &\stackrel{\left(H_4\right)}{\leq}  I(\rvx_1 \rvx_2; \rvz) \\
+    I(\rvz; \rvy) &\stackrel{\left(P_2\right)}{\leq} I(\rvx_1; \rvz) + I(\rvx_2; \rvz| \rvx_1) \\
+    & (C_8) \rightarrow I(\rvx_1; \rvz) =  I(\rvz; \rvy) \\
+\end{aligned}
+$$
+
+$(C_{12})$ Demonstrates that any $\rvz'$ where $I(\rvz'; \rvx_2)>I(\rvz; \rvx_2)$ and $I(\rvz; \rvx_2) = 0$ that maintains $H(\rvz') = H(\rvz)$ results in  solutions that are not sufficient as required by $(H_3)$ because we know that the size of the representation must be at least $I(\rvx; \rvy)$ as defined in $(C_6)$
+
+$$
+\begin{aligned}
+    C_8 &\rightarrow  H(\rvz) \text{ is constant across all minima}\\
+    C_8 &\rightarrow  H(\rvz) = H(\rvz')\text{ for } \rvz' \text{ to be minimal}\\
+    C_8 &\rightarrow  I(\rvx_1; \rvz) = I(\rvx; \rvy)\\
+    I(\rvx_2; \rvz) = 0 &\rightarrow H(\rvz| \rvx_1) = 0 \\
+    \forall \rvz'|I(\rvx_2; \rvz') > 0  &:  H(\rvz'| \rvx_1) > H(\rvz| \rvx_1) \\
+   H(\rvz'| \rvx_1) > H(\rvz| \rvx_1)   &\rightarrow H(\rvz') - H(\rvz'| \rvx_1) < H(\rvz) - H(\rvz| \rvx_1)  \\
+    &\stackrel{\left(P_5\right)}{\rightarrow}  I(\rvx_1; \rvz') < I(\rvx_1; \rvz)  \\
+    \rightarrow \neg (C_6) &:  I(\rvx_1; \rvz') < I(\rvx; \rvy) 
+\end{aligned}
+$$
+
+$(C_{13})$ Demonstrates that combining $(C_{11})$ and $(C_{12})$, there is no type 3 solution that has an equal $\mathcal{L}$ to the minimal type 1 solution that also maintains sufficiency $(H_3)$ and $(C_6)$. This confirms the definition of entropy, in that encoding more independent information requires more bits or nats. 
+
+This means that only a type 1 solution can be both minimal and sufficient, which proves the thesis. 
+
+To summarize this proof, we can compare the losses of all sufficient solutions with $\mathcal{L} = H(\rvz)$. Of those sufficient solutions, the one that minimizes $\mathcal{L}$ is the one with the smallest $H(\rvz)$. The minimal sufficient representation is $\rvz$ that captures only all of $I(\rvx_1; \rvy)$ and nothing else. Thus the minimal $\rvz$ cannot have $I(\rvx_2; \rvz) > 0$ because such $\rvz$ would encode information outside of $I(\rvx_1; \rvy)$.
+
+% that previously satisfied $(C_8)$ will have a greater loss if $I(\mathbf{x_2;z}) > 0$. 
+
+
+\end{proof}
+    \label{genloss}
+
+
+    
+\end{theorem}
+
+
+\subsection{Independence of Filtered Distributions}
+
+\begin{lemma}
+% Let $\mathbf{x}$ and $\mathbf{y}$ be independent random variables with joint distribution $p(\mathbf{x},\mathbf{y})$. For $\mathbf{z} \subset \mathbf{x}$, there exists no $\mathbf{z}$ such that $H(\mathbf{y}|\mathbf{z}) < H(\mathbf{y})$.
+
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. For $\rvx_2'$ where
+    $R_{\vx_2'} \subset R_{\vx_2}$, there exists no $\rvx_2'$ such that $H(\rvx_1|\rvx_2') < H(\rvx_1)$.
+
+\textcolor{black}{\paragraph{Summary} This proof uses the chain rule of mutual information to show that contradiction arises if $\rvx_2'$ could filter $\rvx_1$ in a non random way.}
+
+Hypothesis:
+
+$(H_1)$  $\rvx_2'$ is fully determined by $\rvx_2$ : $H(\rvx_2'|\rvx_2) = 0$ where $R_{\vx_2'} \subset R_{\vx_2}$
+
+$(H_2)$  Independence of $\rvx_1$ and $\rvy_2$ : $I(\rvx_1;\rvx_2) = 0$
+
+Thesis: 
+
+$(T_1)$ $\nexists \rvx_2'.H(\rvx_1|\rvx_2) < H(\rvx_1)$
+
+\begin{proof} by contradiction $H(\rvx_1|\rvx_2) < H(\rvx_1)$
+
+
+    $(C_1)$ Demonstrates $I(\rvx_2;\rvx_2') = I(\rvx_2';\rvx_2')$
+
+    $$
+    \begin{aligned}
+    I(\rvx_2;\rvx_2') &\stackrel{\left(P_4\right)}{=} H(\rvx_2') - H(\rvx_2'|\rvx_2) \\
+    &\stackrel{\left(H_1\right)}{=} H(\rvx_2') - 0\\
+    &\stackrel{\left(P_3\right)}{=} H(\rvx_2') - H(\rvx_2'|\rvx_2') \\
+    &\stackrel{\left(P_3\right)}{=} I(\rvx_2';\rvx_2')
+    \end{aligned}
+    $$
+
+    $(C_2)$ Demonstrates  $I(\rvx_2';\rvx_1|\rvx_2) = 0$
+    
+    $$
+    \begin{aligned}
+    I(\rvx_2';\rvx_1|\rvx_2) &\stackrel{\left(P_2\right)}{=} I(\rvx_2'; \rvx_2 \rvx_1) - I(\rvx_2; \rvx_2') \\
+    &\stackrel{\left(C_1\right)}{=} I(\rvx_2';\rvx_2 \rvx_1) - I(\rvx_2';\rvx_2') \\
+    I(\rvx_2';\rvx_1|\rvx_2)&\stackrel{\left(P_7\right)}{\leq} 0 \leftarrow I(\rvx_2';\rvx_2 \rvx_1) \leq  I(\rvx_2';\rvx_2') \\
+    &\stackrel{\left(P_1\right)}{\geq} 0 \\
+    &=0
+    \end{aligned}
+    $$
+
+    $(C_3)$ Demonstrates $I(\rvx_1;\rvx_2') > 0$ via non independence implied by $\neg T_1$
+    
+    Contradiction arises when we consider symmetric applications of the chain rule to $I(\rvx_1;\rvx_2 \rvx_2')$
+
+    $$
+    \begin{aligned}
+    I(\rvx_1;\rvx_2' \rvx_2) &\stackrel{\left(P_2\right)}{=} I(\rvx_1;\rvx_2') + I(\rvx_1;\rvx_2|\rvx_2') \\
+    I(\rvx_1;\rvx_2' \rvx_2) &\stackrel{\left(C_3\right)}{>} 0 \\
+    I(\rvx_1;\rvx_2 \rvx_2') &\stackrel{\left(P_2\right)}{=} I(\rvx_1;\rvx_2) + I(\rvx_1;\rvx_2'|\rvx_2) \\
+    &\stackrel{\left(C_2\right)}{=} I(\rvx_1;\rvx_2)\\
+    &\stackrel{\left(H_2\right)}{=} 0 \\
+    \end{aligned}
+    $$
+       
+    Since $I(\rvx_1;\rvx_2 \rvx_2')$ cannot be both zero and greater than zero, $\neg T_1$ creates a contradiction, which supports $T_1$. 
+
+    It is easy to confuse this with the existence of a non independent subset $\mathbf{C} := \mathbf{A \cap B}$,  where $\mathbf{A}, \mathbf{B}$ are independent events. However, this example violates $(H_1)$, since we cannot determine $\mathbf{C}$ using only $\mathbf{A}$ or only $\mathbf{B}$.
+
+    
+    
+\end{proof}
+\label{filter}
+\end{lemma}
+
+
+\subsection{\textcolor{black}{Strict} Label Blindness in Filtered Distributions - Guaranteed OOD Failure }
+
+\begin{corollary}
+
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a a surrogate task such generated by $\vy_1 = f_1(\vx_1)$ $H(\rvy_1|\rvx_1) = 0$. Let $\rvy_2$ be a label such that $H(\rvy_2|\rvx_2) = 0$ and $\vy_2 = f_2(\vx_2)$. Let $\sY_{in}$ be as subset of labels $\sY_{in} \subset R_{\rvy_2}$. Let $\rvx'$ be a subset of $\rvx$ where $R_{\rvx'} =  R_{\rvx} \cap \{\vx \in \R: f_2(\vx_2) \in \sY_{in} \}  $ such that $\rvx'$ is composed of independent variables $\rvx_1'$ and $\rvx_2'$ and $\vy_1' = f_1(\vx_1')$. The sufficient representation $\rvz$ learned by minimizing $\mathcal{L} = I(\rvx_1', \rvx_2'; \rvz) - \beta I(\rvz;\rvy_1')$ must have $I(\rvx_2;\rvz) = 0$ and $I(\rvy_2;\rvz) = 0$.
+
+% Let $\mathbf{x}$ be a joint distribution composed of two independent variables $\mathbf{x_1}$ and $\mathbf{x_2}$. Let $\mathbf{y_1}$ be an SSL objective $H(\mathbf{y_1|x_1}) = 0$ and $\mathbf{y_2}$ a label $H(\mathbf{y_2|x_2}) = 0$.  Let $\mathbf{y_{in}}$ represent a subset of  labels $\mathbf{y_{in}} \subset \mathbf{y_2}$. Let $\mathbf{x'} = \{\mathbf{x} | \mathbf{y_2} \in \mathbf{y_{in}}$\} represent the subset of $x$ containing only labels $y_{in}$, with $x'$ composed of $x_1', x_2', y_1', y_2'$. The sufficient representation $\mathbf{z}$ learned by minimizing $\mathcal{L}=I(\mathbf{x';z})-\beta I(\mathbf{z;y_1'})$ must have $I(\mathbf{x_2';z}) = 0$ and $I(\mathbf{x_2;z}) = 0$. 
+
+\textcolor{black}{\paragraph{Summary} This proof combines Theorem \ref{filter} and Theorem \ref{genloss}.}
+
+
+Hypothesis: 
+
+$(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+$(H_2)$  $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+$(H_3)$  $\rvz$ is a sufficient representation of $\rvx: I(\rvx ; \rvy | \rvz)=0$
+
+$(H_4)$ $\rvx$ is composed of two independent variables $\rvx_1, \rvx_2$ : $\rvx = \rvx_1 \rvx_2, I(\rvx_1 ; \rvx_2) = 0$
+
+$(H_5)$ $\rvy$ is fully determined by $\rvx_1$: $H(\rvy|\rvx_1) = 0$ 
+
+$(H_6)$ $\rvx'$ is a subset of $\rvx$ filtered by $\sY_{in}$ : $R_{\rvx'} =  R_{\rvx} \cap \{\vx \in \R: f_2(\vx_2) \in \sY_{in} \} $
+
+Thesis:
+
+$(T_1)$ $\forall \rvz.I(\rvx_2 ; \rvz) = 0, I(\rvx_2' ; \rvz) = 0$
+
+
+\begin{proof} By Construction. 
+
+    $(C_1)$ Demonstrates that $I(\rvx_1'; \rvx_2') = 0$ due to Lemma \ref{filter} 
+
+    Using $(P_{10})$, we know that independent functions stay independent and thus $I(\rvx_1'; \rvx_2) = 0, I(\rvx_1'; \rvx_2) = 0$. From Theorem\ref{genloss} we know that encoding an variable independent of the target y results in a higher loss, therefore $I(\rvx_2'; \rvz) = 0$ and $I(\rvx_2; \rvz) = 0$ since both are independent of $\rvx_1'$.
+
+    By combining Lemma \ref{filter} and Theorem\ref{genloss}, we know that any surrogate learning objective independent of a downstream objective (say classifying labels) results in a representation containing no information for the downstream objective. If it contains no information for one objective, it contains no information for derivitives of that objective (eg. no label information means no OOD detection information).
+    
+\end{proof}
+
+\label{failood}
+
+\end{corollary}
+
+
+\subsection{Unavoidable Risk of Overlapping Out of Distribution Data}
+
+\label{overlaprisk}
+
+\begin{theorem}
+
+Let $\rvx$ come from a distribution. Let $f$ be some labeling function to generate labels $\rvy$ such that $\vy = f(\vx)$, where there are at least two unique labels $|R_\rvy| > 1$. Let $\rvx_{in}$ be a random subset of $\rvx$ where $R_{\rvx_{in}} \subsetneq R_\rvx$ and $|R_{\rvx_{in}}| < \infty$. Let $\rvy_{in}$ be labels generated from $\vy_{in} = f(\vx_{in})$. The probability that a randomly selected $\vx$ contains $\vy$ not present in $R_{\rvy_{in}}$ is always greater than 0. 
+
+Hypothesis: 
+
+$(H_1)$  $\rvx$ comes from any distribution 
+
+$(H_2)$ $\rvy$ is a label generated from function $\vy = f(\vx)$ such that $|R_\rvy| > 1$
+
+$(H_3)$ $\rvx_i$ is a random subset of $\rvx$ where $R_{\rvx_{in}} \subsetneq R_\rvx$ and $|R_{\rvx_{in}}| < \infty$  and $\vy_{in} = f(\vx_{in})$.
+
+Thesis 
+
+$(T_1)$  $\forall \rvx. P( f(\vx) \notin R_{\rvy_{in}}) > 0)$ 
+
+\begin{proof} by contradiction $(\neg T_1)$ $P( f(\vx) \notin R_{\rvy_{in}}) = 0\}$
+
+$(C_1)$ Demonstrates that $\forall \rvx_i. R_{\rvy_{in}} = R_{\rvy}$ because there must exist no sample $\vx$ such that $f(\vx) \notin R_{\rvy_{in}}$. 
+
+$(C_2)$ Demonstrates that $\forall \vy_n .P (f(\vx) = \vy_n) > 0$, where $\vy_n \in R_\rvy$ 
+
+Contradiction arises when we consider that it is possible to sample the same label $\vy_n$ for any finite number of repetitions, as per $(C_2)$. This would create a set of any finite size consisting only of the label $\vy_n$. Thus, there always exists $R_{\rvy_{in}} \subsetneq R_{\rvy}$ which contradicts $(C_1)$.  
+
+More realistically, $R_{\rvy_{in}}$ can consist of all elements of $R_{\rvy}$ except one and still guarantee $P( f(\vx) \notin R_{\rvy_{in}}) > 0)$.
+
+\end{proof}
+    
+\end{theorem}
+
+\section{Sample Images from Datasets Used in the Experiments}
+
+\label{fig:icmlface}
+
+Space intentionally left blank. 
+
+\clearpage
+\begin{figure}[ht]
+    \centering\includegraphics[width=4cm]{icmlface.png} \hfill
+    \includegraphics[width=4cm]{cars.png} \hfill
+    \includegraphics[width=4cm]{food101.png}
+    \caption{From left to right, sample images from the datasets ICML Facial Expression, Stanford Cars, and Food 101. These datasets contain classes that are visually similar, in contrast to CIFAR10, which includes classes such as airplane and dog that are not visually similar.}
+    \label{fig:icmlface images}
+\end{figure}
+
+The above figure shows sample images from the datasets used in the experiments.
+
+\section{Additional Experimental Results}
+
+\subsection{Adjacent OOD on CIFAR10 and CIFAR100}
+
+See table \ref{c10} for results on CIFAR10 and CIFAR100 adjacent OOD benchmarks. SSL methods perform better than on the Faces, Cars, and Food dataset. 
+
+\label{c10tables}
+
+% \begin{table}[!h]
+
+
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|l|ll|ll|}
+\hline
+               & CIFAR10  &          & CIFAR100 &          \\ \hline
+Method         & AUROC    & FPR95    & AUROC    & FPR95    \\ \hline
+Supervised MSP & 85.3±5.9 & 73.0±9.1 & 78.3±0.9 & 80.9±1.2 \\
+SimCLR KNN     & 77.6±8.0 & 75.6±6.0 & 68.8±1.7 & 88.8±1.9 \\
+SimCLR SSD     & 77.6±8.0 & 69.1±1.3 & 70.2±1.2 & 88.2±2.4 \\
+RotLoss KNN    & 71.4±9.1 & 83.3±8.3 & 48.1±2.2 & 94.2±1.5 \\
+RotLoss SSD    & 71.1±6.7 & 82.6±9.0 & 47.9±2.3 & 96.1±0.5 \\ \hline
+\end{tabular}
+\caption{Adjacent OOD Performance on CIFAR10 and CIFAR100.}
+\label{c10}
+\end{table}
+
+\subsection{Far OOD Detection Performance}
+
+A SimCLR KNN based SSL OOD detection method performs extremely well on far OOD tasks. See table \ref{fartable}
+
+\label{far}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        ID Data vs & AUROC & FPR95 \\ \hline
+        OOD CIFAR10 &  &  \\ 
+        \hline
+        ICML Faces & 99.7±0.1 & 0.1±0.0 \\ \hline
+        Stanford Cars & 98.1±0.1 & 8.1±0.9 \\ \hline
+        Food 101 & 99.8±0.1 & 0.0±0.0 \\ \hline
+        OOD CIFAR100 & ~ & ~ \\ \hline
+        ICML Faces & 99.7±0.1 & 0.2±0.1 \\ \hline
+        Stanford Cars & 99.2±0.2 & 1.5±0.1 \\ \hline
+        Food 101 & 99.4±0.1 & 1.4±0.1 \\ \hline
+    \end{tabular}
+    \caption{Using CIFAR10 and CIFAR100 as OOD sets, we see that far OOD detection performance for the SimCLR KNN method is very good. Unlabeled OOD detection methods tend to perform very well in far OOD tasks, see  \citep{sehwag2021ssd, tack2020csi, liu2023unsupervised, guille2024cadet, wang2023clipn}}
+    \label{fartable}
+\end{table}
+
+
+% \begin{table}[!h]
+
+% \centering
+% \begin{tabular}{|l|rrr|}
+
+% \hline
+% ID Data vs & AUROC & AUPR & FPR95 \\
+% OOD CIFAR10 & Mean ±$\sigma$ & Mean ±$\sigma$ & Mean ±$\sigma$  \\
+% \hline
+% ICML Faces & 99.7±0.1 & 99.0±0.3 & 0.1±0.0 \\
+% \cline{1-4}
+% Stanford Cars & 98.1±0.1 & 98.7±0.1 & 8.1±0.9\\
+% \cline{1-4}
+% Food 101  & 99.8±0.1 & 99.8±0.1 & 0.0±0.0\\
+% \cline{1-4} 
+% OOD CIFAR100 &  & & \\
+% \hline
+% ICML Faces & 99.7±0.1 & 99.6±0.4 & 0.2±0.1 \\
+% \cline{1-4}
+% Stanford Cars & 99.2±0.2 & 99.4±0.2 & 1.5±0.1\\
+% \cline{1-4}
+% Food 101  & 99.4±0.1 & 99.2±0.2 & 1.4±0.1\\
+% \cline{1-4}
+% \hline
+% \end{tabular}
+% \caption{Selected datasets versus CIFAR10/CIFAR100 as OOD data, which are all evaluated using the SimCLR KNN model. Imperfect performance on Cars is likely due to the automobiles class found in CIFAR10.}
+% \label{tab:cifar10out}
+% \end{table}
+
+\section{Reviewing CLIPN Pretraining Data}
+
+We consider sample images from CC3M that contain the label from their respective benchmark. We observe in figure \ref{angry} that images containing the word angry often do not contain a human face. This is in contrast to the labels for the Cars and Food dataset, where the pretraining data is very similar to the benchmarking data, see figure \ref{car} and \ref{food}.
+
+
+\begin{figure}[!h]
+    \centering\includegraphics[width=4cm]{angry1.png} \hfill
+    \includegraphics[width=4cm]{angry2.png} \hfill
+    \includegraphics[width=4cm]{angry3.png}
+    \caption{Comparing Images from the CC3M Dataset with captions containing the word angry. These are drastically different from the images in ICML face dataset. Images captioned with other facial expressions also tend to lack a human face.}
+    \label{angry}
+\end{figure}
+
+
+\begin{figure}[!h]
+    \centering\includegraphics[width=4cm]{bmw.png} \hfill
+    \includegraphics[width=4cm]{dodge.png} \hfill
+    \includegraphics[width=4cm]{honda.png}
+    \caption{Comparing Images from the CC3M Dataset with captions containing the word BMW 3 Series, Dodge Ram, and Honda Odyssey, left to right. These are are quite similar to the images in Cars dataset}
+    \label{car}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering\includegraphics[width=4cm]{caeser.png} \hfill
+    \includegraphics[width=4cm]{donuts.png} \hfill
+    \includegraphics[width=4cm]{pizza.png}
+    \caption{Comparing Images from the CC3M Dataset with captions containing the word Caeser Salad, Donut, and Pizza, left to right. These are are quite similar to the images in Food 101 dataset}
+    \label{food}
+\end{figure}
+
+\label{clipn}
+
+
+\end{document}

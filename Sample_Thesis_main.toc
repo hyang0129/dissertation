@@ -1,0 +1,66 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{}%
+\contentsline {chapter}{\numberline {2}Background and Definitions}{2}{}%
+\contentsline {section}{\numberline {2.1}Out of Distribution Detection}{2}{}%
+\contentsline {section}{\numberline {2.2}Anomaly Detection}{3}{}%
+\contentsline {subsection}{\numberline {2.2.1}Definiton and Scope}{4}{}%
+\contentsline {subsection}{\numberline {2.2.2}Training Assumptions}{4}{}%
+\contentsline {subsection}{\numberline {2.2.3}Evaluation Settings}{4}{}%
+\contentsline {section}{\numberline {2.3}Information Theory}{5}{}%
+\contentsline {subsection}{\numberline {2.3.1}Entropy and Mutual Information}{6}{}%
+\contentsline {section}{\numberline {2.4}Information Bottleneck and Minimal Sufficient Statistic}{6}{}%
+\contentsline {subsection}{\numberline {2.4.1}Minimal Sufficient Statistic}{7}{}%
+\contentsline {subsection}{\numberline {2.4.2}Information Bottleneck}{7}{}%
+\contentsline {section}{\numberline {2.5}Dataset Domain}{8}{}%
+\contentsline {section}{\numberline {2.6}Unlabeled OOD Detection}{10}{}%
+\contentsline {section}{\numberline {2.7}Large Language Models}{11}{}%
+\contentsline {chapter}{\numberline {3}Literature Review}{14}{}%
+\contentsline {section}{\numberline {3.1}Information Theory in Machine Learning}{14}{}%
+\contentsline {section}{\numberline {3.2}Representation Learning}{15}{}%
+\contentsline {subsection}{\numberline {3.2.1}Unsupervised Representation Learning}{16}{}%
+\contentsline {subsection}{\numberline {3.2.2}Self-Supervised Learning}{16}{}%
+\contentsline {section}{\numberline {3.3}Out of Distribution Detection}{17}{}%
+\contentsline {subsection}{\numberline {3.3.1}Classical and Training-Agnostic Approaches}{17}{}%
+\contentsline {subsection}{\numberline {3.3.2}Self-Supervised and Unsupervised OOD Detection}{18}{}%
+\contentsline {subsection}{\numberline {3.3.3}Benchmarking and Evaluation}{18}{}%
+\contentsline {section}{\numberline {3.4}Hallucination Detection}{19}{}%
+\contentsline {subsection}{\numberline {3.4.1}Taxonomy of Hallucination Detection Approaches}{19}{}%
+\contentsline {subsection}{\numberline {3.4.2}Information-Theoretic Perspectives}{20}{}%
+\contentsline {subsection}{\numberline {3.4.3}Evaluation and Benchmarks}{20}{}%
+\contentsline {section}{\numberline {3.5}Model Architectures}{21}{}%
+\contentsline {subsection}{\numberline {3.5.1}Convolutional Neural Networks}{21}{}%
+\contentsline {subsection}{\numberline {3.5.2}Transformers}{21}{}%
+\contentsline {subsection}{\numberline {3.5.3}Foundation Models}{21}{}%
+\contentsline {chapter}{\numberline {4}Label Blindness in Unlabeled OOD Detection}{22}{}%
+\contentsline {section}{\numberline {4.1}Introduction}{22}{}%
+\contentsline {section}{\numberline {4.2}Preliminaries}{25}{}%
+\contentsline {subsection}{\numberline {4.2.1}Labeled and Unlabeled Out-of-Distribution Detection}{25}{}%
+\contentsline {subsection}{\numberline {4.2.2}Self-Supervised and Unsupervised Learning}{25}{}%
+\contentsline {section}{\numberline {4.3}Guaranteed OOD Detection Failure}{27}{}%
+\contentsline {subsection}{\numberline {4.3.1}Label Blindness Theorem (Strict Label Blindness)}{27}{}%
+\contentsline {subsection}{\numberline {4.3.2}Implications of Strict Label Blindness in Real World Situations}{28}{}%
+\contentsline {subsection}{\numberline {4.3.3}Theoretical Implications}{29}{}%
+\contentsline {section}{\numberline {4.4}Benchmarking for Label Blindness Failure}{30}{}%
+\contentsline {subsection}{\numberline {4.4.1}Bootstrapping and the Adjacent OOD Benchmark}{30}{}%
+\contentsline {subsection}{\numberline {4.4.2}Why Adjacent OOD is Safety-Critical to Almost All Real World Systems}{30}{}%
+\contentsline {subsection}{\numberline {4.4.3}Comparing Adjacent, Near, and Far OOD Benchmarks}{31}{}%
+\contentsline {subsection}{\numberline {4.4.4}Implications for OOD from Unlabeled Data}{31}{}%
+\contentsline {section}{\numberline {4.5}Experimental Results}{32}{}%
+\contentsline {subsection}{\numberline {4.5.1}Experimental Setup}{32}{}%
+\contentsline {paragraph}{Supervised Baseline.}{32}{}%
+\contentsline {paragraph}{Self-supervised Baselines.}{32}{}%
+\contentsline {paragraph}{Unsupervised Baseline.}{33}{}%
+\contentsline {paragraph}{Zero-shot Baseline.}{33}{}%
+\contentsline {subsection}{\numberline {4.5.2}Adjacent OOD Datasets}{33}{}%
+\contentsline {subsection}{\numberline {4.5.3}Experimental Results}{34}{}%
+\contentsline {section}{\numberline {4.6}Discussion}{35}{}%
+\contentsline {subsection}{\numberline {4.6.1}Impact of Label Blindness on Future Research}{35}{}%
+\contentsline {subsection}{\numberline {4.6.2}Recommendations for Future OOD Detection Research}{36}{}%
+\contentsline {section}{\numberline {4.7}Conclusion}{36}{}%
+\contentsline {chapter}{\numberline {5}Domain Feature Collapse: How Single Domain Training Removes Domain Features}{38}{}%
+\contentsline {chapter}{\numberline {6}Are Hallucinations Out of Distribution?}{39}{}%
+\contentsline {chapter}{\numberline {7}Research Timeline}{40}{}%
+\contentsline {chapter}{\numberline {8}Discussion}{41}{}%
+\contentsline {chapter}{Appendices}{50}{}%
+\contentsline {chapter}{\numberline {A}First Appendix}{51}{}%
+\contentsline {section}{\numberline {A.1}First Appendix Section}{51}{}%
+\contentsline {subsection}{\numberline {A.1.1}First Appendix Subsection}{51}{}%

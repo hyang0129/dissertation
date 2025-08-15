@@ -1,0 +1,571 @@
+\begin{thebibliography}{82}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Alemi et~al.(2017)Alemi, Fischer, Dillon, and Murphy]{alemi2017deep}
+Alexander~A Alemi, Ian Fischer, Joshua~V Dillon, and Kevin Murphy.
+\newblock Deep variational information bottleneck.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2017.
+
+\bibitem[Bakator \& Radosav(2018)Bakator and Radosav]{bakator2018deep}
+Mihalj Bakator and Dragica Radosav.
+\newblock Deep learning and medical diagnosis: A review of literature.
+\newblock \emph{Multimodal Technologies and Interaction}, 2\penalty0
+  (3):\penalty0 47, 2018.
+
+\bibitem[Belghazi et~al.(2018)Belghazi, Baratin, Rajeshwar, Ozair, Bengio,
+  Courville, and Hjelm]{belghazi2018mutual}
+Mohamed~Ishmael Belghazi, Aristide Baratin, Sai Rajeshwar, Sherjil Ozair,
+  Yoshua Bengio, Aaron Courville, and Devon Hjelm.
+\newblock Mutual information neural estimation.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, pp.\
+  531--540, 2018.
+
+\bibitem[Bossard et~al.(2014)Bossard, Guillaumin, and Van~Gool]{bossard14}
+Lukas Bossard, Matthieu Guillaumin, and Luc Van~Gool.
+\newblock Food-101 -- mining discriminative components with random forests.
+\newblock In \emph{European Conference on Computer Vision}, 2014.
+
+\bibitem[Brown et~al.(2020)Brown, Mann, Ryder, Subbiah, Kaplan, Dhariwal,
+  Neelakantan, Shyam, Sastry, Askell, et~al.]{brown2020language}
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared~D Kaplan, Prafulla
+  Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell,
+  et~al.
+\newblock Language models are few-shot learners.
+\newblock \emph{Advances in neural information processing systems},
+  33:\penalty0 1877--1901, 2020.
+
+\bibitem[Burns et~al.(2023)Burns, Ye, Klein, and
+  Steinhardt]{burns2023discovering}
+Collin Burns, Haotian Ye, Dan Klein, and Jacob Steinhardt.
+\newblock Discovering latent knowledge in language models without supervision.
+\newblock \emph{arXiv preprint arXiv:2212.03827}, 2023.
+
+\bibitem[Chen et~al.(2020)Chen, Kornblith, Norouzi, and Hinton]{chen2020simple}
+Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton.
+\newblock A simple framework for contrastive learning of visual
+  representations.
+\newblock In \emph{International conference on machine learning}, pp.\
+  1597--1607. PMLR, 2020.
+
+\bibitem[Chen et~al.(2016)Chen, Duan, Houthooft, Schulman, Sutskever, and
+  Abbeel]{chen2016infogan}
+Xi~Chen, Yan Duan, Rein Houthooft, John Schulman, Ilya Sutskever, and Pieter
+  Abbeel.
+\newblock Infogan: Interpretable representation learning by information
+  maximizing generative adversarial nets.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, pp.\  2172--2180, 2016.
+
+\bibitem[Chern et~al.(2023)Chern, Chern, Chen, Qian, Wei, Zou, and
+  Graham]{chern2023factool}
+I-Chun Chern, Steffi Chern, Shiqi Chen, Weizhe Qian, Kehua Wei, Chunting Zou,
+  and Neubig Graham.
+\newblock Factool: Factuality detection in generative ai--a tool augmented
+  framework for multi-task and multi-domain scenarios.
+\newblock \emph{arXiv preprint arXiv:2307.13528}, 2023.
+
+\bibitem[Devlin et~al.(2018)Devlin, Chang, Lee, and Toutanova]{devlin2018bert}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova.
+\newblock Bert: Pre-training of deep bidirectional transformers for language
+  understanding.
+\newblock \emph{arXiv preprint arXiv:1810.04805}, 2018.
+
+\bibitem[Dosovitskiy et~al.(2020)Dosovitskiy, Beyer, Kolesnikov, Weissenborn,
+  Zhai, Unterthiner, Dehghani, Minderer, Heigold, Gelly,
+  et~al.]{dosovitskiy2020image}
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn,
+  Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg
+  Heigold, Sylvain Gelly, et~al.
+\newblock An image is worth 16x16 words: Transformers for image recognition at
+  scale.
+\newblock \emph{arXiv preprint arXiv:2010.11929}, 2020.
+
+\bibitem[Drummond \& Shearer(2006)Drummond and Shearer]{drummond2006open}
+Nick Drummond and Rob Shearer.
+\newblock The open world assumption.
+\newblock In \emph{eSI Workshop: The Closed World of Databases meets the Open
+  World of the Semantic Web}, volume~15, pp.\ ~1, 2006.
+
+\bibitem[Du et~al.(2024{\natexlab{a}})Du, Fang, Diakonikolas, and
+  Li]{du2024does}
+Xuefeng Du, Zhen Fang, Ilias Diakonikolas, and Yixuan Li.
+\newblock How does unlabeled data provably help out-of-distribution detection?
+\newblock \emph{arXiv preprint arXiv:2402.03502}, 2024{\natexlab{a}}.
+
+\bibitem[Du et~al.(2024{\natexlab{b}})Du, Sun, and Li]{du2024and}
+Xuefeng Du, Yiyou Sun, and Yixuan Li.
+\newblock When and how does in-distribution label help out-of-distribution
+  detection?
+\newblock \emph{arXiv preprint arXiv:2405.18635}, 2024{\natexlab{b}}.
+
+\bibitem[Ekim et~al.(2024)Ekim, Tadesse, Robinson, Hacheme, Schmitt, Dodhia,
+  and Ferres]{ekim2024distribution}
+Burak Ekim, Girmaw~Abebe Tadesse, Caleb Robinson, Gilles Hacheme, Michael
+  Schmitt, Rahul Dodhia, and Juan M~Lavista Ferres.
+\newblock Distribution shifts at scale: Out-of-distribution detection in earth
+  observation.
+\newblock \emph{arXiv preprint arXiv:2412.13394}, 2024.
+
+\bibitem[Erhan et~al.(2013)Erhan, Goodfellow, Cukierski, and Bengio]{icmlface}
+Dumitru Erhan, Ian Goodfellow, Will Cukierski, and Yoshua Bengio.
+\newblock Challenges in representation learning: Facial expression recognition
+  challenge, 2013.
+\newblock URL
+  \url{https://kaggle.com/competitions/challenges-in-representation-learning-facial-expression-recognition-challenge}.
+
+\bibitem[Esmaeilpour et~al.(2022)Esmaeilpour, Liu, Robertson, and
+  Shu]{esmaeilpour2022zero}
+Sepideh Esmaeilpour, Bing Liu, Eric Robertson, and Lei Shu.
+\newblock Zero-shot out-of-distribution detection based on the pre-trained
+  model clip.
+\newblock In \emph{Proceedings of the AAAI conference on artificial
+  intelligence}, volume~36, pp.\  6568--6576, 2022.
+
+\bibitem[Fang et~al.(2022)Fang, Li, Lu, Dong, Han, and Liu]{fang2022out}
+Zhen Fang, Yixuan Li, Jie Lu, Jiahua Dong, Bo~Han, and Feng Liu.
+\newblock Is out-of-distribution detection learnable?
+\newblock \emph{Advances in Neural Information Processing Systems},
+  35:\penalty0 37199--37213, 2022.
+
+\bibitem[Farquhar et~al.(2024)Farquhar, Kossen, Kuhn, and
+  Gal]{farquhar2024detecting}
+Sebastian Farquhar, Jannik Kossen, Lorenz Kuhn, and Yarin Gal.
+\newblock Detecting hallucinations in large language models using semantic
+  entropy.
+\newblock \emph{arXiv preprint arXiv:2406.15012}, 2024.
+
+\bibitem[Federici et~al.(2020)Federici, Dutta, Forr{\'e}, Kushman, and
+  Akata]{federici2020learning}
+Marco Federici, Anjan Dutta, Patrick Forr{\'e}, Nate Kushman, and Zeynep Akata.
+\newblock Learning robust representations via multi-view information
+  bottleneck.
+\newblock \emph{arXiv preprint arXiv:2002.07017}, 2020.
+
+\bibitem[Fort et~al.(2021)Fort, Ren, and Lakshminarayanan]{fort2021exploring}
+Stanislav Fort, Jie Ren, and Balaji Lakshminarayanan.
+\newblock Exploring the limits of out-of-distribution detection.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  34:\penalty0 7068--7081, 2021.
+
+\bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
+  Warde-Farley, Ozair, Courville, and Bengio]{goodfellow2014generative}
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
+  Sherjil Ozair, Aaron Courville, and Yoshua Bengio.
+\newblock Generative adversarial nets.
+\newblock \emph{Advances in neural information processing systems}, 27, 2014.
+
+\bibitem[Guille-Escuret et~al.(2024)Guille-Escuret, Rodriguez, Vazquez,
+  Mitliagkas, and Monteiro]{guille2024cadet}
+Charles Guille-Escuret, Pau Rodriguez, David Vazquez, Ioannis Mitliagkas, and
+  Joao Monteiro.
+\newblock Cadet: Fully self-supervised out-of-distribution detection with
+  contrastive learning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pp.\  770--778, 2016.
+
+\bibitem[He et~al.(2020)He, Fan, Wu, Xie, and Girshick]{he2020momentum}
+Kaiming He, Haoqi Fan, Yuxin Wu, Saining Xie, and Ross Girshick.
+\newblock Momentum contrast for unsupervised visual representation learning.
+\newblock In \emph{Proceedings of the IEEE/CVF conference on computer vision
+  and pattern recognition}, pp.\  9729--9738, 2020.
+
+\bibitem[Hendrycks \& Gimpel(2016)Hendrycks and Gimpel]{hendrycks2016baseline}
+Dan Hendrycks and Kevin Gimpel.
+\newblock A baseline for detecting misclassified and out-of-distribution
+  examples in neural networks.
+\newblock \emph{arXiv preprint arXiv:1610.02136}, 2016.
+
+\bibitem[Hendrycks et~al.(2019)Hendrycks, Mazeika, Kadavath, and
+  Song]{hendrycks2019using}
+Dan Hendrycks, Mantas Mazeika, Saurav Kadavath, and Dawn Song.
+\newblock Using self-supervised learning can improve model robustness and
+  uncertainty.
+\newblock \emph{Advances in neural information processing systems}, 32, 2019.
+
+\bibitem[Hinton \& Salakhutdinov(2006)Hinton and
+  Salakhutdinov]{hinton2006reducing}
+Geoffrey~E Hinton and Ruslan~R Salakhutdinov.
+\newblock Reducing the dimensionality of data with neural networks.
+\newblock \emph{Science}, 313\penalty0 (5786):\penalty0 504--507, 2006.
+
+\bibitem[Hjelm et~al.(2019)Hjelm, Fedorov, Lavoie-Marchildon, Grewal, Bachman,
+  Trischler, and Bengio]{hjelm2019learning}
+R~Devon Hjelm, Alex Fedorov, Samuel Lavoie-Marchildon, Karan Grewal, Philip
+  Bachman, Adam Trischler, and Yoshua Bengio.
+\newblock Learning deep representations by mutual information estimation and
+  maximization.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2019.
+
+\bibitem[Ho et~al.(2020)Ho, Jain, and Abbeel]{ho2020denoising}
+Jonathan Ho, Ajay Jain, and Pieter Abbeel.
+\newblock Denoising diffusion probabilistic models.
+\newblock \emph{Advances in neural information processing systems},
+  33:\penalty0 6840--6851, 2020.
+
+\bibitem[Hyv{\"a}rinen \& Oja(2000)Hyv{\"a}rinen and
+  Oja]{hyvarinen2000independent}
+Aapo Hyv{\"a}rinen and Erkki Oja.
+\newblock Independent component analysis: algorithms and applications.
+\newblock \emph{Neural networks}, 13\penalty0 (4-5):\penalty0 411--430, 2000.
+
+\bibitem[Jordan et~al.(1999)Jordan, Ghahramani, Jaakkola, and
+  Saul]{jordan1999introduction}
+Michael~I Jordan, Zoubin Ghahramani, Tommi~S Jaakkola, and Lawrence~K Saul.
+\newblock An introduction to variational methods for graphical models.
+\newblock \emph{Machine Learning}, 37:\penalty0 183--233, 1999.
+
+\bibitem[Khosla et~al.(2020)Khosla, Teterwak, Wang, Sarna, Tian, Isola,
+  Maschinot, Liu, and Krishnan]{khosla2020supervised}
+Prannay Khosla, Piotr Teterwak, Chen Wang, Aaron Sarna, Yonglong Tian, Phillip
+  Isola, Aaron Maschinot, Ce~Liu, and Dilip Krishnan.
+\newblock Supervised contrastive learning.
+\newblock \emph{Advances in neural information processing systems},
+  33:\penalty0 18661--18673, 2020.
+
+\bibitem[Kingma \& Welling(2014)Kingma and Welling]{kingma2014auto}
+Diederik~P Kingma and Max Welling.
+\newblock Auto-encoding variational bayes.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2014.
+
+\bibitem[Krause et~al.(2013)Krause, Stark, Deng, and
+  Fei-Fei]{KrauseStarkDengFei-Fei_3DRR2013}
+Jonathan Krause, Michael Stark, Jia Deng, and Li~Fei-Fei.
+\newblock 3d object representations for fine-grained categorization.
+\newblock In \emph{4th International IEEE Workshop on 3D Representation and
+  Recognition (3dRR-13)}, Sydney, Australia, 2013.
+
+\bibitem[Krizhevsky et~al.(2009)Krizhevsky, Nair, and Hinton]{cifar10}
+Alex Krizhevsky, Vinod Nair, and Geoffrey Hinton.
+\newblock Cifar-10 and cifar-100 datasets, 2009.
+\newblock URL \url{https://www.cs.toronto.edu/~kriz/cifar.html}.
+
+\bibitem[Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and
+  Hinton]{krizhevsky2012imagenet}
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock \emph{Advances in neural information processing systems}, 25, 2012.
+
+\bibitem[Lee et~al.(2018)Lee, Lee, Lee, and Shin]{lee2018simple}
+Kimin Lee, Kibok Lee, Honglak Lee, and Jinwoo Shin.
+\newblock A simple unified framework for detecting out-of-distribution samples
+  and adversarial attacks.
+\newblock \emph{Advances in neural information processing systems}, 31, 2018.
+
+\bibitem[Li et~al.(2023)Li, Cheng, Zhao, Nie, and Wen]{li2023halueval}
+Junyi Li, Xiaoxue Cheng, Wayne~Xin Zhao, Jian-Yun Nie, and Ji-Rong Wen.
+\newblock Halueval: A large-scale hallucination evaluation benchmark for large
+  language models.
+\newblock \emph{arXiv preprint arXiv:2305.11747}, 2023.
+
+\bibitem[Liang et~al.(2017)Liang, Li, and Srikant]{liang2017enhancing}
+Shiyu Liang, Yixuan Li, and Rayadurgam Srikant.
+\newblock Enhancing the reliability of out-of-distribution image detection in
+  neural networks.
+\newblock \emph{arXiv preprint arXiv:1706.02690}, 2017.
+
+\bibitem[Lin et~al.(2022)Lin, Hilton, and Evans]{lin2022truthfulqa}
+Stephanie Lin, Jacob Hilton, and Owain Evans.
+\newblock Truthfulqa: Measuring how models mimic human falsehoods.
+\newblock \emph{Proceedings of the 60th Annual Meeting of the Association for
+  Computational Linguistics}, pp.\  3214--3252, 2022.
+
+\bibitem[Linsker(1988)]{linsker1988self}
+Ralph Linsker.
+\newblock Self-organization in a perceptual network.
+\newblock \emph{Computer}, 21\penalty0 (3):\penalty0 105--117, 1988.
+
+\bibitem[Liu et~al.(2020)Liu, Wang, Owens, and Li]{liu2020energy}
+Weitang Liu, Xiaoyun Wang, John Owens, and Yixuan Li.
+\newblock Energy-based out-of-distribution detection.
+\newblock \emph{Advances in neural information processing systems},
+  33:\penalty0 21464--21475, 2020.
+
+\bibitem[Liu et~al.(2023)Liu, Zhou, Wang, and Weinberger]{liu2023unsupervised}
+Zhenzhen Liu, Jin~Peng Zhou, Yufan Wang, and Kilian~Q Weinberger.
+\newblock Unsupervised out-of-distribution detection with diffusion inpainting.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  22528--22538. PMLR, 2023.
+
+\bibitem[Manakul et~al.(2023)Manakul, Liusie, and
+  Gales]{manakul2023selfcheckgpt}
+Potsawee Manakul, Adian Liusie, and Mark~JF Gales.
+\newblock Selfcheckgpt: Zero-resource black-box hallucination detection for
+  generative large language models.
+\newblock \emph{arXiv preprint arXiv:2303.08896}, 2023.
+
+\bibitem[McAllester(1999)]{mcallester1999pac}
+David~A McAllester.
+\newblock Pac-bayesian model averaging.
+\newblock In \emph{Proceedings of the 12th Annual Conference on Computational
+  Learning Theory}, pp.\  164--170, 1999.
+
+\bibitem[Mikolov et~al.(2013)Mikolov, Chen, Corrado, and
+  Dean]{mikolov2013efficient}
+Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean.
+\newblock Efficient estimation of word representations in vector space.
+\newblock \emph{arXiv preprint arXiv:1301.3781}, 2013.
+
+\bibitem[Pearson(1901)]{pearson1901liii}
+Karl Pearson.
+\newblock Liii. on lines and planes of closest fit to systems of points in
+  space.
+\newblock \emph{The London, Edinburgh, and Dublin Philosophical Magazine and
+  Journal of Science}, 2\penalty0 (11):\penalty0 559--572, 1901.
+
+\bibitem[Peng et~al.(2023)Peng, Galley, He, Cheng, Xie, Hu, Huang, Liden, Yu,
+  Chen, et~al.]{peng2023check}
+Baolin Peng, Michel Galley, Pengcheng He, Hao Cheng, Yujia Xie, Yu~Hu, Qiuyuan
+  Huang, Lars Liden, Zhou Yu, Weizhu Chen, et~al.
+\newblock Check your facts and try again: Improving large language models with
+  external knowledge and automated feedback.
+\newblock \emph{arXiv preprint arXiv:2302.12813}, 2023.
+
+\bibitem[Peng et~al.(2005)Peng, Long, and Ding]{peng2005feature}
+Hanchuan Peng, Fuhui Long, and Chris Ding.
+\newblock Feature selection based on mutual information criteria of
+  max-dependency, max-relevance, and min-redundancy.
+\newblock \emph{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}, 27\penalty0 (8):\penalty0 1226--1238, 2005.
+
+\bibitem[Pennington et~al.(2014)Pennington, Socher, and
+  Manning]{pennington2014glove}
+Jeffrey Pennington, Richard Socher, and Christopher~D Manning.
+\newblock Glove: Global vectors for word representation.
+\newblock In \emph{Proceedings of the 2014 conference on empirical methods in
+  natural language processing (EMNLP)}, pp.\  1532--1543, 2014.
+
+\bibitem[Radford et~al.(2018)Radford, Narasimhan, Salimans, Sutskever,
+  et~al.]{radford2018improving}
+Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever, et~al.
+\newblock Improving language understanding by generative pre-training, 2018.
+\newblock URL
+  \url{https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf}.
+
+\bibitem[Radford et~al.(2021)Radford, Kim, Hallacy, Ramesh, Goh, Agarwal,
+  Sastry, Askell, Mishkin, Clark, et~al.]{radford2021learning}
+Alec Radford, Jong~Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh,
+  Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark,
+  et~al.
+\newblock Learning transferable visual models from natural language
+  supervision.
+\newblock In \emph{International conference on machine learning}, pp.\
+  8748--8763. PMLR, 2021.
+
+\bibitem[Raffel et~al.(2020)Raffel, Shazeer, Roberts, Lee, Narang, Matena,
+  Zhou, Li, Liu, et~al.]{raffel2020exploring}
+Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael
+  Matena, Yanqi Zhou, Wei Li, Peter~J Liu, et~al.
+\newblock Exploring the limits of transfer learning with a unified text-to-text
+  transformer.
+\newblock \emph{The Journal of Machine Learning Research}, 21\penalty0
+  (1):\penalty0 5485--5551, 2020.
+
+\bibitem[Ramanagopal et~al.(2018)Ramanagopal, Anderson, Vasudevan, and
+  Johnson-Roberson]{ramanagopal2018failing}
+Manikandasriram~Srinivasan Ramanagopal, Cyrus Anderson, Ram Vasudevan, and
+  Matthew Johnson-Roberson.
+\newblock Failing to learn: Autonomously identifying perception failures for
+  self-driving cars.
+\newblock \emph{IEEE Robotics and Automation Letters}, 3\penalty0 (4):\penalty0
+  3860--3867, 2018.
+
+\bibitem[Rezende et~al.(2014)Rezende, Mohamed, and
+  Wierstra]{rezende2014stochastic}
+Danilo~Jimenez Rezende, Shakir Mohamed, and Daan Wierstra.
+\newblock Stochastic backpropagation and approximate inference in deep
+  generative models.
+\newblock In \emph{International conference on machine learning}, pp.\
+  1278--1286. PMLR, 2014.
+
+\bibitem[Runge et~al.(2019)Runge, Nowack, Kretschmer, Flaxman, and
+  Sejdinovic]{runge2019detecting}
+Jakob Runge, Peer Nowack, Marlene Kretschmer, Seth Flaxman, and Dino
+  Sejdinovic.
+\newblock Detecting and quantifying causal associations in large nonlinear time
+  series datasets.
+\newblock \emph{Science Advances}, 5\penalty0 (11):\penalty0 eaau4996, 2019.
+
+\bibitem[Russakovsky et~al.(2015)Russakovsky, Deng, Su, Krause, Satheesh, Ma,
+  Huang, Karpathy, Khosla, Bernstein, Berg, and Fei-Fei]{ILSVRC15}
+Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, Sanjeev Satheesh, Sean Ma,
+  Zhiheng Huang, Andrej Karpathy, Aditya Khosla, Michael Bernstein,
+  Alexander~C. Berg, and Li~Fei-Fei.
+\newblock {ImageNet Large Scale Visual Recognition Challenge}.
+\newblock \emph{International Journal of Computer Vision (IJCV)}, 115\penalty0
+  (3):\penalty0 211--252, 2015.
+\newblock \doi{10.1007/s11263-015-0816-y}.
+
+\bibitem[Saxe et~al.(2019)Saxe, Bansal, Dapello, Advani, Kolchinsky, Tracey,
+  and Cox]{saxe2019information}
+Andrew~M Saxe, Yamini Bansal, Joel Dapello, Madhu~S Advani, Artemy Kolchinsky,
+  Brendan~D Tracey, and David~D Cox.
+\newblock The information bottleneck theory of deep learning.
+\newblock \emph{Journal of Statistical Mechanics: Theory and Experiment},
+  2019\penalty0 (12):\penalty0 124020, 2019.
+
+\bibitem[Sehwag et~al.(2021)Sehwag, Chiang, and Mittal]{sehwag2021ssd}
+Vikash Sehwag, Mung Chiang, and Prateek Mittal.
+\newblock Ssd: A unified framework for self-supervised outlier detection.
+\newblock \emph{arXiv preprint arXiv:2103.12051}, 2021.
+
+\bibitem[Selvaraju et~al.(2017)Selvaraju, Cogswell, Das, Vedantam, Parikh, and
+  Batra]{selvaraju2017grad}
+Ramprasaath~R Selvaraju, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam,
+  Devi Parikh, and Dhruv Batra.
+\newblock Grad-cam: Visual explanations from deep networks via gradient-based
+  localization.
+\newblock In \emph{Proceedings of the IEEE international conference on computer
+  vision}, pp.\  618--626, 2017.
+
+\bibitem[Shannon(1948)]{shannon1948mathematical}
+Claude~Elwood Shannon.
+\newblock A mathematical theory of communication.
+\newblock \emph{The Bell system technical journal}, 27\penalty0 (3):\penalty0
+  379--423, 1948.
+
+\bibitem[Sharma et~al.(2018)Sharma, Ding, Goodman, and
+  Soricut]{sharma2018conceptual}
+Piyush Sharma, Nan Ding, Sebastian Goodman, and Radu Soricut.
+\newblock Conceptual captions: A cleaned, hypernymed, image alt-text dataset
+  for automatic image captioning.
+\newblock In \emph{Proceedings of the 56th Annual Meeting of the Association
+  for Computational Linguistics (Volume 1: Long Papers)}, pp.\  2556--2565,
+  2018.
+
+\bibitem[Shwartz-Ziv \& LeCun(2023)Shwartz-Ziv and LeCun]{shwartz2023compress}
+Ravid Shwartz-Ziv and Yann LeCun.
+\newblock To compress or not to compress--self-supervised learning and
+  information theory: A review.
+\newblock \emph{arXiv preprint arXiv:2304.09355}, 2023.
+
+\bibitem[Shwartz-Ziv \& Tishby(2017)Shwartz-Ziv and Tishby]{shwartz2017opening}
+Ravid Shwartz-Ziv and Naftali Tishby.
+\newblock Opening the black box of deep neural networks via information.
+\newblock \emph{arXiv preprint arXiv:1703.00810}, 2017.
+
+\bibitem[Song et~al.(2021)Song, Sohl-Dickstein, Kingma, Kumar, Ermon, and
+  Poole]{song2020score}
+Yang Song, Jascha Sohl-Dickstein, Diederik~P Kingma, Abhishek Kumar, Stefano
+  Ermon, and Ben Poole.
+\newblock Score-based generative modeling through stochastic differential
+  equations.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+
+\bibitem[Sun et~al.(2022)Sun, Ming, Zhu, and Li]{sun2022out}
+Yiyou Sun, Yifei Ming, Xiaojin Zhu, and Yixuan Li.
+\newblock Out-of-distribution detection with deep nearest neighbors.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  20827--20840. PMLR, 2022.
+
+\bibitem[Tack et~al.(2020)Tack, Mo, Jeong, and Shin]{tack2020csi}
+Jihoon Tack, Sangwoo Mo, Jongheon Jeong, and Jinwoo Shin.
+\newblock Csi: Novelty detection via contrastive learning on distributionally
+  shifted instances.
+\newblock \emph{Advances in neural information processing systems},
+  33:\penalty0 11839--11852, 2020.
+
+\bibitem[Tishby et~al.(2000)Tishby, Pereira, and Bialek]{tishby2000information}
+Naftali Tishby, Fernando~C Pereira, and William Bialek.
+\newblock The information bottleneck method.
+\newblock \emph{arXiv preprint physics/0004057}, 2000.
+
+\bibitem[van~den Oord et~al.(2018)van~den Oord, Li, and
+  Vinyals]{oord2018representation}
+Aaron van~den Oord, Yazhe Li, and Oriol Vinyals.
+\newblock Representation learning with contrastive predictive coding.
+\newblock In \emph{arXiv preprint arXiv:1807.03748}, 2018.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock \emph{Advances in neural information processing systems}, 30, 2017.
+
+\bibitem[Wang et~al.(2023)Wang, Li, Yao, and Li]{wang2023clipn}
+Hualiang Wang, Yi~Li, Huifeng Yao, and Xiaomeng Li.
+\newblock Clipn for zero-shot ood detection: Teaching clip to say no.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}, pp.\  1802--1812, 2023.
+
+\bibitem[Wang \& Deng(2021)Wang and Deng]{wang2021deep}
+Mei Wang and Weihong Deng.
+\newblock Deep face recognition: A survey.
+\newblock \emph{Neurocomputing}, 429:\penalty0 215--244, 2021.
+
+\bibitem[Xiao et~al.(2020)Xiao, Yan, and Amit]{xiao2020likelihood}
+Zhisheng Xiao, Qing Yan, and Yali Amit.
+\newblock Likelihood regret: An out-of-distribution detection score for
+  variational auto-encoder.
+\newblock \emph{Advances in neural information processing systems},
+  33:\penalty0 20685--20696, 2020.
+
+\bibitem[Xu \& Raginsky(2017)Xu and Raginsky]{xu2017information}
+Aolin Xu and Maxim Raginsky.
+\newblock Information-theoretic analysis of generalization capability of
+  learning algorithms.
+\newblock \emph{IEEE Transactions on Information Theory}, 63\penalty0
+  (9):\penalty0 5948--5964, 2017.
+
+\bibitem[Yang et~al.(2025)Yang, Yu, and Desell]{yangcan}
+Hong Yang, Qi~Yu, and Travis Desell.
+\newblock Can we ignore labels in out of distribution detection?
+\newblock In \emph{The Thirteenth International Conference on Learning
+  Representations}, 2025.
+
+\bibitem[Yang et~al.(2021)Yang, Zhou, Li, and Liu]{yang2021generalized}
+Jingkang Yang, Kaiyang Zhou, Yixuan Li, and Ziwei Liu.
+\newblock Generalized out-of-distribution detection: A survey.
+\newblock \emph{arXiv preprint arXiv:2110.11334}, 2021.
+
+\bibitem[Yang et~al.(2022)Yang, Wang, Zou, Zhou, Ding, Peng, Wang, Chen, Li,
+  Sun, et~al.]{yang2022openood}
+Jingkang Yang, Pengyun Wang, Dejian Zou, Zitang Zhou, Kunyuan Ding, Wenxuan
+  Peng, Haoqi Wang, Guangyao Chen, Bo~Li, Yiyou Sun, et~al.
+\newblock Openood: Benchmarking generalized out-of-distribution detection.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  35:\penalty0 32598--32611, 2022.
+
+\bibitem[Zhang et~al.(2023{\natexlab{a}})Zhang, Li, Zhao, Xu,
+  et~al.]{zhang2023sirens}
+Hanlin Zhang, Ziyang Li, Yuxin Zhao, Sheng Xu, et~al.
+\newblock Sirens: Detecting hallucinations in large language models using
+  uncertainty.
+\newblock \emph{arXiv preprint arXiv:2310.13988}, 2023{\natexlab{a}}.
+
+\bibitem[Zhang et~al.(2023{\natexlab{b}})Zhang, Yang, Wang, Wang, Lin, Zhang,
+  Sun, Du, Li, Liu, et~al.]{zhang2023openood}
+Jingyang Zhang, Jingkang Yang, Pengyun Wang, Haoqi Wang, Yueqian Lin, Haoran
+  Zhang, Yiyou Sun, Xuefeng Du, Yixuan Li, Ziwei Liu, et~al.
+\newblock Openood v1. 5: Enhanced benchmark for out-of-distribution detection.
+\newblock \emph{arXiv preprint arXiv:2306.09301}, 2023{\natexlab{b}}.
+
+\bibitem[Zhang et~al.(2021)Zhang, Delbrouck, and Rubin]{zhang2021out}
+Oliver Zhang, Jean-Benoit Delbrouck, and Daniel~L Rubin.
+\newblock Out of distribution detection for medical images.
+\newblock In \emph{Uncertainty for Safe Utilization of Machine Learning in
+  Medical Imaging, and Perinatal Imaging, Placental and Preterm Image Analysis:
+  3rd International Workshop, UNSURE 2021, and 6th International Workshop,
+  PIPPI 2021, Held in Conjunction with MICCAI 2021, Strasbourg, France, October
+  1, 2021, Proceedings 3}, pp.\  102--111. Springer, 2021.
+
+\bibitem[Zhou(2022)]{zhou2022rethinking}
+Yibo Zhou.
+\newblock Rethinking reconstruction autoencoder-based out-of-distribution
+  detection.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition}, pp.\  7379--7387, 2022.
+
+\end{thebibliography}

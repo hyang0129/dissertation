@@ -1,0 +1,516 @@
+\chapter{Theoretical Proofs for Label Blindness}
+\label{app:proofs}
+
+This appendix contains the detailed theoretical proofs supporting the Label Blindness theory presented in Chapter 4. The proofs establish the mathematical foundations for understanding when and why unlabeled out-of-distribution detection methods are guaranteed to fail.
+
+\section{Properties of Mutual Information and Entropy}
+\label{app:properties}
+
+In this section we enumerate some of the properties of mutual information that are used to prove the theorems reported in this work. For any random variables $\rvw, \rvx, \rvy$ and $\rvz$:
+
+$\left(P_1\right)$ Positivity:
+$$
+I(\rvx ; \rvy) \geq 0, I(\rvx ; \rvy \mid \rvz) \geq 0
+$$
+$\left(P_2\right)$ Chain rule:
+$$
+I(\rvx \rvy ; \rvz)=I(\rvy ; \rvz)+I(\rvx ; \rvz \mid \rvy)
+$$
+$\left(P_3\right)$ Chain rule (Multivariate Mutual Information):
+$$
+I(\rvx ; \rvy ; \rvz)=I(\rvy ; \rvz)-I(\rvy ; \rvz \mid \rvx)
+$$
+$\left(P_4\right)$ Positivity of discrete entropy:
+For discrete $\rvx$
+$$
+H(\rvx) \geq 0, H(\rvx \mid \rvy) \geq 0
+$$
+$\left(P_5\right)$ Entropy and Mutual Information
+$$
+H(\rvx)=H(\rvx \mid \rvy)+I(\rvx ; \rvy)
+$$
+
+$(P_6)$ Conditioning a variable cannot increase its entropy
+
+$$
+H(\rvy|\rvz) \leq H(\rvy)
+$$
+
+$(P_7)$ A variable knows about itself as much as any other variable can
+
+$$
+I(\rvx;\rvx) \geq I(\rvx;\rvy)
+$$
+
+$(P_8)$ Symmetry of Mutual Information
+
+$$
+I(\rvx;\rvy) = I(\rvy;\rvx)
+$$
+
+$(P_9)$ Entropy and Conditional Mutual Information (This is simply $P_5$ conditioned on $\rvz$)
+
+$$
+I(\rvx;\rvy|\rvz)  = H(\rvx|\rvz) - H(\rvx|\rvy\rvz)
+$$
+
+$(P_{10})$ Functions of Independent Variables Remain Independent
+
+$$
+I(\rvx; \rvy) = 0 \rightarrow I(f(\rvx);\rvy) = 0
+$$
+
+\section{Supporting Theorems and Proofs}
+\label{app:supporting}
+
+This section contains supporting theorems and proofs that establish the foundation for the main Label Blindness results.
+
+\subsection{Sufficiency}
+\label{app:sufficiency}
+
+\begin{proposition}
+Let $\rvx$ and $\rvy$ be random variables from joint distribution $p(\rvx, \rvy)$. Let $\rvz$ be a representation of $\rvx$, then $\rvz$ is sufficient for $\rvy$ if and only if $I(\rvx ; \rvy)=I(\rvy ; \rvz)$
+
+Hypothesis:
+
+$\left(H_1\right) \rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+Thesis:
+
+$\left(T_1\right) I(\rvx ; \rvy \mid \rvz)=0 \Longleftrightarrow I(\rvx ; \rvy)=I(\rvy ; \rvz)$
+
+\begin{proof}
+$$
+\begin{aligned}
+I(\rvx ; \rvy \mid \rvz) & \stackrel{\left(P_3\right)}{=} I(\rvx ; \rvy)-I(\rvx ; \rvy ; \rvz) \stackrel{\left(P_3\right)}{=} I(\rvx ; \rvy)-I(\rvy ; \rvz)+I(\rvy ; \rvz \mid \rvx) \\
+& \stackrel{\left(H_1\right)}{=} I(\rvx ; \rvy)-I(\rvy ; \rvz)
+\end{aligned}
+$$
+
+Since both $I(\rvx ; \rvy)$ and $I(\rvy ; \rvz)$ are non-negative $\left(P_1\right), I(\rvx ; \rvy \mid \rvz)=0 \Longleftrightarrow I(\rvy ; \rvz)=I(\rvx ; \rvy)$
+
+\end{proof}
+\label{sufficiency}
+\end{proposition}
+
+\subsection{Lower Bound of Mutual Information for Sufficiency}
+\label{app:infobound}
+
+\begin{lemma}
+Let $\rvx$ and $\rvy$ be random variables with joint distribution $p(\rvx, \rvy)$. Let $\rvz$ be a representation of $\rvx$ that is sufficient, as per definition \ref{definesuff}. Then $I(\rvx;\rvz) \geq I(\rvz;\rvy)$ and $I(\rvx;\rvz) \geq I(\rvx;\rvy)$.
+
+Hypothesis:
+
+$(H_1)$ $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+$(H_2)$ $ \rvz$ is a sufficient representation of $\rvx: I(\rvx; \rvy| \rvz))=0$
+
+Thesis:
+
+$(T_1)$ $\forall \rvz.I(\rvx;\rvz) \geq I(\rvz;\rvy), I(\rvx;\rvz) \geq I(\rvx;\rvy)$
+
+\begin{proof}By Construction
+
+$$
+\begin{aligned}
+I(\rvx \rvy|\rvz)) &\stackrel{\left(H_2\right)}{=} 0 \\
+&\stackrel{\left(P_2\right)}{=} I(\rvz \rvy; \rvx) - I(\rvz; \rvx) \\
+&\stackrel{\left(P_2\right)}{=} I(\rvx; \rvy) + I(\rvx; \rvz|\rvy) - I(\rvz; \rvx) \\
+&\stackrel{\left(PropB1\right)}{=} I(\rvz; \rvy) + I(\rvx; \rvz|\rvy) - I(\rvz;\rvx) \\
+I(\rvz;\rvx) &= I(\rvz;\rvy) + I(\rvx; \rvz|\rvy)\\
+I(\rvz;\rvx) &\stackrel{\left(P_1\right)}{\geq} I(\rvz; \rvy)\\
+\end{aligned}
+$$
+
+Note that $I(\rvz; \rvy) = I(\rvx; \rvy)$ for all sufficient representations, as per proposition \ref{sufficiency}.
+
+This supports our intuition that the information in the representation consists of relevant information $I(\rvz;\rvy)$ and irrelevant information $I(\rvx; \rvz| \rvy)$. By definition of sufficiency, there must be enough information for $I(\rvz; \rvy)$ in $I(\rvx; \rvz)$, which is to say that the size of the encoding cannot be smaller than the minimum size to encode all of $I(\rvx; \rvy)$.
+
+\end{proof}
+\label{infobound}
+\end{lemma}
+
+\subsection{Conditional Mutual Information of Noise}
+\label{app:infonoise}
+
+\begin{lemma}
+Let $\rvx$ and $\rvy$ be independent random variables and $\rvz$ be a function of $\rvx$ with joint distribution $p(\rvx, \rvy, \rvz)$. The conditional mutual information $I(\rvx; \rvz| \rvy)$ is always equal to the mutual information $I(\rvx; \rvz)$. As in the information content is unchanged when adding noise.
+
+Hypothesis:
+
+$(H_1)$ Independence of $\rvx$ and $\rvy$ : $I(\rvx;\rvy) = 0$
+
+$(H_2)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+Thesis:
+
+$(T_1)$ $I(\rvx; \rvz| \rvy) = I(\rvx; \rvz)$
+
+\begin{proof}
+By Construction.
+
+$(C_1)$ Demonstrates that $H(\rvz| \rvx \rvy) = 0$
+
+$$
+\begin{aligned}
+0 \stackrel{\left(P_4\right)}{\leq} H(\rvz|\rvx \rvy)&\stackrel{\left(P_6\right)}{\leq}H(\rvz|\rvx)\\
+H(\rvz|\rvx \rvy)&\stackrel{\left(H_2\right)}{\leq} 0
+\end{aligned}
+$$
+
+$(C_2)$ Demonstrates that $I(\rvz;\rvy) = 0$
+$$
+\begin{aligned}
+I(\rvz; \rvy)&\stackrel{\left(H_2\right)}{=}I(f(\rvx);\rvy)\\
+&\stackrel{\left(P_{10}\right)}{=}I(\rvx ; \rvy)\\
+&\stackrel{\left(H_{1}\right)}{=}0\\
+\end{aligned}
+$$
+
+Thus
+
+$$
+\begin{aligned}
+I(\rvx; \rvz| \rvy) &\stackrel{\left(P_9\right)}{=} H(\rvz|\rvy) - H(\rvz|\rvx \rvy)\\
+&\stackrel{\left(C_1\right)}{=} H(\rvz| \rvy)- 0\\
+&\stackrel{\left(P_5\right)}{=} H(\rvz) - I(\rvz; \rvy) \\
+&\stackrel{\left(C_2\right)}{=}H(\rvz) - 0 \\
+&\stackrel{\left(H_2\right)}{=}H(\rvz) - H(\rvz| \rvx) \\
+&\stackrel{\left(P_5\right)}{=}I(\rvx; \rvz)
+\end{aligned}
+$$
+
+This supports the intuition that if one added a random noise channel it will not change the mutual information.
+
+\end{proof}
+\label{infonoise}
+\end{lemma}
+
+\subsection{Factorization of Bottleneck Loss}
+\label{app:lossfact}
+
+\begin{lemma}
+Let $\rvx$ be a random variable with label $\rvy$ such that $H(\rvy| \rvx) = 0$ and $\rvz$ is a sufficient representation of $\rvx$ for $\rvy$. The loss function
+$\mathcal{L}=I(\rvx; \rvz)-\beta I(\rvz; \rvy)$ is equivalent to $\mathcal{L}=H(\rvz)-\beta I(\rvz; \rvy)$, with $\beta$ as some constant.
+
+Hypothesis:
+
+$(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+Thesis:
+
+$(T_1)$ $ I(\rvx; \rvz)-\beta I(\rvz; \rvy) = H(\rvz)-\beta I(\rvz; \rvy)$
+
+\begin{proof} By Construction.
+$$
+\begin{aligned}
+I(\rvx; \rvz)-\beta I(\rvz; \rvy) &\stackrel{\left(P_5\right)}{=} H(\rvz) - H(\rvz| \rvx) -\beta I(\rvz;\rvy) \\
+&\stackrel{\left(H_1\right)}{=} H(\rvz) -\beta I(\rvz; \rvy)
+\end{aligned}
+$$
+
+Due to the relationship between $\rvx$ and $\rvz$, we can create an intuitive factorization of the bottleneck loss function. Effectively, we want to maximize $I(\rvz; \rvy)$ while minimizing the information content of $\rvz$
+
+\end{proof}
+
+\label{lossfact}
+\end{lemma}
+
+\section{Main Theorems and Proofs}
+\label{app:mainproofs}
+
+We ignore cases where the determined variable has an entropy of 0. Generally, if $H(\rvy| \rvx) = 0 \rightarrow H(\rvy) > 0$. Also, we only consider cases where the random variables have more than zero entropy.
+
+Note that $R_{\rvx}$ represents the support of random variable $\rvx$ such that $R_{\rvx} = \{\vx \in \R : P(\vx) > 0\}$.
+
+\subsection{Strict Label Blindness in the Minimal Sufficient Statistic}
+\label{app:genloss}
+
+\begin{theorem}[Strict Label Blindness in the Minimal Sufficient Statistic]
+Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a surrogate task such that $H(\rvy_1|\rvx_1) = 0$. Let $\rvz$ be any sufficient representation of $\rvx$ for $\rvy_1$ that satisfies the sufficiency definition \ref{definesuff} and minimizes the loss function $\mathcal{L} = I(\rvx_1 \rvx_2; \rvz) - \beta I(\rvz;\rvy_1)$. The possible $\rvz$ that minimizes $\mathcal{L}$  and is sufficient must meet the condition $I(\rvx_2; \rvz) = 0$.
+
+\textbf{Summary:} This proof uses the derivative of the loss function to establish the possible set of local minima that satisfies $\mathcal{L}$. For any possible minima of $\mathcal{L}$, the representation $\rvz$ must contain information of only  $\rvx_1 \rightarrow H(\rvz|\rvx_1)=0$ or only $\rvx_2 \rightarrow H(\rvz| \rvx_2)=0)$ or both $\rvx_1, \rvx_2 \rightarrow H(\rvz|\rvx_1, \rvx_2)=0$. We show that   possible set of all local minima must satisfy $H(\rvz|\rvx_1)=0$ by showing that the other two cases must always have greater $\mathcal{L}$. This proves the Theorem that the learned representation cannot contain information about $\rvx_2$.
+
+Hypothesis:
+
+$(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+$(H_2)$  $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+$(H_3)$  $\rvz$ is a sufficient representation of $\rvx: I(\rvx ; \rvy | \rvz)=0$
+
+$(H_4)$ $\rvx$ is composed of two independent variables $\rvx_1, \rvx_2$ : $\rvx = \rvx_1, \rvx_2, I(\rvx_1; \rvx_2) = 0$
+
+$(H_5)$ $\rvy$ is fully determined by $\rvx_1$: $H(\rvy| \rvx_1) = 0$
+
+Thesis:
+
+$(T_1)$ $\forall \rvz.I(\rvx_2,\rvz) = 0$
+
+\begin{proof} By Construction
+
+$(C_1)$ demonstrates that $\mathcal{L}=H(\rvz) -\beta I(\rvz;\rvy)$ via factoring $I(\rvx_1 \rvx_2;\rvz)$. Alternatively, Theorem \ref{lossfact} creates the same result.
+
+$$
+\begin{aligned}
+I(\rvx_1, \rvx_2; \rvz) &\stackrel{\left(P_2\right)}{=} I(\rvx_1; \rvz) + I(\rvx_2; \rvz| \rvx_1)\\
+&\stackrel{\left(P_5\right)}{=} H(\rvz) -  H(\rvz| \rvx_1) + I(\rvx_2; \rvz| \rvx_1) \\
+&\stackrel{\left(P_9\right)}{=} H(\rvz) -  H(\rvz| \rvx_1) + H(\rvz| \rvx_1) - H(\rvz| \rvx_1 \rvx_2) \\
+&\stackrel{\left(H_1\right)}{=}H(\rvz) -  H(\rvz| \rvx_1) + H(\rvz| \rvx_1) - 0 \\
+&\mathcal{L}=H(\rvz)  -\beta I(\rvz; \rvy)
+\end{aligned}
+$$
+
+$(C_2)$ Demonstrates that $I(\rvz; \rvy) = I(\rvx; \rvy)$ as per Theorem \ref{sufficiency}.
+
+$(C_3)$ Demonstrates that $I(\rvz; \rvy)$ is a constant across all sufficient representations because Theorem \ref{sufficiency} applies.
+
+$(C_4)$ Demonstrates that for all possible $\rvz$ satisfying $(H_3)$, their loss can be compared using only $\mathcal{L}_z = H(\rvz)$ for comparing across $\rvz$
+
+$$
+\begin{aligned}
+\frac{d\mathcal{L}}{d\rvz}  &\stackrel{\left(C_1\right)}{=}\frac{H(\rvz)}{d\rvz} - \frac{\beta I(\rvz; \rvy)}{d\rvz} \\
+&\stackrel{\left(C_3\right)}{=}\frac{H(\rvz)}{d\rvz} - 0
+\end{aligned}
+$$
+
+$(C_5)$ Demonstrates that the value of $H(\rvz)$ at all possible $\rvz$ that minimizes $\mathcal{L}$ is the same. Even for different minimal $\rvz$, they must have the same $H(\rvz)$ to all be minimal. When comparing possible minimal solutions to $\mathcal{L}$, $H(\rvz)$ is constant across all minimal solutions.
+
+$(C_6)$ Demonstrates that any $\rvz$ that satisfies sufficiency must satisfy $I(\rvz; \rvx) \geq I(\rvz; \rvy)$ and $I(\rvz; \rvx) \geq I(\rvx; \rvy)$ as per Theorem \ref{infobound}.
+
+$(C_7)$ Demonstrates that minima(s) exists only where $H(\rvz) = I(\rvz; \rvy)$ and $H(\rvz| \rvx) = 0$. Note that $H(\rvz) = I(\rvx; \rvy) = I(\rvz; \rvy)$ is the most compact representation size that is sufficient.
+
+$$
+\begin{aligned}
+I(\rvz;\rvx) &\stackrel{\left(C_6\right)}{\geq} I(\rvz; \rvy) \\
+H(\rvz) - H(\rvz| \rvx)  &\stackrel{\left(P_5\right)}{\geq} I(\rvz; \rvy)\\
+\forall \rvz | C_6 \land H_3 \land I(\rvz; \rvx) > I(\rvz; \rvy) &. \exists \rvz'|\rvz' = f(\rvz) \land I(\rvz; \rvx) > I(\rvz'; \rvx) \land C_6 \land H_3
+\end{aligned}
+$$
+
+From $(C_7)$ there exists only 3 types of minimas, separated by their dependence on the variables  $\rvx_1, \rvx_2$. As per $(H_1)$, any $\rvz$ must follow one of the 3 types.
+
+\begin{enumerate}
+\item Dependent only on $\rvx_1$: $\forall \rvz|H(\rvz|\rvx_1)=0 \rightarrow I(\rvx_2; \rvz) = 0$
+
+\item Dependent only on $\rvx_2$: $\forall \rvz|H(\rvz| \rvx_2)=0 \rightarrow I(\rvx_2; \rvz) > 0$
+
+\item Dependent on both $\rvx_1 \rvx_2$: $\forall \rvz|H(\rvz|\rvx_1, \rvx_2)=0 \land H(\rvz| \rvx_1)>0 \land H(\rvz| \rvx_2)>0 \rightarrow I(\rvx_2; \rvz) > 0$
+\end{enumerate}
+
+From here we will show that all type 2 and type 3 minimas always fail $(H_3)$ or have greater $\mathcal{L}$ than any type 1 minima.
+
+\textbf{Type 1} $\rvx_1$: $\forall \rvz|H(\rvz| \rvx_1)=0 \rightarrow I(\rvx_2; \rvz) = 0$
+
+$(C_8)$ Demonstrates that there exists $H(\rvz) = I(\rvz; \rvy) = I(\rvx_1; \rvz)$ and it is a set of minimas satisfying $(C_7)$. This also establishes an upper bound for solutions to $\mathcal{L}$ due to $(C_5)$. Therefore, any solution for type 1, type 2, and type 3 must satisfy $I(\rvz; \rvy) \leq I(\rvx_1; \rvz)$ to be sufficient and $I(\rvz; \rvy) = I(\rvx_1; \rvz)$ to be minimal.
+
+$$
+\begin{aligned}
+I(\rvz; \rvy)&\stackrel{\left(C_6\right)}{\leq} I(\rvz; \rvx)  \\
+&\stackrel{\left(H_4\right)}{\leq}  I(\rvx_1, \rvx_2; \rvz) \\
+&\stackrel{\left(P_2\right)}{\leq} I(\rvx_2; \rvz) + I(\rvx_1; \rvz| \rvx_2)\\
+&\stackrel{\left(Type1\right)}{\leq} 0 + I(\rvx_1; \rvz| \rvx_2)\\
+&\stackrel{\left(Theorem\ref{infonoise}\right)}{\leq} I(\rvx_1; \rvz)\\
+&\stackrel{\left(P_5\right)}{\leq} H(\rvz) - H(\rvz| \rvx_1)\\
+\exists \rvz &|I(\rvx_1; \rvz)  = I(\rvz; \rvy) = I(\rvx; \rvz) = I(\rvx; \rvy)
+\end{aligned}
+$$
+
+$(C_{9})$ Demonstrates that there exists no $H(\rvz') < H(\rvz)$ that satisfies sufficiency if $\rvz$ satisfies $(C_8)$ and is also $I(\rvz; \rvx_2) = 0$.
+
+$$
+\begin{aligned}
+C_8 &\rightarrow  I(\rvx_1; \rvz) = I(\rvx; \rvy)\\
+H(\rvz') < H(\rvz) & \rightarrow I(\rvx_1; \rvz') < I(\rvx_1; \rvz) \\
+\rightarrow \neg (C_2) &: I(\rvx_1; \rvz') < I(\rvx_1; \rvz) = I(\rvy; \rvz) = I(\rvx; \rvy)
+\end{aligned}
+$$
+
+\textbf{Type 2} $\rvx_2$: $\forall \rvz|H(\rvz| \rvx_2)=0 \rightarrow I(\rvx_2; \rvz) > 0$
+
+$(C_{10})$ Demonstrates that no type 2 minima can exist, simply because it would contain no information regarding $\rvx_1$, thus failing to satisfy $(H_3)$. This is because $\rvz$ cannot contain any information about $\rvx_1$, otherwise we would not satisfy $H(\rvz|\rvx_2)=0$. If the representation $\rvz$ contains no information about $\rvy$, then it is not sufficient.
+
+$$
+\begin{aligned}
+H(\rvz| \rvx_2) = 0 & \rightarrow \rvz = f(\rvx_2) \\
+0 &\stackrel{\left(H_4\right)}{=} I(\rvx_1; \rvx_2)\\
+&\stackrel{\left(P_{10}\right)}{=} I(f(\rvx_1);\rvx_2)\\
+&\stackrel{\left(H_5\right)}{=} I(\rvy; \rvx_2)\\
+&\stackrel{\left(P_{10}\right)}{=} I(\rvy;f(\rvx_2))\\
+0&=I(\rvy;\rvz)
+\end{aligned}
+$$
+
+\textbf{Type 3} $\rvx_1, \rvx_2$: $\forall \rvz|H(\rvz| \rvx_1 , \rvx_2)=0 \land H(\rvz|\rvx_1)>0 \land H(\rvz| \rvx_2)>0 \rightarrow I(\rvx_2; \rvz) > 0$
+
+$(C_{11})$ Demonstrates that any $\rvz$ that could be minimal must also satisfy $(C_8)$ for sufficiency. Note that $(C_8)$ implies that any $I(\rvx_1; \rvz) >  I(\rvz;\rvy)$ is not minimal.
+
+$$
+\begin{aligned}
+I(\rvz; \rvy)&\stackrel{\left(C_6\right)}{\leq} I(\rvz; \rvx)  \\
+&\stackrel{\left(H_4\right)}{\leq}  I(\rvx_1 \rvx_2; \rvz) \\
+I(\rvz; \rvy) &\stackrel{\left(P_2\right)}{\leq} I(\rvx_1; \rvz) + I(\rvx_2; \rvz| \rvx_1) \\
+& (C_8) \rightarrow I(\rvx_1; \rvz) =  I(\rvz; \rvy) \\
+\end{aligned}
+$$
+
+$(C_{12})$ Demonstrates that any $\rvz'$ where $I(\rvz'; \rvx_2)>I(\rvz; \rvx_2)$ and $I(\rvz; \rvx_2) = 0$ that maintains $H(\rvz') = H(\rvz)$ results in  solutions that are not sufficient as required by $(H_3)$ because we know that the size of the representation must be at least $I(\rvx; \rvy)$ as defined in $(C_6)$
+
+$$
+\begin{aligned}
+C_8 &\rightarrow  H(\rvz) \text{ is constant across all minima}\\
+C_8 &\rightarrow  H(\rvz) = H(\rvz')\text{ for } \rvz' \text{ to be minimal}\\
+C_8 &\rightarrow  I(\rvx_1; \rvz) = I(\rvx; \rvy)\\
+I(\rvx_2; \rvz) = 0 &\rightarrow H(\rvz| \rvx_1) = 0 \\
+\forall \rvz'|I(\rvx_2; \rvz') > 0  &:  H(\rvz'| \rvx_1) > H(\rvz| \rvx_1) \\
+H(\rvz'| \rvx_1) > H(\rvz| \rvx_1)   &\rightarrow H(\rvz') - H(\rvz'| \rvx_1) < H(\rvz) - H(\rvz| \rvx_1)  \\
+&\stackrel{\left(P_5\right)}{\rightarrow}  I(\rvx_1; \rvz') < I(\rvx_1; \rvz)  \\
+\rightarrow \neg (C_6) &:  I(\rvx_1; \rvz') < I(\rvx; \rvy)
+\end{aligned}
+$$
+
+$(C_{13})$ Demonstrates that combining $(C_{11})$ and $(C_{12})$, there is no type 3 solution that has an equal $\mathcal{L}$ to the minimal type 1 solution that also maintains sufficiency $(H_3)$ and $(C_6)$. This confirms the definition of entropy, in that encoding more independent information requires more bits or nats.
+
+This means that only a type 1 solution can be both minimal and sufficient, which proves the thesis.
+
+To summarize this proof, we can compare the losses of all sufficient solutions with $\mathcal{L} = H(\rvz)$. Of those sufficient solutions, the one that minimizes $\mathcal{L}$ is the one with the smallest $H(\rvz)$. The minimal sufficient representation is $\rvz$ that captures only all of $I(\rvx_1; \rvy)$ and nothing else. Thus the minimal $\rvz$ cannot have $I(\rvx_2; \rvz) > 0$ because such $\rvz$ would encode information outside of $I(\rvx_1; \rvy)$.
+
+\end{proof}
+\label{genloss}
+\end{theorem}
+
+\subsection{Independence of Filtered Distributions}
+\label{app:filter}
+
+\begin{lemma}[Independence of Filtered Distributions]
+Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. For $\rvx_2'$ where
+$R_{\vx_2'} \subset R_{\vx_2}$, there exists no $\rvx_2'$ such that $H(\rvx_1|\rvx_2') < H(\rvx_1)$.
+
+\textbf{Summary:} This proof uses the chain rule of mutual information to show that contradiction arises if $\rvx_2'$ could filter $\rvx_1$ in a non random way.
+
+Hypothesis:
+
+$(H_1)$  $\rvx_2'$ is fully determined by $\rvx_2$ : $H(\rvx_2'|\rvx_2) = 0$ where $R_{\vx_2'} \subset R_{\vx_2}$
+
+$(H_2)$  Independence of $\rvx_1$ and $\rvy_2$ : $I(\rvx_1;\rvx_2) = 0$
+
+Thesis:
+
+$(T_1)$ $\nexists \rvx_2'.H(\rvx_1|\rvx_2) < H(\rvx_1)$
+
+\begin{proof} by contradiction $H(\rvx_1|\rvx_2) < H(\rvx_1)$
+
+$(C_1)$ Demonstrates $I(\rvx_2;\rvx_2') = I(\rvx_2';\rvx_2')$
+
+$$
+\begin{aligned}
+I(\rvx_2;\rvx_2') &\stackrel{\left(P_4\right)}{=} H(\rvx_2') - H(\rvx_2'|\rvx_2) \\
+&\stackrel{\left(H_1\right)}{=} H(\rvx_2') - 0\\
+&\stackrel{\left(P_3\right)}{=} H(\rvx_2') - H(\rvx_2'|\rvx_2') \\
+&\stackrel{\left(P_3\right)}{=} I(\rvx_2';\rvx_2')
+\end{aligned}
+$$
+
+$(C_2)$ Demonstrates  $I(\rvx_2';\rvx_1|\rvx_2) = 0$
+
+$$
+\begin{aligned}
+I(\rvx_2';\rvx_1|\rvx_2) &\stackrel{\left(P_2\right)}{=} I(\rvx_2'; \rvx_2 \rvx_1) - I(\rvx_2; \rvx_2') \\
+&\stackrel{\left(C_1\right)}{=} I(\rvx_2';\rvx_2 \rvx_1) - I(\rvx_2';\rvx_2') \\
+I(\rvx_2';\rvx_1|\rvx_2)&\stackrel{\left(P_7\right)}{\leq} 0 \leftarrow I(\rvx_2';\rvx_2 \rvx_1) \leq  I(\rvx_2';\rvx_2') \\
+&\stackrel{\left(P_1\right)}{\geq} 0 \\
+&=0
+\end{aligned}
+$$
+
+$(C_3)$ Demonstrates $I(\rvx_1;\rvx_2') > 0$ via non independence implied by $\neg T_1$
+
+Contradiction arises when we consider symmetric applications of the chain rule to $I(\rvx_1;\rvx_2 \rvx_2')$
+
+$$
+\begin{aligned}
+I(\rvx_1;\rvx_2' \rvx_2) &\stackrel{\left(P_2\right)}{=} I(\rvx_1;\rvx_2') + I(\rvx_1;\rvx_2|\rvx_2') \\
+I(\rvx_1;\rvx_2' \rvx_2) &\stackrel{\left(C_3\right)}{>} 0 \\
+I(\rvx_1;\rvx_2 \rvx_2') &\stackrel{\left(P_2\right)}{=} I(\rvx_1;\rvx_2) + I(\rvx_1;\rvx_2'|\rvx_2) \\
+&\stackrel{\left(C_2\right)}{=} I(\rvx_1;\rvx_2)\\
+&\stackrel{\left(H_2\right)}{=} 0 \\
+\end{aligned}
+$$
+
+Since $I(\rvx_1;\rvx_2 \rvx_2')$ cannot be both zero and greater than zero, $\neg T_1$ creates a contradiction, which supports $T_1$.
+
+It is easy to confuse this with the existence of a non independent subset $\mathbf{C} := \mathbf{A \cap B}$,  where $\mathbf{A}, \mathbf{B}$ are independent events. However, this example violates $(H_1)$, since we cannot determine $\mathbf{C}$ using only $\mathbf{A}$ or only $\mathbf{B}$.
+
+\end{proof}
+\label{filter}
+\end{lemma}
+
+\subsection{Strict Label Blindness in Filtered Distributions - Guaranteed OOD Failure}
+\label{app:failood}
+
+\begin{corollary}[Strict Label Blindness in Filtered Distributions]
+Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a surrogate task such generated by $\vy_1 = f_1(\vx_1)$ $H(\rvy_1|\rvx_1) = 0$. Let $\rvy_2$ be a label such that $H(\rvy_2|\rvx_2) = 0$ and $\vy_2 = f_2(\vx_2)$. Let $\sY_{in}$ be as subset of labels $\sY_{in} \subset R_{\rvy_2}$. Let $\rvx'$ be a subset of $\rvx$ where $R_{\rvx'} =  R_{\rvx} \cap \{\vx \in \R: f_2(\vx_2) \in \sY_{in} \}  $ such that $\rvx'$ is composed of independent variables $\rvx_1'$ and $\rvx_2'$ and $\vy_1' = f_1(\vx_1')$. The sufficient representation $\rvz$ learned by minimizing $\mathcal{L} = I(\rvx_1', \rvx_2'; \rvz) - \beta I(\rvz;\rvy_1')$ must have $I(\rvx_2;\rvz) = 0$ and $I(\rvy_2;\rvz) = 0$.
+
+\textbf{Summary:} This proof combines Theorem \ref{filter} and Theorem \ref{genloss}.
+
+Hypothesis:
+
+$(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+$(H_2)$  $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+$(H_3)$  $\rvz$ is a sufficient representation of $\rvx: I(\rvx ; \rvy | \rvz)=0$
+
+$(H_4)$ $\rvx$ is composed of two independent variables $\rvx_1, \rvx_2$ : $\rvx = \rvx_1 \rvx_2, I(\rvx_1 ; \rvx_2) = 0$
+
+$(H_5)$ $\rvy$ is fully determined by $\rvx_1$: $H(\rvy|\rvx_1) = 0$
+
+$(H_6)$ $\rvx'$ is a subset of $\rvx$ filtered by $\sY_{in}$ : $R_{\rvx'} =  R_{\rvx} \cap \{\vx \in \R: f_2(\vx_2) \in \sY_{in} \} $
+
+Thesis:
+
+$(T_1)$ $\forall \rvz.I(\rvx_2 ; \rvz) = 0, I(\rvx_2' ; \rvz) = 0$
+
+\begin{proof} By Construction.
+
+$(C_1)$ Demonstrates that $I(\rvx_1'; \rvx_2') = 0$ due to Lemma \ref{filter}
+
+Using $(P_{10})$, we know that independent functions stay independent and thus $I(\rvx_1'; \rvx_2) = 0, I(\rvx_1'; \rvx_2) = 0$. From Theorem\ref{genloss} we know that encoding an variable independent of the target y results in a higher loss, therefore $I(\rvx_2'; \rvz) = 0$ and $I(\rvx_2; \rvz) = 0$ since both are independent of $\rvx_1'$.
+
+By combining Lemma \ref{filter} and Theorem\ref{genloss}, we know that any surrogate learning objective independent of a downstream objective (say classifying labels) results in a representation containing no information for the downstream objective. If it contains no information for one objective, it contains no information for derivatives of that objective (eg. no label information means no OOD detection information).
+
+\end{proof}
+
+\label{failood}
+\end{corollary}
+
+\subsection{Unavoidable Risk of Overlapping Out of Distribution Data}
+\label{app:overlaprisk}
+
+\begin{theorem}[Unavoidable Risk of Overlapping OOD Data]
+Let $\rvx$ come from a distribution. Let $f$ be some labeling function to generate labels $\rvy$ such that $\vy = f(\vx)$, where there are at least two unique labels $|R_\rvy| > 1$. Let $\rvx_{in}$ be a random subset of $\rvx$ where $R_{\rvx_{in}} \subsetneq R_\rvx$ and $|R_{\rvx_{in}}| < \infty$. Let $\rvy_{in}$ be labels generated from $\vy_{in} = f(\vx_{in})$. The probability that a randomly selected $\vx$ contains $\vy$ not present in $R_{\rvy_{in}}$ is always greater than 0.
+
+Hypothesis:
+
+$(H_1)$  $\rvx$ comes from any distribution
+
+$(H_2)$ $\rvy$ is a label generated from function $\vy = f(\vx)$ such that $|R_\rvy| > 1$
+
+$(H_3)$ $\rvx_i$ is a random subset of $\rvx$ where $R_{\rvx_{in}} \subsetneq R_\rvx$ and $|R_{\rvx_{in}}| < \infty$  and $\vy_{in} = f(\vx_{in})$.
+
+Thesis
+
+$(T_1)$  $\forall \rvx. P( f(\vx) \notin R_{\rvy_{in}}) > 0)$
+
+\begin{proof} by contradiction $(\neg T_1)$ $P( f(\vx) \notin R_{\rvy_{in}}) = 0\}$
+
+$(C_1)$ Demonstrates that $\forall \rvx_i. R_{\rvy_{in}} = R_{\rvy}$ because there must exist no sample $\vx$ such that $f(\vx) \notin R_{\rvy_{in}}$.
+
+$(C_2)$ Demonstrates that $\forall \vy_n .P (f(\vx) = \vy_n) > 0$, where $\vy_n \in R_\rvy$
+
+Contradiction arises when we consider that it is possible to sample the same label $\vy_n$ for any finite number of repetitions, as per $(C_2)$. This would create a set of any finite size consisting only of the label $\vy_n$. Thus, there always exists $R_{\rvy_{in}} \subsetneq R_{\rvy}$ which contradicts $(C_1)$.
+
+More realistically, $R_{\rvy_{in}}$ can consist of all elements of $R_{\rvy}$ except one and still guarantee $P( f(\vx) \notin R_{\rvy_{in}}) > 0)$.
+
+\end{proof}
+\end{theorem}

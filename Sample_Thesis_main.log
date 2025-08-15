@@ -1,0 +1,741 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  14 AUG 2025 17:48
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./Sample_Thesis_main.tex
+(Sample_Thesis_main.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
+Document Class: book 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\bk11.clo
+File: bk11.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count187
+\c@chapter=\count188
+\c@section=\count189
+\c@subsection=\count190
+\c@subsubsection=\count191
+\c@paragraph=\count192
+\c@subparagraph=\count193
+\c@figure=\count194
+\c@table=\count195
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+)
+(thesisfrontmatter.sty
+Package: thesisfrontmatter 2015/3/17 v2.0 Thesis Frontmatter Approved
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count196
+\Gm@cntv=\count197
+\c@Gm@tempcnt=\count198
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks18
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+) (math_commands.tex
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+Package: amsmath 2023/05/13 v2.17o AMS math features
+\@mathmargin=\skip50
+
+For additional information on amsmath, use the `?' option.
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen149
+))
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen150
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count199
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count266
+\leftroot@=\count267
+LaTeX Info: Redefining \overline on input line 399.
+LaTeX Info: Redefining \colon on input line 410.
+\classnum@=\count268
+\DOTSCASE@=\count269
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box51
+\strutbox@=\box52
+LaTeX Info: Redefining \big on input line 722.
+LaTeX Info: Redefining \Big on input line 723.
+LaTeX Info: Redefining \bigg on input line 724.
+LaTeX Info: Redefining \Bigg on input line 725.
+\big@size=\dimen151
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count270
+LaTeX Info: Redefining \bmod on input line 905.
+LaTeX Info: Redefining \pmod on input line 910.
+LaTeX Info: Redefining \smash on input line 940.
+LaTeX Info: Redefining \relbar on input line 970.
+LaTeX Info: Redefining \Relbar on input line 971.
+\c@MaxMatrixCols=\count271
+\dotsspace@=\muskip16
+\c@parentequation=\count272
+\dspbrk@lvl=\count273
+\tag@help=\toks20
+\row@=\count274
+\column@=\count275
+\maxfields@=\count276
+\andhelp@=\toks21
+\eqnshift@=\dimen152
+\alignsep@=\dimen153
+\tagshift@=\dimen154
+\tagwidth@=\dimen155
+\totwidth@=\dimen156
+\lineht@=\dimen157
+\@envbody=\toks22
+\multlinegap=\skip51
+\multlinetaggap=\skip52
+\mathdisplay@stack=\toks23
+LaTeX Info: Redefining \[ on input line 2953.
+LaTeX Info: Redefining \] on input line 2954.
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty
+Package: bm 2023/07/08 v1.2f Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup6
+\symboldletters=\mathgroup7
+\symboldsymbols=\mathgroup8
+Package bm Info: No bold for \OMX/cmex/m/n, using \pmb.
+Package bm Info: No bold for \U/msa/m/n, using \pmb.
+Package bm Info: No bold for \U/msb/m/n, using \pmb.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
+)
+LaTeX Font Info:    Overwriting math alphabet `\mathsfit' in version `bold'
+(Font)                  OT1/cmss/m/sl --> OT1/cmss/bx/n on input line 314.
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen158
+\lightrulewidth=\dimen159
+\cmidrulewidth=\dimen160
+\belowrulesep=\dimen161
+\belowbottomsep=\dimen162
+\aboverulesep=\dimen163
+\abovetopsep=\dimen164
+\cmidrulesep=\dimen165
+\cmidrulekern=\dimen166
+\defaultaddspace=\dimen167
+\@cmidla=\count277
+\@cmidlb=\count278
+\@aboverulesep=\dimen168
+\@belowrulesep=\dimen169
+\@thisruleclass=\count279
+\@lastruleclass=\count280
+\@thisrulewidth=\dimen170
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\multicol.sty
+Package: multicol 2023/03/30 v1.9f multicolumn formatting (FMi)
+\c@tracingmulticols=\count281
+\mult@box=\box53
+\multicol@leftmargin=\dimen171
+\c@unbalance=\count282
+\c@collectmore=\count283
+\doublecol@number=\count284
+\multicoltolerance=\count285
+\multicolpretolerance=\count286
+\full@width=\dimen172
+\page@free=\dimen173
+\premulticols=\dimen174
+\postmulticols=\dimen175
+\multicolsep=\skip53
+\multicolbaselineskip=\skip54
+\partial@page=\box54
+\last@line=\box55
+\mc@boxedresult=\box56
+\maxbalancingoverflow=\dimen176
+\mult@rightbox=\box57
+\mult@grightbox=\box58
+\mult@firstbox=\box59
+\mult@gfirstbox=\box60
+\@tempa=\box61
+\@tempa=\box62
+\@tempa=\box63
+\@tempa=\box64
+\@tempa=\box65
+\@tempa=\box66
+\@tempa=\box67
+\@tempa=\box68
+\@tempa=\box69
+\@tempa=\box70
+\@tempa=\box71
+\@tempa=\box72
+\@tempa=\box73
+\@tempa=\box74
+\@tempa=\box75
+\@tempa=\box76
+\@tempa=\box77
+\@tempa=\box78
+\@tempa=\box79
+\@tempa=\box80
+\@tempa=\box81
+\@tempa=\box82
+\@tempa=\box83
+\@tempa=\box84
+\@tempa=\box85
+\@tempa=\box86
+\@tempa=\box87
+\@tempa=\box88
+\@tempa=\box89
+\@tempa=\box90
+\@tempa=\box91
+\@tempa=\box92
+\@tempa=\box93
+\@tempa=\box94
+\@tempa=\box95
+\@tempa=\box96
+\c@minrows=\count287
+\c@columnbadness=\count288
+\c@finalcolumnbadness=\count289
+\last@try=\dimen177
+\multicolovershoot=\dimen178
+\multicolundershoot=\dimen179
+\mult@nat@firstbox=\box97
+\colbreak@box=\box98
+\mc@col@check@num=\count290
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/cite\cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty
+Package: appendix 2020/02/08 v1.2c extra appendix facilities
+\c@@pps=\count291
+\c@@ppsavesec=\count292
+\c@@ppsaveapp=\count293
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+
+
+Package natbib Warning: The `cite' package should not be used
+(natbib)                with natbib. Use option `sort' instead.
+
+\bibhang=\skip55
+\bibsep=\skip56
+LaTeX Info: Redefining \cite on input line 694.
+LaTeX Info: Redefining \citenum on input line 708.
+\c@NAT@ctr=\count294
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen180
+\Gin@req@width=\dimen181
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.sty
+Package: subfigure 2002/07/30 v2.1.4 subfigure package
+\subfigtopskip=\skip57
+\subfigcapskip=\skip58
+\subfigcaptopadj=\dimen182
+\subfigbottomskip=\skip59
+\subfigcapmargin=\dimen183
+\subfiglabelskip=\skip60
+\c@subfigure=\count295
+\c@lofdepth=\count296
+\c@subtable=\count297
+\c@lotdepth=\count298
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.cfg
+)
+\subfig@top=\skip61
+\subfig@bottom=\skip62
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.sty
+Package: mathtools 2024/10/04 v1.31 mathematical typesetting tools
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
+Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count299
+\calc@Bcount=\count300
+\calc@Adimen=\dimen184
+\calc@Bdimen=\dimen185
+\calc@Askip=\skip63
+\calc@Bskip=\skip64
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count301
+\calc@Cskip=\skip65
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty
+Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
+)
+\g_MT_multlinerow_int=\count302
+\l_MT_multwidth_dim=\dimen186
+\origjot=\skip66
+\l_MT_shortvdotswithinadjustabove_dim=\dimen187
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen188
+\l_MT_above_intertext_sep=\dimen189
+\l_MT_below_intertext_sep=\dimen190
+\l_MT_above_shortintertext_sep=\dimen191
+\l_MT_below_shortintertext_sep=\dimen192
+\xmathstrut@box=\box99
+\xmathstrut@dim=\dimen193
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty
+Package: amsthm 2020/05/29 v2.20.6
+\thm@style=\toks24
+\thm@bodyfont=\toks25
+\thm@headfont=\toks26
+\thm@notefont=\toks27
+\thm@headpunct=\toks28
+\thm@preskip=\skip67
+\thm@postskip=\skip68
+\thm@headsep=\skip69
+\dth@everypar=\toks29
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty
+Package: placeins 2005/04/18  v 2.2
+)
+\c@theorem=\count303
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty
+\wrapoverhang=\dimen194
+\WF@size=\dimen195
+\c@WF@wrappedlines=\count304
+\WF@box=\box100
+\WF@everypar=\toks30
+Package: wrapfig 2003/01/31  v 3.6
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1350.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1354.
+Package xcolor Info: Model `RGB' extended on input line 1366.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1368.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+Package: colortbl 2024/10/29 v1.0k Color table columns (DPC)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen196
+\ar@mcellbox=\box101
+\extrarowheight=\dimen197
+\NC@list=\toks31
+\extratabsurround=\skip70
+\backup@length=\skip71
+\ar@cellbox=\box102
+)
+\everycr=\toks32
+\minrowclearance=\skip72
+\rownum=\count305
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.st
+y
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count306
+\float@exts=\toks33
+\float@box=\box103
+\@float@everytoks=\toks34
+\@floatcapt=\box104
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks35
+\c@algorithm=\count307
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudoc
+ode.sty
+Package: algpseudocode 
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithmi
+cx.sty
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count308
+\c@ALG@rem=\count309
+\c@ALG@nested=\count310
+\ALG@tlm=\skip73
+\ALG@thistlm=\skip74
+\c@ALG@Lnr=\count311
+\c@ALG@blocknr=\count312
+\c@ALG@storecount=\count313
+\c@ALG@tmpcounter=\count314
+\ALG@tmplength=\skip75
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def
+File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count315
+\l__pdf_internal_box=\box105
+) (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
+(Acknowledgements.aux) (Dedication.aux) (AppendixA.aux))
+\openout1 = `Sample_Thesis_main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-31.8738pt
+* \headheight=12.0pt
+* \headsep=19.8738pt
+* \topskip=11.0pt
+* \footskip=27.46295pt
+* \marginparwidth=62.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count316
+\scratchdimen=\dimen198
+\scratchbox=\box106
+\nofMPsegments=\count317
+\nofMParguments=\count318
+\everyMPshowfont=\toks36
+\MPscratchCnt=\count319
+\MPscratchDim=\dimen199
+\MPnumerator=\count320
+\makeMPintoPDFobject=\count321
+\everyMPtoPDFconversion=\toks37
+)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+\openout2 = `CoverPage.aux'.
+
+ (CoverPage.tex)
+
+Package thesisfrontmatter Warning: prevdegreeA is not defined on input line 67.
+
+
+[1
+
+
+
+
+{C:/Users/HongM/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
+[3]
+\openout2 = `Abstract.aux'.
+
+ (Abstract.tex) [4
+
+]
+\openout2 = `Acknowledgements.aux'.
+
+ (Acknowledgements.tex) [5
+
+
+
+]
+\openout2 = `Dedication.aux'.
+
+ (Dedication.tex) [6
+
+
+
+]
+(Sample_Thesis_main.toc
+LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
+
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+[7
+
+
+
+] [8] [9])
+\tf@toc=\write3
+\openout3 = `Sample_Thesis_main.toc'.
+
+ [10] (Sample_Thesis_main.lof)
+\tf@lof=\write4
+\openout4 = `Sample_Thesis_main.lof'.
+
+ [11
+
+] (Sample_Thesis_main.lot)
+\tf@lot=\write5
+\openout5 = `Sample_Thesis_main.lot'.
+
+
+[12
+
+]
+Chapter 1.
+[1
+
+]
+Chapter 2.
+[2
+
+] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
+Chapter 3.
+[14
+
+] [15]
+Overfull \hbox (43.32942pt too wide) in paragraph at lines 405--406
+\OT1/cmr/m/n/10.95 which learns lin-ear pro-jec-tions max-i-miz-ing vari-ance, 
+and \OT1/cmr/m/it/10.95 In-de-pen-dent Com-po-nent Anal-y-sis \OT1/cmr/m/n/10.9
+5 (ICA) (Hyv^^?arinen
+ []
+
+[16]
+Overfull \hbox (12.13565pt too wide) in paragraph at lines 417--418
+\OT1/cmr/m/n/10.95 tion|contrastive meth-ods im-plic-itly max-i-mize MI be-twee
+n rep-re-sen-ta-tions of aug-mented views (Hjelm
+ []
+
+[17] [18] [19]
+Overfull \hbox (2.52249pt too wide) in paragraph at lines 461--462
+[]\OT1/cmr/m/it/10.95 External ver-i-fi-ca-tion meth-ods \OT1/cmr/m/n/10.95 com
+-pare model out-puts against ex-ter-nal knowl-edge sources, databases,
+ []
+
+[20]
+Overfull \hbox (6.83415pt too wide) in paragraph at lines 485--486
+\OT1/cmr/m/n/10.95 cess-ing and com-puter vi-sion through its self-attention me
+ch-a-nism. Vi-sion Trans-form-ers (ViTs) (Doso-
+ []
+
+[21]
+Chapter 4.
+
+Overfull \hbox (3.31694pt too wide) in paragraph at lines 498--499
+\OT1/cmr/m/it/10.95 This chap-ter is based on work pub-lished at ICLR 2025: "Ca
+n We Ig-nore La-bels in Out-of-Distribution
+ []
+
+[22
+
+]
+<gradcam_example_faces.png, id=130, 716.6775pt x 359.54324pt>
+File: gradcam_example_faces.png Graphic file (type png)
+<use gradcam_example_faces.png>
+Package pdftex.def Info: gradcam_example_faces.png  used on input line 510.
+(pdftex.def)             Requested size: 375.80544pt x 188.53809pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[23] [24 <./gradcam_example_faces.png>] [25] [26] [27] [28] [29] [30] [31]
+[32] [33]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[34] [35] [36] [37]
+Chapter 5.
+[38
+
+]
+Chapter 6.
+[39
+
+]
+Chapter 7.
+[40
+
+]
+Chapter 8.
+(Sample_Thesis_main.bbl [41
+
+] [42
+
+]
+Underfull \hbox (badness 5681) in paragraph at lines 115--120
+[]\OT1/cmr/m/n/10.95 Dumitru Er-han, Ian Good-fel-low, Will Cukier-ski, and Yos
+hua Ben-gio.  Chal-lenges
+ []
+
+
+Underfull \hbox (badness 6842) in paragraph at lines 115--120
+\OT1/cmr/m/n/10.95 in rep-re-sen-ta-tion learn-ing: Fa-cial ex-pres-sion recog-
+ni-tion chal-lenge, 2013.  URL
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--120
+\OT1/cmtt/m/n/10.95 https : / / kaggle . com / competitions / challenges -[] in
+ -[] representation -[] learning -[] facial -[]
+ []
+
+[43] [44] [45] [46] [47] [48]) [49] [50
+
+
+]
+\openout2 = `AppendixA.aux'.
+
+ (AppendixA.tex
+Appendix A.
+) [51
+
+
+] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
+(Acknowledgements.aux) (Dedication.aux) (AppendixA.aux))
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-04>
+ ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 7387 strings out of 474486
+ 113201 string characters out of 5743755
+ 1937542 words of memory out of 5000000
+ 29509 multiletter control sequences out of 15000+600000
+ 570060 words of font info for 79 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 72i,16n,79p,1240b,414s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
+1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/t
+ype1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/H
+ongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:
+/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib
+10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
+s/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/font
+s/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/Ho
+ngM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:
+/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6
+.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Sample_Thesis_main.pdf (63 pages, 737687 bytes).
+PDF statistics:
+ 326 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+

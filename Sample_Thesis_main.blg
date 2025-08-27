@@ -15,46 +15,49 @@ Reallocating 'name_of_file' (item size: 1) to 13 items.
 Reallocating 'name_of_file' (item size: 1) to 14 items.
 A level-1 auxiliary file: AppendixA.aux
 Database file #1: Bibliography.bib
+Warning--entry type for "rock_data" isn't style-file defined
+--line 201 of file Bibliography.bib
 Warning--can't use both volume and number fields in esmaeilpour2022zero
-You've used 82 entries,
+Warning--empty journal in netzer2011reading
+You've used 105 entries,
             2773 wiz_defined-function locations,
-            1011 strings with 22080 characters,
-and the built_in function-call counts, 47333 in all, are:
-= -- 4024
-> -- 3593
-< -- 36
-+ -- 1206
-- -- 1122
-* -- 4086
-:= -- 7281
-add.period$ -- 253
-call.type$ -- 82
-change.case$ -- 611
-chr.to.int$ -- 80
-cite$ -- 165
-duplicate$ -- 1937
-empty$ -- 3337
-format.name$ -- 1224
-if$ -- 9862
-int.to.chr$ -- 3
+            1126 strings with 26585 characters,
+and the built_in function-call counts, 60120 in all, are:
+= -- 5128
+> -- 4507
+< -- 46
++ -- 1513
+- -- 1405
+* -- 5183
+:= -- 9232
+add.period$ -- 329
+call.type$ -- 105
+change.case$ -- 772
+chr.to.int$ -- 102
+cite$ -- 212
+duplicate$ -- 2466
+empty$ -- 4272
+format.name$ -- 1532
+if$ -- 12544
+int.to.chr$ -- 4
 int.to.str$ -- 1
-missing$ -- 79
-newline$ -- 419
-num.names$ -- 328
-pop$ -- 1249
+missing$ -- 98
+newline$ -- 538
+num.names$ -- 422
+pop$ -- 1582
 preamble$ -- 1
-purify$ -- 529
+purify$ -- 667
 quote$ -- 0
-skip$ -- 1651
+skip$ -- 2098
 stack$ -- 0
-substring$ -- 1545
-swap$ -- 309
-text.length$ -- 21
+substring$ -- 1983
+swap$ -- 400
+text.length$ -- 27
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 902
-warning$ -- 1
-while$ -- 345
+type$ -- 1155
+warning$ -- 2
+while$ -- 441
 width$ -- 0
-write$ -- 1051
-(There was 1 warning)
+write$ -- 1353
+(There were 3 warnings)

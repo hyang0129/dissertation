@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  14 AUG 2025 17:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  20 AUG 2025 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -562,22 +562,22 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 
-] [8] [9])
+] [8] [9] [10])
 \tf@toc=\write3
 \openout3 = `Sample_Thesis_main.toc'.
 
- [10] (Sample_Thesis_main.lof)
+ [11] (Sample_Thesis_main.lof)
 \tf@lof=\write4
 \openout4 = `Sample_Thesis_main.lof'.
 
- [11
+ [12
 
 ] (Sample_Thesis_main.lot)
 \tf@lot=\write5
 \openout5 = `Sample_Thesis_main.lot'.
 
 
-[12
+[13
 
 ]
 Chapter 1.
@@ -587,97 +587,131 @@ Chapter 1.
 Chapter 2.
 [2
 
-] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
+] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14]
 Chapter 3.
-[14
+[15
 
-] [15]
-Overfull \hbox (43.32942pt too wide) in paragraph at lines 405--406
+] [16]
+Overfull \hbox (43.32942pt too wide) in paragraph at lines 430--431
 \OT1/cmr/m/n/10.95 which learns lin-ear pro-jec-tions max-i-miz-ing vari-ance, 
 and \OT1/cmr/m/it/10.95 In-de-pen-dent Com-po-nent Anal-y-sis \OT1/cmr/m/n/10.9
 5 (ICA) (Hyv^^?arinen
  []
 
-[16]
-Overfull \hbox (12.13565pt too wide) in paragraph at lines 417--418
+[17]
+Overfull \hbox (12.13565pt too wide) in paragraph at lines 442--443
 \OT1/cmr/m/n/10.95 tion|contrastive meth-ods im-plic-itly max-i-mize MI be-twee
 n rep-re-sen-ta-tions of aug-mented views (Hjelm
  []
 
-[17] [18] [19]
-Overfull \hbox (2.52249pt too wide) in paragraph at lines 461--462
+[18] [19] [20] [21] [22]
+Overfull \hbox (2.52249pt too wide) in paragraph at lines 522--523
 []\OT1/cmr/m/it/10.95 External ver-i-fi-ca-tion meth-ods \OT1/cmr/m/n/10.95 com
 -pare model out-puts against ex-ter-nal knowl-edge sources, databases,
  []
 
-[20]
-Overfull \hbox (6.83415pt too wide) in paragraph at lines 485--486
+[23]
+Overfull \hbox (6.83415pt too wide) in paragraph at lines 546--547
 \OT1/cmr/m/n/10.95 cess-ing and com-puter vi-sion through its self-attention me
 ch-a-nism. Vi-sion Trans-form-ers (ViTs) (Doso-
  []
 
-[21]
+[24] [25]
 Chapter 4.
 
-Overfull \hbox (3.31694pt too wide) in paragraph at lines 498--499
+Overfull \hbox (3.31694pt too wide) in paragraph at lines 559--560
 \OT1/cmr/m/it/10.95 This chap-ter is based on work pub-lished at ICLR 2025: "Ca
 n We Ig-nore La-bels in Out-of-Distribution
  []
 
-[22
+[26
 
 ]
-<gradcam_example_faces.png, id=130, 716.6775pt x 359.54324pt>
+<gradcam_example_faces.png, id=146, 716.6775pt x 359.54324pt>
 File: gradcam_example_faces.png Graphic file (type png)
 <use gradcam_example_faces.png>
-Package pdftex.def Info: gradcam_example_faces.png  used on input line 510.
+Package pdftex.def Info: gradcam_example_faces.png  used on input line 571.
 (pdftex.def)             Requested size: 375.80544pt x 188.53809pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[23] [24 <./gradcam_example_faces.png>] [25] [26] [27] [28] [29] [30] [31]
-[32] [33]
+[27] [28 <./gradcam_example_faces.png>] [29] [30] [31] [32] [33] [34] [35]
+[36] [37]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[34] [35] [36] [37]
+[38] [39] [40] [41]
 Chapter 5.
-[38
 
-]
+Overfull \hbox (1.17668pt too wide) in paragraph at lines 826--827
+\OT1/cmr/m/n/10.95 bench-marks (Zhang et al., 2023b). How-ever, these bench-mar
+ks al-most ex-clu-sively use in-distribution
+ []
+
+[42
+
+] [43] [44] [45] [46] [47] [48]
+Overfull \hbox (12.88255pt too wide) in paragraph at lines 947--965
+ [][] 
+ []
+
+[49]
+Overfull \hbox (11.06973pt too wide) in paragraph at lines 989--1007
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (21.14633pt too wide) in paragraph at lines 1019--1037
+ [][] 
+ []
+
+[50]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[51] [52] [53] [54] [55]
 Chapter 6.
-[39
+[56
 
 ]
 Chapter 7.
-[40
+[57
 
 ]
 Chapter 8.
-(Sample_Thesis_main.bbl [41
+(Sample_Thesis_main.bbl [58
 
-] [42
+] [59
 
 ]
-Underfull \hbox (badness 5681) in paragraph at lines 115--120
+Underfull \hbox (badness 5681) in paragraph at lines 150--155
 []\OT1/cmr/m/n/10.95 Dumitru Er-han, Ian Good-fel-low, Will Cukier-ski, and Yos
 hua Ben-gio.  Chal-lenges
  []
 
 
-Underfull \hbox (badness 6842) in paragraph at lines 115--120
+Underfull \hbox (badness 6842) in paragraph at lines 150--155
 \OT1/cmr/m/n/10.95 in rep-re-sen-ta-tion learn-ing: Fa-cial ex-pres-sion recog-
 ni-tion chal-lenge, 2013.  URL
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 115--120
+Underfull \hbox (badness 10000) in paragraph at lines 150--155
 \OT1/cmtt/m/n/10.95 https : / / kaggle . com / competitions / challenges -[] in
  -[] representation -[] learning -[] facial -[]
  []
 
-[43] [44] [45] [46] [47] [48]) [49] [50
+[60] [61] [62] [63] [64] [65]
+Underfull \hbox (badness 1931) in paragraph at lines 585--589
+[]\OT1/cmr/m/n/10.95 Aditya Soni.  Play-ing cards dataset, 2020.  URL $\OT1/cmt
+t/m/n/10.95 https : / / www . kaggle . com / datasets /
+ []
+
+[66] [67]) [68] [69
 
 
 ]
@@ -685,57 +719,64 @@ Underfull \hbox (badness 10000) in paragraph at lines 115--120
 
  (AppendixA.tex
 Appendix A.
-) [51
+[70
 
 
-] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
+] [71] [72] [73] [74] [75] [76] [77] [78] [79] [80] [81]
+Overfull \hbox (7.62505pt too wide) in paragraph at lines 478--479
+[]\OT1/cmr/m/n/10.95 Using $(\OML/cmm/m/it/10.95 P[]\OT1/cmr/m/n/10.95 )$, we k
+now that in-de-pen-dent func-tions stay in-de-pen-dent and thus $\OML/cmm/m/it/
+10.95 I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr
+/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) = 0\OML/cmm/m/it/10.95 ; I\OT1/cmr/m/n/10.9
+5 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/
+m/n/10.95 ) =
+ []
+
+[82]) [83] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
 (Acknowledgements.aux) (Dedication.aux) (AppendixA.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 7387 strings out of 474486
- 113201 string characters out of 5743755
- 1937542 words of memory out of 5000000
- 29509 multiletter control sequences out of 15000+600000
- 570060 words of font info for 79 fonts, out of 8000000 for 9000
+ 7511 strings out of 474486
+ 115871 string characters out of 5743755
+ 1945542 words of memory out of 5000000
+ 29632 multiletter control sequences out of 15000+600000
+ 570419 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,16n,79p,1240b,414s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,16n,79p,1240b,481s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
 1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
 ts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publ
 ic/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/t
 ype1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX
 /fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/App
-Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/H
-ongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:
-/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib
-10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
-s/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/
-public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiK
-TeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Loca
-l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/Ho
-ngM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:
-/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6
-.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Sample_Thesis_main.pdf (63 pages, 737687 bytes).
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/User
+s/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb>
+<C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+mi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/
+HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><
+C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
+y10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
+ts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Sample_Thesis_main.pdf (96 pages, 850891 bytes).
 PDF statistics:
- 326 PDF objects out of 1000 (max. 8388607)
+ 436 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -2,8 +2,11 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Results from experiments across various datasets and methods. Unlabeled methods perform poorly in adjacent OOD detection. CLIPN performance is due to labels present in the pretraining dataset. Higher AUROC and lower FPR is better.}}{35}{}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Results from experiments across various datasets and methods. Unlabeled methods perform poorly in adjacent OOD detection. CLIPN performance is due to labels present in the pretraining dataset. Higher AUROC and lower FPR is better.}}{39}{}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Summary OOD Performance Across All Datasets Reported As (In-Domain OOD Score)/(Out-of-Domain OOD Score). We exclude the Rock dataset from this summary as it is an outlier for reasons explained in Section \ref {discussion}. Best scores are in bold and second best are bold and italicized. The domain filter methods are italicized. SC Resnet is not compatible with OOD methods that use logits.}}{49}{}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Summary FPR@95 OOD Performance Across Selected ID Datasets Reported As (In-Domain OOD Score)/(Out-of-Domain OOD Score). Best scores are in bold and second best are bold and italicized. Domain filtering methods are italicized.}}{51}{}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Detailed FPR@95 OOD Detection Performance for the Colon Dataset. Results show performance across different out-of-domain test sets. Domain filtering methods are italicized.}}{52}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

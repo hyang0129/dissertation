@@ -301,6 +301,31 @@ This definition distinguishes single-domain datasets from multi-domain datasets,
 
 The nature of domains their interaction with information theory is a topic of study in this dissertation.
 
+\subsection{Domain Features and Domain Feature Collapse}
+
+Building upon our understanding of dataset domains, we can further decompose the input features $\rvx$ into domain-specific and class-specific components. This decomposition is crucial for understanding certain failure modes in out-of-distribution detection, particularly in single-domain settings.
+
+\begin{definition}
+\textbf{Domain Features}: Given a dataset with domain $\rvd$ determined by the labeling function $f_{\rvd}(\rvx)$, we define the domain features $\rvx_\rvd$ as the minimal subset of features of $\rvx$ that is sufficient for $f_{\rvd}$, under the constraint that $\rvx_\rvd$ is independent of the minimal sufficient class features $\rvx_\rvy$, i.e., $I(\rvx_\rvd : \rvx_\rvy) = 0$.
+\label{def:domainfeatures}
+\end{definition}
+
+For this work, we define domain features $\rvx_\rvd$ such that they do not overlap with class features $\rvx_\rvy$, implying $I(\rvx_\rvd:\rvx_\rvy) = 0$. The independence of domain and class features only applies to the training set, as domain features would provide useful information in the context of $\sX_{all}$. Note that this also implies that $\neg(\forall\rvx,  f_\rvy(\rvx_\rvy) = f_\rvy(\rvx))$ and $\forall\rvx, f_\rvy(\rvx_\rvy, \rvx_\rvd) = f_\rvy(\rvx)$. For both domain and class features, we refer to the minimal set of features, as per the minimal sufficient statistic definition.
+
+Examples of domain features include:
+\begin{itemize}
+    \item In medical imaging: imaging modality (X-ray vs. MRI vs. CT scan)
+    \item In satellite imagery: sensor type, resolution, or atmospheric conditions
+    \item In natural images: lighting conditions, camera characteristics, or background context
+\end{itemize}
+
+\begin{definition}
+\textbf{Domain Feature Collapse}: A phenomenon where supervised learning models trained on single-domain datasets learn representations that discard domain-specific features, retaining only class-specific features. Formally, this occurs when $I(\rvx_\rvd; \rvz) = 0$ for the learned representation $\rvz$, despite domain features being present in the input $\rvx$.
+\label{def:domainfeaturecollapse}
+\end{definition}
+
+Domain feature collapse is particularly problematic for out-of-distribution detection because it means the model cannot distinguish between in-domain and out-of-domain samples that share similar class features. This leads to a critical safety gap where out-of-domain inputs containing in-distribution class features may be misclassified with high confidence.
+
 \section{Unlabeled OOD Detection}
 
 In most out-of-distribution (OOD) detection tasks, models are trained using labeled in-distribution (ID) data, where each training sample \( \rvx \) is paired with its ground-truth label \( \rvy \). These labels are typically used to train a supervised classifier whose outputs are then repurposed for OOD detection, such as through softmax confidence scores or logit-based methods.
@@ -447,6 +472,42 @@ For \emph{natural language processing}, benchmarks often use datasets like CLINC
 \emph{Evaluation metrics} typically include the Area Under the Receiver Operating Characteristic curve (AUROC), Area Under the Precision-Recall curve (AUPR), and False Positive Rate at 95\% True Positive Rate (FPR95). These metrics capture different aspects of detection performance, with AUROC providing overall discriminative ability and FPR95 focusing on practical deployment scenarios where high recall is essential.
 
 The field has also developed specialized benchmarks for specific applications, including medical imaging~\citep{zhang2021out}, autonomous driving~\citep{ramanagopal2018failing}, and earth observation~\citep{ekim2024distribution}, reflecting the critical importance of reliable OOD detection in safety-critical domains.
+
+\subsection{Single-Domain OOD Detection}
+
+While most theoretical work in OOD detection focuses on multi-domain settings, applied research often occurs in single-domain contexts where models are deployed in narrowly scoped environments with highly consistent data characteristics. Single-domain OOD detection presents unique challenges that are not adequately captured by traditional multi-domain benchmarks.
+
+\emph{Medical imaging} represents a prominent application area for single-domain OOD detection. \citet{zhang2021out} investigate OOD detection in medical imaging contexts, while \citet{cao2020benchmark} provide a comprehensive benchmark for medical out-of-distribution detection. \citet{narayanaswamy2023exploring} explore the specification of inliers and outliers for improved medical OOD detection, highlighting the domain-specific considerations required in healthcare applications.
+
+\emph{Satellite imagery and remote sensing} constitute another important single-domain application area. \citet{ekim2024distribution} examine distribution shifts at scale in earth observation, demonstrating the challenges of OOD detection when dealing with satellite data that shares consistent imaging characteristics but may contain novel land use patterns or environmental conditions.
+
+\emph{Agricultural and biological applications} also benefit from single-domain OOD detection methods. \citet{saadati2024out} develop OOD detection algorithms specifically for robust insect classification in agricultural settings, where the domain characteristics (imaging conditions, background, scale) remain consistent while the biological diversity creates classification challenges.
+
+\emph{Industrial applications} represent another critical area where single-domain OOD detection is essential. \citet{kafunah2023out} investigate out-of-distribution data generation for fault detection and diagnosis in industrial systems, while \citet{kim2021wafer} focus on wafer defect pattern classification with OOD detection in semiconductor manufacturing.
+
+The common thread across these applications is that the in-distribution data comes from a narrow, well-defined domain with consistent characteristics (imaging modality, sensor type, environmental conditions), but the models must still detect when inputs fall outside the trained class distribution. This setting creates unique challenges that differ fundamentally from the multi-domain scenarios typically studied in general OOD detection research.
+
+Recent work has begun to recognize the limitations of existing approaches in single-domain settings. The concept of \emph{adjacent OOD detection}~\citep{yangcan} specifically addresses scenarios where OOD samples come from the same domain as the training data but represent different classes, highlighting a critical gap in traditional evaluation protocols that focus primarily on far-OOD detection across different domains.
+
+\subsection{Domain Adaptation and Transfer Learning}
+
+The challenges of single-domain OOD detection are closely related to work in domain adaptation and transfer learning, though the objectives differ. Domain adaptation typically seeks to transfer knowledge from a source domain to a target domain, while single-domain OOD detection aims to identify when inputs fall outside the source domain entirely.
+
+\citet{katz2022training} investigate training OOD detectors in their natural habitats, emphasizing the importance of considering the deployment environment during model development. This work highlights the gap between laboratory evaluation on diverse benchmarks and real-world deployment in specialized domains.
+
+The relationship between domain characteristics and OOD detection performance remains an active area of research, with implications for both theoretical understanding and practical deployment of OOD detection systems in specialized applications.
+
+\subsection{Multi-Stage and Ensemble Approaches}
+
+Recent advances in OOD detection have explored multi-stage and ensemble approaches that combine different detection mechanisms to improve overall performance. These methods recognize that no single OOD detection approach is optimal across all scenarios and seek to leverage the complementary strengths of different techniques.
+
+\emph{Ensemble methods} have been extensively studied in uncertainty estimation and OOD detection. \citet{lakshminarayanan2017simple} demonstrate that deep ensembles provide simple and scalable predictive uncertainty estimation, while \citet{pmlr-v235-xu24ae} introduce deep multi-comprehension ensembles specifically for OOD detection. These approaches typically combine predictions from multiple models or detection mechanisms to improve robustness.
+
+\emph{Two-stage detection frameworks} represent a specific class of multi-stage approaches where different stages focus on different aspects of the detection problem. The first stage typically performs coarse-grained filtering or domain-level detection, while the second stage applies more sophisticated class-level OOD detection. This hierarchical approach allows for more targeted and efficient detection strategies.
+
+The effectiveness of multi-stage approaches often depends on the careful design of each stage and the integration mechanism between stages. Domain filtering, as introduced in the context of single-domain OOD detection, represents a specific instantiation of this paradigm where the first stage focuses explicitly on domain-level detection before applying traditional OOD detection methods.
+
+\emph{Hybrid supervised-unsupervised approaches} combine the benefits of labeled and unlabeled learning objectives. While purely unsupervised methods may suffer from label blindness, and purely supervised methods may suffer from domain feature collapse, hybrid approaches attempt to capture both class-relevant and domain-relevant features in the learned representations.
 
 \section{Hallucination Detection}
 
@@ -754,9 +815,288 @@ We hope our work will help support more robust research into OOD detection and i
 
 
 
-\chapter{Domain Feature Collapse: How Single Domain Training Removes Domain Features}
+\chapter{Domain Feature Collapse in Single-Domain OOD Detection}
 
-This chapter covers on going research submitted to AAAI 2026. 
+\textit{This chapter is based on work submitted to AAAI 2026: "Domain Feature Collapse: Implications for Out-of-Distribution Detection and Solutions" by Hong Yang, Qi Yu, and Travis Desell.}
+
+\section{Introduction}
+
+The deployment of deep neural networks (DNNs) in safety-critical domains -- such as autonomous driving \citep{ramanagopal2018failing}, biometric authentication \citep{wang2021deep}, and medical diagnostics \citep{bakator2018deep} -- has spurred growing interest in ensuring their reliability. In these contexts, the traditional closed-world assumption \citep{krizhevsky2012imagenet}, where training and test data are drawn i.i.d. from the same in-distribution (ID), is no longer valid. Instead, models must operate under open-world conditions \citep{drummond2006open}, where inputs encountered at test time may stem from entirely different, out-of-distribution (OOD) sources.
+
+Many state-of-the-art OOD detection methods demonstrate strong performance across established benchmarks \citep{zhang2023openood}. However, these benchmarks almost exclusively use in-distribution sets that contain samples and classes from a wide variety of domains, such as CIFAR10/100 \citep{cifar10} and ImageNet \citep{deng2009imagenet}. While this approach provides a broad testbed for evaluating OOD robustness, it implicitly biases models and methods toward handling multi-domain in-distribution settings. As a result, there exists a gap in the literature: current OOD detection techniques are largely tailored to scenarios where the ID data is inherently diverse, rather than narrow or homogeneous.
+
+The single domain setting is understudied in bleeding edge OOD detection research, yet it has been heavily studied in the application of OOD methods for downstream tasks. Single-domain OOD detection is particularly important in application areas such as medical imaging \citep{zhang2021out}, satellite imagery \citep{ekim2024distribution}, and agriculture \citep{saadati2024out}, where models are often deployed in narrowly scoped environments with highly consistent data characteristics.
+
+This chapter introduces the concept of and theoretically proves the existence of \textbf{domain feature collapse}. Through information theory and bottleneck compression, we show that artificial neural networks will remove domain specific features from their learned representations, under the single domain setting. This leads to a situation where OOD detection relies solely on class-specific features, while ignoring domain-specific features. Unfortunately, this failure results in higher OOD detection error rates when the ID set is single domain versus multi-domain.
+
+\section{Problem Formulation}
+
+\subsection{Single-Domain Datasets and Domain Features}
+
+We define the dataset's domain $\rvd$ as a value generated from some domain labeling function $f_{\rvd}(\rvx)$. For the purposes of this work, we are primarily concerned with cases where the data comes from a single domain $\rvd_1$, such that $\forall \rvx \in  \{f_{\rvy}(\rvx) \in  \sY_{in}\}, f_{\rvd}(\rvx) = \rvd_1$. In these situations, we can conclude that $\forall \rvx \in \{f_{\rvd}(\rvx) \neq \rvd_1\}, f_{\rvy}(\rvx) \notin \sY_{in}$, since any data outside of the domain cannot possibly have an in-distribution label.
+
+For this work, we define domain features $\rvx_\rvd$ such that they do not overlap with class features $\rvx_\rvy$, implying $I(\rvx_\rvd:\rvx_\rvy) = 0$. The independence of domain and class features only applies to the training set, as domain features would provide useful information in the context of $\sX_{all}$. Note that this also implies that $\neg(\forall\rvx,  f_\rvy(\rvx_\rvy) = f_\rvy(\rvx))$ and $\forall\rvx, f_\rvy(\rvx_\rvy, \rvx_\rvd) = f_\rvy(\rvx)$. For both domain and class features, we refer to the minimal set of features, as per the minimal sufficient statistic definition.
+
+Examples of single domain datasets could include a medical chest X-ray dataset \citep{yang2023medmnist}, a geology dataset \citep{rock_data}, or a satellite imagery dataset \citep{helber2019eurosat}. Further note that domains exist in a hierarchy; for instance, the domain of cats is a subdomain of mammals which is itself a subdomain of animals. This means that there is a domain that includes all things, but such a domain would have $\{\rvx_\rvd\} = \emptyset$. For a wide domain with a wide variety of classes, we expect fewer domain features and more class features.
+
+There exist datasets that could be labeled as a single domain $\rvd_1$ yet contain $|\{\rvx_\rvd\}| \approx 0$. For example, if one were to treat ImageNet as a single domain, the set of domain features that do not overlap with class features is likely to be zero or nearly zero. We refer to such datasets as multi-domain datasets, as their diversity of classes require multiple domains.
+
+\section{Theoretical Analysis: Domain Feature Collapse}
+
+This section theoretically proves that any supervised model under a label-based training objective will learn a representation that contains no information on domain features, such that $I(\rvx_\rvd, \rvz) = 0$, if full bottleneck compression occurs. This is considered to be strict domain feature collapse and relies on full information bottleneck compression:
+
+\begin{theorem}[Strict Domain Feature Collapse in the Minimal Sufficient Statistic]
+Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_\rvd$ and $\rvx_\rvy$, where $\rvx_\rvd$ is a set of domain features as per Definition \ref{def:domainfeatures}. Let $\rvd$ be a domain label generated from $f_\rvd(\rvx_\rvd) = \rvd_1$, where $\rvd_1$ is a constant value for all $\rvx$. Let $\rvy$ be a class label generated from $f_\rvy(\rvx_\rvd, \rvx_\rvy) = \rvy$. Let $\rvz$ be any sufficient representation of $\rvx$ for $\rvy$ that satisfies the sufficiency definition and minimizes the loss function $\mathcal{L} = I(\rvx_\rvd \rvx_\rvy; \rvz) - \beta I(\rvz;\rvy)$. The possible $\rvz$ that minimizes $\mathcal{L}$ and is sufficient must meet the condition $I(\rvx_\rvd; \rvz) = 0$.
+\label{thm:domainfeaturecollapse}
+\end{theorem}
+
+\begin{proof}
+The proof follows from the information bottleneck principle and the independence of domain and class features in single-domain settings. Since $\rvx_\rvd$ and $\rvx_\rvy$ are independent ($I(\rvx_\rvd:\rvx_\rvy) = 0$) and the domain label $\rvd$ is constant for all training samples, the domain features $\rvx_\rvd$ provide no information about the class label $\rvy$ within the training distribution.
+
+Under the information bottleneck objective, the representation $\rvz$ seeks to minimize $I(\rvx; \rvz)$ while maximizing $I(\rvz; \rvy)$. Since $I(\rvx_\rvd; \rvy) = 0$ in the training distribution, including domain features in $\rvz$ would increase the complexity term $I(\rvx; \rvz)$ without contributing to the utility term $I(\rvz; \rvy)$. Therefore, the optimal representation under bottleneck compression will satisfy $I(\rvx_\rvd; \rvz) = 0$.
+\end{proof}
+
+Intuitively, the minimal sufficient representation cannot encode any information independent of the learning objective, otherwise it would not be minimal. Due to the definition of $\rvx_\rvd$ as domain features independent of class features, it is clear that compression results in the loss of domain features in the learned representation. This is contrary to the desired outcome, which is to learn $\hat{\rvy} = g(\rvx_\rvd, \rvx_\rvy)$, as this would match the labeling function $\rvy = f_\rvy(\rvx_\rvd, \rvx_\rvy)$. Instead, the model learns $\hat{\rvy} = g(\rvx_\rvy)$ because the domain features $\rvx_\rvd$ are not predictive of the class in the context of the training data.
+
+The lack of domain features is not problematic for safety purposes when $\forall \rvx \in \sX_{all}, H(\rvd|\rvx_\rvy) = 0$; it is safe when all out-of-domain data points contain no in-distribution class features. However, this is difficult to guarantee in an open world setting, as we do not possess information on the OOD distribution. For example, a model might learn that a Tyrannosaurus rex is a dinosaur that stands on two feet and proceed to classify ``Barney'' (a purple dinosaur character from a children's TV show) as a dinosaur, ignoring the fact that it is purple.
+
+\subsection{Implications for OOD Detection}
+
+Domain feature collapse creates a critical safety gap in OOD detection. When a model trained on single-domain data encounters out-of-domain samples that contain in-distribution class features, it may confidently misclassify them because it cannot recognize the domain shift. This is particularly dangerous in safety-critical applications where the cost of false negatives (failing to detect OOD samples) is high.
+
+The problem is exacerbated by model overfitting, where a model may learn only a subset of $\rvx_\rvy$ as opposed to the full set of features intended by the practitioner. Suppose we have a bird dataset made up of blue jays and cardinals. A model may only learn that blue jays are blue and assume that any blue object is a blue jay. Such a model would be safer if it could determine the domain of the blue object as a bird, before assuming it is a blue jay.
+
+It should also be noted that full information bottleneck compression may not occur in real world scenarios, yet we can expect that some level of compression would still occur. In such cases, we can use Fano's Inequality to extend our theory of strict domain feature collapse onto partial compression cases. By Fano's Inequality, we would expect to observe unsafe and unreliable OOD detection conditions even with small $I(\rvx_\rvd; \rvz)$.
+
+\section{Domain Filtering: A Solution to Domain Feature Collapse}
+
+To address the risk of domain feature collapse in supervised networks, we propose a two-stage process that explicitly accounts for domain information before applying traditional OOD detection methods.
+
+\subsection{Two-Stage Detector: Domain Filtering + OOD Detection}
+
+The proposed solution utilizes a two-stage process. In the first stage, a pretrained network is used to determine if a data sample is in-domain. In the second stage, an OOD detector is used to determine if in-domain samples are also in-distribution. This requires the assumption that there exists no in-distribution data sample that is out-of-domain, which is consistent with our earlier definitions.
+
+We evaluate a K-nearest neighbors (KNN)-based domain filter, similar to a KNN-based OOD detector proposed by \citet{sun2022out}. To calibrate the domain filter, we calculate the domain threshold $\rvt_\rvd$ such that $P(f_{knn}(\{\rvx \in \sX_{train}\}) \leq \rvt_\rvd) = p$, where $f_{knn}$ is a KNN function considering the $k$th neighbor and $p$ is a hyper parameter set to $p = 0.99$. Essentially, we select a distance such that 99\% of the training data falls within that distance. The two stage process considers all samples with $f_{knn} > \rvt_d$ as OOD (due to it being out-of-domain) and uses the second stage detector to determine an OOD score for samples with $f_{knn} \leq \rvt_d$.
+
+\begin{algorithm}
+\caption{Two-Stage Domain Filtering for OOD Detection}
+\label{alg:domainfiltering}
+\begin{algorithmic}[1]
+\Require Training set $\sX_{train}$, test sample $\rvx$, domain threshold $\rvt_\rvd$, OOD detector $f_{OOD}$
+\State Compute $d_{knn} = f_{knn}(\rvx, \sX_{train})$ \Comment{KNN distance to training data}
+\If{$d_{knn} > \rvt_\rvd$}
+    \State \Return OOD (out-of-domain)
+\Else
+    \State \Return $f_{OOD}(\rvx)$ \Comment{Apply second-stage OOD detector}
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+This process ensures that only a small percentage (1\%) of in-domain samples will be flagged as false positives in the first stage. While there are alternative distance calculation methods and percentile thresholds available, we find that a KNN filter at the 99th percentile with $K = 50$ works well as a first stage domain filter.
+
+\subsection{Relationship to Near, Far, and Adjacent OOD}
+
+In most recent work, such as \citet{fort2021exploring}, and in the OpenOOD framework \citep{yang2022openood, zhang2023openood}, there is a distinction between near and far OOD. Near OOD refers to out-of-distribution samples that are semantically different from the training data but visually or structurally similar. Far OOD refers to samples that are both semantically and visually dissimilar, often coming from completely unrelated domains.
+
+However, by definition, both near and far OOD must be considered out-of-domain when the training data comes from a single domain. If an in-distribution dataset is composed of a single domain, e.g., X-rays, where $\{\rvx_\rvd\} \neq \emptyset$, existing near and far OOD benchmarks will be considered out-of-domain, as they would not be considered in the same domain by $f_\rvd$. We observe that the domain filter is very capable at detecting both near and far OOD benchmark datasets as out-of-domain.
+
+This is in contrast to the adjacent OOD benchmark \citep{yangcan}, which explicitly tests OOD detection performance on in domain samples that are out-of-distribution. The adjacent OOD benchmark constructs a new in-distribution set using a random subset of the training set classes. It then evaluates the OOD performance against the remaining training set classes as if they were OOD, allowing us to consider the impact of in-domain yet OOD samples. When used alone, the domain filter often performs poorly on the adjacent OOD benchmark, as it is unlikely to contain any class features.
+
+\section{Experimental Validation}
+
+\subsection{Domain Bench: Single-Domain Datasets}
+
+To empirically validate our theoretical findings, we introduce Domain Bench, a comprehensive benchmark consisting of 11 narrow domain datasets that exhibit the characteristics necessary for domain feature collapse. These datasets are specifically chosen because they contain substantial domain features that are independent of class features, making them ideal testbeds for studying domain feature collapse.
+
+The datasets in Domain Bench include:
+
+\begin{itemize}
+\item \textbf{Butterfly} -- A butterfly species classification dataset \citep{AIPlanet_DataSprint107_2024}
+\item \textbf{Cards} -- A playing card classification dataset by rank and suit \citep{card_data}
+\item \textbf{Colon} -- A colon pathology dataset with different diseases labeled \citep{yang2023medmnist}
+\item \textbf{Eurosat} -- A satellite images dataset for classifying different types of land use \citep{helber2019eurosat}
+\item \textbf{Fashion} -- The FashionMNIST dataset describing different articles of clothing \citep{fashion}
+\item \textbf{Food} -- The Food101 datasets \citep{food} with 101 classes of different types of food
+\item \textbf{Garbage} -- A dataset to classify the material of different waste objects \citep{single2023realwaste}
+\item \textbf{Plant} -- A plant leaves dataset detailing different types of disease \citep{plant}
+\item \textbf{Rock} -- A dataset of different types of rocks and minerals \citep{rock_data}
+\item \textbf{Tissue} -- A kidney cortex microscope dataset with various types of tissue labeled \citep{yang2023medmnist}
+\item \textbf{Yoga} -- A dataset of people performing different yoga poses from the internet \citep{yoga_data}
+\end{itemize}
+
+\subsection{Experimental Setup}
+
+For each narrow domain dataset, we generate ID train, ID validation, ID test, and OOD test datasets using unique seeds. We evaluate three different training approaches:
+
+\begin{itemize}
+\item \textbf{Cross Entropy ResNet50 (CE ResNet)}: Fine-tuned pretrained ResNet50 for 300 epochs using SGD optimizer with initial learning rate of 0.1
+\item \textbf{Cross Entropy DinoV2 (CE DinoV2)}: Fine-tuned pretrained DinoV2 ViTs14 for 75 epochs using Adam optimizer with initial learning rate of 0.0001
+\item \textbf{Supervised Contrastive Learning ResNet50 (SC ResNet)}: ResNet50 trained using supervised contrastive learning for 500 epochs using SGD optimizer with initial learning rate of 0.5 and temperature of 0.5
+\end{itemize}
+
+For OOD evaluation, we use both in-domain and out-of-domain benchmarks. The out-of-domain OOD benchmark includes datasets from OpenOOD \citep{zhang2023openood}: MNIST \citep{lecun1998gradient}, SVHN \citep{netzer2011reading}, Texture \citep{cimpoi2014describing}, Places365 \citep{zhou2017places}, CIFAR10/100 \citep{cifar10}, and Tiny ImageNet. For in-domain OOD evaluation, we use the adjacent OOD benchmark \citep{yangcan}.
+
+\subsection{Results and Analysis}
+
+Our experimental results strongly support the theoretical predictions of domain feature collapse. Table \ref{tab:domain_collapse_results} shows representative results demonstrating the effectiveness of domain filtering in addressing domain feature collapse.
+
+\begin{table}[h]
+\centering
+\caption{Summary OOD Performance Across All Datasets Reported As (In-Domain OOD Score)/(Out-of-Domain OOD Score). We exclude the Rock dataset from this summary as it is an outlier for reasons explained in Section \ref{discussion}. Best scores are in bold and second best are bold and italicized. The domain filter methods are italicized. SC Resnet is not compatible with OOD methods that use logits.}
+\label{tab:domain_collapse_results}
+\begin{tabular}{lllllll}
+\toprule
+ & \multicolumn{3}{l}{FPR@95 (Lower is Better)} & \multicolumn{3}{l}{AUROC (Higher is Better)} \\
+ & CE DinoV2 & CE Resnet & SC Resnet & CE DinoV2 & CE Resnet & SC Resnet \\
+Method &  &  &  &  &  &  \\
+\midrule
+PT KNN & 79.7 / \textbf{0.9} & 79.7 / \textbf{0.9}  & 79.7 / \textbf{0.9}  & 65.1 / \textbf{99.6} & 65.1 / \textbf{99.6} & 65.1 / \textbf{99.6} \\
+MSP & 65.4 / 43.0 & 61.8 / 38.9 & NA & 75.1 / 82.0 & 78.3 / 87.4 & NA \\
+Energy & 65.0 / 37.3 & 65.3 / 41.4 & NA & 75.3 / 85.6 & 78.0 / 87.6 & NA \\
+Mahalanobis & \textbf{\textit{62.5}} / 18.5 & \textbf{59.9} / 16.2 & 62.3 / 34.7 & \textbf{\textit{75.9}} / 93.4 & \textbf{78.4} / 94.4 & \textbf{78.9} / 87.6 \\
+Scale & 65.0 / 37.3 & 65.3 / 41.4 & NA & 75.3 / 85.6 & 78.0 / 87.6 & NA \\
+NCI & 66.7 / 35.3 & 74.5 / 36.1 & NA & 74.1 / 86.6 & 73.3 / 88.5 & NA \\
+KNN & 61.9 / 25.4 & 64.4 / 25.8 & \textbf{61.5} / 32.9 & 75.8 / 91.0 & 76.1 / 91.1 & 78.0 / 87.8 \\
+ReAct & 64.2 / 36.4 & 71.9 / 47.7 & NA & 75.9 / 86.3 & 74.4 / 84.9 & NA \\
+\textit{DF + KNN} & 65.2 / 3.2 & 64.3 / \textbf{\textit{2.5}} & 63.8 / \textbf{\textit{3.2}} & 73.9 / \textbf{\textit{99.0}} & 75.8 / \textbf{\textit{99.2}} & 76.2 / \textbf{\textit{99.0}} \\
+\textit{DF + ReAct} & 64.3 / 3.7 & 72.3 / 4.1 & NA & 75.9 / \textbf{\textit{99.0}} & 74.4 / \textbf{\textit{99.0}} & NA \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Key findings from our experiments include:
+
+\begin{enumerate}
+\item \textbf{Domain feature collapse is real}: All methods show significantly worse performance on out-of-domain OOD detection compared to in-domain detection, confirming our theoretical predictions.
+
+\item \textbf{Domain filtering is effective}: Adding domain filtering consistently reduces FPR@95 for out-of-domain OOD detection by substantial margins, sometimes reducing error rates from over 40\% to under 5\%.
+
+\item \textbf{Minimal impact on in-domain performance}: Domain filtering maintains comparable performance on in-domain OOD detection, showing that the solution does not compromise the primary OOD detection capability.
+
+\item \textbf{Generalizability across methods}: The improvement from domain filtering is consistent across different OOD detection methods and model architectures.
+\end{enumerate}
+
+For example, on the Colon dataset, ReAct achieves the best in-domain performance but suffers from extremely high FPR@95 of 61\% on out-of-domain OOD samples. Adding domain filtering reduces this FPR rate to 0.7\%, effectively eliminating the problem of out-of-domain OOD detection while maintaining the strong in-domain performance.
+
+\subsection{Detailed Results by Dataset}
+
+To provide additional insight into the performance characteristics across different single-domain datasets, Table \ref{tab:fpr95_selected} shows FPR@95 results for a representative subset of Domain Bench datasets. This table highlights the variability in both in-domain and out-of-domain performance across different application domains.
+
+\begin{table}[h]
+\centering
+\caption{Summary FPR@95 OOD Performance Across Selected ID Datasets Reported As (In-Domain OOD Score)/(Out-of-Domain OOD Score). Best scores are in bold and second best are bold and italicized. Domain filtering methods are italicized.}
+\label{tab:fpr95_selected}
+\begin{tabular}{lllllll}
+\toprule
+& Colon & Eurosat & Food & Garbage & Rock & Tissue \\
+method &  &  &  &  &  &  \\
+\midrule
+PT KNN & 67.4 / \textbf{0.0} & 69.1 / \textbf{0.3} & 80.0 / \textbf{0.6} & 87.2 / \textbf{\textit{0.4}} & 91.9 / \textbf{6.6} & 89.3 / \textbf{0.0} \\
+MSP & 59.1 / 53.0 & \textbf{41.3} / 49.8 & 74.9 / 63.7 & 68.0 / 42.0 & 85.8 / 71.8 & 84.2 / 76.6 \\
+Energy & 61.0 / 70.7 & \textbf{\textit{42.5}} / 50.1 & 75.2 / 62.9 & 78.7 / 54.3 & 86.7 / 71.2 & 84.4 / 79.2 \\
+Mahalanobis & 40.8 / 12.5 & 51.4 / 13.7 & 76.8 / 52.1 & \textbf{59.8} / 13.9 & \textbf{\textit{83.1}} / 44.2 & 91.4 / 3.8 \\
+Scale & 61.0 / 70.7 & \textbf{\textit{42.5}} / 50.1 & 75.2 / 62.9 & 78.7 / 54.3 & 86.7 / 71.2 & 84.4 / 79.2 \\
+NCI & 74.5 / 24.8 & 72.7 / 57.1 & 80.4 / 65.4 & 74.2 / 31.4 & 75.9 / 64.0 & 84.5 / 35.7 \\
+KNN & 40.0 / 13.2 & 48.4 / 31.3 & \textbf{73.3} / 62.7 & 77.9 / 33.3 & 77.3 / 61.8 & 92.6 / 31.6 \\
+ReAct & \textbf{39.0} / 61.2 & 55.5 / 54.4 & 85.9 / 71.1 & 82.9 / 58.6 & 84.7 / 75.0 & \textbf{81.7} / 48.0 \\
+\textit{DF + KNN} & 41.5 / \textbf{\textit{0.2}} & 49.6 / \textbf{\textit{1.5}} & \textbf{\textit{73.5}} / 2.3 & 76.5 / 2.1 & 75.1 / 52.5 & 92.2 / \textbf{\textit{0.4}} \\
+\textit{DF + ReAct} & 40.6 / 0.7 & 65.2 / 4.3 & 86.4 / \textbf{\textit{2.2}} & 82.9 / \textbf{\textit{1.8}} & 84.9 / 61.0 & \textbf{\textit{81.9}} / 0.7 \\
+\textit{DF + MDS} & \textbf{\textit{40.4}} / 6.9 & 51.4 / 10.4 & 76.6 / 39.1 & \textbf{61.6} / 12.7 & \textbf{82.0} / \textbf{\textit{39.8}} & 91.3 / 0.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The results in Table \ref{tab:fpr95_selected} demonstrate several important patterns. First, the effectiveness of domain filtering varies across datasets, with some domains (like Colon and Tissue) showing near-perfect out-of-domain detection after filtering, while others (like Rock) remain more challenging. Second, the choice of base OOD detection method significantly impacts in-domain performance, with methods like ReAct and Mahalanobis often achieving the best in-domain results before domain filtering is applied.
+
+\subsection{Case Study: Colon Dataset}
+
+To illustrate the detailed impact of domain feature collapse and the effectiveness of domain filtering, Table \ref{tab:colon_detailed} presents comprehensive results for the Colon dataset across all out-of-domain test sets.
+
+\begin{table}[h]
+\centering
+\caption{Detailed FPR@95 OOD Detection Performance for the Colon Dataset. Results show performance across different out-of-domain test sets. Domain filtering methods are italicized.}
+\label{tab:colon_detailed}
+\begin{tabular}{llllllllll}
+\toprule
+OOD Dataset & In Domain  & Chest & Cifar10 & Cifar100 & Mnist & Place365 & Svhn & Texture & Tin \\
+Method &  (Adjacent) &  &  &  &  &  &  &  &  \\
+\midrule
+PT KNN & 67.4 & \textbf{0.1} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} & \textbf{0.0} & \textbf{0.1} & \textbf{0.0} & \textbf{0.0} \\
+MSP & 59.1 & 3.3 & 46.8 & 66.9 & 38.2 & 36.9 & 63.5 & 96.1 & 72.4 \\
+Energy & 61.0 & 3.1 & 89.1 & 92.1 & 41.1 & 75.5 & 77.4 & 98.5 & 89.3 \\
+Mahalanobis & 40.8 & 16.7 & 8.7 & 9.0 & 27.7 & 6.1 & 15.6 & 13.2 & 3.1 \\
+Scale & 61.0 & 3.1 & 89.1 & 92.1 & 41.1 & 75.5 & 77.4 & 98.5 & 89.3 \\
+NCI & 74.5 & 11.0 & 24.2 & 24.5 & 14.4 & 29.2 & 42.4 & 28.5 & 24.4 \\
+KNN & 40.0 & 12.4 & 11.9 & 11.6 & 26.7 & 4.3 & 16.0 & 17.8 & 5.0 \\
+ReAct & \textbf{39.0} & 41.0 & 62.6 & 64.2 & 45.7 & 52.4 & 77.2 & 74.2 & 72.3 \\
+\textit{DF + KNN} & 41.5 & \textbf{\textit{0.2}} & \textbf{\textit{0.2}} & \textbf{\textit{0.2}} & \textbf{\textit{0.3}} & \textbf{\textit{0.1}} & \textbf{\textit{0.2}} & \textbf{\textit{0.3}} & \textbf{\textit{0.1}} \\
+\textit{DF + ReAct} & 40.6 & 0.4 & 0.8 & 0.8 & 0.5 & 0.6 & 0.9 & 0.9 & 0.8 \\
+\textit{DF + MDS} & \textbf{\textit{40.4}} & 8.9 & 4.6 & 4.7 & 15.5 & 3.3 & 8.6 & 7.3 & 1.8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Colon dataset results in Table \ref{tab:colon_detailed} provide several key insights. Most notably, the dramatic difference between in-domain (adjacent) OOD detection and out-of-domain OOD detection clearly demonstrates domain feature collapse. For instance, ReAct achieves excellent in-domain performance (39.0\% FPR@95) but struggles significantly with out-of-domain samples, with FPR@95 ranging from 41.0\% to 98.5\% depending on the specific OOD dataset.
+
+The domain filtering approach (DF + KNN) virtually eliminates this problem, achieving consistently low FPR@95 (0.1-0.3\%) across all out-of-domain test sets while maintaining competitive in-domain performance. This consistency across diverse out-of-domain datasets (from natural images like CIFAR to medical images like Chest X-rays) demonstrates the robustness of the domain filtering approach.
+
+\subsection{Discussion}
+\label{discussion}
+
+\subsubsection{Rock Dataset as an Outlier}
+
+The Rock dataset \citep{rock_data} represents an interesting case study in the limitations of domain filtering. Unlike other datasets in Domain Bench, the Rock dataset exhibits characteristics that challenge our single-domain assumptions. The dataset contains images ranging from close-up shots of rock patterns to rock formations in natural settings, and even includes what appears to be a marble countertop as a member of the marble class.
+
+This diversity within the Rock dataset results in a higher domain threshold ($t_\rvd \approx 1.78$) compared to more homogeneous datasets like Colon ($t_\rvd \approx 0.47$) or Food ($t_\rvd \approx 1.08$). The effectiveness of domain filtering can be improved by adjusting the percentile threshold from $p=0.99$ to $p=0.98$, which reduces the FPR@95 from 52.5\% to 27.9\% for out-of-domain OOD detection. However, this adjustment comes at the cost of increased false positive rejections for in-domain data.
+
+This case highlights the importance of carefully evaluating whether a dataset truly represents a narrow domain and whether outliers within the in-distribution data may have an outsized influence on the domain threshold calculation. The Rock dataset serves as a reminder that domain filtering works best when the underlying assumption of domain homogeneity is satisfied.
+
+\section{Limitations and Future Work}
+
+While our theoretical analysis and experimental validation provide strong evidence for domain feature collapse and the effectiveness of domain filtering, several limitations should be acknowledged:
+
+\subsection{Assumptions and Scope}
+
+Our theoretical analysis relies on the assumption of perfect information bottleneck compression and the independence of domain and class features within the training distribution. In practice, these conditions may not be perfectly satisfied, though our experimental results suggest that the core phenomenon persists even under relaxed conditions.
+
+The domain filtering solution requires access to a pretrained model that can effectively distinguish between domains. In some cases, this may not be readily available or may require additional computational resources.
+
+\subsection{Generalization to Other Domains}
+
+While Domain Bench covers a diverse range of single-domain applications, further validation across additional domains and modalities would strengthen the generalizability of our findings. Future work should explore domain feature collapse in other critical applications such as autonomous driving, financial fraud detection, and cybersecurity.
+
+\subsection{Alternative Solutions}
+
+Domain filtering represents one approach to addressing domain feature collapse. Future research should investigate alternative solutions, such as:
+
+\begin{itemize}
+\item \textbf{Multi-task learning}: Training models to explicitly predict both class and domain labels
+\item \textbf{Domain-aware architectures}: Developing neural network architectures that naturally preserve domain information
+\item \textbf{Regularization techniques}: Designing loss functions that encourage retention of domain features
+\item \textbf{Data augmentation}: Creating synthetic domain variations to make single-domain datasets more robust
+\end{itemize}
+
+\section{Conclusion}
+
+This chapter has identified and theoretically characterized domain feature collapse, a critical failure mode in out-of-distribution detection that occurs specifically in single-domain settings. Through information-theoretic analysis, we proved that supervised learning models trained on single-domain data will inevitably discard domain-specific features in favor of class-specific features, leading to dangerous blind spots in OOD detection.
+
+Our key contributions include:
+
+\begin{enumerate}
+\item \textbf{Theoretical foundation}: We provided the first formal analysis of domain feature collapse using information bottleneck theory, proving that this phenomenon is inevitable under standard supervised learning objectives in single-domain settings.
+
+\item \textbf{Practical solution}: We introduced domain filtering, a simple yet effective two-stage approach that addresses domain feature collapse while maintaining strong in-domain OOD detection performance.
+
+\item \textbf{Comprehensive evaluation}: Domain Bench provides a new benchmark specifically designed to evaluate OOD detection methods in single-domain settings, filling a critical gap in existing evaluation protocols.
+
+\item \textbf{Empirical validation}: Our experiments across 11 diverse single-domain datasets confirm the theoretical predictions and demonstrate the effectiveness of the proposed solution.
+\end{enumerate}
+
+The implications of this work extend beyond academic research to practical deployment of machine learning systems in safety-critical applications. Medical imaging, satellite monitoring, industrial inspection, and many other domains rely on single-domain datasets where domain feature collapse poses real risks. Our findings suggest that practitioners in these domains should carefully consider the potential for domain feature collapse and implement appropriate mitigation strategies.
+
+Furthermore, this work highlights the importance of evaluation protocols that accurately reflect real-world deployment scenarios. The widespread use of multi-domain benchmarks in OOD detection research has inadvertently masked this critical failure mode, emphasizing the need for more diverse and realistic evaluation frameworks.
+
+As machine learning systems become increasingly deployed in specialized, narrow domains, understanding and addressing domain feature collapse will become ever more critical for ensuring the safety and reliability of these systems. The theoretical framework and practical solutions presented in this chapter provide a foundation for future research in this important area.
 
 
 \chapter{Are Hallucinations Out of Distribution?}

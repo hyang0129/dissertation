@@ -1,9 +1,17 @@
-\begin{thebibliography}{82}
+\begin{thebibliography}{105}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{AIPlanet}(2023)]{AIPlanet_DataSprint107_2024}
+{AIPlanet}.
+\newblock {Data Sprint 107 – Butterfly Image Classification} [dataset].
+\newblock
+  \url{https://aiplanet.com/challenges/325/butterfly_identification/overview/about},
+  2023.
+\newblock Accessed: 2025-05-09.
 
 \bibitem[Alemi et~al.(2017)Alemi, Fischer, Dillon, and Murphy]{alemi2017deep}
 Alexander~A Alemi, Ian Fischer, Joshua~V Dillon, and Kevin Murphy.
@@ -25,10 +33,17 @@ Mohamed~Ishmael Belghazi, Aristide Baratin, Sai Rajeshwar, Sherjil Ozair,
 \newblock In \emph{International Conference on Machine Learning (ICML)}, pp.\
   531--540, 2018.
 
-\bibitem[Bossard et~al.(2014)Bossard, Guillaumin, and Van~Gool]{bossard14}
+\bibitem[Bossard et~al.(2014{\natexlab{a}})Bossard, Guillaumin, and
+  Van~Gool]{bossard14}
 Lukas Bossard, Matthieu Guillaumin, and Luc Van~Gool.
 \newblock Food-101 -- mining discriminative components with random forests.
-\newblock In \emph{European Conference on Computer Vision}, 2014.
+\newblock In \emph{European Conference on Computer Vision}, 2014{\natexlab{a}}.
+
+\bibitem[Bossard et~al.(2014{\natexlab{b}})Bossard, Guillaumin, and
+  Van~Gool]{food}
+Lukas Bossard, Matthieu Guillaumin, and Luc Van~Gool.
+\newblock Food-101 -- mining discriminative components with random forests.
+\newblock In \emph{European Conference on Computer Vision}, 2014{\natexlab{b}}.
 
 \bibitem[Brown et~al.(2020)Brown, Mann, Ryder, Subbiah, Kaplan, Dhariwal,
   Neelakantan, Shyam, Sastry, Askell, et~al.]{brown2020language}
@@ -44,6 +59,11 @@ Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared~D Kaplan, Prafulla
 Collin Burns, Haotian Ye, Dan Klein, and Jacob Steinhardt.
 \newblock Discovering latent knowledge in language models without supervision.
 \newblock \emph{arXiv preprint arXiv:2212.03827}, 2023.
+
+\bibitem[Cao et~al.(2020)Cao, Huang, Hui, and Cohen]{cao2020benchmark}
+Tianshi Cao, Chin-Wei Huang, David Yu-Tung Hui, and Joseph~Paul Cohen.
+\newblock A benchmark of medical out of distribution detection.
+\newblock \emph{arXiv preprint arXiv:2007.04250}, 2020.
 
 \bibitem[Chen et~al.(2020)Chen, Kornblith, Norouzi, and Hinton]{chen2020simple}
 Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton.
@@ -68,6 +88,21 @@ I-Chun Chern, Steffi Chern, Shiqi Chen, Weizhe Qian, Kehua Wei, Chunting Zou,
 \newblock Factool: Factuality detection in generative ai--a tool augmented
   framework for multi-task and multi-domain scenarios.
 \newblock \emph{arXiv preprint arXiv:2307.13528}, 2023.
+
+\bibitem[Cimpoi et~al.(2014)Cimpoi, Maji, Kokkinos, Mohamed, and
+  Vedaldi]{cimpoi2014describing}
+Mircea Cimpoi, Subhransu Maji, Iasonas Kokkinos, Sammy Mohamed, and Andrea
+  Vedaldi.
+\newblock Describing textures in the wild.
+\newblock In \emph{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}, pp.\  3606--3613, 2014.
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
+  Fei-Fei]{deng2009imagenet}
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li~Fei-Fei.
+\newblock Imagenet: A large-scale hierarchical image database.
+\newblock In \emph{2009 IEEE conference on computer vision and pattern
+  recognition}, pp.\  248--255. Ieee, 2009.
 
 \bibitem[Devlin et~al.(2018)Devlin, Chang, Lee, and Toutanova]{devlin2018bert}
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova.
@@ -179,6 +214,14 @@ Kaiming He, Haoqi Fan, Yuxin Wu, Saining Xie, and Ross Girshick.
 \newblock In \emph{Proceedings of the IEEE/CVF conference on computer vision
   and pattern recognition}, pp.\  9729--9738, 2020.
 
+\bibitem[Helber et~al.(2019)Helber, Bischke, Dengel, and
+  Borth]{helber2019eurosat}
+Patrick Helber, Benjamin Bischke, Andreas Dengel, and Damian Borth.
+\newblock Eurosat: A novel dataset and deep learning benchmark for land use and
+  land cover classification.
+\newblock \emph{IEEE Journal of Selected Topics in Applied Earth Observations
+  and Remote Sensing}, 2019.
+
 \bibitem[Hendrycks \& Gimpel(2016)Hendrycks and Gimpel]{hendrycks2016baseline}
 Dan Hendrycks and Kevin Gimpel.
 \newblock A baseline for detecting misclassified and out-of-distribution
@@ -213,6 +256,18 @@ Jonathan Ho, Ajay Jain, and Pieter Abbeel.
 \newblock \emph{Advances in neural information processing systems},
   33:\penalty0 6840--6851, 2020.
 
+\bibitem[Hossain et~al.(2021)Hossain, Uddin, Nahin, and Ibne~Eunus]{rock_data}
+Shahriar Hossain, Jahir Uddin, Rakibul Nahin, and Salman Ibne~Eunus.
+\newblock Rock classification dataset, 08 2021.
+
+\bibitem[Hughes \& Salath{\'{e} }(2015)Hughes and Salath{\'{e} }]{plant}
+David~P. Hughes and Marcel Salath{\'{e} }.
+\newblock An open access repository of images on plant health to enable the
+  development of mobile disease diagnostics through machine learning and
+  crowdsourcing.
+\newblock \emph{CoRR}, abs/1511.08060, 2015.
+\newblock URL \url{http://arxiv.org/abs/1511.08060}.
+
 \bibitem[Hyv{\"a}rinen \& Oja(2000)Hyv{\"a}rinen and
   Oja]{hyvarinen2000independent}
 Aapo Hyv{\"a}rinen and Erkki Oja.
@@ -225,6 +280,19 @@ Michael~I Jordan, Zoubin Ghahramani, Tommi~S Jaakkola, and Lawrence~K Saul.
 \newblock An introduction to variational methods for graphical models.
 \newblock \emph{Machine Learning}, 37:\penalty0 183--233, 1999.
 
+\bibitem[Kafunah et~al.(2023)Kafunah, Verma, Ali, and Breslin]{kafunah2023out}
+Jefkine Kafunah, Priyanka Verma, Muhammad~Intizar Ali, and John~G Breslin.
+\newblock Out-of-distribution data generation for fault detection and diagnosis
+  in industrial systems.
+\newblock \emph{IEEE Access}, 11:\penalty0 135061--135073, 2023.
+
+\bibitem[Katz-Samuels et~al.(2022)Katz-Samuels, Nakhleh, Nowak, and
+  Li]{katz2022training}
+Julian Katz-Samuels, Julia~B Nakhleh, Robert Nowak, and Yixuan Li.
+\newblock Training ood detectors in their natural habitats.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  10848--10865. PMLR, 2022.
+
 \bibitem[Khosla et~al.(2020)Khosla, Teterwak, Wang, Sarna, Tian, Isola,
   Maschinot, Liu, and Krishnan]{khosla2020supervised}
 Prannay Khosla, Piotr Teterwak, Chen Wang, Aaron Sarna, Yonglong Tian, Phillip
@@ -232,6 +300,12 @@ Prannay Khosla, Piotr Teterwak, Chen Wang, Aaron Sarna, Yonglong Tian, Phillip
 \newblock Supervised contrastive learning.
 \newblock \emph{Advances in neural information processing systems},
   33:\penalty0 18661--18673, 2020.
+
+\bibitem[Kim et~al.(2021)Kim, Cho, and Lee]{kim2021wafer}
+Yusung Kim, Donghee Cho, and Jee-Hyong Lee.
+\newblock Wafer defect pattern classification with detecting
+  out-of-distribution.
+\newblock \emph{Microelectronics Reliability}, 122:\penalty0 114157, 2021.
 
 \bibitem[Kingma \& Welling(2014)Kingma and Welling]{kingma2014auto}
 Diederik~P Kingma and Max Welling.
@@ -256,6 +330,20 @@ Alex Krizhevsky, Vinod Nair, and Geoffrey Hinton.
 Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
 \newblock Imagenet classification with deep convolutional neural networks.
 \newblock \emph{Advances in neural information processing systems}, 25, 2012.
+
+\bibitem[Lakshminarayanan et~al.(2017)Lakshminarayanan, Pritzel, and
+  Blundell]{lakshminarayanan2017simple}
+Balaji Lakshminarayanan, Alexander Pritzel, and Charles Blundell.
+\newblock Simple and scalable predictive uncertainty estimation using deep
+  ensembles.
+\newblock \emph{Advances in neural information processing systems}, 30, 2017.
+
+\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and
+  Haffner]{lecun1998gradient}
+Yann LeCun, L{\'e}on Bottou, Yoshua Bengio, and Patrick Haffner.
+\newblock Gradient-based learning applied to document recognition.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
+  2278--2324, 1998.
 
 \bibitem[Lee et~al.(2018)Lee, Lee, Lee, and Shin]{lee2018simple}
 Kimin Lee, Kibok Lee, Honglak Lee, and Jinwoo Shin.
@@ -316,6 +404,22 @@ David~A McAllester.
 Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean.
 \newblock Efficient estimation of word representations in vector space.
 \newblock \emph{arXiv preprint arXiv:1301.3781}, 2013.
+
+\bibitem[Narayanaswamy et~al.(2023)Narayanaswamy, Mubarka, Anirudh, Rajan, and
+  Thiagarajan]{narayanaswamy2023exploring}
+Vivek Narayanaswamy, Yamen Mubarka, Rushil Anirudh, Deepta Rajan, and
+  Jayaraman~J Thiagarajan.
+\newblock Exploring inlier and outlier specification for improved medical ood
+  detection.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}, pp.\  4589--4598, 2023.
+
+\bibitem[Netzer et~al.(2011)Netzer, Wang, Coates, Bissacco, Wu, and
+  Ng]{netzer2011reading}
+Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo~Wu, and Andrew~Y
+  Ng.
+\newblock Reading digits in natural images with unsupervised feature learning.
+\newblock 2011.
 
 \bibitem[Pearson(1901)]{pearson1901liii}
 Karl Pearson.
@@ -407,6 +511,14 @@ Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, Sanjeev Satheesh, Sean Ma,
   (3):\penalty0 211--252, 2015.
 \newblock \doi{10.1007/s11263-015-0816-y}.
 
+\bibitem[Saadati et~al.(2024)Saadati, Balu, Chiranjeevi, Jubery, Singh, Sarkar,
+  Singh, and Ganapathysubramanian]{saadati2024out}
+Mojdeh Saadati, Aditya Balu, Shivani Chiranjeevi, Talukder~Zaki Jubery,
+  Asheesh~K Singh, Soumik Sarkar, Arti Singh, and Baskar Ganapathysubramanian.
+\newblock Out-of-distribution detection algorithms for robust insect
+  classification.
+\newblock \emph{Plant Phenomics}, 6:\penalty0 0170, 2024.
+
 \bibitem[Saxe et~al.(2019)Saxe, Bansal, Dapello, Advani, Kolchinsky, Tracey,
   and Cox]{saxe2019information}
 Andrew~M Saxe, Yamini Bansal, Joel Dapello, Madhu~S Advani, Artemy Kolchinsky,
@@ -455,6 +567,12 @@ Ravid Shwartz-Ziv and Naftali Tishby.
 \newblock Opening the black box of deep neural networks via information.
 \newblock \emph{arXiv preprint arXiv:1703.00810}, 2017.
 
+\bibitem[Single et~al.(2023)Single, Jain, and Jain]{single2023realwaste}
+Nikita Single, Harsh Jain, and Priyanka Jain.
+\newblock Realwaste: A novel real-life data set for landfill waste
+  classification using deep learning.
+\newblock \emph{IEEE Access}, 11:\penalty0 112562--112584, 2023.
+
 \bibitem[Song et~al.(2021)Song, Sohl-Dickstein, Kingma, Kumar, Ermon, and
   Poole]{song2020score}
 Yang Song, Jascha Sohl-Dickstein, Diederik~P Kingma, Abhishek Kumar, Stefano
@@ -462,6 +580,18 @@ Yang Song, Jascha Sohl-Dickstein, Diederik~P Kingma, Abhishek Kumar, Stefano
 \newblock Score-based generative modeling through stochastic differential
   equations.
 \newblock In \emph{International Conference on Learning Representations}, 2021.
+
+\bibitem[Soni(2020)]{card_data}
+Aditya Soni.
+\newblock Playing cards dataset, 2020.
+\newblock URL
+  \url{https://www.kaggle.com/datasets/adityasoni04/playing-cards-dataset}.
+
+\bibitem[sumanthvrao(2020)]{yoga_data}
+sumanthvrao.
+\newblock Yoga poses, 2020.
+\newblock URL \url{https://www.kaggle.com/datasets/sumanthvrao/yoga-poses}.
+\newblock Version 6.
 
 \bibitem[Sun et~al.(2022)Sun, Ming, Zhu, and Li]{sun2022out}
 Yiyou Sun, Yifei Ming, Xiaojin Zhu, and Yixuan Li.
@@ -505,6 +635,13 @@ Mei Wang and Weihong Deng.
 \newblock Deep face recognition: A survey.
 \newblock \emph{Neurocomputing}, 429:\penalty0 215--244, 2021.
 
+\bibitem[Xiao et~al.(2017)Xiao, Rasul, and Vollgraf]{fashion}
+Han Xiao, Kashif Rasul, and Roland Vollgraf.
+\newblock Fashion-mnist: a novel image dataset for benchmarking machine
+  learning algorithms.
+\newblock \emph{CoRR}, abs/1708.07747, 2017.
+\newblock URL \url{http://arxiv.org/abs/1708.07747}.
+
 \bibitem[Xiao et~al.(2020)Xiao, Yan, and Amit]{xiao2020likelihood}
 Zhisheng Xiao, Qing Yan, and Yali Amit.
 \newblock Likelihood regret: An out-of-distribution detection score for
@@ -519,11 +656,29 @@ Aolin Xu and Maxim Raginsky.
 \newblock \emph{IEEE Transactions on Information Theory}, 63\penalty0
   (9):\penalty0 5948--5964, 2017.
 
+\bibitem[Xu et~al.(2024)Xu, Yu, Xu, Inkawhich, and Chen]{pmlr-v235-xu24ae}
+Chenhui Xu, Fuxun Yu, Zirui Xu, Nathan Inkawhich, and Xiang Chen.
+\newblock Out-of-distribution detection via deep multi-comprehension ensemble.
+\newblock In Ruslan Salakhutdinov, Zico Kolter, Katherine Heller, Adrian
+  Weller, Nuria Oliver, Jonathan Scarlett, and Felix Berkenkamp (eds.),
+  \emph{Proceedings of the 41st International Conference on Machine Learning},
+  volume 235 of \emph{Proceedings of Machine Learning Research}, pp.\
+  55465--55489. PMLR, 21--27 Jul 2024.
+\newblock URL \url{https://proceedings.mlr.press/v235/xu24ae.html}.
+
 \bibitem[Yang et~al.(2025)Yang, Yu, and Desell]{yangcan}
 Hong Yang, Qi~Yu, and Travis Desell.
 \newblock Can we ignore labels in out of distribution detection?
 \newblock In \emph{The Thirteenth International Conference on Learning
   Representations}, 2025.
+
+\bibitem[Yang et~al.(2023)Yang, Shi, Wei, Liu, Zhao, Ke, Pfister, and
+  Ni]{yang2023medmnist}
+Jiancheng Yang, Rui Shi, Donglai Wei, Zequan Liu, Lin Zhao, Bilian Ke,
+  Hanspeter Pfister, and Bingbing Ni.
+\newblock Medmnist v2-a large-scale lightweight benchmark for 2d and 3d
+  biomedical image classification.
+\newblock \emph{Scientific Data}, 10\penalty0 (1):\penalty0 41, 2023.
 
 \bibitem[Yang et~al.(2021)Yang, Zhou, Li, and Liu]{yang2021generalized}
 Jingkang Yang, Kaiyang Zhou, Yixuan Li, and Ziwei Liu.
@@ -560,6 +715,13 @@ Oliver Zhang, Jean-Benoit Delbrouck, and Daniel~L Rubin.
   3rd International Workshop, UNSURE 2021, and 6th International Workshop,
   PIPPI 2021, Held in Conjunction with MICCAI 2021, Strasbourg, France, October
   1, 2021, Proceedings 3}, pp.\  102--111. Springer, 2021.
+
+\bibitem[Zhou et~al.(2017)Zhou, Lapedriza, Khosla, Oliva, and
+  Torralba]{zhou2017places}
+Bolei Zhou, Agata Lapedriza, Aditya Khosla, Aude Oliva, and Antonio Torralba.
+\newblock Places: A 10 million image database for scene recognition.
+\newblock \emph{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}, 40\penalty0 (6):\penalty0 1452--1464, 2017.
 
 \bibitem[Zhou(2022)]{zhou2022rethinking}
 Yibo Zhou.

@@ -1099,11 +1099,170 @@ Furthermore, this work highlights the importance of evaluation protocols that ac
 As machine learning systems become increasingly deployed in specialized, narrow domains, understanding and addressing domain feature collapse will become ever more critical for ensuring the safety and reliability of these systems. The theoretical framework and practical solutions presented in this chapter provide a foundation for future research in this important area.
 
 
-\chapter{Are Hallucinations Out of Distribution?}
 
-This chapter covers a proposal to research the nature of hallucinations. 
+\include{Chapter6_Hallucinations}
 
 \chapter{Research Timeline}
+
+This chapter outlines a focused 12-month research timeline for investigating hallucinations in large language models using our proposed contrastive mutual information estimation method. The timeline emphasizes practical hallucination detection applications while building the necessary theoretical foundations.
+
+\section{Overview}
+
+The research program is structured around three main phases over 12 months, with each phase building upon the previous one to culminate in a robust hallucination detection system based on information-theoretic principles.
+
+\section{Phase 1: Foundation and Method Development (Months 1-4)}
+
+\subsection{Month 1: Theoretical Framework}
+\begin{itemize}
+    \item Formalize information-theoretic framework for hallucinations
+    \item Establish mathematical foundations for contrastive MI estimation
+    \item Literature review of existing MI estimation methods
+    \item Design synthetic datasets with known ground-truth MI for validation
+\end{itemize}
+
+\subsection{Month 2: Contrastive MI Implementation}
+\begin{itemize}
+    \item Implement contrastive mutual information estimation method
+    \item Develop projection functions and similarity metrics
+    \item Create training pipeline for contrastive learning
+    \item Validate method on synthetic data with known MI values
+\end{itemize}
+
+\subsection{Month 3: Baseline Methods and Comparison}
+\begin{itemize}
+    \item Implement baseline MI estimation methods (MINE, InfoNCE)
+    \item Establish comparison framework between methods
+    \item Test all methods on small-scale language models (GPT-2, BERT-base)
+    \item Initial correlation analysis between MI estimates and model confidence
+\end{itemize}
+
+\subsection{Month 4: Method Refinement}
+\begin{itemize}
+    \item Conduct ablation studies on contrastive method design choices
+    \item Optimize hyperparameters (temperature, projection architecture, negative sampling)
+    \item Establish computational efficiency benchmarks
+    \item Prepare for large-scale experiments
+\end{itemize}
+
+\section{Phase 2: Large-Scale Validation and Hallucination Detection (Months 5-8)}
+
+\subsection{Month 5: Foundation Model Analysis}
+\begin{itemize}
+    \item Apply contrastive MI estimation to large language models (GPT-3.5, LLaMA)
+    \item Analyze layer-wise information flow patterns
+    \item Identify critical layers where information degradation occurs
+    \item Establish baseline hallucination rates on benchmark datasets
+\end{itemize}
+
+\subsection{Month 6: Hallucination Correlation Studies}
+\begin{itemize}
+    \item Measure correlation between MI estimates and hallucination rates
+    \item Test on factual QA datasets (Natural Questions, TriviaQA, WebQuestions)
+    \item Analyze hallucination-specific benchmarks (HaluEval, TruthfulQA, FEVER)
+    \item Develop MI-based hallucination detection thresholds
+\end{itemize}
+
+\subsection{Month 7: Detection System Development}
+\begin{itemize}
+    \item Build real-time hallucination detection system using contrastive MI
+    \item Implement inference-time MI estimation for new QA pairs
+    \item Develop confidence calibration based on MI scores
+    \item Create interpretable visualizations of information flow
+\end{itemize}
+
+\subsection{Month 8: Cross-Architecture Validation}
+\begin{itemize}
+    \item Test detection system across different model architectures
+    \item Validate on transformer variants (BERT, RoBERTa, T5)
+    \item Analyze performance on different model scales
+    \item Compare with existing hallucination detection methods
+\end{itemize}
+
+\section{Phase 3: Applications and Deployment (Months 9-12)}
+
+\subsection{Month 9: Domain-Specific Applications}
+\begin{itemize}
+    \item Apply hallucination detection to specialized domains (medical, legal, scientific)
+    \item Test robustness across different question types and complexity levels
+    \item Analyze performance on multi-turn conversations
+    \item Develop domain-specific calibration strategies
+\end{itemize}
+
+\subsection{Month 10: Intervention Strategies}
+\begin{itemize}
+    \item Develop MI-guided training objectives to reduce hallucinations
+    \item Implement attention mechanism modifications based on MI insights
+    \item Test intervention strategies on fine-tuned models
+    \item Measure improvement in hallucination rates post-intervention
+\end{itemize}
+
+\subsection{Month 11: Comprehensive Evaluation}
+\begin{itemize}
+    \item Conduct large-scale evaluation on diverse benchmarks
+    \item Compare with state-of-the-art hallucination detection methods
+    \item Analyze computational costs and scalability
+    \item Perform human evaluation studies on detection accuracy
+\end{itemize}
+
+\subsection{Month 12: Documentation and Dissemination}
+\begin{itemize}
+    \item Finalize research findings and prepare publications
+    \item Create open-source implementation of contrastive MI method
+    \item Develop user-friendly tools for hallucination detection
+    \item Write comprehensive documentation and tutorials
+\end{itemize}
+
+\section{Key Deliverables}
+
+\subsection{Technical Deliverables}
+\begin{itemize}
+    \item Novel contrastive mutual information estimation method
+    \item Real-time hallucination detection system
+    \item Comprehensive benchmark evaluation results
+    \item Open-source implementation and tools
+\end{itemize}
+
+\subsection{Research Outputs}
+\begin{itemize}
+    \item Peer-reviewed publications on information-theoretic hallucination analysis
+    \item Technical reports on contrastive MI estimation methodology
+    \item Benchmark datasets and evaluation protocols
+    \item Workshop presentations and conference talks
+\end{itemize}
+
+\section{Risk Mitigation}
+
+\subsection{Technical Risks}
+\begin{itemize}
+    \item \textbf{MI Estimation Accuracy}: Validate on synthetic data and cross-compare methods
+    \item \textbf{Computational Scalability}: Implement efficient approximations and caching
+    \item \textbf{Model Generalization}: Test across diverse architectures and scales
+\end{itemize}
+
+\subsection{Timeline Risks}
+\begin{itemize}
+    \item \textbf{Implementation Delays}: Maintain parallel development tracks
+    \item \textbf{Data Access Issues}: Establish multiple benchmark dataset sources
+    \item \textbf{Computational Resources}: Secure cloud computing access and local GPU clusters
+\end{itemize}
+
+\section{Success Metrics}
+
+\subsection{Quantitative Metrics}
+\begin{itemize}
+    \item Hallucination detection AUROC $> 0.85$ on benchmark datasets
+    \item MI estimation correlation $> 0.7$ with ground-truth synthetic data
+    \item Computational overhead $< 20\%$ compared to baseline inference
+    \item Cross-architecture performance variance $< 10\%$
+\end{itemize}
+
+\subsection{Qualitative Metrics}
+\begin{itemize}
+    \item Interpretable insights into information flow in language models
+    \item Practical applicability to real-world deployment scenarios
+    \item Community adoption of open-source tools and methods
+    \item Positive peer review feedback on research contributions
+\end{itemize}
 
 
 

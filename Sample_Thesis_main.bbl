@@ -1,4 +1,4 @@
-\begin{thebibliography}{105}
+\begin{thebibliography}{121}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -33,6 +33,14 @@ Mohamed~Ishmael Belghazi, Aristide Baratin, Sai Rajeshwar, Sherjil Ozair,
 \newblock In \emph{International Conference on Machine Learning (ICML)}, pp.\
   531--540, 2018.
 
+\bibitem[Berant et~al.(2013)Berant, Ceccaldi, Fader, Gabrilovich, Liang, and
+  Zettlemoyer]{berant2013semantic}
+Jonathan Berant, Andrew Ceccaldi, Antoine Fader, Evgeniy Gabrilovich, Percy
+  Liang, and Luke Zettlemoyer.
+\newblock Semantic parsing on freebase from question-answer pairs.
+\newblock \emph{Proceedings of the 2013 conference on empirical methods in
+  natural language processing}, pp.\  1533--1544, 2013.
+
 \bibitem[Bossard et~al.(2014{\natexlab{a}})Bossard, Guillaumin, and
   Van~Gool]{bossard14}
 Lukas Bossard, Matthieu Guillaumin, and Luc Van~Gool.
@@ -65,12 +73,21 @@ Tianshi Cao, Chin-Wei Huang, David Yu-Tung Hui, and Joseph~Paul Cohen.
 \newblock A benchmark of medical out of distribution detection.
 \newblock \emph{arXiv preprint arXiv:2007.04250}, 2020.
 
-\bibitem[Chen et~al.(2020)Chen, Kornblith, Norouzi, and Hinton]{chen2020simple}
+\bibitem[Chen et~al.(2020{\natexlab{a}})Chen, Kornblith, Norouzi, and
+  Hinton]{chen2020simclr}
+Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton.
+\newblock A simple framework for contrastive learning of visual
+  representations.
+\newblock \emph{International conference on machine learning}, pp.\
+  1597--1607, 2020{\natexlab{a}}.
+
+\bibitem[Chen et~al.(2020{\natexlab{b}})Chen, Kornblith, Norouzi, and
+  Hinton]{chen2020simple}
 Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton.
 \newblock A simple framework for contrastive learning of visual
   representations.
 \newblock In \emph{International conference on machine learning}, pp.\
-  1597--1607. PMLR, 2020.
+  1597--1607. PMLR, 2020{\natexlab{b}}.
 
 \bibitem[Chen et~al.(2016)Chen, Duan, Houthooft, Schulman, Sutskever, and
   Abbeel]{chen2016infogan}
@@ -96,6 +113,11 @@ Mircea Cimpoi, Subhransu Maji, Iasonas Kokkinos, Sammy Mohamed, and Andrea
 \newblock Describing textures in the wild.
 \newblock In \emph{Proceedings of the IEEE conference on computer vision and
   pattern recognition}, pp.\  3606--3613, 2014.
+
+\bibitem[Cover \& Thomas(1999)Cover and Thomas]{cover1999elements}
+Thomas~M Cover and Joy~A Thomas.
+\newblock \emph{Elements of information theory}.
+\newblock John Wiley \& Sons, 1999.
 
 \bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
   Fei-Fei]{deng2009imagenet}
@@ -187,6 +209,12 @@ Stanislav Fort, Jie Ren, and Balaji Lakshminarayanan.
 \newblock \emph{Advances in Neural Information Processing Systems},
   34:\penalty0 7068--7081, 2021.
 
+\bibitem[Gao et~al.(2021)Gao, Yao, and Chen]{gao2021simcse}
+Tianyu Gao, Xingcheng Yao, and Danqi Chen.
+\newblock Simcse: Simple contrastive learning of sentence embeddings.
+\newblock \emph{Proceedings of the 2021 Conference on Empirical Methods in
+  Natural Language Processing}, pp.\  6894--6910, 2021.
+
 \bibitem[Goodfellow et~al.(2014)Goodfellow, Pouget-Abadie, Mirza, Xu,
   Warde-Farley, Ozair, Courville, and Bengio]{goodfellow2014generative}
 Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
@@ -235,6 +263,13 @@ Dan Hendrycks, Mantas Mazeika, Saurav Kadavath, and Dawn Song.
   uncertainty.
 \newblock \emph{Advances in neural information processing systems}, 32, 2019.
 
+\bibitem[Hewitt \& Manning(2019)Hewitt and Manning]{hewitt2019structural}
+John Hewitt and Christopher~D Manning.
+\newblock A structural probe for finding syntax in word representations.
+\newblock \emph{Proceedings of the 2019 Conference of the North American
+  Chapter of the Association for Computational Linguistics: Human Language
+  Technologies, Volume 1 (Long and Short Papers)}, pp.\  4129--4138, 2019.
+
 \bibitem[Hinton \& Salakhutdinov(2006)Hinton and
   Salakhutdinov]{hinton2006reducing}
 Geoffrey~E Hinton and Ruslan~R Salakhutdinov.
@@ -280,6 +315,14 @@ Michael~I Jordan, Zoubin Ghahramani, Tommi~S Jaakkola, and Lawrence~K Saul.
 \newblock An introduction to variational methods for graphical models.
 \newblock \emph{Machine Learning}, 37:\penalty0 183--233, 1999.
 
+\bibitem[Joshi et~al.(2017)Joshi, Choi, Weld, and
+  Zettlemoyer]{joshi2017triviaqa}
+Mandar Joshi, Eunsol Choi, Daniel~S Weld, and Luke Zettlemoyer.
+\newblock Triviaqa: A large scale distantly supervised challenge dataset for
+  reading comprehension.
+\newblock \emph{Proceedings of the 55th Annual Meeting of the Association for
+  Computational Linguistics (Volume 1: Long Papers)}, pp.\  1601--1611, 2017.
+
 \bibitem[Kafunah et~al.(2023)Kafunah, Verma, Ali, and Breslin]{kafunah2023out}
 Jefkine Kafunah, Priyanka Verma, Muhammad~Intizar Ali, and John~G Breslin.
 \newblock Out-of-distribution data generation for fault detection and diagnosis
@@ -300,6 +343,15 @@ Prannay Khosla, Piotr Teterwak, Chen Wang, Aaron Sarna, Yonglong Tian, Phillip
 \newblock Supervised contrastive learning.
 \newblock \emph{Advances in neural information processing systems},
   33:\penalty0 18661--18673, 2020.
+
+\bibitem[Kim et~al.(2018)Kim, Wattenberg, Gilmer, Cai, Wexler, Viegas,
+  et~al.]{kim2018interpretability}
+Been Kim, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda
+  Viegas, et~al.
+\newblock Interpretability beyond feature attribution: Quantitative testing
+  with concept activation vectors (tcav).
+\newblock \emph{International conference on machine learning}, pp.\
+  2668--2677, 2018.
 
 \bibitem[Kim et~al.(2021)Kim, Cho, and Lee]{kim2021wafer}
 Yusung Kim, Donghee Cho, and Jee-Hyong Lee.
@@ -330,6 +382,16 @@ Alex Krizhevsky, Vinod Nair, and Geoffrey Hinton.
 Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
 \newblock Imagenet classification with deep convolutional neural networks.
 \newblock \emph{Advances in neural information processing systems}, 25, 2012.
+
+\bibitem[Kwiatkowski et~al.(2019)Kwiatkowski, Palomaki, Redfield, Collins,
+  Parikh, Alberti, Epstein, Polosukhin, Devlin, Lee,
+  et~al.]{kwiatkowski2019natural}
+Tom Kwiatkowski, Jennimaria Palomaki, Olivia Redfield, Michael Collins, Ankur
+  Parikh, Chris Alberti, Danielle Epstein, Illia Polosukhin, Jacob Devlin,
+  Kenton Lee, et~al.
+\newblock Natural questions: a benchmark for question answering research.
+\newblock \emph{Transactions of the Association for Computational Linguistics},
+  7:\penalty0 453--466, 2019.
 
 \bibitem[Lakshminarayanan et~al.(2017)Lakshminarayanan, Pritzel, and
   Blundell]{lakshminarayanan2017simple}
@@ -362,6 +424,13 @@ Shiyu Liang, Yixuan Li, and Rayadurgam Srikant.
 \newblock Enhancing the reliability of out-of-distribution image detection in
   neural networks.
 \newblock \emph{arXiv preprint arXiv:1706.02690}, 2017.
+
+\bibitem[Lin et~al.(2021)Lin, Hilton, and Evans]{lin2021truthfulqa}
+Stephanie Lin, Jacob Hilton, and Owain Evans.
+\newblock Truthfulqa: Measuring how models mimic human falsehoods.
+\newblock \emph{Proceedings of the 59th Annual Meeting of the Association for
+  Computational Linguistics and the 11th International Joint Conference on
+  Natural Language Processing (Volume 1: Long Papers)}, pp.\  3214--3252, 2021.
 
 \bibitem[Lin et~al.(2022)Lin, Hilton, and Evans]{lin2022truthfulqa}
 Stephanie Lin, Jacob Hilton, and Owain Evans.
@@ -421,6 +490,13 @@ Yuval Netzer, Tao Wang, Adam Coates, Alessandro Bissacco, Bo~Wu, and Andrew~Y
 \newblock Reading digits in natural images with unsupervised feature learning.
 \newblock 2011.
 
+\bibitem[Olah et~al.(2020)Olah, Cammarata, Schubert, Goh, Petrov, and
+  Carter]{olah2020zoom}
+Chris Olah, Nick Cammarata, Ludwig Schubert, Gabriel Goh, Michael Petrov, and
+  Shan Carter.
+\newblock Zoom in: An introduction to circuits.
+\newblock \emph{Distill}, 5\penalty0 (3):\penalty0 e00024--001, 2020.
+
 \bibitem[Pearson(1901)]{pearson1901liii}
 Karl Pearson.
 \newblock Liii. on lines and planes of closest fit to systems of points in
@@ -449,6 +525,13 @@ Jeffrey Pennington, Richard Socher, and Christopher~D Manning.
 \newblock Glove: Global vectors for word representation.
 \newblock In \emph{Proceedings of the 2014 conference on empirical methods in
   natural language processing (EMNLP)}, pp.\  1532--1543, 2014.
+
+\bibitem[Poole et~al.(2019)Poole, Ozair, Van Den~Oord, Alemi, and
+  Tucker]{poole2019variational}
+Ben Poole, Sherjil Ozair, Aaron Van Den~Oord, Alex Alemi, and George Tucker.
+\newblock On variational bounds of mutual information.
+\newblock \emph{International Conference on Machine Learning}, pp.\
+  5171--5180, 2019.
 
 \bibitem[Radford et~al.(2018)Radford, Narasimhan, Salimans, Sutskever,
   et~al.]{radford2018improving}
@@ -492,6 +575,12 @@ Danilo~Jimenez Rezende, Shakir Mohamed, and Daan Wierstra.
   generative models.
 \newblock In \emph{International conference on machine learning}, pp.\
   1278--1286. PMLR, 2014.
+
+\bibitem[Rogers et~al.(2020)Rogers, Kovaleva, and Rumshisky]{rogers2020primer}
+Anna Rogers, Olga Kovaleva, and Anna Rumshisky.
+\newblock A primer on neural network models for natural language processing.
+\newblock \emph{Journal of Artificial Intelligence Research}, 61:\penalty0
+  65--95, 2020.
 
 \bibitem[Runge et~al.(2019)Runge, Nowack, Kretschmer, Flaxman, and
   Sejdinovic]{runge2019detecting}
@@ -606,6 +695,20 @@ Jihoon Tack, Sangwoo Mo, Jongheon Jeong, and Jinwoo Shin.
 \newblock \emph{Advances in neural information processing systems},
   33:\penalty0 11839--11852, 2020.
 
+\bibitem[Tenney et~al.(2019)Tenney, Das, and Pavlick]{tenney2019bert}
+Ian Tenney, Dipanjan Das, and Ellie Pavlick.
+\newblock Bert rediscovers the classical nlp pipeline.
+\newblock \emph{Proceedings of the 57th Annual Meeting of the Association for
+  Computational Linguistics}, pp.\  4593--4601, 2019.
+
+\bibitem[Thorne et~al.(2018)Thorne, Vlachos, Christodoulopoulos, and
+  Mittal]{thorne2018fever}
+James Thorne, Andreas Vlachos, Christos Christodoulopoulos, and Arpit Mittal.
+\newblock Fever: a large-scale dataset for fact extraction and verification.
+\newblock \emph{Proceedings of the 2018 Conference of the North American
+  Chapter of the Association for Computational Linguistics: Human Language
+  Technologies, Volume 1 (Long Papers)}, pp.\  809--819, 2018.
+
 \bibitem[Tishby et~al.(2000)Tishby, Pereira, and Bialek]{tishby2000information}
 Naftali Tishby, Fernando~C Pereira, and William Bialek.
 \newblock The information bottleneck method.
@@ -623,6 +726,20 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
   Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
 \newblock Attention is all you need.
 \newblock \emph{Advances in neural information processing systems}, 30, 2017.
+
+\bibitem[Voita \& Titov(2020)Voita and Titov]{voita2019information}
+Elena Voita and Ivan Titov.
+\newblock Information-theoretic probing with minimum description length.
+\newblock \emph{Proceedings of the 2020 Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, pp.\  183--196, 2020.
+
+\bibitem[Voita et~al.(2019)Voita, Talbot, Moiseev, Sennrich, and
+  Titov]{voita2019analyzing}
+Elena Voita, David Talbot, Fedor Moiseev, Rico Sennrich, and Ivan Titov.
+\newblock Analyzing multi-head self-attention: Specialized heads do the heavy
+  lifting, the rest can be pruned.
+\newblock \emph{Proceedings of the 57th Annual Meeting of the Association for
+  Computational Linguistics}, pp.\  5797--5808, 2019.
 
 \bibitem[Wang et~al.(2023)Wang, Li, Yao, and Li]{wang2023clipn}
 Hualiang Wang, Yi~Li, Huifeng Yao, and Xiaomeng Li.

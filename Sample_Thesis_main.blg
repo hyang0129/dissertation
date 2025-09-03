@@ -9,6 +9,8 @@ Reallocating 'name_of_file' (item size: 1) to 21 items.
 A level-1 auxiliary file: Acknowledgements.aux
 Reallocating 'name_of_file' (item size: 1) to 15 items.
 A level-1 auxiliary file: Dedication.aux
+Reallocating 'name_of_file' (item size: 1) to 28 items.
+A level-1 auxiliary file: Chapter6_Hallucinations.aux
 Reallocating 'name_of_file' (item size: 1) to 20 items.
 The style file: iclr2025_conference.bst
 Reallocating 'name_of_file' (item size: 1) to 13 items.
@@ -19,45 +21,45 @@ Warning--entry type for "rock_data" isn't style-file defined
 --line 201 of file Bibliography.bib
 Warning--can't use both volume and number fields in esmaeilpour2022zero
 Warning--empty journal in netzer2011reading
-You've used 105 entries,
+You've used 121 entries,
             2773 wiz_defined-function locations,
-            1126 strings with 26585 characters,
-and the built_in function-call counts, 60120 in all, are:
-= -- 5128
-> -- 4507
-< -- 46
-+ -- 1513
-- -- 1405
-* -- 5183
-:= -- 9232
-add.period$ -- 329
-call.type$ -- 105
-change.case$ -- 772
-chr.to.int$ -- 102
-cite$ -- 212
-duplicate$ -- 2466
-empty$ -- 4272
-format.name$ -- 1532
-if$ -- 12544
-int.to.chr$ -- 4
+            1199 strings with 30137 characters,
+and the built_in function-call counts, 70672 in all, are:
+= -- 6110
+> -- 5183
+< -- 61
++ -- 1740
+- -- 1615
+* -- 6036
+:= -- 10754
+add.period$ -- 377
+call.type$ -- 121
+change.case$ -- 887
+chr.to.int$ -- 117
+cite$ -- 244
+duplicate$ -- 2927
+empty$ -- 5006
+format.name$ -- 1764
+if$ -- 14832
+int.to.chr$ -- 5
 int.to.str$ -- 1
-missing$ -- 98
-newline$ -- 538
-num.names$ -- 422
-pop$ -- 1582
+missing$ -- 115
+newline$ -- 618
+num.names$ -- 486
+pop$ -- 1808
 preamble$ -- 1
-purify$ -- 667
+purify$ -- 767
 quote$ -- 0
-skip$ -- 2098
+skip$ -- 2536
 stack$ -- 0
-substring$ -- 1983
-swap$ -- 400
-text.length$ -- 27
+substring$ -- 2557
+swap$ -- 546
+text.length$ -- 39
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 1155
+type$ -- 1326
 warning$ -- 2
-while$ -- 441
+while$ -- 531
 width$ -- 0
-write$ -- 1353
+write$ -- 1560
 (There were 3 warnings)

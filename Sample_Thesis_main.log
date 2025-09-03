@@ -1,9 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  20 AUG 2025 12:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  3 SEP 2025 13:33
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
-**./Sample_Thesis_main.tex
-(Sample_Thesis_main.tex
+**c:/Users/HongM/latex/phd-proposal-dissertation-template/Sample_Thesis_main.tex
+(c:/Users/HongM/latex/phd-proposal-dissertation-template/Sample_Thesis_main.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
 (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
@@ -23,21 +24,16 @@ File: bk11.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip48
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
-)
-(thesisfrontmatter.sty
+) (thesisfrontmatter.sty
 Package: thesisfrontmatter 2015/3/17 v2.0 Thesis Frontmatter Approved
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks17
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
 ))
 \Gm@cnth=\count196
@@ -52,27 +48,21 @@ Package: iftex 2022/02/03 v1.0f TeX engine tests
 \Gm@layouthoffset=\dimen147
 \Gm@layoutvoffset=\dimen148
 \Gm@dimlist=\toks18
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
-) (math_commands.tex
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))) (math_commands.tex (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
 Package: amsmath 2023/05/13 v2.17o AMS math features
 \@mathmargin=\skip50
 
 For additional information on amsmath, use the `?' option.
 (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
 Package: amstext 2021/08/26 v2.01 AMS text
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks19
 \ex@=\dimen149
-))
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen150
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count199
@@ -122,16 +112,14 @@ LaTeX Info: Redefining \Relbar on input line 971.
 \mathdisplay@stack=\toks23
 LaTeX Info: Redefining \[ on input line 2953.
 LaTeX Info: Redefining \] on input line 2954.
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\bm.sty
 Package: bm 2023/07/08 v1.2f Bold Symbol Support (DPC/FMi)
 \symboldoperators=\mathgroup6
 \symboldletters=\mathgroup7
@@ -143,8 +131,7 @@ LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 149.
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathsfit' in version `bold'
 (Font)                  OT1/cmss/m/sl --> OT1/cmss/bx/n on input line 314.
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \heavyrulewidth=\dimen158
 \lightrulewidth=\dimen159
@@ -163,8 +150,7 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@thisruleclass=\count279
 \@lastruleclass=\count280
 \@thisrulewidth=\dimen170
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\multicol.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\multicol.sty
 Package: multicol 2023/03/30 v1.9f multicolumn formatting (FMi)
 \c@tracingmulticols=\count281
 \mult@box=\box53
@@ -233,37 +219,29 @@ Package: multicol 2023/03/30 v1.9f multicolumn formatting (FMi)
 \mult@nat@firstbox=\box97
 \colbreak@box=\box98
 \mc@col@check@num=\count290
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
 Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
 Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
-fg
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 107.
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
 File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 )) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/cite\cite.sty
 LaTeX Info: Redefining \cite on input line 302.
 LaTeX Info: Redefining \nocite on input line 332.
 Package: cite 2015/02/27  v 5.5
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty
 Package: appendix 2020/02/08 v1.2c extra appendix facilities
 \c@@pps=\count291
 \c@@ppsavesec=\count292
 \c@@ppsaveapp=\count293
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 
 
@@ -279,8 +257,7 @@ LaTeX Info: Redefining \citenum on input line 708.
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 \Gin@req@height=\dimen180
 \Gin@req@width=\dimen181
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.sty
 Package: subfigure 2002/07/30 v2.1.4 subfigure package
 \subfigtopskip=\skip57
 \subfigcapskip=\skip58
@@ -292,20 +269,18 @@ Package: subfigure 2002/07/30 v2.1.4 subfigure package
 \c@lofdepth=\count296
 \c@subtable=\count297
 \c@lotdepth=\count298
+
 ****************************************
 * Local config file subfigure.cfg used *
 ****************************************
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.cfg
-)
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.cfg)
 \subfig@top=\skip61
 \subfig@bottom=\skip62
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.sty
 Package: mathtools 2024/10/04 v1.31 mathematical typesetting tools
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
 Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
 \calc@Acount=\count299
 \calc@Bcount=\count300
@@ -317,8 +292,7 @@ LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
 \calc@Ccount=\count301
 \calc@Cskip=\skip65
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty
 Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
 )
 \g_MT_multlinerow_int=\count302
@@ -343,28 +317,24 @@ Package: amsthm 2020/05/29 v2.20.6
 \thm@postskip=\skip68
 \thm@headsep=\skip69
 \dth@everypar=\toks29
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty
 Package: placeins 2005/04/18  v 2.2
 )
 \c@theorem=\count303
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty
 \wrapoverhang=\dimen194
 \WF@size=\dimen195
 \c@WF@wrappedlines=\count304
 \WF@box=\box100
 \WF@everypar=\toks30
 Package: wrapfig 2003/01/31  v 3.6
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package xcolor Info: Driver file: pdftex.def on input line 274.
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
 Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1350.
 Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1354.
 Package xcolor Info: Model `RGB' extended on input line 1366.
@@ -376,7 +346,7 @@ Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
 Package: colortbl 2024/10/29 v1.0k Color table columns (DPC)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
 Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
 \col@sep=\dimen196
 \ar@mcellbox=\box101
@@ -389,11 +359,8 @@ Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
 \everycr=\toks32
 \minrowclearance=\skip72
 \rownum=\count305
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.st
-y
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
-nment
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count306
@@ -401,19 +368,14 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box103
 \@float@everytoks=\toks34
 \@floatcapt=\box104
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks35
 \c@algorithm=\count307
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudoc
-ode.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudocode.sty
 Package: algpseudocode 
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithmi
-cx.sty
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithmicx.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
@@ -429,14 +391,11 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip75
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
-tex.def
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count315
 \l__pdf_internal_box=\box105
-) (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
-(Acknowledgements.aux) (Dedication.aux) (AppendixA.aux))
+) (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
 \openout1 = `Sample_Thesis_main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
@@ -488,9 +447,7 @@ LaTeX Font Info:    ... okay on input line 53.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
-ii
+(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count316
 \scratchdimen=\dimen198
@@ -503,15 +460,10 @@ ii
 \MPnumerator=\count320
 \makeMPintoPDFobject=\count321
 \everyMPtoPDFconversion=\toks37
-)
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
-ase.sty
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
-Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
-85.
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
-fg
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 \openout2 = `CoverPage.aux'.
@@ -520,14 +472,12 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 
 Package thesisfrontmatter Warning: prevdegreeA is not defined on input line 67.
 
-
 [1
 
 
 
 
-{C:/Users/HongM/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
-[3]
+{C:/Users/HongM/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2] [3]
 \openout2 = `Abstract.aux'.
 
  (Abstract.tex) [4
@@ -546,38 +496,33 @@ Package thesisfrontmatter Warning: prevdegreeA is not defined on input line 67.
 
 
 
-]
-(Sample_Thesis_main.toc
+] (Sample_Thesis_main.toc
 LaTeX Font Info:    Trying to load font information for U+msa on input line 3.
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 3.
-
-(C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-[7
+) [7
 
 
 
-] [8] [9] [10])
+] [8] [9] [10] [11] [12] [13])
 \tf@toc=\write3
 \openout3 = `Sample_Thesis_main.toc'.
 
- [11] (Sample_Thesis_main.lof)
+ [14] (Sample_Thesis_main.lof)
 \tf@lof=\write4
 \openout4 = `Sample_Thesis_main.lof'.
 
- [12
+ [15
 
 ] (Sample_Thesis_main.lot)
 \tf@lot=\write5
 \openout5 = `Sample_Thesis_main.lot'.
 
-
-[13
+ [16
 
 ]
 Chapter 1.
@@ -593,41 +538,35 @@ Chapter 3.
 
 ] [16]
 Overfull \hbox (43.32942pt too wide) in paragraph at lines 430--431
-\OT1/cmr/m/n/10.95 which learns lin-ear pro-jec-tions max-i-miz-ing vari-ance, 
-and \OT1/cmr/m/it/10.95 In-de-pen-dent Com-po-nent Anal-y-sis \OT1/cmr/m/n/10.9
-5 (ICA) (Hyv^^?arinen
+\OT1/cmr/m/n/10.95 which learns lin-ear pro-jec-tions max-i-miz-ing vari-ance, and \OT1/cmr/m/it/10.95 In-de-pen-dent Com-po-nent Anal-y-sis \OT1/cmr/m/n/10.95 (ICA) (Hyv^^?arinen
  []
 
 [17]
 Overfull \hbox (12.13565pt too wide) in paragraph at lines 442--443
-\OT1/cmr/m/n/10.95 tion|contrastive meth-ods im-plic-itly max-i-mize MI be-twee
-n rep-re-sen-ta-tions of aug-mented views (Hjelm
+\OT1/cmr/m/n/10.95 tion|contrastive meth-ods im-plic-itly max-i-mize MI be-tween rep-re-sen-ta-tions of aug-mented views (Hjelm
  []
 
 [18] [19] [20] [21] [22]
 Overfull \hbox (2.52249pt too wide) in paragraph at lines 522--523
-[]\OT1/cmr/m/it/10.95 External ver-i-fi-ca-tion meth-ods \OT1/cmr/m/n/10.95 com
--pare model out-puts against ex-ter-nal knowl-edge sources, databases,
+[]\OT1/cmr/m/it/10.95 External ver-i-fi-ca-tion meth-ods \OT1/cmr/m/n/10.95 com-pare model out-puts against ex-ter-nal knowl-edge sources, databases,
  []
 
 [23]
 Overfull \hbox (6.83415pt too wide) in paragraph at lines 546--547
-\OT1/cmr/m/n/10.95 cess-ing and com-puter vi-sion through its self-attention me
-ch-a-nism. Vi-sion Trans-form-ers (ViTs) (Doso-
+\OT1/cmr/m/n/10.95 cess-ing and com-puter vi-sion through its self-attention mech-a-nism. Vi-sion Trans-form-ers (ViTs) (Doso-
  []
 
 [24] [25]
 Chapter 4.
 
 Overfull \hbox (3.31694pt too wide) in paragraph at lines 559--560
-\OT1/cmr/m/it/10.95 This chap-ter is based on work pub-lished at ICLR 2025: "Ca
-n We Ig-nore La-bels in Out-of-Distribution
+\OT1/cmr/m/it/10.95 This chap-ter is based on work pub-lished at ICLR 2025: "Can We Ig-nore La-bels in Out-of-Distribution
  []
 
 [26
 
 ]
-<gradcam_example_faces.png, id=146, 716.6775pt x 359.54324pt>
+<gradcam_example_faces.png, id=155, 716.6775pt x 359.54324pt>
 File: gradcam_example_faces.png Graphic file (type png)
 <use gradcam_example_faces.png>
 Package pdftex.def Info: gradcam_example_faces.png  used on input line 571.
@@ -636,8 +575,7 @@ Package pdftex.def Info: gradcam_example_faces.png  used on input line 571.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[27] [28 <./gradcam_example_faces.png>] [29] [30] [31] [32] [33] [34] [35]
-[36] [37]
+[27] [28 <./gradcam_example_faces.png>] [29] [30] [31] [32] [33] [34] [35] [36] [37]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -645,8 +583,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 Chapter 5.
 
 Overfull \hbox (1.17668pt too wide) in paragraph at lines 826--827
-\OT1/cmr/m/n/10.95 bench-marks (Zhang et al., 2023b). How-ever, these bench-mar
-ks al-most ex-clu-sively use in-distribution
+\OT1/cmr/m/n/10.95 bench-marks (Zhang et al., 2023b). How-ever, these bench-marks al-most ex-clu-sively use in-distribution
  []
 
 [42
@@ -674,44 +611,121 @@ Overfull \hbox (21.14633pt too wide) in paragraph at lines 1019--1037
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [51] [52] [53] [54] [55]
+\openout2 = `Chapter6_Hallucinations.aux'.
+
+ (Chapter6_Hallucinations.tex
 Chapter 6.
 [56
 
+
 ]
+Overfull \hbox (6.72105pt too wide) in paragraph at lines 29--30
+[]\OT1/cmr/bx/n/10.95 Definition 6.2.1. []Information-Preserving Gen-er-a-tion\OT1/cmr/m/n/10.95 : A lan-guage model ex-hibits information-
+ []
+
+
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 57
+ []
+
+[57]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 58
+ []
+
+[58]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 59
+ []
+
+[59]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 60
+ []
+
+[60]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 61
+ []
+
+[61]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 62
+ []
+
+[62]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 63
+ []
+
+[63]
+Overfull \hbox (0.12228pt too wide) in paragraph at lines 254--255
+\OT1/cmr/m/n/10.95 (1988) in-tro-duced In-fo-Max prin-ci-ples that max-i-mize mu-tual in-for-ma-tion be-tween in-puts and learned
+ []
+
+
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 64
+ []
+
+[64]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 65
+ []
+
+[65]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 66
+ []
+
+[66]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 67
+ []
+
+[67]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 68
+ []
+
+[68])
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 69
+ []
+
+[69]
 Chapter 7.
-[57
+[70
 
-]
+
+
+] [71] [72] [73] [74] [75]
 Chapter 8.
-(Sample_Thesis_main.bbl [58
+(Sample_Thesis_main.bbl [76
 
-] [59
+] [77
 
-]
-Underfull \hbox (badness 5681) in paragraph at lines 150--155
-[]\OT1/cmr/m/n/10.95 Dumitru Er-han, Ian Good-fel-low, Will Cukier-ski, and Yos
-hua Ben-gio.  Chal-lenges
+] [78]
+Underfull \hbox (badness 5681) in paragraph at lines 172--177
+[]\OT1/cmr/m/n/10.95 Dumitru Er-han, Ian Good-fel-low, Will Cukier-ski, and Yoshua Ben-gio.  Chal-lenges
  []
 
 
-Underfull \hbox (badness 6842) in paragraph at lines 150--155
-\OT1/cmr/m/n/10.95 in rep-re-sen-ta-tion learn-ing: Fa-cial ex-pres-sion recog-
-ni-tion chal-lenge, 2013.  URL
+Underfull \hbox (badness 6842) in paragraph at lines 172--177
+\OT1/cmr/m/n/10.95 in rep-re-sen-ta-tion learn-ing: Fa-cial ex-pres-sion recog-ni-tion chal-lenge, 2013.  URL
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 150--155
-\OT1/cmtt/m/n/10.95 https : / / kaggle . com / competitions / challenges -[] in
- -[] representation -[] learning -[] facial -[]
+Underfull \hbox (badness 10000) in paragraph at lines 172--177
+\OT1/cmtt/m/n/10.95 https : / / kaggle . com / competitions / challenges -[] in -[] representation -[] learning -[] facial -[]
  []
 
-[60] [61] [62] [63] [64] [65]
-Underfull \hbox (badness 1931) in paragraph at lines 585--589
-[]\OT1/cmr/m/n/10.95 Aditya Soni.  Play-ing cards dataset, 2020.  URL $\OT1/cmt
-t/m/n/10.95 https : / / www . kaggle . com / datasets /
+[79] [80] [81] [82] [83] [84]
+Underfull \hbox (badness 1931) in paragraph at lines 674--678
+[]\OT1/cmr/m/n/10.95 Aditya Soni.  Play-ing cards dataset, 2020.  URL $\OT1/cmtt/m/n/10.95 https : / / www . kaggle . com / datasets /
  []
 
-[66] [67]) [68] [69
+[85] [86] [87]) [88] [89
 
 
 ]
@@ -719,64 +733,32 @@ t/m/n/10.95 https : / / www . kaggle . com / datasets /
 
  (AppendixA.tex
 Appendix A.
-[70
+[90
 
 
-] [71] [72] [73] [74] [75] [76] [77] [78] [79] [80] [81]
+] [91] [92] [93] [94] [95] [96] [97] [98] [99] [100] [101]
 Overfull \hbox (7.62505pt too wide) in paragraph at lines 478--479
-[]\OT1/cmr/m/n/10.95 Using $(\OML/cmm/m/it/10.95 P[]\OT1/cmr/m/n/10.95 )$, we k
-now that in-de-pen-dent func-tions stay in-de-pen-dent and thus $\OML/cmm/m/it/
-10.95 I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr
-/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) = 0\OML/cmm/m/it/10.95 ; I\OT1/cmr/m/n/10.9
-5 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/
-m/n/10.95 ) =
+[]\OT1/cmr/m/n/10.95 Using $(\OML/cmm/m/it/10.95 P[]\OT1/cmr/m/n/10.95 )$, we know that in-de-pen-dent func-tions stay in-de-pen-dent and thus $\OML/cmm/m/it/10.95 I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) = 0\OML/cmm/m/it/10.95 ; I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) =
  []
 
-[82]) [83] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
-(Acknowledgements.aux) (Dedication.aux) (AppendixA.aux))
+[102]) [103] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 7511 strings out of 474486
- 115871 string characters out of 5743755
+ 7608 strings out of 474486
+ 118818 string characters out of 5743755
  1945542 words of memory out of 5000000
- 29632 multiletter control sequences out of 15000+600000
+ 29720 multiletter control sequences out of 15000+600000
  570419 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,16n,79p,1240b,481s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
-1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/User
-s/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb>
-<C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-mi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/P
-rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/
-Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/
-HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><
-C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cms
-y10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Sample_Thesis_main.pdf (96 pages, 850891 bytes).
+ 72i,16n,79p,1294b,513s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Sample_Thesis_main.pdf (119 pages, 897155 bytes).
 PDF statistics:
- 436 PDF objects out of 1000 (max. 8388607)
+ 510 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

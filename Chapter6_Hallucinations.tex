@@ -54,78 +54,122 @@ where $\tau_{critical}$ represents the minimum information required for factuall
 \subsection{Mutual Information Estimation in Foundation Models}
 \label{subsec:mi_estimation}
 
-We propose to investigate several approaches for estimating mutual information in the intermediate layers of foundation models:
+Estimating mutual information in the high-dimensional intermediate representations of foundation models presents significant theoretical and computational challenges. We investigate several complementary approaches, each offering distinct advantages and limitations for understanding information flow in transformer architectures.
 
 \subsubsection{Neural Mutual Information Estimation}
-\begin{itemize}
-    \item \textbf{MINE (Mutual Information Neural Estimation)} \citep{belghazi2018mutual}: Use neural networks to estimate MI between layer representations
-    \item \textbf{Strengths}: Scalable to high-dimensional representations, differentiable
-    \item \textbf{Weaknesses}: Estimation bias, computational overhead, requires careful hyperparameter tuning
-\end{itemize}
+
+The Mutual Information Neural Estimation (MINE) framework \citep{belghazi2018mutual} represents a significant advancement in MI estimation for high-dimensional data. MINE leverages the Donsker-Varadhan representation of the KL divergence to provide a tractable lower bound on mutual information through neural network optimization.
+
+The method works by training a neural network $T_\theta$ to distinguish between samples from the joint distribution $p(x,y)$ and the product of marginals $p(x)p(y)$. The MI estimate is obtained as:
+\[
+\hat{I}_{\text{MINE}}(X;Y) = \sup_\theta \mathbb{E}_{p(x,y)}[T_\theta(x,y)] - \log\mathbb{E}_{p(x)p(y)}[e^{T_\theta(x,y)}]
+\]
+
+For our application to transformer layers, MINE offers several compelling advantages. The method scales naturally to the high-dimensional hidden states typical in modern language models, often ranging from 768 to several thousand dimensions. The differentiable nature of the estimation process allows for end-to-end optimization and integration with existing training pipelines. Furthermore, MINE can handle the complex, non-linear dependencies that characterize the relationship between different transformer layers.
+
+However, MINE also presents notable challenges for our specific use case. The method is known to suffer from estimation bias, particularly when the true mutual information is high, which may be the case for adjacent transformer layers. The computational overhead can be substantial, requiring additional forward passes through the discriminator network during training. Additionally, MINE's performance is highly sensitive to hyperparameter choices, including the architecture of the discriminator network, learning rates, and batch sizes, necessitating careful tuning for each model architecture and scale.
 
 \subsubsection{Variational Bounds}
-\begin{itemize}
-    \item \textbf{InfoNCE} \citep{oord2018representation}: Contrastive estimation using noise contrastive estimation
-    \item \textbf{Strengths}: Stable training, well-established theoretical properties
-    \item \textbf{Weaknesses}: Lower bound only, sensitive to negative sampling strategy
-\end{itemize}
+
+InfoNCE (Information Noise Contrastive Estimation) \citep{oord2018representation} provides an alternative approach to MI estimation through contrastive learning principles. This method estimates a lower bound on mutual information by maximizing the agreement between positive pairs while minimizing agreement with negative samples.
+
+The InfoNCE objective can be expressed as:
+\[
+\mathcal{L}_{\text{InfoNCE}} = -\mathbb{E}\left[\log\frac{f(x,y)}{\sum_{y' \in \mathcal{N}} f(x,y')}\right]
+\]
+where $f(x,y)$ represents a learned similarity function and $\mathcal{N}$ denotes the set of negative samples.
+
+InfoNCE demonstrates particular strength in providing stable training dynamics, making it well-suited for the iterative optimization required in our layer-wise analysis. The method benefits from well-established theoretical properties, including proven convergence guarantees under certain conditions. The contrastive framework naturally aligns with our goal of understanding how information about question-answer pairs is preserved or lost across transformer layers.
+
+The primary limitation of InfoNCE lies in its provision of only a lower bound on the true mutual information, which may underestimate the actual information content in cases where the bound is loose. The quality of the MI estimate is critically dependent on the negative sampling strategy, requiring careful consideration of how to select informative negative examples that provide meaningful contrast without introducing bias. In the context of transformer layers, this translates to decisions about which layer representations to use as negatives and how to ensure they provide sufficient diversity for accurate estimation.
 
 \subsubsection{Kernel-Based Methods}
-\begin{itemize}
-    \item \textbf{Kernel Density Estimation}: Non-parametric estimation using kernel methods
-    \item \textbf{Strengths}: No distributional assumptions, theoretically grounded
-    \item \textbf{Weaknesses}: Curse of dimensionality, computational complexity
-\end{itemize}
+
+Kernel density estimation approaches offer a non-parametric alternative for MI estimation that makes minimal assumptions about the underlying data distribution. These methods estimate the probability densities $p(x)$, $p(y)$, and $p(x,y)$ using kernel functions, then compute mutual information through numerical integration.
+
+The kernel-based MI estimate takes the form:
+\[
+\hat{I}_{\text{kernel}}(X;Y) = \iint p(x,y) \log\frac{p(x,y)}{p(x)p(y)} dx dy
+\]
+where each density is estimated using kernel methods such as Gaussian kernels with adaptive bandwidth selection.
+
+The theoretical foundation of kernel methods provides strong guarantees about estimation consistency and convergence properties. Unlike neural approaches, kernel methods do not require distributional assumptions about the data, making them particularly robust for the diverse range of representations that emerge across different transformer layers and model architectures. The non-parametric nature ensures that the method can capture complex, multimodal distributions that may characterize the relationship between layer representations.
+
+However, kernel-based approaches face significant practical limitations when applied to high-dimensional transformer representations. The curse of dimensionality severely impacts both the accuracy and computational feasibility of density estimation in spaces with hundreds or thousands of dimensions. The computational complexity grows exponentially with dimensionality, making direct application to full transformer hidden states computationally prohibitive. Additionally, the choice of kernel bandwidth becomes increasingly critical and difficult to optimize in high-dimensional spaces, often requiring problem-specific tuning that may not generalize across different model architectures.
 
 \subsubsection{Discrete Approximations}
-\begin{itemize}
-    \item \textbf{Quantization-Based}: Discretize continuous representations and compute empirical MI
-    \item \textbf{Strengths}: Exact computation possible, interpretable
-    \item \textbf{Weaknesses}: Information loss from quantization, choice of discretization scheme
-\end{itemize}
+
+Quantization-based approaches provide an alternative pathway to MI estimation by discretizing continuous representations and computing empirical mutual information on the resulting discrete distributions. This method involves partitioning the continuous space of layer representations into discrete bins and estimating MI using the standard discrete formula.
+
+The discrete MI estimate is computed as:
+\[
+\hat{I}_{\text{discrete}}(X;Y) = \sum_{x,y} p(x,y) \log\frac{p(x,y)}{p(x)p(y)}
+\]
+where the probabilities are estimated from the empirical frequencies in the discretized space.
+
+Discrete approximation methods offer the significant advantage of enabling exact computation of mutual information once the discretization is established, eliminating the approximation errors inherent in other estimation approaches. The resulting estimates are highly interpretable, allowing for direct analysis of which discrete states contribute most to the mutual information between layers. This interpretability can provide valuable insights into the specific types of information that are preserved or lost during the forward pass through transformer layers.
+
+The primary challenge with discrete approximation lies in the information loss introduced by the quantization process itself. The choice of discretization scheme—including the number of bins, binning strategy, and handling of outliers—can significantly impact the quality of the MI estimate. Too few bins may fail to capture important distributional structure, while too many bins can lead to sparse empirical distributions and unreliable probability estimates. Furthermore, the optimal discretization strategy may vary across different layers and model architectures, requiring careful validation and potentially limiting the generalizability of findings across different experimental settings.
 
 \subsubsection{Contrastive Mutual Information Estimation (Proposed)}
-We propose a novel contrastive learning approach specifically designed for estimating mutual information between intermediate layer representations in language models during question-answering tasks.
 
-\begin{itemize}
-    \item \textbf{Method Overview}: Given two random layers $l_i$ and $l_j$ in a transformer model, we learn a contrastive representation that maximizes similarity for the same question-answer (QA) pair across layers while minimizing similarity for different QA pairs.
+We propose a novel contrastive learning approach specifically designed for estimating mutual information between intermediate layer representations in language models during question-answering tasks. This method addresses the unique challenges of analyzing information flow in transformer architectures while providing interpretable insights into how question-answer relationships are preserved across model layers.
 
-    \item \textbf{Formal Definition}: For a QA pair $(\rvx, \rvy)$, let $\rvz_{l_i}$ and $\rvz_{l_j}$ be the hidden representations at layers $l_i$ and $l_j$ respectively. We learn projection functions $f_i: \rvz_{l_i} \rightarrow \mathbb{R}^d$ and $f_j: \rvz_{l_j} \rightarrow \mathbb{R}^d$ such that:
-    \[
-    \mathcal{L}_{\text{contrastive}} = -\log \frac{\exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j})) / \tau)}{\sum_{k=1}^{N} \exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j}^{(k)})) / \tau)}
-    \]
-    where $\rvz_{l_j}^{(k)}$ represents representations from different QA pairs, $\text{sim}(\cdot, \cdot)$ is a similarity function (e.g., cosine similarity), and $\tau$ is a temperature parameter.
+\paragraph{Method Overview and Motivation}
 
-    \item \textbf{MI Estimation}: The mutual information between layers is estimated as:
-    \[
-    \hat{I}(\rvz_{l_i}; \rvz_{l_j}) = \mathbb{E}_{(\rvx,\rvy)} \left[ \log \frac{\exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j})) / \tau)}{\mathbb{E}_{(\rvx',\rvy')} [\exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j}')) / \tau)]} \right]
-    \]
+Our approach builds on the fundamental insight that mutual information between two random variables can be understood through their ability to predict each other. In the context of transformer layers processing question-answer pairs, we hypothesize that layers with high mutual information should contain representations that maintain consistent relationships for the same QA pair while exhibiting distinct patterns for different QA pairs.
 
-    \item \textbf{Strengths}:
-    \begin{itemize}
-        \item Directly optimizes for QA pair consistency across layers
-        \item Scalable to large transformer models
-        \item Provides interpretable similarity scores
-        \item Can detect layer-specific information degradation
-        \item Naturally handles variable sequence lengths
-    \end{itemize}
+Given two layers $l_i$ and $l_j$ in a transformer model, our method learns contrastive representations that maximize similarity for the same question-answer pair across these layers while minimizing similarity for different QA pairs. This approach directly targets the preservation of QA-specific information, making it particularly well-suited for understanding hallucination mechanisms where the loss of question-answer coherence is a primary concern.
 
-    \item \textbf{Weaknesses}:
-    \begin{itemize}
-        \item Requires careful negative sampling strategy
-        \item Sensitive to projection function architecture
-        \item May not capture all forms of mutual information
-        \item Computational overhead for large batch sizes
-    \end{itemize}
+\paragraph{Formal Mathematical Framework}
 
-    \item \textbf{Implementation Details}:
-    \begin{itemize}
-        \item Use pooled representations (e.g., CLS token, mean pooling) for fixed-size embeddings
-        \item Employ hard negative mining to improve contrastive learning
-        \item Apply layer normalization before projection functions
-        \item Use momentum-based updates for stable training
-    \end{itemize}
-\end{itemize}
+For a question-answer pair $(\rvx, \rvy)$, let $\rvz_{l_i}$ and $\rvz_{l_j}$ represent the hidden states at layers $l_i$ and $l_j$ respectively. We learn projection functions $f_i: \rvz_{l_i} \rightarrow \mathbb{R}^d$ and $f_j: \rvz_{l_j} \rightarrow \mathbb{R}^d$ that map layer representations to a common embedding space where similarity can be meaningfully compared.
+
+The contrastive learning objective is formulated as:
+\[
+\mathcal{L}_{\text{contrastive}} = -\log \frac{\exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j})) / \tau)}{\sum_{k=1}^{N} \exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j}^{(k)})) / \tau)}
+\]
+
+Here, $\rvz_{l_j}^{(k)}$ represents representations from different QA pairs serving as negative examples, $\text{sim}(\cdot, \cdot)$ denotes a similarity function such as cosine similarity, and $\tau$ is a temperature parameter that controls the sharpness of the distribution. The temperature parameter plays a crucial role in balancing between hard and soft assignments, with lower values creating sharper distinctions between positive and negative pairs.
+
+The mutual information between layers is then estimated through the learned contrastive representations:
+\[
+\hat{I}(\rvz_{l_i}; \rvz_{l_j}) = \mathbb{E}_{(\rvx,\rvy)} \left[ \log \frac{\exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j})) / \tau)}{\mathbb{E}_{(\rvx',\rvy')} [\exp(\text{sim}(f_i(\rvz_{l_i}), f_j(\rvz_{l_j}')) / \tau)]} \right]
+\]
+
+This formulation provides a principled connection between contrastive learning objectives and mutual information estimation, grounded in the theoretical framework established by \citet{poole2019variational}.
+
+\paragraph{Advantages and Theoretical Justification}
+
+The proposed contrastive approach offers several significant advantages for analyzing information flow in language models. Most importantly, it directly optimizes for question-answer pair consistency across layers, ensuring that the MI estimate captures the specific type of information most relevant to hallucination analysis. This task-specific focus distinguishes our method from general-purpose MI estimators that may not prioritize the preservation of QA relationships.
+
+The method demonstrates excellent scalability to large transformer models, as the contrastive learning framework can efficiently handle the high-dimensional representations typical in modern language models. Unlike kernel-based methods that suffer from the curse of dimensionality, our approach leverages learned projections to map representations to manageable embedding spaces while preserving the essential relational structure.
+
+The contrastive framework provides interpretable similarity scores that can be analyzed to understand which types of information are preserved or lost between layers. These scores offer direct insights into the mechanisms of information degradation that may lead to hallucinations, enabling both detection and potential intervention strategies.
+
+Additionally, our method can detect layer-specific information degradation patterns, identifying particular layers where QA consistency begins to break down. This capability is crucial for understanding the temporal dynamics of hallucination emergence during the forward pass through transformer layers.
+
+The approach naturally handles variable sequence lengths common in question-answering tasks, as the projection functions can accommodate different input dimensions through appropriate pooling strategies.
+
+\paragraph{Limitations and Challenges}
+
+Despite its advantages, the contrastive MI estimation method faces several important limitations that must be carefully addressed in implementation. The quality of MI estimates is critically dependent on the negative sampling strategy, requiring thoughtful selection of negative examples that provide meaningful contrast without introducing systematic bias. Poor negative sampling can lead to either overestimation (if negatives are too easy) or underestimation (if negatives are too similar to positives) of the true mutual information.
+
+The method exhibits sensitivity to the architecture and initialization of projection functions $f_i$ and $f_j$. The choice of projection dimensionality, activation functions, and regularization strategies can significantly impact the quality of the learned representations and, consequently, the accuracy of MI estimates. This sensitivity necessitates careful hyperparameter tuning and validation across different model architectures.
+
+While our method captures important aspects of mutual information related to QA consistency, it may not capture all forms of mutual information present between layer representations. The contrastive objective focuses specifically on preserving QA relationships, potentially missing other types of information dependencies that contribute to the overall mutual information between layers.
+
+The computational overhead can become substantial for large batch sizes, as the method requires computing similarities between all positive pairs and their corresponding negative sets. This scaling challenge may limit the practical applicability to very large datasets or real-time applications without careful optimization.
+
+\paragraph{Implementation Considerations}
+
+Successful implementation of the contrastive MI estimation method requires careful attention to several technical details. We employ pooled representations such as CLS tokens or mean pooling to obtain fixed-size embeddings from variable-length sequences, ensuring consistent input dimensions for the projection functions while preserving the essential semantic content.
+
+Hard negative mining strategies can significantly improve the quality of contrastive learning by focusing on the most informative negative examples. This involves selecting negative samples that are semantically similar but factually distinct from the positive pairs, providing stronger learning signals for the contrastive objective.
+
+Layer normalization applied before the projection functions helps stabilize training and ensures that the learned similarities are not dominated by magnitude differences between layer representations. This normalization is particularly important when comparing representations from layers at different depths, which may have different activation scales.
+
+Momentum-based updates for the projection functions can provide more stable training dynamics, particularly important when dealing with the high-dimensional and potentially noisy representations typical in large language models. This approach helps prevent oscillations and ensures convergent learning of the similarity functions.
 
 \subsection{Representation Learning Analysis}
 \label{subsec:repr_analysis}
@@ -144,54 +188,196 @@ Study how the information bottleneck principle applies to language generation an
 \section{Experimental Design}
 \label{sec:experiments}
 
+Our experimental design follows a systematic approach to validate the proposed contrastive mutual information estimation method and its effectiveness for hallucination detection. The experiments are structured to address three primary research questions: (1) How accurately can our contrastive method estimate mutual information compared to existing approaches? (2) What is the relationship between MI estimates and hallucination occurrence in large language models? (3) How effectively can MI-based metrics detect hallucinations in real-world scenarios?
+
 \subsection{Datasets and Benchmarks}
 \label{subsec:datasets}
 
-\subsubsection{Factual Question Answering}
-\begin{itemize}
-    \item \textbf{Natural Questions} \citep{kwiatkowski2019natural}: Open-domain QA with Wikipedia sources
-    \item \textbf{TriviaQA} \citep{joshi2017triviaqa}: Trivia questions with evidence documents
-    \item \textbf{WebQuestions} \citep{berant2013semantic}: Questions answerable from Freebase
-\end{itemize}
+We employ a diverse collection of datasets spanning factual question answering, hallucination detection, and synthetic validation scenarios. Each dataset serves specific purposes in our experimental pipeline, from method validation to real-world performance assessment.
+
+\subsubsection{Factual Question Answering Datasets}
+
+\paragraph{Natural Questions}
+The Natural Questions dataset \citep{kwiatkowski2019natural} provides a large-scale collection of real user questions paired with Wikipedia articles containing answers. We utilize the open-domain variant, which contains over 300,000 question-answer pairs derived from actual Google search queries. For our experiments, we construct training and test sets of 50,000 and 15,000 samples respectively, ensuring sufficient statistical power for reliable MI estimation and hallucination detection evaluation.
+
+The dataset's strength lies in its naturalistic question formulation, reflecting the types of queries users actually pose to search engines. This authenticity makes it particularly valuable for evaluating hallucination detection in realistic scenarios. We preprocess the data to extract clean question-answer pairs, filtering out questions with ambiguous or incomplete answers to ensure clear ground truth for hallucination assessment.
+
+\paragraph{TriviaQA}
+TriviaQA \citep{joshi2017triviaqa} offers a complementary perspective with its focus on trivia questions paired with evidence documents from Wikipedia and web sources. The dataset contains approximately 95,000 question-answer pairs, from which we sample 40,000 for training and 12,000 for testing, maintaining the minimum 10,000 sample requirement for robust evaluation.
+
+The trivia format provides questions with well-defined factual answers, making it ideal for studying hallucinations where models generate plausible but incorrect information. The availability of evidence documents allows us to distinguish between cases where models hallucinate due to lack of knowledge versus cases where they fail to properly utilize available information.
+
+\paragraph{WebQuestions}
+WebQuestions \citep{berant2013semantic} focuses on questions answerable from the Freebase knowledge base, providing a structured approach to factual question answering. With approximately 6,000 total questions, we use the entire dataset for testing while supplementing with synthetic variations to reach our minimum sample requirements.
+
+This dataset is particularly valuable for studying hallucinations in structured knowledge domains, where the ground truth can be precisely verified against the knowledge base. The questions often require multi-hop reasoning, making them suitable for analyzing how information flows through multiple transformer layers.
 
 \subsubsection{Hallucination-Specific Benchmarks}
-\begin{itemize}
-    \item \textbf{HaluEval} \citep{li2023halueval}: Comprehensive hallucination evaluation
-    \item \textbf{TruthfulQA} \citep{lin2021truthfulqa}: Questions designed to elicit false beliefs
-    \item \textbf{FEVER} \citep{thorne2018fever}: Fact extraction and verification
-\end{itemize}
+
+\paragraph{HaluEval}
+HaluEval \citep{li2023halueval} represents the most comprehensive benchmark specifically designed for hallucination evaluation in large language models. The dataset encompasses multiple task types including question answering, dialogue, summarization, and text completion, with over 35,000 samples across all categories.
+
+We focus primarily on the question-answering subset, which contains approximately 10,000 samples with carefully annotated hallucination labels. The dataset provides both binary hallucination labels and fine-grained categorizations of hallucination types, enabling detailed analysis of how our MI-based detection method performs across different hallucination categories.
+
+The benchmark's strength lies in its systematic construction methodology, where hallucinations are generated through controlled perturbations of factual content. This approach ensures a balanced distribution of hallucinated and non-hallucinated responses, crucial for training and evaluating detection systems.
+
+\paragraph{TruthfulQA}
+TruthfulQA \citep{lin2021truthfulqa} presents a unique challenge by focusing on questions designed to elicit false beliefs and misconceptions commonly held by humans. The dataset contains 817 questions across 38 categories, covering topics where models might generate plausible but incorrect answers based on common misconceptions.
+
+While smaller than our preferred minimum of 10,000 samples, TruthfulQA provides invaluable insights into a specific type of hallucination where models reproduce human biases and false beliefs. We augment this dataset with paraphrased versions and related questions to increase the sample size while maintaining the essential characteristics of the original benchmark.
+
+The dataset is particularly relevant for studying intrinsic hallucinations, where models generate content that contradicts established facts due to biases in training data or reasoning failures rather than simple knowledge gaps.
+
+\paragraph{FEVER}
+The Fact Extraction and VERification (FEVER) dataset \citep{thorne2018fever} provides a large-scale benchmark for fact-checking with over 185,000 claims paired with evidence from Wikipedia. We adapt FEVER for hallucination detection by treating unverifiable or contradicted claims as hallucinations and supported claims as factual content.
+
+From the full dataset, we construct training and test sets of 80,000 and 20,000 samples respectively, ensuring robust statistical evaluation. The dataset's three-way classification (supported, refuted, not enough info) provides nuanced ground truth labels that allow for detailed analysis of different types of factual errors.
+
+FEVER's strength lies in its systematic evidence-based verification process, providing clear criteria for distinguishing between factual and hallucinated content. The dataset's scale and rigorous annotation make it ideal for training and evaluating our contrastive MI estimation method.
+
+\subsubsection{Synthetic Validation Datasets}
+
+To validate the accuracy of our contrastive MI estimation method, we construct synthetic datasets where the ground truth mutual information can be computed analytically. These datasets serve as crucial benchmarks for method validation before application to real-world scenarios.
+
+\paragraph{Gaussian Mixture Models}
+We generate synthetic question-answer representations using Gaussian mixture models with known covariance structures. By controlling the overlap between mixture components, we can precisely control the mutual information between synthetic "layer" representations. These datasets range from 10,000 to 100,000 samples, allowing us to study the convergence properties of our estimation method.
+
+\paragraph{Transformer-Based Synthetic Data}
+We create synthetic datasets by extracting representations from small, controlled transformer models where we can compute or approximate the true mutual information through exhaustive sampling. These datasets provide more realistic validation scenarios while maintaining computational tractability for ground truth estimation.
 
 \subsection{Model Analysis}
 \label{subsec:model_analysis}
 
+Our model analysis encompasses a comprehensive evaluation across different architectures, scales, and training paradigms to understand how mutual information dynamics vary across the landscape of modern language models.
+
 \subsubsection{Architecture Comparison}
-Compare mutual information dynamics across different model architectures:
-\begin{itemize}
-    \item Transformer-based models (GPT family, BERT variants)
-    \item State-space models (Mamba, S4)
-    \item Hybrid architectures
-\end{itemize}
+
+\paragraph{Transformer-Based Models}
+We conduct extensive analysis across the transformer family, including both encoder-only and decoder-only architectures. The GPT family (GPT-2, GPT-3.5, GPT-4) serves as our primary focus for decoder-only models, given their widespread use in question-answering applications. We analyze models ranging from GPT-2 small (124M parameters) to GPT-3.5 (175B parameters), providing insights into how architectural scale affects information flow patterns.
+
+For encoder-only models, we examine BERT variants including BERT-base (110M parameters), BERT-large (340M parameters), and RoBERTa in multiple sizes. These models provide complementary insights into bidirectional information processing, particularly relevant for understanding how question and answer information interact during encoding.
+
+Encoder-decoder models such as T5 (ranging from T5-small to T5-11B) and BART offer additional perspectives on information flow in sequence-to-sequence architectures. These models are particularly valuable for studying how information is transferred from encoder representations to decoder states during answer generation.
+
+\paragraph{State-Space Models}
+Recent advances in state-space models, particularly Mamba and Structured State Space (S4) models, provide alternative architectures for sequence modeling that may exhibit different information flow characteristics compared to attention-based transformers. We analyze Mamba models in the 130M to 2.8B parameter range to understand how the selective state-space mechanism affects mutual information preservation.
+
+The linear scaling properties of state-space models with sequence length make them particularly interesting for studying long-context question-answering scenarios where traditional transformers face computational limitations. Our analysis focuses on how information degrades over long sequences and whether the state-space mechanism provides better information preservation than attention mechanisms.
+
+\paragraph{Hybrid Architectures}
+We examine hybrid models that combine transformer attention with alternative mechanisms, such as retrieval-augmented generation (RAG) models and models incorporating external memory systems. These architectures provide insights into how external information sources affect internal information flow and hallucination patterns.
+
+Mixture-of-experts (MoE) models represent another important hybrid category, where different expert networks may specialize in different types of information processing. We analyze how expert routing decisions correlate with mutual information patterns and hallucination emergence.
 
 \subsubsection{Scale Analysis}
-Investigate how model scale affects mutual information preservation and hallucination rates across different parameter counts and training data sizes.
+
+\paragraph{Parameter Count Effects}
+We systematically investigate how model scale affects mutual information preservation and hallucination rates across parameter counts ranging from 100M to 175B parameters. This analysis reveals scaling laws for information flow, identifying whether larger models consistently preserve more mutual information between questions and answers or whether there are optimal scales for different types of reasoning tasks.
+
+The scale analysis includes both dense and sparse models, examining how parameter efficiency techniques such as pruning and quantization affect information flow patterns. We particularly focus on whether compressed models exhibit different hallucination characteristics due to altered information processing capabilities.
+
+\paragraph{Training Data Scale}
+Beyond parameter count, we analyze how training data scale affects information flow characteristics. Using models trained on datasets ranging from 1B to 1T tokens, we investigate whether exposure to more diverse training data improves information preservation or introduces additional sources of hallucination through conflicting information.
+
+This analysis includes examination of domain-specific fine-tuning effects, studying how adaptation to particular domains (medical, legal, scientific) affects the mutual information patterns and hallucination rates in those domains versus general knowledge areas.
+
+\paragraph{Context Length Analysis}
+We conduct specialized experiments examining how context length affects information flow and hallucination patterns. Using models with varying context windows (from 512 to 32,768 tokens), we analyze how information degrades over long sequences and whether longer contexts provide better grounding for factual accuracy or introduce additional opportunities for hallucination.
+
+\subsection{Evaluation Metrics and Protocols}
+\label{subsec:evaluation_metrics}
+
+Our evaluation framework employs multiple complementary metrics to provide comprehensive assessment of both mutual information estimation accuracy and hallucination detection performance.
+
+\subsubsection{Mutual Information Estimation Metrics}
+
+\paragraph{Synthetic Data Validation}
+For synthetic datasets where ground truth mutual information is known, we employ mean squared error (MSE) and mean absolute error (MAE) between estimated and true MI values. We also compute correlation coefficients to assess the ranking consistency of our estimates across different MI regimes.
+
+Bias and variance decomposition provides insights into the systematic errors and estimation uncertainty of our contrastive method compared to baseline approaches. We conduct bootstrap sampling to estimate confidence intervals for MI estimates, ensuring robust statistical evaluation.
+
+\paragraph{Cross-Method Consistency}
+When ground truth MI is unavailable, we assess consistency across different estimation methods (MINE, InfoNCE, kernel-based, and our contrastive approach). High correlation between methods provides confidence in the reliability of estimates, while systematic differences reveal method-specific biases that must be accounted for in interpretation.
+
+\subsubsection{Hallucination Detection Metrics}
+
+\paragraph{Area Under the Receiver Operating Characteristic Curve (AUROC)}
+AUROC serves as our primary metric for evaluating hallucination detection performance, providing a threshold-independent measure of discriminative ability. We compute AUROC scores for each dataset and model combination, with scores above 0.85 considered indicative of strong detection performance.
+
+The AUROC metric is particularly valuable because it captures the trade-off between true positive and false positive rates across all possible decision thresholds. This comprehensive view is essential for understanding the practical utility of our MI-based detection approach across different deployment scenarios with varying tolerance for false alarms.
+
+\paragraph{False Positive Rate at 95\% True Positive Rate (FPR95)}
+FPR95 provides a practically oriented metric that reflects real-world deployment constraints where high recall (95\% true positive rate) is essential for safety-critical applications. This metric directly addresses the question: "If we want to catch 95\% of all hallucinations, what percentage of non-hallucinated content will be incorrectly flagged?"
+
+FPR95 is particularly relevant for applications where missing hallucinations carries high cost, such as medical or legal question-answering systems. We target FPR95 values below 20\% as indicative of practical utility, though the specific threshold may vary by application domain.
+
+\paragraph{Precision-Recall Analysis}
+We conduct comprehensive precision-recall analysis to understand performance across different operating points. This analysis is particularly important for understanding how our method performs when hallucinations are rare (low base rate scenarios) versus common (high base rate scenarios).
+
+Area under the precision-recall curve (AUPR) provides a summary metric that is less sensitive to class imbalance than AUROC, making it valuable for datasets where hallucinations represent a small fraction of total samples.
+
+\subsubsection{Statistical Significance and Robustness}
+
+\paragraph{Cross-Validation and Bootstrap Sampling}
+All experiments employ 5-fold cross-validation to ensure robust performance estimates and reduce dependence on particular train-test splits. Bootstrap sampling with 1,000 iterations provides confidence intervals for all reported metrics, enabling statistical significance testing between different methods and conditions.
+
+\paragraph{Multiple Random Seeds}
+We conduct all experiments across multiple random seeds (minimum 5 per condition) to account for initialization variability and ensure reproducible results. This is particularly important for contrastive learning methods, which can be sensitive to initialization and negative sampling randomness.
+
+\paragraph{Ablation Studies}
+Systematic ablation studies isolate the contribution of different components in our contrastive MI estimation method. These studies examine the effects of projection function architecture, temperature parameter values, negative sampling strategies, and pooling methods on both MI estimation accuracy and hallucination detection performance.
 
 \subsubsection{Contrastive MI Estimation Validation}
-Specific experiments to validate our proposed contrastive mutual information estimation method:
 
-\begin{itemize}
-    \item \textbf{Synthetic Validation}: Test the method on synthetic data with known ground-truth MI values to assess estimation accuracy
-    \item \textbf{Cross-Method Comparison}: Compare contrastive MI estimates with MINE, InfoNCE, and other baseline methods on the same datasets
-    \item \textbf{Layer Consistency Analysis}: Examine how MI estimates change across transformer layers and correlate with hallucination emergence
-    \item \textbf{Ablation Studies}:
-    \begin{itemize}
-        \item Effect of negative sampling strategies (random vs. hard negatives)
-        \item Impact of projection function architecture (linear vs. MLP)
-        \item Sensitivity to temperature parameter $\tau$
-        \item Influence of pooling strategies for sequence representations
-    \end{itemize}
-    \item \textbf{Computational Efficiency}: Benchmark computational costs compared to other MI estimation methods
-    \item \textbf{Hallucination Correlation}: Measure correlation between contrastive MI estimates and actual hallucination rates on benchmark datasets
-\end{itemize}
+Our proposed contrastive mutual information estimation method requires comprehensive validation to establish its accuracy, reliability, and practical utility for hallucination detection. This validation encompasses both theoretical verification on synthetic data and empirical assessment on real-world language model representations.
+
+\paragraph{Synthetic Validation Protocol}
+We conduct extensive validation using synthetic datasets where ground truth mutual information can be computed analytically or through exhaustive sampling. The synthetic validation employs multiple data generation strategies to ensure robustness across different distributional assumptions.
+
+Gaussian mixture models with controlled covariance structures provide the foundation for our synthetic validation. We generate pairs of random variables with mutual information values ranging from 0 (independence) to high dependence scenarios, testing our method's accuracy across this full spectrum. Each synthetic dataset contains at least 50,000 samples to ensure stable MI estimates and reliable assessment of method performance.
+
+Non-Gaussian synthetic data tests the robustness of our method beyond standard distributional assumptions. We employ heavy-tailed distributions, multimodal distributions, and discrete-continuous mixtures to evaluate performance under realistic conditions that may arise in transformer representations.
+
+The validation protocol includes systematic variation of key parameters including dimensionality (from 10 to 1,000 dimensions), sample size (from 1,000 to 100,000 samples), and noise levels to understand the operating characteristics of our method across different experimental conditions.
+
+\paragraph{Cross-Method Comparison Framework}
+We implement a comprehensive comparison framework that evaluates our contrastive method against established MI estimation approaches including MINE, InfoNCE, kernel density estimation, and discrete approximation methods. This comparison employs identical datasets and evaluation protocols to ensure fair assessment.
+
+The comparison framework evaluates multiple performance dimensions including estimation accuracy (bias and variance), computational efficiency (time and memory requirements), and robustness to hyperparameter choices. We conduct systematic hyperparameter sweeps for all methods to ensure optimal performance in the comparison.
+
+Statistical significance testing using paired t-tests and Wilcoxon signed-rank tests provides rigorous assessment of performance differences between methods. Effect size calculations complement significance tests to evaluate the practical importance of observed differences.
+
+\paragraph{Layer Consistency Analysis}
+A critical component of our validation examines how MI estimates change across transformer layers and their correlation with hallucination emergence patterns. This analysis employs layer-wise extraction of representations from multiple transformer models, computing MI estimates between all pairs of layers.
+
+We analyze both adjacent layer pairs (consecutive layers) and distant layer pairs (layers separated by multiple intermediate layers) to understand how information flows and degrades through the transformer architecture. This analysis reveals critical layers where information loss occurs and identifies potential intervention points for hallucination mitigation.
+
+Correlation analysis between layer-wise MI estimates and empirically observed hallucination rates provides direct validation of our theoretical framework linking information loss to hallucination emergence. We employ both Pearson and Spearman correlation coefficients to capture linear and monotonic relationships.
+
+\paragraph{Comprehensive Ablation Studies}
+Our ablation studies systematically isolate the contribution of different design choices in the contrastive MI estimation method, providing insights into optimal configurations and robustness to hyperparameter variations.
+
+Negative sampling strategy ablation compares random negative sampling, hard negative mining, and stratified sampling approaches. Hard negative mining selects the most challenging negative examples that are semantically similar but factually distinct from positive pairs, potentially providing stronger learning signals for the contrastive objective.
+
+Projection function architecture ablation examines linear projections, multi-layer perceptrons with varying depths and widths, and residual architectures. We evaluate how architectural complexity affects both MI estimation accuracy and computational efficiency, identifying optimal trade-offs for different application scenarios.
+
+Temperature parameter sensitivity analysis systematically varies the temperature parameter $\tau$ from 0.01 to 10.0, examining its effect on both training dynamics and final MI estimation quality. This analysis reveals optimal temperature ranges and assesses the robustness of our method to this critical hyperparameter.
+
+Pooling strategy comparison evaluates different approaches for converting variable-length sequences to fixed-size representations, including mean pooling, max pooling, attention-weighted pooling, and CLS token extraction. This analysis is crucial for understanding how sequence-level information is preserved in the contrastive learning process.
+
+\paragraph{Computational Efficiency Benchmarking}
+We conduct systematic benchmarking of computational costs compared to other MI estimation methods, measuring both training time and inference time across different model scales and dataset sizes. This benchmarking employs standardized hardware configurations and implementation optimizations to ensure fair comparison.
+
+Memory usage analysis examines the scalability of our method to large transformer models and datasets, identifying potential bottlenecks and optimization opportunities. We analyze both peak memory usage during training and steady-state memory requirements during inference.
+
+Scalability analysis examines how computational costs grow with key problem dimensions including sequence length, batch size, model size, and dataset size. This analysis informs practical deployment considerations and identifies parameter regimes where our method remains computationally feasible.
+
+\paragraph{Hallucination Correlation Validation}
+The ultimate validation of our method lies in its ability to predict hallucination occurrence through MI estimates. We conduct extensive correlation analysis between contrastive MI estimates and empirically observed hallucination rates across multiple datasets and model architectures.
+
+This validation employs both aggregate correlation analysis (correlation between average MI and hallucination rates across different conditions) and instance-level analysis (correlation between individual MI estimates and hallucination labels for specific question-answer pairs).
+
+Temporal analysis examines how the correlation between MI estimates and hallucination rates evolves during model training, providing insights into the development of information processing capabilities and potential early stopping criteria for hallucination-aware training.
 
 \section{Expected Contributions}
 \label{sec:contributions}

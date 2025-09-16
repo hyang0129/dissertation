@@ -113,103 +113,106 @@
 \contentsline {paragraph}{HaluEval}{66}{}%
 \contentsline {paragraph}{TruthfulQA}{67}{}%
 \contentsline {paragraph}{FEVER}{67}{}%
+\contentsline {paragraph}{HalluLens}{67}{}%
 \contentsline {subsubsection}{Synthetic Validation Datasets}{68}{}%
 \contentsline {paragraph}{Gaussian Mixture Models}{68}{}%
 \contentsline {paragraph}{Transformer-Based Synthetic Data}{68}{}%
-\contentsline {subsection}{\numberline {6.4.2}Model Analysis}{68}{}%
-\contentsline {subsubsection}{Architecture Comparison}{68}{}%
-\contentsline {paragraph}{Transformer-Based Models}{68}{}%
+\contentsline {subsection}{\numberline {6.4.2}Model Analysis}{69}{}%
+\contentsline {subsubsection}{Architecture Comparison}{69}{}%
+\contentsline {paragraph}{Transformer-Based Models}{69}{}%
 \contentsline {paragraph}{State-Space Models}{69}{}%
-\contentsline {paragraph}{Hybrid Architectures}{69}{}%
-\contentsline {subsubsection}{Scale Analysis}{69}{}%
-\contentsline {paragraph}{Parameter Count Effects}{69}{}%
+\contentsline {paragraph}{Hybrid Architectures}{70}{}%
+\contentsline {subsubsection}{Scale Analysis}{70}{}%
+\contentsline {paragraph}{Parameter Count Effects}{70}{}%
 \contentsline {paragraph}{Training Data Scale}{70}{}%
-\contentsline {paragraph}{Context Length Analysis}{70}{}%
-\contentsline {subsection}{\numberline {6.4.3}Evaluation Metrics and Protocols}{70}{}%
-\contentsline {subsubsection}{Mutual Information Estimation Metrics}{70}{}%
-\contentsline {paragraph}{Synthetic Data Validation}{70}{}%
+\contentsline {paragraph}{Context Length Analysis}{71}{}%
+\contentsline {subsection}{\numberline {6.4.3}Evaluation Metrics and Protocols}{71}{}%
+\contentsline {subsubsection}{Mutual Information Estimation Metrics}{71}{}%
+\contentsline {paragraph}{Synthetic Data Validation}{71}{}%
 \contentsline {paragraph}{Cross-Method Consistency}{71}{}%
 \contentsline {subsubsection}{Hallucination Detection Metrics}{71}{}%
 \contentsline {paragraph}{Area Under the Receiver Operating Characteristic Curve (AUROC)}{71}{}%
-\contentsline {paragraph}{False Positive Rate at 95\% True Positive Rate (FPR95)}{71}{}%
-\contentsline {paragraph}{Precision-Recall Analysis}{71}{}%
+\contentsline {paragraph}{False Positive Rate at 95\% True Positive Rate (FPR95)}{72}{}%
+\contentsline {paragraph}{Precision-Recall Analysis}{72}{}%
 \contentsline {subsubsection}{Statistical Significance and Robustness}{72}{}%
 \contentsline {paragraph}{Cross-Validation and Bootstrap Sampling}{72}{}%
 \contentsline {paragraph}{Multiple Random Seeds}{72}{}%
-\contentsline {paragraph}{Ablation Studies}{72}{}%
-\contentsline {subsubsection}{Contrastive MI Estimation Validation}{72}{}%
-\contentsline {paragraph}{Synthetic Validation Protocol}{72}{}%
-\contentsline {paragraph}{Cross-Method Comparison Framework}{73}{}%
-\contentsline {paragraph}{Layer Consistency Analysis}{73}{}%
+\contentsline {paragraph}{Ablation Studies}{73}{}%
+\contentsline {subsubsection}{Contrastive MI Estimation Validation}{73}{}%
+\contentsline {paragraph}{Synthetic Validation Protocol}{73}{}%
+\contentsline {paragraph}{Cross-Method Comparison Framework}{74}{}%
+\contentsline {paragraph}{Layer Consistency Analysis}{74}{}%
 \contentsline {paragraph}{Comprehensive Ablation Studies}{74}{}%
-\contentsline {paragraph}{Computational Efficiency Benchmarking}{74}{}%
+\contentsline {paragraph}{Computational Efficiency Benchmarking}{75}{}%
 \contentsline {paragraph}{Hallucination Correlation Validation}{75}{}%
-\contentsline {section}{\numberline {6.5}Expected Contributions}{75}{}%
-\contentsline {subsection}{\numberline {6.5.1}Theoretical Contributions}{75}{}%
-\contentsline {subsection}{\numberline {6.5.2}Empirical Contributions}{76}{}%
-\contentsline {subsection}{\numberline {6.5.3}Practical Applications}{76}{}%
-\contentsline {section}{\numberline {6.6}Challenges and Limitations}{76}{}%
-\contentsline {subsection}{\numberline {6.6.1}Technical Challenges}{76}{}%
-\contentsline {subsection}{\numberline {6.6.2}Theoretical Limitations}{76}{}%
-\contentsline {section}{\numberline {6.7}Related Work and Positioning}{77}{}%
-\contentsline {subsection}{\numberline {6.7.1}Information Theory in Natural Language Processing}{77}{}%
-\contentsline {subsubsection}{Classical Information-Theoretic Approaches}{77}{}%
-\contentsline {subsubsection}{Mutual Information in Representation Learning}{77}{}%
-\contentsline {subsubsection}{Information Bottleneck Theory}{77}{}%
-\contentsline {subsection}{\numberline {6.7.2}Hallucination Detection and Mitigation}{78}{}%
-\contentsline {subsubsection}{Confidence-Based Methods}{78}{}%
-\contentsline {subsubsection}{Consistency-Based Approaches}{78}{}%
-\contentsline {subsubsection}{Mechanistic Approaches}{79}{}%
-\contentsline {subsection}{\numberline {6.7.3}Representation Learning in Language Models}{79}{}%
-\contentsline {subsubsection}{Probing Studies}{79}{}%
-\contentsline {subsubsection}{Mechanistic Interpretability}{79}{}%
-\contentsline {subsubsection}{Information Flow Analysis}{80}{}%
-\contentsline {subsection}{\numberline {6.7.4}Contrastive Learning in NLP}{80}{}%
-\contentsline {subsubsection}{Sentence and Document Representations}{80}{}%
-\contentsline {subsubsection}{Mutual Information Estimation via Contrastive Learning}{80}{}%
-\contentsline {subsection}{\numberline {6.7.5}Positioning and Novel Contributions}{81}{}%
-\contentsline {subsubsection}{Theoretical Contributions}{81}{}%
-\contentsline {subsubsection}{Methodological Innovations}{81}{}%
-\contentsline {subsubsection}{Bridging Theory and Practice}{81}{}%
-\contentsline {subsubsection}{Relationship to Existing Work}{82}{}%
-\contentsline {section}{\numberline {6.8}Conclusion}{82}{}%
-\contentsline {chapter}{\numberline {7}Research Timeline}{83}{}%
-\contentsline {section}{\numberline {7.1}Overview}{83}{}%
-\contentsline {section}{\numberline {7.2}Phase 1: Foundation and Method Development (Months 1-4)}{83}{}%
-\contentsline {subsection}{\numberline {7.2.1}Month 1: Theoretical Framework}{83}{}%
-\contentsline {subsection}{\numberline {7.2.2}Month 2: Contrastive MI Implementation}{84}{}%
-\contentsline {subsection}{\numberline {7.2.3}Month 3: Baseline Methods and Comparison}{84}{}%
-\contentsline {subsection}{\numberline {7.2.4}Month 4: Method Refinement}{84}{}%
-\contentsline {section}{\numberline {7.3}Phase 2: Large-Scale Validation and Hallucination Detection (Months 5-8)}{84}{}%
-\contentsline {subsection}{\numberline {7.3.1}Month 5: Foundation Model Analysis}{84}{}%
-\contentsline {subsection}{\numberline {7.3.2}Month 6: Hallucination Correlation Studies}{85}{}%
-\contentsline {subsection}{\numberline {7.3.3}Month 7: Detection System Development}{85}{}%
-\contentsline {subsection}{\numberline {7.3.4}Month 8: Cross-Architecture Validation}{85}{}%
-\contentsline {section}{\numberline {7.4}Phase 3: Applications and Deployment (Months 9-12)}{85}{}%
-\contentsline {subsection}{\numberline {7.4.1}Month 9: Domain-Specific Applications}{85}{}%
-\contentsline {subsection}{\numberline {7.4.2}Month 10: Intervention Strategies}{86}{}%
-\contentsline {subsection}{\numberline {7.4.3}Month 11: Comprehensive Evaluation}{86}{}%
-\contentsline {subsection}{\numberline {7.4.4}Month 12: Documentation and Dissemination}{86}{}%
-\contentsline {section}{\numberline {7.5}Key Deliverables}{86}{}%
-\contentsline {subsection}{\numberline {7.5.1}Technical Deliverables}{86}{}%
-\contentsline {subsection}{\numberline {7.5.2}Research Outputs}{87}{}%
-\contentsline {section}{\numberline {7.6}Risk Mitigation}{87}{}%
-\contentsline {subsection}{\numberline {7.6.1}Technical Risks}{87}{}%
-\contentsline {subsection}{\numberline {7.6.2}Timeline Risks}{87}{}%
-\contentsline {section}{\numberline {7.7}Success Metrics}{87}{}%
-\contentsline {subsection}{\numberline {7.7.1}Quantitative Metrics}{87}{}%
-\contentsline {subsection}{\numberline {7.7.2}Qualitative Metrics}{88}{}%
-\contentsline {chapter}{\numberline {8}Discussion}{89}{}%
-\contentsline {chapter}{Appendices}{102}{}%
-\contentsline {chapter}{\numberline {A}Theoretical Proofs for Label Blindness}{103}{}%
-\contentsline {section}{\numberline {A.1}Properties of Mutual Information and Entropy}{103}{}%
-\contentsline {section}{\numberline {A.2}Supporting Theorems and Proofs}{104}{}%
-\contentsline {subsection}{\numberline {A.2.1}Sufficiency}{104}{}%
-\contentsline {subsection}{\numberline {A.2.2}Lower Bound of Mutual Information for Sufficiency}{105}{}%
-\contentsline {subsection}{\numberline {A.2.3}Conditional Mutual Information of Noise}{106}{}%
-\contentsline {subsection}{\numberline {A.2.4}Factorization of Bottleneck Loss}{107}{}%
-\contentsline {section}{\numberline {A.3}Main Theorems and Proofs}{108}{}%
-\contentsline {subsection}{\numberline {A.3.1}Strict Label Blindness in the Minimal Sufficient Statistic}{108}{}%
-\contentsline {subsection}{\numberline {A.3.2}Independence of Filtered Distributions}{113}{}%
-\contentsline {subsection}{\numberline {A.3.3}Strict Label Blindness in Filtered Distributions - Guaranteed OOD Failure}{114}{}%
-\contentsline {subsection}{\numberline {A.3.4}Unavoidable Risk of Overlapping Out of Distribution Data}{116}{}%
+\contentsline {section}{\numberline {6.5}Contributions and Positioning}{76}{}%
+\contentsline {subsection}{\numberline {6.5.1}Theoretical Foundations and Innovations}{76}{}%
+\contentsline {subsection}{\numberline {6.5.2}Methodological Innovations and Empirical Contributions}{77}{}%
+\contentsline {subsection}{\numberline {6.5.3}Bridging Theory and Practice}{78}{}%
+\contentsline {subsection}{\numberline {6.5.4}Positioning Relative to Existing Work}{80}{}%
+\contentsline {section}{\numberline {6.6}Challenges and Limitations}{81}{}%
+\contentsline {subsection}{\numberline {6.6.1}Technical Challenges}{81}{}%
+\contentsline {subsection}{\numberline {6.6.2}Theoretical Limitations}{82}{}%
+\contentsline {subsection}{\numberline {6.6.3}Practical Implementation Challenges}{83}{}%
+\contentsline {subsection}{\numberline {6.6.4}Validation and Evaluation Challenges}{84}{}%
+\contentsline {subsection}{\numberline {6.6.5}Ethical and Societal Considerations}{85}{}%
+\contentsline {section}{\numberline {6.7}Related Work}{85}{}%
+\contentsline {subsection}{\numberline {6.7.1}Information Theory in Natural Language Processing}{85}{}%
+\contentsline {subsubsection}{Classical Information-Theoretic Approaches}{85}{}%
+\contentsline {subsubsection}{Mutual Information in Representation Learning}{86}{}%
+\contentsline {subsubsection}{Information Bottleneck Theory}{86}{}%
+\contentsline {subsection}{\numberline {6.7.2}Hallucination Detection and Mitigation}{86}{}%
+\contentsline {subsubsection}{Confidence-Based Methods}{87}{}%
+\contentsline {subsubsection}{Consistency-Based Approaches}{87}{}%
+\contentsline {subsubsection}{Mechanistic Approaches}{87}{}%
+\contentsline {subsection}{\numberline {6.7.3}Representation Learning in Language Models}{88}{}%
+\contentsline {subsubsection}{Probing Studies}{88}{}%
+\contentsline {subsubsection}{Mechanistic Interpretability}{88}{}%
+\contentsline {subsubsection}{Information Flow Analysis}{88}{}%
+\contentsline {subsection}{\numberline {6.7.4}Contrastive Learning in NLP}{89}{}%
+\contentsline {subsubsection}{Sentence and Document Representations}{89}{}%
+\contentsline {subsubsection}{Mutual Information Estimation via Contrastive Learning}{89}{}%
+\contentsline {section}{\numberline {6.8}Conclusion}{89}{}%
+\contentsline {chapter}{\numberline {7}Research Timeline}{91}{}%
+\contentsline {section}{\numberline {7.1}Overview}{91}{}%
+\contentsline {section}{\numberline {7.2}Research Timeline Gantt Chart}{91}{}%
+\contentsline {subsection}{\numberline {7.2.1}Parallel Work Streams and Task Overlaps}{92}{}%
+\contentsline {subsection}{\numberline {7.2.2}Key Milestones and Deliverables}{93}{}%
+\contentsline {section}{\numberline {7.3}Phase 1: Foundation and Method Development (Months 1-4)}{94}{}%
+\contentsline {subsection}{\numberline {7.3.1}Month 1: Theoretical Framework and Prototype Analysis}{94}{}%
+\contentsline {subsection}{\numberline {7.3.2}Month 2: Contrastive MI Implementation Refinement}{94}{}%
+\contentsline {subsection}{\numberline {7.3.3}Month 3: Baseline Methods and Comparison}{95}{}%
+\contentsline {subsection}{\numberline {7.3.4}Month 4: Method Refinement}{95}{}%
+\contentsline {section}{\numberline {7.4}Phase 2: Large-Scale Validation and Hallucination Detection (Months 5-8)}{96}{}%
+\contentsline {subsection}{\numberline {7.4.1}Month 5: Foundation Model Analysis}{96}{}%
+\contentsline {subsection}{\numberline {7.4.2}Month 6: Hallucination Correlation Studies}{96}{}%
+\contentsline {subsection}{\numberline {7.4.3}Month 7: Detection System Development}{97}{}%
+\contentsline {subsection}{\numberline {7.4.4}Month 8: Cross-Architecture Validation}{97}{}%
+\contentsline {section}{\numberline {7.5}Phase 3: Applications and Deployment (Months 9-12)}{98}{}%
+\contentsline {subsection}{\numberline {7.5.1}Month 9: Domain-Specific Applications}{98}{}%
+\contentsline {subsection}{\numberline {7.5.2}Month 10: Intervention Strategies}{98}{}%
+\contentsline {subsection}{\numberline {7.5.3}Month 11: Comprehensive Evaluation}{99}{}%
+\contentsline {subsection}{\numberline {7.5.4}Month 12: Documentation and Dissemination}{99}{}%
+\contentsline {section}{\numberline {7.6}Key Deliverables}{100}{}%
+\contentsline {subsection}{\numberline {7.6.1}Technical Deliverables}{100}{}%
+\contentsline {subsection}{\numberline {7.6.2}Research Outputs}{101}{}%
+\contentsline {section}{\numberline {7.7}Risk Mitigation}{101}{}%
+\contentsline {subsection}{\numberline {7.7.1}Technical Risks}{101}{}%
+\contentsline {subsection}{\numberline {7.7.2}Timeline Risks}{102}{}%
+\contentsline {section}{\numberline {7.8}Success Metrics}{103}{}%
+\contentsline {subsection}{\numberline {7.8.1}Quantitative Metrics}{103}{}%
+\contentsline {subsection}{\numberline {7.8.2}Qualitative Metrics}{103}{}%
+\contentsline {chapter}{\numberline {8}Discussion}{105}{}%
+\contentsline {chapter}{Appendices}{118}{}%
+\contentsline {chapter}{\numberline {A}Theoretical Proofs for Label Blindness}{119}{}%
+\contentsline {section}{\numberline {A.1}Properties of Mutual Information and Entropy}{119}{}%
+\contentsline {section}{\numberline {A.2}Supporting Theorems and Proofs}{120}{}%
+\contentsline {subsection}{\numberline {A.2.1}Sufficiency}{120}{}%
+\contentsline {subsection}{\numberline {A.2.2}Lower Bound of Mutual Information for Sufficiency}{121}{}%
+\contentsline {subsection}{\numberline {A.2.3}Conditional Mutual Information of Noise}{122}{}%
+\contentsline {subsection}{\numberline {A.2.4}Factorization of Bottleneck Loss}{123}{}%
+\contentsline {section}{\numberline {A.3}Main Theorems and Proofs}{124}{}%
+\contentsline {subsection}{\numberline {A.3.1}Strict Label Blindness in the Minimal Sufficient Statistic}{124}{}%
+\contentsline {subsection}{\numberline {A.3.2}Independence of Filtered Distributions}{129}{}%
+\contentsline {subsection}{\numberline {A.3.3}Strict Label Blindness in Filtered Distributions - Guaranteed OOD Failure}{130}{}%
+\contentsline {subsection}{\numberline {A.3.4}Unavoidable Risk of Overlapping Out of Distribution Data}{132}{}%

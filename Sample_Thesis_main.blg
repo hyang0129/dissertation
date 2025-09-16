@@ -21,45 +21,45 @@ Warning--entry type for "rock_data" isn't style-file defined
 --line 201 of file Bibliography.bib
 Warning--can't use both volume and number fields in esmaeilpour2022zero
 Warning--empty journal in netzer2011reading
-You've used 121 entries,
+You've used 122 entries,
             2773 wiz_defined-function locations,
-            1199 strings with 30137 characters,
-and the built_in function-call counts, 70672 in all, are:
-= -- 6110
-> -- 5183
+            1203 strings with 30363 characters,
+and the built_in function-call counts, 71335 in all, are:
+= -- 6159
+> -- 5258
 < -- 61
-+ -- 1740
-- -- 1615
-* -- 6036
-:= -- 10754
-add.period$ -- 377
-call.type$ -- 121
-change.case$ -- 887
-chr.to.int$ -- 117
-cite$ -- 244
-duplicate$ -- 2927
-empty$ -- 5006
-format.name$ -- 1764
-if$ -- 14832
++ -- 1765
+- -- 1639
+* -- 6100
+:= -- 10866
+add.period$ -- 380
+call.type$ -- 122
+change.case$ -- 898
+chr.to.int$ -- 118
+cite$ -- 246
+duplicate$ -- 2947
+empty$ -- 5037
+format.name$ -- 1789
+if$ -- 14961
 int.to.chr$ -- 5
 int.to.str$ -- 1
-missing$ -- 115
-newline$ -- 618
-num.names$ -- 486
-pop$ -- 1808
+missing$ -- 116
+newline$ -- 623
+num.names$ -- 490
+pop$ -- 1830
 preamble$ -- 1
-purify$ -- 767
+purify$ -- 777
 quote$ -- 0
-skip$ -- 2536
+skip$ -- 2556
 stack$ -- 0
-substring$ -- 2557
-swap$ -- 546
+substring$ -- 2559
+swap$ -- 547
 text.length$ -- 39
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 1326
+type$ -- 1337
 warning$ -- 2
-while$ -- 531
+while$ -- 534
 width$ -- 0
-write$ -- 1560
+write$ -- 1572
 (There were 3 warnings)

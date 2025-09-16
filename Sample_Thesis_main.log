@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  15 SEP 2025 17:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  16 SEP 2025 16:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -709,7 +709,7 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
  []
 
 [72]
-Overfull \hbox (2.05876pt too wide) in paragraph at lines 339--340
+Overfull \hbox (2.05876pt too wide) in paragraph at lines 346--347
 \OT1/cmr/m/n/10.95 sump-tions. We em-ploy heavy-tailed dis-tri-bu-tions, mul-ti-modal dis-tri-bu-tions, and discrete-continuous
  []
 
@@ -734,11 +734,6 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
  []
 
 [76]
-Overfull \hbox (0.12228pt too wide) in paragraph at lines 440--441
-\OT1/cmr/m/n/10.95 (1988) in-tro-duced In-fo-Max prin-ci-ples that max-i-mize mu-tual in-for-ma-tion be-tween in-puts and learned
- []
-
-
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 77
  []
@@ -763,44 +758,99 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 81
  []
 
-[81])
+[81]
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 82
  []
 
 [82]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 83
+ []
+
+[83]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 84
+ []
+
+[84]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 85
+ []
+
+[85]
+Overfull \hbox (0.12228pt too wide) in paragraph at lines 525--526
+\OT1/cmr/m/n/10.95 (1988) in-tro-duced In-fo-Max prin-ci-ples that max-i-mize mu-tual in-for-ma-tion be-tween in-puts and learned
+ []
+
+
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 86
+ []
+
+[86]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 87
+ []
+
+[87]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 88
+ []
+
+[88])
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 89
+ []
+
+[89]
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 90
+ []
+
+[90]
 Chapter 7.
-[83
+[91
 
 
 
-] [84] [85] [86] [87] [88]
+] [92] [93] [94] [95]
+Overfull \hbox (4.01564pt too wide) in paragraph at lines 1244--1245
+[]\OT1/cmr/m/n/10.95 Our anal-y-sis ex-tends to hallucination-specific bench-marks in-clud-ing HaluE-val, Truth-fulQA, FEVER,
+ []
+
+[96] [97]
+Overfull \hbox (9.73389pt too wide) in paragraph at lines 1268--1269
+\OT1/cmr/m/n/10.95 The tenth month fo-cuses on de-vel-op-ing proac-tive in-ter-ven-tion strate-gies that lever-age our information-
+ []
+
+[98] [99] [100] [101] [102] [103] [104]
 Chapter 8.
-(Sample_Thesis_main.bbl [89
+(Sample_Thesis_main.bbl [105
 
-] [90
+] [106
 
-] [91]
-Underfull \hbox (badness 5681) in paragraph at lines 172--177
+] [107]
+Underfull \hbox (badness 5681) in paragraph at lines 179--184
 []\OT1/cmr/m/n/10.95 Dumitru Er-han, Ian Good-fel-low, Will Cukier-ski, and Yoshua Ben-gio.  Chal-lenges
  []
 
 
-Underfull \hbox (badness 6842) in paragraph at lines 172--177
+Underfull \hbox (badness 6842) in paragraph at lines 179--184
 \OT1/cmr/m/n/10.95 in rep-re-sen-ta-tion learn-ing: Fa-cial ex-pres-sion recog-ni-tion chal-lenge, 2013.  URL
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 172--177
+Underfull \hbox (badness 10000) in paragraph at lines 179--184
 \OT1/cmtt/m/n/10.95 https : / / kaggle . com / competitions / challenges -[] in -[] representation -[] learning -[] facial -[]
  []
 
-[92] [93] [94] [95] [96] [97]
-Underfull \hbox (badness 1931) in paragraph at lines 674--678
+[108] [109] [110] [111] [112] [113]
+Underfull \hbox (badness 1931) in paragraph at lines 681--685
 []\OT1/cmr/m/n/10.95 Aditya Soni.  Play-ing cards dataset, 2020.  URL $\OT1/cmtt/m/n/10.95 https : / / www . kaggle . com / datasets /
  []
 
-[98] [99] [100]) [101] [102
+[114] [115] [116]) [117] [118
 
 
 ]
@@ -808,32 +858,32 @@ Underfull \hbox (badness 1931) in paragraph at lines 674--678
 
  (AppendixA.tex
 Appendix A.
-[103
+[119
 
 
-] [104] [105] [106] [107] [108] [109] [110] [111] [112] [113] [114]
+] [120] [121] [122] [123] [124] [125] [126] [127] [128] [129] [130]
 Overfull \hbox (7.62505pt too wide) in paragraph at lines 478--479
 []\OT1/cmr/m/n/10.95 Using $(\OML/cmm/m/it/10.95 P[]\OT1/cmr/m/n/10.95 )$, we know that in-de-pen-dent func-tions stay in-de-pen-dent and thus $\OML/cmm/m/it/10.95 I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) = 0\OML/cmm/m/it/10.95 ; I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) =
  []
 
-[115]) [116] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
+[131]) [132] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 7609 strings out of 474486
- 118845 string characters out of 5743755
- 1945542 words of memory out of 5000000
- 29721 multiletter control sequences out of 15000+600000
- 570419 words of font info for 80 fonts, out of 8000000 for 9000
+ 7638 strings out of 474486
+ 119202 string characters out of 5743755
+ 1954542 words of memory out of 5000000
+ 29742 multiletter control sequences out of 15000+600000
+ 574875 words of font info for 97 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,16n,79p,1294b,513s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,16n,79p,1294b,515s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Sample_Thesis_main.pdf (132 pages, 937344 bytes).
+Output written on Sample_Thesis_main.pdf (148 pages, 984259 bytes).
 PDF statistics:
- 551 PDF objects out of 1000 (max. 8388607)
+ 603 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

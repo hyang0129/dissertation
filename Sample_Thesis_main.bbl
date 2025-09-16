@@ -1,4 +1,4 @@
-\begin{thebibliography}{121}
+\begin{thebibliography}{122}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -24,6 +24,13 @@ Mihalj Bakator and Dragica Radosav.
 \newblock Deep learning and medical diagnosis: A review of literature.
 \newblock \emph{Multimodal Technologies and Interaction}, 2\penalty0
   (3):\penalty0 47, 2018.
+
+\bibitem[Bang et~al.(2025)Bang, Ji, Schelten, Hartshorn, Fowler, Zhang,
+  Cancedda, and Fung]{bang2025hallulens}
+Yejin Bang, Ziwei Ji, Alan Schelten, Anthony Hartshorn, Tara Fowler, Cheng
+  Zhang, Nicola Cancedda, and Pascale Fung.
+\newblock Hallulens: Llm hallucination benchmark.
+\newblock \emph{arXiv preprint arXiv:2504.17550}, 2025.
 
 \bibitem[Belghazi et~al.(2018)Belghazi, Baratin, Rajeshwar, Ozair, Bengio,
   Courville, and Hjelm]{belghazi2018mutual}

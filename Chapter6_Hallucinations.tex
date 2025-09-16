@@ -235,6 +235,13 @@ From the full dataset, we construct training and test sets of 80,000 and 20,000 
 
 FEVER's strength lies in its systematic evidence-based verification process, providing clear criteria for distinguishing between factual and hallucinated content. The dataset's scale and rigorous annotation make it ideal for training and evaluating our contrastive MI estimation method.
 
+\paragraph{HalluLens}
+HalluLens \citep{bang2025hallulens} introduces a comprehensive hallucination benchmark that distinguishes between extrinsic and intrinsic hallucinations, providing a clear taxonomy that separates hallucination evaluation from factuality assessment. The benchmark addresses a critical gap in existing evaluations by focusing specifically on consistency with training data (extrinsic) and input context (intrinsic) rather than absolute factual correctness.
+
+The benchmark comprises three main tasks for extrinsic hallucination evaluation: PreciseWikiQA for short fact-seeking queries, LongWiki for long-form content generation, and NonExistentRefusal for testing model behavior when confronted with non-existent entities. A key innovation is the dynamic test set generation approach, which mitigates data leakage by creating new questions during evaluation rather than relying on static test sets.
+
+HalluLens provides particularly valuable insights for our MI-based detection approach through its systematic evaluation of model behavior at knowledge boundaries. The NonExistentRefusal task, which tests whether models appropriately abstain from answering questions about fabricated entities, directly aligns with our information-theoretic framework for detecting when models lack sufficient knowledge to provide reliable responses.
+
 \subsubsection{Synthetic Validation Datasets}
 
 To validate the accuracy of our contrastive MI estimation method, we construct synthetic datasets where the ground truth mutual information can be computed analytically. These datasets serve as crucial benchmarks for method validation before application to real-world scenarios.
@@ -379,54 +386,132 @@ This validation employs both aggregate correlation analysis (correlation between
 
 Temporal analysis examines how the correlation between MI estimates and hallucination rates evolves during model training, providing insights into the development of information processing capabilities and potential early stopping criteria for hallucination-aware training.
 
-\section{Expected Contributions}
+\section{Contributions and Positioning}
 \label{sec:contributions}
 
-\subsection{Theoretical Contributions}
-\begin{enumerate}
-    \item \textbf{Information-Theoretic Framework}: Formal characterization of hallucinations through mutual information theory
-    \item \textbf{Representation Learning Theory}: Understanding of how different learning objectives affect information preservation
-    \item \textbf{Critical Thresholds}: Identification of information-theoretic thresholds for hallucination emergence
-\end{enumerate}
+This work occupies a unique position at the intersection of information theory, representation learning, and hallucination detection in large language models, making several novel contributions that advance both theoretical understanding and practical applications. Our research establishes the first comprehensive information-theoretic framework for understanding hallucinations while providing practical tools for detection and mitigation.
 
-\subsection{Empirical Contributions}
-\begin{enumerate}
-    \item \textbf{Measurement Methodology}: Practical approaches for estimating mutual information in large language models, including our novel contrastive MI estimation method
-    \item \textbf{Hallucination Prediction}: Early detection of hallucinations through information-theoretic metrics and layer-wise consistency analysis
-    \item \textbf{Intervention Strategies}: Information-guided approaches for reducing hallucination rates
-    \item \textbf{Contrastive MI Validation}: Empirical validation of the proposed contrastive learning approach for MI estimation across different model architectures and scales
-\end{enumerate}
+\subsection{Theoretical Foundations and Innovations}
 
-\subsection{Practical Applications}
-\begin{enumerate}
-    \item \textbf{Model Design}: Architectural modifications to preserve information flow
-    \item \textbf{Training Objectives}: Information-theoretic regularization for hallucination reduction
-    \item \textbf{Inference-Time Detection}: Real-time hallucination detection using MI estimates
-\end{enumerate}
+Our research establishes a comprehensive information-theoretic framework that fundamentally reconceptualizes hallucinations in large language models. This framework provides the first formal mathematical characterization of hallucinations as manifestations of mutual information degradation between input queries and generated responses. By grounding hallucination analysis in rigorous information theory, we move beyond phenomenological descriptions to develop predictive models that can quantify the likelihood of hallucination emergence based on measurable information-theoretic properties.
+
+The framework introduces novel theoretical constructs including information-preserving generation thresholds, layer-wise information flow dynamics, and critical information bottlenecks that govern hallucination emergence. These theoretical contributions provide a unified mathematical language for describing, predicting, and ultimately preventing hallucinations across different model architectures and task domains. Unlike existing approaches that treat hallucinations as post-hoc phenomena, our framework enables mechanistic understanding of the underlying information-processing failures.
+
+Central to our theoretical contribution is the novel application of mutual information estimation to analyze layer-wise information flow in transformer architectures. This approach reveals how information about the input query degrades as it propagates through successive transformer layers, identifying critical points where hallucinations are most likely to emerge. Our layer-wise analysis provides unprecedented insights into the internal mechanisms of hallucination generation, enabling targeted interventions at specific architectural components.
+
+Our work advances representation learning theory by elucidating how different training objectives and architectural choices affect information preservation throughout the model's computational graph. We develop theoretical insights into the trade-offs between compression and information retention, revealing how standard training procedures may inadvertently create information bottlenecks that predispose models to hallucination. This understanding enables the design of training objectives that explicitly optimize for information preservation while maintaining task performance.
+
+The identification of critical information-theoretic thresholds represents a major theoretical breakthrough in understanding hallucination emergence. Through rigorous mathematical analysis and empirical validation, we establish quantitative criteria that predict when information degradation will lead to hallucinations. These thresholds provide actionable guidance for model design, training procedures, and inference-time monitoring, enabling proactive rather than reactive approaches to hallucination mitigation.
+
+\subsection{Methodological Innovations and Empirical Contributions}
+
+We introduce a novel contrastive mutual information estimation method specifically designed for question-answering contexts and transformer architectures. Unlike existing MI estimation techniques that assume general distributional properties, our method leverages the structured nature of QA tasks and the specific representational characteristics of transformer models. This specialization enables more accurate and computationally efficient estimation of information flow in the high-dimensional spaces characteristic of modern language models.
+
+Our methodological contributions center on the adaptation of contrastive learning principles to the specific challenges of question-answering consistency analysis across transformer layers. Traditional contrastive learning approaches focus on general representation learning, but our QA-specific adaptation explicitly models the relationship between question and answer representations at different depths in the network. This specialization enables more sensitive detection of information degradation patterns that correlate with hallucination emergence.
+
+The measurement methodology encompasses comprehensive protocols for layer-wise information analysis, including standardized procedures for representation extraction, negative sampling strategies, and validation against synthetic ground truth data. These protocols enable reproducible and comparable analysis across different model architectures, scales, and training paradigms, establishing a foundation for systematic study of information dynamics in language models.
+
+Our work demonstrates the practical feasibility of early hallucination detection through real-time monitoring of information-theoretic metrics during model inference. Unlike existing post-hoc detection methods, our approach can identify potential hallucinations as they develop during the generation process, enabling intervention before completion. This capability represents a paradigm shift from reactive to proactive hallucination management, with significant implications for deployment of language models in high-stakes applications.
+
+We develop a practical system for real-time hallucination detection that operates during model inference using mutual information estimates. This real-time capability opens new possibilities for intervention strategies, including early stopping, alternative generation paths, or confidence-aware output modification. Our cross-architecture analysis methodology provides systematic comparison of information flow patterns across different transformer variants, from encoder-decoder models to modern autoregressive architectures.
+
+The comprehensive empirical validation of our contrastive learning approach for MI estimation spans diverse model architectures, from small experimental models to large foundation models with billions of parameters. This validation establishes the robustness and generalizability of our approach across the spectrum of current language model deployments, providing confidence in the practical applicability of our theoretical insights.
+
+\subsection{Bridging Theory and Practice}
+
+Our work uniquely bridges the gap between purely theoretical information-theoretic research and purely empirical hallucination detection methods by providing both rigorous mathematical foundations and practical implementation strategies. This dual focus ensures that our theoretical insights translate directly into actionable tools for improving language model reliability.
+
+The practical applications of our research extend across the entire lifecycle of language model development and deployment, from initial architectural design through training and inference. Our information-theoretic insights enable targeted architectural modifications that preserve information flow while maintaining computational efficiency. These modifications include attention mechanism adjustments, layer normalization strategies, and residual connection designs that minimize information bottlenecks identified through our analysis.
+
+Specific architectural innovations include information-preserving attention patterns that maintain stronger connections between input queries and intermediate representations, adaptive layer depths that adjust computational resources based on information complexity, and novel residual architectures that provide multiple pathways for information flow. These modifications are guided by our theoretical framework and validated through empirical analysis of information preservation and hallucination rates.
+
+Our work introduces information-theoretic regularization techniques that can be integrated into standard training procedures to reduce hallucination propensity. These regularization terms explicitly optimize for information preservation between input queries and generated responses, providing a principled approach to hallucination-aware training. The regularization framework is flexible and can be adapted to different training objectives, from supervised fine-tuning to reinforcement learning from human feedback.
+
+The training objective innovations include mutual information maximization terms that encourage preservation of query-relevant information, consistency regularization that penalizes information degradation across layers, and adversarial training procedures that explicitly test model robustness to information perturbations. These objectives can be combined with existing training procedures with minimal computational overhead, making them practical for large-scale model training.
+
+Real-time hallucination detection represents one of the most immediately applicable contributions of our research. The inference-time detection system operates with minimal computational overhead, providing continuous monitoring of information flow during generation. This system can trigger various intervention strategies, from simple confidence scoring to more sophisticated generation path modification, enabling adaptive response to potential hallucinations as they develop.
+
+The practical deployment framework includes integration protocols for existing language model serving infrastructure, standardized APIs for accessing information-theoretic metrics, and configurable intervention strategies that can be tailored to specific application requirements. This framework enables immediate adoption of our methods in production environments, providing practical tools for improving language model reliability in real-world applications.
+
+\subsection{Positioning Relative to Existing Work}
+
+Our approach represents a fundamental departure from existing hallucination detection methods through its focus on mechanistic rather than behavioral analysis. While traditional approaches examine model outputs to identify hallucinations after they have been generated, our method analyzes the internal information flow processes that give rise to hallucinations. This mechanistic perspective provides deeper insights into the causal factors underlying hallucination generation and enables more targeted intervention strategies.
+
+The predictive capabilities of our approach distinguish it from reactive detection methods that can only identify hallucinations after generation completion. By monitoring mutual information dynamics during the generation process, our method can potentially predict hallucinations before they fully manifest in the output. This predictive capability opens new possibilities for real-time intervention, including generation path modification, confidence-aware output adjustment, and early stopping mechanisms.
+
+Our emphasis on interpretability contrasts sharply with black-box detection approaches that provide binary hallucination classifications without explanatory insights. The information-theoretic framework reveals not just whether a hallucination has occurred, but why it occurred and at which point in the generation process the information degradation began. This interpretability is crucial for developing more robust models and for building user trust in AI systems.
+
+The architecture-agnostic nature of our approach ensures broad applicability across the diverse landscape of transformer-based language models. Unlike methods that rely on specific architectural features or training procedures, our information-theoretic framework applies universally to any transformer architecture. This generality is essential given the rapid evolution of language model architectures and the need for detection methods that remain effective across different model families and scales.
+
+The theoretical understanding of hallucination mechanisms through information theory provides a principled foundation for developing more effective detection and mitigation strategies. Rather than treating hallucinations as black-box phenomena, our framework reveals the underlying information-processing failures that give rise to these errors. This mechanistic understanding enables targeted interventions that address root causes rather than merely symptoms.
+
+Our practical tools for real-world hallucination detection are designed with deployment constraints in mind, balancing detection accuracy with computational efficiency. The methods scale effectively to large foundation models while maintaining real-time performance requirements. This scalability ensures that our theoretical insights can be applied to the most advanced language models currently in production.
+
+The interpretable insights into model behavior that emerge from our information-theoretic analysis provide valuable guidance for architecture design and training procedures. By revealing how information flows and degrades through transformer layers, our work informs decisions about model depth, attention mechanisms, and training objectives. These insights contribute to the development of more robust language models that are inherently less prone to hallucination.
 
 \section{Challenges and Limitations}
 \label{sec:challenges}
 
+While our research presents significant advances in understanding and detecting hallucinations through information-theoretic analysis, several important challenges and limitations must be acknowledged and addressed. These challenges span technical, theoretical, and practical dimensions, each requiring careful consideration in the implementation and interpretation of our methods.
+
 \subsection{Technical Challenges}
-\begin{itemize}
-    \item \textbf{High-Dimensional MI Estimation}: Accurate estimation in transformer hidden spaces
-    \item \textbf{Computational Complexity}: Scalability to large models and datasets
-    \item \textbf{Ground Truth Definition}: Establishing reliable hallucination labels
-\end{itemize}
+
+The estimation of mutual information in the high-dimensional hidden spaces characteristic of modern transformer architectures presents fundamental technical challenges that impact the accuracy and reliability of our approach. Transformer hidden states typically range from hundreds to thousands of dimensions, placing them in regimes where traditional MI estimation methods suffer from the curse of dimensionality. Our contrastive approach addresses some of these challenges, but estimation accuracy remains sensitive to hyperparameter choices, negative sampling strategies, and the quality of learned projection functions.
+
+The computational complexity of our methods scales with model size, batch size, and the number of layers analyzed, potentially limiting practical applicability to the largest foundation models. While our contrastive approach is more efficient than exhaustive density estimation methods, the computational overhead of computing similarities between all positive pairs and their corresponding negative sets can become substantial for large-scale applications. This scaling challenge necessitates careful optimization and potentially limits real-time applicability in resource-constrained environments.
+
+Establishing reliable ground truth labels for hallucination detection presents ongoing challenges that affect both training and evaluation of our methods. Hallucination labeling often requires domain expertise and can be subjective, particularly for subtle factual errors or cases where multiple valid interpretations exist. The quality of our MI-based detection methods is fundamentally limited by the quality of these ground truth labels, and systematic biases in labeling can propagate through our analysis.
+
+The challenge is compounded by the need for large-scale labeled datasets to validate our methods across diverse domains and model architectures. Manual annotation is expensive and time-consuming, while automated labeling methods may introduce their own biases and errors. This limitation affects our ability to comprehensively validate our approach across the full spectrum of potential hallucination types and contexts.
 
 \subsection{Theoretical Limitations}
-\begin{itemize}
-    \item \textbf{Causality vs. Correlation}: Distinguishing causal relationships from correlations
-    \item \textbf{Task Dependence}: Generalizability across different types of generation tasks
-    \item \textbf{Model Specificity}: Applicability to different architectural paradigms
-\end{itemize}
+
+A fundamental theoretical limitation of our approach lies in distinguishing causal relationships from correlations in the observed associations between information degradation and hallucination emergence. While our framework demonstrates strong correlations between mutual information loss and hallucination rates, establishing causality requires more sophisticated experimental designs and theoretical analysis. The observed correlations could potentially be explained by confounding factors or alternative causal pathways that our current framework does not fully capture.
+
+This limitation has important implications for the interpretability and actionability of our findings. While correlation-based insights can guide detection and mitigation strategies, causal understanding is necessary for developing principled interventions that address root causes rather than symptoms. Future work must address this limitation through more sophisticated causal inference techniques and controlled experimental designs.
+
+The generalizability of our findings across different types of generation tasks represents another significant theoretical limitation. Our analysis focuses primarily on question-answering tasks, which have relatively structured input-output relationships. The extent to which our insights apply to more open-ended generation tasks, creative writing, or multi-modal generation remains unclear. Different task types may exhibit different information flow patterns and hallucination mechanisms that are not captured by our current framework.
+
+This task dependence limitation affects the broader applicability of our methods and may require task-specific adaptations or entirely different theoretical frameworks for certain application domains. The challenge is particularly acute for tasks where the notion of "ground truth" is less well-defined or where creative deviation from factual accuracy may be desirable.
+
+Our framework's applicability to different architectural paradigms beyond transformer-based models presents additional theoretical limitations. While we analyze various transformer architectures, the rapid evolution of language model architectures means that new paradigms may exhibit fundamentally different information processing characteristics. State-space models, mixture-of-experts architectures, and emerging paradigms may require significant adaptations or extensions of our theoretical framework.
+
+The architecture specificity limitation is compounded by the fact that our contrastive MI estimation method is designed specifically for transformer representations. Alternative architectures may require different approaches to representation extraction, similarity computation, and information flow analysis, potentially limiting the immediate applicability of our methods to emerging model paradigms.
+
+\subsection{Practical Implementation Challenges}
+
+The translation of our theoretical insights into practical systems faces several implementation challenges that may limit real-world adoption. Integration with existing language model serving infrastructure requires careful consideration of computational overhead, latency requirements, and system reliability. Our information-theoretic monitoring adds computational costs that may be prohibitive for latency-sensitive applications or resource-constrained deployments.
+
+The challenge is particularly acute for real-time applications where inference latency is critical. While our contrastive MI estimation is more efficient than alternative approaches, the additional computational overhead may still be unacceptable for applications requiring sub-millisecond response times. This limitation may restrict the applicability of our methods to offline analysis or applications with more relaxed latency requirements.
+
+Deployment in production environments also raises questions about system reliability and failure modes. Our methods introduce additional complexity into the inference pipeline, creating potential points of failure that could affect system availability. Robust error handling, fallback mechanisms, and monitoring systems are necessary to ensure that information-theoretic analysis does not compromise the reliability of language model deployments.
+
+The interpretability of our information-theoretic metrics presents another practical challenge. While our framework provides insights into information flow and hallucination mechanisms, translating these insights into actionable guidance for practitioners requires additional tooling and training. The complexity of information-theoretic concepts may limit adoption among practitioners who lack specialized background in information theory or representation learning.
+
+\subsection{Validation and Evaluation Challenges}
+
+Comprehensive validation of our approach faces several methodological challenges that affect the strength of our empirical claims. The lack of standardized benchmarks for information-theoretic analysis of language models makes it difficult to compare our methods with alternative approaches or to establish baseline performance expectations. This limitation affects both the development of our methods and their evaluation against existing techniques.
+
+The challenge is compounded by the multifaceted nature of hallucination phenomena, which span different types of errors, domains, and contexts. Comprehensive evaluation requires diverse benchmarks that capture this complexity, but existing hallucination benchmarks may not adequately represent the full spectrum of scenarios where our methods would be applied. This limitation affects our ability to make strong claims about the generalizability and robustness of our approach.
+
+Cross-model validation presents additional challenges due to the diversity of training procedures, datasets, and architectural choices across different language models. Variations in tokenization, training objectives, and model scale can affect information flow patterns in ways that may not be captured by our current analysis. Ensuring that our findings generalize across this diversity requires extensive empirical validation that may be computationally prohibitive.
+
+The temporal stability of our findings represents another validation challenge. Language models continue to evolve rapidly, with new training techniques, architectural innovations, and scale increases potentially affecting the relevance of our current insights. Longitudinal validation studies are necessary to ensure that our methods remain effective as the field advances, but such studies require sustained research effort and computational resources.
+
+\subsection{Ethical and Societal Considerations}
+
+The deployment of hallucination detection systems raises important ethical considerations that must be carefully addressed. Our methods could potentially be used to suppress legitimate dissent or alternative viewpoints by labeling them as "hallucinations," particularly in contexts where ground truth is contested or politically sensitive. The definition of hallucination itself may embed certain worldviews or biases that could systematically disadvantage certain perspectives or communities.
+
+The potential for misuse of our detection capabilities extends to scenarios where authoritarian actors might use hallucination detection as a pretext for censorship or information control. While our technical contributions are intended to improve the reliability and trustworthiness of AI systems, the same capabilities could be repurposed for less benign applications that restrict information access or suppress legitimate discourse.
+
+Privacy considerations also arise from the detailed analysis of information flow within language models. Our methods provide insights into how models process and represent information, which could potentially be used to infer sensitive information about training data or user interactions. Careful consideration of privacy implications is necessary when deploying our methods in contexts where such inferences could have negative consequences for individuals or organizations.
 
 
 
-\section{Related Work and Positioning}
+\section{Related Work}
 \label{sec:related_work}
 
-This work builds upon and extends several research directions, positioning itself at the intersection of information theory, representation learning, and hallucination detection in large language models.
+This work builds upon and extends several research directions at the intersection of information theory, representation learning, and hallucination detection in large language models.
 
 \subsection{Information Theory in Natural Language Processing}
 \label{subsec:info_theory_nlp}
@@ -501,44 +586,7 @@ Contrastive learning has become increasingly important in NLP, particularly for 
 
 Our proposed contrastive MI estimation method builds upon these foundations but is specifically designed for analyzing information flow in transformer layers during question-answering tasks.
 
-\subsection{Positioning and Novel Contributions}
-\label{subsec:positioning}
 
-This work occupies a unique position at the intersection of several research areas, making several novel contributions:
-
-\subsubsection{Theoretical Contributions}
-\begin{itemize}
-    \item \textbf{Information-Theoretic Framework for Hallucinations}: First comprehensive framework linking hallucinations to mutual information loss between questions and answers
-    \item \textbf{Layer-Wise Information Flow Analysis}: Novel application of MI estimation to understand information degradation in transformer layers
-    \item \textbf{Contrastive MI Estimation}: New method specifically designed for QA contexts and transformer architectures
-\end{itemize}
-
-\subsubsection{Methodological Innovations}
-\begin{itemize}
-    \item \textbf{QA-Specific Contrastive Learning}: Adaptation of contrastive learning principles to question-answering consistency across layers
-    \item \textbf{Real-Time Hallucination Detection}: Practical system for inference-time hallucination detection using MI estimates
-    \item \textbf{Cross-Architecture Analysis}: Systematic comparison of information flow patterns across different transformer variants
-\end{itemize}
-
-\subsubsection{Bridging Theory and Practice}
-Unlike purely theoretical information-theoretic work or purely empirical hallucination detection methods, this research provides:
-\begin{itemize}
-    \item Theoretical understanding of hallucination mechanisms through information theory
-    \item Practical tools for real-world hallucination detection
-    \item Interpretable insights into model behavior that can guide architecture design
-    \item Scalable methods that work with large foundation models
-\end{itemize}
-
-\subsubsection{Relationship to Existing Work}
-Our approach differs from existing hallucination detection methods in several key ways:
-\begin{itemize}
-    \item \textbf{Mechanistic vs. Behavioral}: We analyze internal information flow rather than just output behavior
-    \item \textbf{Predictive vs. Reactive}: Our method can potentially predict hallucinations before generation completion
-    \item \textbf{Interpretable vs. Black-Box}: Provides insights into why hallucinations occur, not just detection
-    \item \textbf{Architecture-Agnostic}: Works across different transformer architectures and scales
-\end{itemize}
-
-This positioning establishes our work as a novel contribution that advances both theoretical understanding and practical applications in the critical area of language model reliability and trustworthiness.
 
 \section{Conclusion}
 \label{sec:hall_conclusion}

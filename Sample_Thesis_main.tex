@@ -50,6 +50,13 @@
 \usepackage{colortbl}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+
+\usepackage{xcolor}
+\newcommand{\travis}[1]{\textcolor{red}{{\it [Travis: #1]}}}
+
+
+
+
 \begin{document}
 
 %*******************************************
@@ -140,9 +147,9 @@ OOD detection, on the other hand, aims to detect data that comes from a differen
 
 \subsection{Training Assumptions}
 
-Anomaly detection methods typically assume access only to normal (non-anomalous) data during training and must learn to recognize deviations without ever seeing examples of the anomalies. This is often referred to as a one-class learning problem.
+Anomaly detection methods typically assume access only to normal (non-anomalous) data during training and must learn to recognize deviations without ever seeing examples of the anomalies. This is often referred to as a one-class learning problem. \travis{not necessarily, some methods assume you have labeled anomalies and train on that.  others also assume there are unlabeled anomalies within the training data. Should maybe back this up with some citations.}
 
-In contrast, OOD detection typically operates in a supervised learning context where the model has been trained on multiple in-distribution classes, and the challenge is to detect test inputs that fall outside this known set. Here, the focus is on recognizing the model’s epistemic uncertainty — i.e., knowing what the model doesn’t know.
+In contrast, OOD detection typically operates in a supervised learning context where the model has been trained on multiple in-distribution classes, and the challenge is to detect test inputs that fall outside this known set. Here, the focus is on recognizing the model’s epistemic uncertainty — i.e., knowing what the model doesn’t know. \travis{similarly it would be good to have some citations backing this up}
 
 \subsection{Evaluation Settings}
 
@@ -156,7 +163,7 @@ Information theory provides a mathematical framework for quantifying uncertainty
 
 
 \begin{definition}
-\textbf{Entropy}: The entropy of a discrete random variable $\rvx$ with distribution $p(\vx)$ is defined as the expected amount of uncertainty or information contained in $\rvx$, denoted by $H(\rvx)$.
+\textbf{Entropy}: The entropy of a discrete random variable $\rvx$ with distribution $p(\vx)$ is defined as the expected amount of uncertainty or information \travis{is it uncertainty or entropy or both?} wouldn't uncertainty be the opposite of information? contained in $\rvx$, denoted by $H(\rvx)$.
 \label{def:entropy}
 \end{definition}
 
@@ -320,7 +327,7 @@ Examples of domain features include:
 \end{itemize}
 
 \begin{definition}
-\textbf{Domain Feature Collapse}: A phenomenon where supervised learning models trained on single-domain datasets learn representations that discard domain-specific features, retaining only class-specific features. Formally, this occurs when $I(\rvx_\rvd; \rvz) = 0$ for the learned representation $\rvz$, despite domain features being present in the input $\rvx$.
+\textbf{Domain Feature Collapse}: A phenomenon where supervised learning models trained on single-domain datasets learn representations that discard domain-specific features, retaining only class-specific features. Formally, this occurs when $I(\rvx_\rvd; \rvz) = 0$ for the learned representation $\rvz$, despite domain features being present in the input $\rvx$.\travis{can you provide any citations about domain feature collapse (e.g., studies?)}
 \label{def:domainfeaturecollapse}
 \end{definition}
 
@@ -342,7 +349,7 @@ f_{OOD} \gets \mathrm{Train}(\{ \rvx_i \}_{i=1}^N),
 \]
 and no supervision signal from \( \{ \rvy_i \} \) is involved.
 
-Unlabeled OOD detection approaches often rely on unsupervised learning objectives, such as density estimation, reconstruction error, or self-supervised representations. We can also consider using a pretrained model (without fine tuning) as a form of unlabeled OOD detection, as one does not explicitly train on the in distribution labels. These methods are attractive in settings where label acquisition is expensive or infeasible, or where one desires OOD detection capabilities decoupled from any specific classification task.
+Unlabeled OOD detection approaches often rely on unsupervised learning objectives, such as density estimation, reconstruction error, or self-supervised representations. \travis{it may be good to have a citation or two, maybe to a survey on unlabeled OOD detection} We can also consider using a pretrained model (without fine tuning) as a form of unlabeled OOD detection, as one does not explicitly train on the in distribution labels. These methods are attractive in settings where label acquisition is expensive or infeasible, or where one desires OOD detection capabilities decoupled from any specific classification task.
 
 Importantly, while unlabeled methods do not use labels during training, they still aim to solve the same core problem as labeled OOD detection: estimating the probability that a given test input \( \rvx \) comes from a distribution different from the training data. Formally, both types of methods estimate:
 \[
@@ -381,7 +388,7 @@ Let $\vx \in \cX^*$ be an input prompt and $\vy \in \cX^*$ a model-generated con
 
 Formally, $\vy$ is said to hallucinate with respect to $\mathcal{W}$ if there exists a span $\vy' \subseteq \vy$ such that $\vy'$ contradicts $\mathcal{W}$ or introduces unverifiable or fabricated content under the semantics of the task.
 
-We further separate hallucinations in Extrinsic and Intrinsic. For the purpose of this work, we are primarily interested in Extrinsic Hallucinations.
+We further separate hallucinations in Extrinsic and Intrinsic. For the purpose of this work, we are primarily interested in Extrinsic Hallucinations. \travis{i would add some citations for hallucinations here}
 
 \subsection*{Extrinsic Hallucination}
 
@@ -427,7 +434,7 @@ Representation learning aims to automatically discover useful features from raw 
 
 \subsection{Unsupervised Representation Learning}
 
-Classical unsupervised methods include \emph{Principal Component Analysis} (PCA)~\citep{pearson1901liii}, which learns linear projections maximizing variance, and \emph{Independent Component Analysis} (ICA)~\citep{hyvarinen2000independent}, which seeks statistically independent components. These methods provide foundations for understanding how to decompose data into meaningful factors.
+Classical unsupervised methods include \emph{Principal Component Analysis} (PCA)~\citep{pearson1901liii}, which learns linear projections maximizing variance, and \emph{Independent Component Analysis} (ICA)~\citep{hyvarinen2000independent}, \travis{fix line out of bounds} which seeks statistically independent components. These methods provide foundations for understanding how to decompose data into meaningful factors.
 
 Deep unsupervised approaches revolutionized the field through \emph{autoencoders}~\citep{hinton2006reducing}, which learn compact representations via reconstruction objectives. \emph{Variational Autoencoders} (VAEs)~\citep{kingma2014auto,rezende2014stochastic} introduced probabilistic frameworks combining neural networks with variational inference, using KL regularization to enforce structured latent spaces.
 
@@ -459,7 +466,7 @@ A significant advancement in OOD detection has come through leveraging self-supe
 
 Generative model approaches offer another unsupervised pathway, with \emph{reconstruction-based methods}~\citep{zhou2022rethinking} using autoencoders and VAEs to detect OOD samples through reconstruction error. Recent work has explored \emph{diffusion models}~\citep{liu2023unsupervised} for unsupervised OOD detection, leveraging the inpainting capabilities of diffusion processes to identify distributional shifts.
 
-The theoretical foundations of unsupervised OOD detection remain an active area of research, with recent work~\citep{du2024does} investigating how unlabeled data provably helps OOD detection and exploring the fundamental limitations of label-agnostic approaches~\citep{yangcan}.
+The theoretical foundations of unsupervised OOD detection remain an active area of research, with recent work~\citep{du2024does} investigating how unlabeled data provably helps OOD detection and exploring the fundamental limitations of label-agnostic approaches~\citep{yangcan}. \travis{you can mention this is your own work and part of the contributions of your thesis here.}
 
 \subsection{Benchmarking and Evaluation}
 
@@ -487,7 +494,7 @@ While most theoretical work in OOD detection focuses on multi-domain settings, a
 
 The common thread across these applications is that the in-distribution data comes from a narrow, well-defined domain with consistent characteristics (imaging modality, sensor type, environmental conditions), but the models must still detect when inputs fall outside the trained class distribution. This setting creates unique challenges that differ fundamentally from the multi-domain scenarios typically studied in general OOD detection research.
 
-Recent work has begun to recognize the limitations of existing approaches in single-domain settings. The concept of \emph{adjacent OOD detection}~\citep{yangcan} specifically addresses scenarios where OOD samples come from the same domain as the training data but represent different classes, highlighting a critical gap in traditional evaluation protocols that focus primarily on far-OOD detection across different domains.
+Recent work has begun to recognize the limitations of existing approaches in single-domain settings. The concept of \emph{adjacent OOD detection}~\citep{yangcan} \travis{again you can mention this is part of your thesis/proposed work} specifically addresses scenarios where OOD samples come from the same domain as the training data but represent different classes, highlighting a critical gap in traditional evaluation protocols that focus primarily on far-OOD detection across different domains.
 
 \subsection{Domain Adaptation and Transfer Learning}
 
@@ -503,11 +510,11 @@ Recent advances in OOD detection have explored multi-stage and ensemble approach
 
 \emph{Ensemble methods} have been extensively studied in uncertainty estimation and OOD detection. \citet{lakshminarayanan2017simple} demonstrate that deep ensembles provide simple and scalable predictive uncertainty estimation, while \citet{pmlr-v235-xu24ae} introduce deep multi-comprehension ensembles specifically for OOD detection. These approaches typically combine predictions from multiple models or detection mechanisms to improve robustness.
 
-\emph{Two-stage detection frameworks} represent a specific class of multi-stage approaches where different stages focus on different aspects of the detection problem. The first stage typically performs coarse-grained filtering or domain-level detection, while the second stage applies more sophisticated class-level OOD detection. This hierarchical approach allows for more targeted and efficient detection strategies.
+\emph{Two-stage detection frameworks} \travis{can you cite some examples?} represent a specific class of multi-stage approaches where different stages focus on different aspects of the detection problem. The first stage typically performs coarse-grained filtering or domain-level detection, while the second stage applies more sophisticated class-level OOD detection. This hierarchical approach allows for more targeted and efficient detection strategies.
 
 The effectiveness of multi-stage approaches often depends on the careful design of each stage and the integration mechanism between stages. Domain filtering, as introduced in the context of single-domain OOD detection, represents a specific instantiation of this paradigm where the first stage focuses explicitly on domain-level detection before applying traditional OOD detection methods.
 
-\emph{Hybrid supervised-unsupervised approaches} combine the benefits of labeled and unlabeled learning objectives. While purely unsupervised methods may suffer from label blindness, and purely supervised methods may suffer from domain feature collapse, hybrid approaches attempt to capture both class-relevant and domain-relevant features in the learned representations.
+\emph{Hybrid supervised-unsupervised approaches} \travis{again cite some examples} combine the benefits of labeled and unlabeled learning objectives. While purely unsupervised methods may suffer from label blindness, and purely supervised methods may suffer from domain feature collapse, hybrid approaches attempt to capture both class-relevant and domain-relevant features in the learned representations.
 
 \section{Hallucination Detection}
 

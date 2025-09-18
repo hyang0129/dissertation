@@ -49,7 +49,7 @@ pdflatex Sample_Thesis_main.tex
 - `Sample_Thesis_main.tex`: Main dissertation file
 - `AppendixA.tex`: Theoretical proofs appendix
 - `Bibliography.bib`: Complete bibliography
-- `*.png`: Figures and experimental results
+- `images/`: Figures and experimental results (PNG, JPG, PDF)
 - `ICLR_2025_SSL_OOD__Camera_Ready_/`: Original ICLR paper source
 
 ## Citation

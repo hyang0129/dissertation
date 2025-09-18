@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  16 SEP 2025 17:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  18 SEP 2025 13:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -359,59 +359,289 @@ Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
 \everycr=\toks32
 \minrowclearance=\skip72
 \rownum=\count305
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil-common.tex
+\pgfutil@everybye=\toks33
+\pgfutil@tempdima=\dimen198
+\pgfutil@tempdimb=\dimen199
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil-latex.def
+\pgfutil@abb=\box103
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs.code.tex (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+Package: pgfrcs 2023-01-15 v3.1.10 (3.1.10)
+))
+Package: pgf 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsys.code.tex
+Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks34
+\pgfkeys@temptoks=\toks35
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeyslibraryfiltered.code.tex
+\pgfkeys@tmptoks=\toks36
+))
+\pgf@x=\dimen256
+\pgf@y=\dimen257
+\pgf@xa=\dimen258
+\pgf@ya=\dimen259
+\pgf@xb=\dimen260
+\pgf@yb=\dimen261
+\pgf@xc=\dimen262
+\pgf@yc=\dimen263
+\pgf@xd=\dimen264
+\pgf@yd=\dimen265
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count306
+\c@pgf@countb=\count307
+\c@pgf@countc=\count308
+\c@pgf@countd=\count309
+\t@pgf@toka=\toks37
+\t@pgf@tokb=\toks38
+\t@pgf@tokc=\toks39
+\pgf@sys@id@count=\count310
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.cfg
+File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
+)
+Driver file for pgf: pgfsys-pdftex.def
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2023-01-15 v3.1.10 (3.1.10)
+))) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfsyssoftpath@smallbuffer@items=\count311
+\pgfsyssoftpath@bigbuffer@items=\count312
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcore.code.tex
+Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparser.code.tex
+\pgfmath@dimen=\dimen266
+\pgfmath@count=\count313
+\pgfmath@box=\box104
+\pgfmath@toks=\toks40
+\pgfmath@stack@operand=\toks41
+\pgfmath@stack@operation=\toks42
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.basic.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.trigonometric.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.random.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.comparison.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.base.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.round.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.misc.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.integerarithmetics.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count314
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code.tex) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@picminx=\dimen267
+\pgf@picmaxx=\dimen268
+\pgf@picminy=\dimen269
+\pgf@picmaxy=\dimen270
+\pgf@pathminx=\dimen271
+\pgf@pathmaxx=\dimen272
+\pgf@pathminy=\dimen273
+\pgf@pathmaxy=\dimen274
+\pgf@xx=\dimen275
+\pgf@xy=\dimen276
+\pgf@yx=\dimen277
+\pgf@yy=\dimen278
+\pgf@zx=\dimen279
+\pgf@zy=\dimen280
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@path@lastx=\dimen281
+\pgf@path@lasty=\dimen282
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@shorten@end@additional=\dimen283
+\pgf@shorten@start@additional=\dimen284
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfpic=\box105
+\pgf@hbox=\box106
+\pgf@layerbox@main=\box107
+\pgf@picture@serial@count=\count315
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgflinewidth=\dimen285
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransformations.code.tex
+File: pgfcoretransformations.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@pt@x=\dimen286
+\pgf@pt@y=\dimen287
+\pgf@pt@temp=\dimen288
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfarrowsep=\dimen289
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@max=\dimen290
+\pgf@sys@shading@range@num=\count316
+\pgf@shadingcount=\count317
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfexternal@startupbox=\box108
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransparency.code.tex
+File: pgfcoretransparency.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfnodeparttextbox=\box109
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2023-01-15 v3.1.10 (3.1.10)
+\pgf@nodesepstart=\dimen291
+\pgf@nodesepend=\dimen292
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2023-01-15 v3.1.10 (3.1.10)
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.code.tex
+Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
+\pgffor@iter=\dimen293
+\pgffor@skip=\dimen294
+\pgffor@stack=\toks43
+\pgffor@toks=\toks44
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz\tikz.code.tex
+Package: tikz 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibraryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgf@plot@mark@count=\count318
+\pgfplotmarksize=\dimen295
+)
+\tikz@lastx=\dimen296
+\tikz@lasty=\dimen297
+\tikz@lastxsaved=\dimen298
+\tikz@lastysaved=\dimen299
+\tikz@lastmovetox=\dimen300
+\tikz@lastmovetoy=\dimen301
+\tikzleveldistance=\dimen302
+\tikzsiblingdistance=\dimen303
+\tikz@figbox=\box110
+\tikz@figbox@bg=\box111
+\tikz@tempbox=\box112
+\tikz@tempbox@bg=\box113
+\tikztreelevel=\count319
+\tikznumberofchildren=\count320
+\tikznumberofcurrentchild=\count321
+\tikz@fig@count=\count322
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfmatrixcurrentrow=\count323
+\pgfmatrixcurrentcolumn=\count324
+\pgf@matrix@numberofcolumns=\count325
+)
+\tikz@expandcount=\count326
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
+))) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.code.tex
+File: tikzlibraryshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.misc.code.tex
+File: tikzlibraryshapes.misc.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.misc.code.tex
+File: pgflibraryshapes.misc.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.symbols.code.tex
+File: tikzlibraryshapes.symbols.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.symbols.code.tex
+File: pgflibraryshapes.symbols.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.arrows.code.tex
+File: tikzlibraryshapes.arrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.arrows.code.tex
+File: pgflibraryshapes.arrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.callouts.code.tex (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.callouts.code.tex)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.multipart.code.tex
+File: tikzlibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.multipart.code.tex
+File: pgflibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\pgfnodepartlowerbox=\box114
+\pgfnodeparttwobox=\box115
+\pgfnodepartthreebox=\box116
+\pgfnodepartfourbox=\box117
+\pgfnodeparttwentybox=\box118
+\pgfnodepartnineteenbox=\box119
+\pgfnodeparteighteenbox=\box120
+\pgfnodepartseventeenbox=\box121
+\pgfnodepartsixteenbox=\box122
+\pgfnodepartfifteenbox=\box123
+\pgfnodepartfourteenbox=\box124
+\pgfnodepartthirteenbox=\box125
+\pgfnodeparttwelvebox=\box126
+\pgfnodepartelevenbox=\box127
+\pgfnodeparttenbox=\box128
+\pgfnodepartninebox=\box129
+\pgfnodeparteightbox=\box130
+\pgfnodepartsevenbox=\box131
+\pgfnodepartsixbox=\box132
+\pgfnodepartfivebox=\box133
+))) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryarrows.code.tex
+File: tikzlibraryarrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+ (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibraryarrows.code.tex
+File: pgflibraryarrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
+\arrowsize=\dimen304
+)) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2023-01-15 v3.1.10 (3.1.10)
+) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryfit.code.tex
+File: tikzlibraryfit.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
  (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count306
-\float@exts=\toks33
-\float@box=\box103
-\@float@everytoks=\toks34
-\@floatcapt=\box104
+\c@float@type=\count327
+\float@exts=\toks45
+\float@box=\box134
+\@float@everytoks=\toks46
+\@floatcapt=\box135
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2022/04/13 v1.1d Standard LaTeX ifthen package (DPC)
 )
-\@float@every@algorithm=\toks35
-\c@algorithm=\count307
+\@float@every@algorithm=\toks47
+\c@algorithm=\count328
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudocode.sty
 Package: algpseudocode 
  (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithmicx.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count308
-\c@ALG@rem=\count309
-\c@ALG@nested=\count310
+\c@ALG@line=\count329
+\c@ALG@rem=\count330
+\c@ALG@nested=\count331
 \ALG@tlm=\skip73
 \ALG@thistlm=\skip74
-\c@ALG@Lnr=\count311
-\c@ALG@blocknr=\count312
-\c@ALG@storecount=\count313
-\c@ALG@tmpcounter=\count314
+\c@ALG@Lnr=\count332
+\c@ALG@blocknr=\count333
+\c@ALG@storecount=\count334
+\c@ALG@tmpcounter=\count335
 \ALG@tmplength=\skip75
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count315
-\l__pdf_internal_box=\box105
+\l__color_backend_stack_int=\count336
+\l__pdf_internal_box=\box136
 ) (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
 \openout1 = `Sample_Thesis_main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
-LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -449,17 +679,17 @@ LaTeX Font Info:    ... okay on input line 53.
 
 (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count316
-\scratchdimen=\dimen198
-\scratchbox=\box106
-\nofMPsegments=\count317
-\nofMParguments=\count318
-\everyMPshowfont=\toks36
-\MPscratchCnt=\count319
-\MPscratchDim=\dimen199
-\MPnumerator=\count320
-\makeMPintoPDFobject=\count321
-\everyMPtoPDFconversion=\toks37
+\scratchcounter=\count337
+\scratchdimen=\dimen305
+\scratchbox=\box137
+\nofMPsegments=\count338
+\nofMParguments=\count339
+\everyMPshowfont=\toks48
+\MPscratchCnt=\count340
+\MPscratchDim=\dimen306
+\MPnumerator=\count341
+\makeMPintoPDFobject=\count342
+\everyMPtoPDFconversion=\toks49
 ) (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -470,7 +700,7 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 
  (CoverPage.tex)
 
-Package thesisfrontmatter Warning: prevdegreeA is not defined on input line 67.
+Package thesisfrontmatter Warning: prevdegreeA is not defined on input line 69.
 
 [1
 
@@ -509,18 +739,18 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 ] [8] [9] [10] [11] [12] [13] [14])
-\tf@toc=\write3
-\openout3 = `Sample_Thesis_main.toc'.
+\tf@toc=\write4
+\openout4 = `Sample_Thesis_main.toc'.
 
  [15] (Sample_Thesis_main.lof)
-\tf@lof=\write4
-\openout4 = `Sample_Thesis_main.lof'.
+\tf@lof=\write5
+\openout5 = `Sample_Thesis_main.lof'.
 
  [16
 
 ] (Sample_Thesis_main.lot)
-\tf@lot=\write5
-\openout5 = `Sample_Thesis_main.lot'.
+\tf@lot=\write6
+\openout6 = `Sample_Thesis_main.lot'.
 
  [17
 
@@ -529,7 +759,7 @@ Chapter 1.
 [1
 
 ] [2] [3]
-Overfull \hbox (2.43398pt too wide) in paragraph at lines 131--132
+Overfull \hbox (2.43398pt too wide) in paragraph at lines 133--134
 []\OT1/cmr/m/n/10.95 Our the-o-ret-i-cal con-tri-bu-tions will in-clude for-mal def-i-ni-tions of hal-lu-ci-na-tions in terms of information-
  []
 
@@ -542,39 +772,39 @@ Chapter 3.
 [20
 
 ] [21]
-Overfull \hbox (43.32942pt too wide) in paragraph at lines 496--497
+Overfull \hbox (43.32942pt too wide) in paragraph at lines 498--499
 \OT1/cmr/m/n/10.95 which learns lin-ear pro-jec-tions max-i-miz-ing vari-ance, and \OT1/cmr/m/it/10.95 In-de-pen-dent Com-po-nent Anal-y-sis \OT1/cmr/m/n/10.95 (ICA) (Hyv^^?arinen
  []
 
 [22]
-Overfull \hbox (12.13565pt too wide) in paragraph at lines 508--509
+Overfull \hbox (12.13565pt too wide) in paragraph at lines 510--511
 \OT1/cmr/m/n/10.95 tion|contrastive meth-ods im-plic-itly max-i-mize MI be-tween rep-re-sen-ta-tions of aug-mented views (Hjelm
  []
 
 [23] [24] [25] [26] [27]
-Overfull \hbox (2.52249pt too wide) in paragraph at lines 588--589
+Overfull \hbox (2.52249pt too wide) in paragraph at lines 590--591
 []\OT1/cmr/m/it/10.95 External ver-i-fi-ca-tion meth-ods \OT1/cmr/m/n/10.95 com-pare model out-puts against ex-ter-nal knowl-edge sources, databases,
  []
 
 [28]
-Overfull \hbox (6.83415pt too wide) in paragraph at lines 612--613
+Overfull \hbox (6.83415pt too wide) in paragraph at lines 614--615
 \OT1/cmr/m/n/10.95 cess-ing and com-puter vi-sion through its self-attention mech-a-nism. Vi-sion Trans-form-ers (ViTs) (Doso-
  []
 
 [29] [30]
 Chapter 4.
 
-Overfull \hbox (3.31694pt too wide) in paragraph at lines 625--626
+Overfull \hbox (3.31694pt too wide) in paragraph at lines 627--628
 \OT1/cmr/m/it/10.95 This chap-ter is based on work pub-lished at ICLR 2025: "Can We Ig-nore La-bels in Out-of-Distribution
  []
 
 [31
 
 ]
-<gradcam_example_faces.png, id=174, 716.6775pt x 359.54324pt>
+<gradcam_example_faces.png, id=177, 716.6775pt x 359.54324pt>
 File: gradcam_example_faces.png Graphic file (type png)
 <use gradcam_example_faces.png>
-Package pdftex.def Info: gradcam_example_faces.png  used on input line 637.
+Package pdftex.def Info: gradcam_example_faces.png  used on input line 639.
 (pdftex.def)             Requested size: 375.80544pt x 188.53809pt.
 
 
@@ -587,19 +817,19 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [43] [44] [45] [46]
 Chapter 5.
 
-Overfull \hbox (1.17668pt too wide) in paragraph at lines 892--893
+Overfull \hbox (1.17668pt too wide) in paragraph at lines 894--895
 \OT1/cmr/m/n/10.95 bench-marks (Zhang et al., 2023b). How-ever, these bench-marks al-most ex-clu-sively use in-distribution
  []
 
 [47
 
 ] [48] [49] [50] [51] [52] [53]
-Overfull \hbox (12.88255pt too wide) in paragraph at lines 1013--1031
+Overfull \hbox (12.88255pt too wide) in paragraph at lines 1015--1033
  [][] 
  []
 
 [54]
-Overfull \hbox (11.06973pt too wide) in paragraph at lines 1055--1073
+Overfull \hbox (11.06973pt too wide) in paragraph at lines 1057--1075
  [][] 
  []
 
@@ -607,7 +837,7 @@ Overfull \hbox (11.06973pt too wide) in paragraph at lines 1055--1073
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Overfull \hbox (21.14633pt too wide) in paragraph at lines 1085--1103
+Overfull \hbox (21.14633pt too wide) in paragraph at lines 1087--1105
  [][] 
  []
 
@@ -714,16 +944,16 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
  []
 
 [77]
-Overfull \hbox (2.05876pt too wide) in paragraph at lines 346--347
-\OT1/cmr/m/n/10.95 sump-tions. We em-ploy heavy-tailed dis-tri-bu-tions, mul-ti-modal dis-tri-bu-tions, and discrete-continuous
- []
-
-
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 78
  []
 
 [78]
+Overfull \hbox (2.05876pt too wide) in paragraph at lines 422--423
+\OT1/cmr/m/n/10.95 sump-tions. We em-ploy heavy-tailed dis-tri-bu-tions, mul-ti-modal dis-tri-bu-tions, and discrete-continuous
+ []
+
+
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 79
  []
@@ -784,16 +1014,16 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
  []
 
 [90]
-Overfull \hbox (0.12228pt too wide) in paragraph at lines 525--526
-\OT1/cmr/m/n/10.95 (1988) in-tro-duced In-fo-Max prin-ci-ples that max-i-mize mu-tual in-for-ma-tion be-tween in-puts and learned
- []
-
-
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 91
  []
 
 [91]
+Overfull \hbox (0.12228pt too wide) in paragraph at lines 601--602
+\OT1/cmr/m/n/10.95 (1988) in-tro-duced In-fo-Max prin-ci-ples that max-i-mize mu-tual in-for-ma-tion be-tween in-puts and learned
+ []
+
+
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 92
  []
@@ -803,7 +1033,7 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 93
  []
 
-[93])
+[93]
 Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 94
  []
@@ -813,29 +1043,34 @@ Overfull \hbox (180.13759pt too wide) has occurred while \output is active
 \OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 95
  []
 
-[95]
+[95])
+Overfull \hbox (180.13759pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 96
+ []
+
+[96]
 Chapter 7.
-[96
+[97
 
 
 
-] [97] [98] [99] [100]
-Overfull \hbox (4.01564pt too wide) in paragraph at lines 1310--1311
+] [98] [99] [100] [101]
+Overfull \hbox (4.01564pt too wide) in paragraph at lines 1312--1313
 []\OT1/cmr/m/n/10.95 Our anal-y-sis ex-tends to hallucination-specific bench-marks in-clud-ing HaluE-val, Truth-fulQA, FEVER,
  []
 
-[101] [102]
-Overfull \hbox (9.73389pt too wide) in paragraph at lines 1334--1335
+[102] [103]
+Overfull \hbox (9.73389pt too wide) in paragraph at lines 1336--1337
 \OT1/cmr/m/n/10.95 The tenth month fo-cuses on de-vel-op-ing proac-tive in-ter-ven-tion strate-gies that lever-age our information-
  []
 
-[103] [104] [105] [106] [107] [108] [109]
+[104] [105] [106] [107] [108] [109] [110]
 Chapter 8.
-[110
+[111
 
-] [111] [112] [113] [114] (Sample_Thesis_main.bbl [115] [116
+] [112] [113] [114] [115] (Sample_Thesis_main.bbl [116] [117
 
-] [117]
+] [118]
 Underfull \hbox (badness 5681) in paragraph at lines 179--184
 []\OT1/cmr/m/n/10.95 Dumitru Er-han, Ian Good-fel-low, Will Cukier-ski, and Yoshua Ben-gio.  Chal-lenges
  []
@@ -850,12 +1085,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 179--184
 \OT1/cmtt/m/n/10.95 https : / / kaggle . com / competitions / challenges -[] in -[] representation -[] learning -[] facial -[]
  []
 
-[118] [119] [120] [121] [122] [123]
+[119] [120] [121] [122] [123] [124]
 Underfull \hbox (badness 1931) in paragraph at lines 689--693
 []\OT1/cmr/m/n/10.95 Aditya Soni.  Play-ing cards dataset, 2020.  URL $\OT1/cmtt/m/n/10.95 https : / / www . kaggle . com / datasets /
  []
 
-[124] [125] [126]) [127] [128
+[125] [126] [127]) [128] [129
 
 
 ]
@@ -863,32 +1098,32 @@ Underfull \hbox (badness 1931) in paragraph at lines 689--693
 
  (AppendixA.tex
 Appendix A.
-[129
+[130
 
 
-] [130] [131] [132] [133] [134] [135] [136] [137] [138] [139] [140]
+] [131] [132] [133] [134] [135] [136] [137] [138] [139] [140] [141]
 Overfull \hbox (7.62505pt too wide) in paragraph at lines 478--479
 []\OT1/cmr/m/n/10.95 Using $(\OML/cmm/m/it/10.95 P[]\OT1/cmr/m/n/10.95 )$, we know that in-de-pen-dent func-tions stay in-de-pen-dent and thus $\OML/cmm/m/it/10.95 I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) = 0\OML/cmm/m/it/10.95 ; I\OT1/cmr/m/n/10.95 (\OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ; \OT1/cmr/bx/n/10.95 x[]\OT1/cmr/m/n/10.95 ) =
  []
 
-[141]) [142] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
+[142]) [143] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux) (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux) (AppendixA.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 7641 strings out of 474486
- 119271 string characters out of 5743755
+ 20281 strings out of 474486
+ 416473 string characters out of 5743755
  1954542 words of memory out of 5000000
- 29745 multiletter control sequences out of 15000+600000
+ 42127 multiletter control sequences out of 15000+600000
  574875 words of font info for 97 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,16n,79p,1294b,517s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Sample_Thesis_main.pdf (159 pages, 1010903 bytes).
+ 84i,16n,87p,1294b,822s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Sample_Thesis_main.pdf (160 pages, 1063001 bytes).
 PDF statistics:
- 638 PDF objects out of 1000 (max. 8388607)
+ 659 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

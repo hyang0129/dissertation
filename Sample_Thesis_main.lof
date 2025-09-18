@@ -5,7 +5,8 @@
 \contentsline {figure}{\numberline {4.1}{\ignorespaces An example failure case by visualizing the heatmaps of the gradient of a unlabeled SimCLR trained ResNet \citep {chen2020simple} using the GradCAM method \citep {selvaraju2017grad}. The OOD detection task is to detect OOD facial expressions. In this case, the OOD detection method fails as justified by our theoretical work, where the representations do not exhibit a strong gradient in regions commonly associated with facial expressions (i.e., eyebrows, mouth, etc.).}}{33}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces System architecture for hallucination detection through mutual information analysis. The primary language model generates responses while extracting layer-wise embeddings. During training, the same primary model processes training QA pairs to generate embeddings with hallucination labels, which are used to train a secondary analysis model via contrastive learning. At inference time, this secondary model estimates mutual information between question-answer representations to detect potential hallucinations when information content falls below a critical threshold $\tau _{critical}$.}}{71}{}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Research timeline Gantt chart showing task distribution across 12 months.}}{97}{}%
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Research timeline Gantt chart showing task distribution across 12 months.}}{98}{}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }

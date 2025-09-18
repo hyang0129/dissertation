@@ -11,10 +11,10 @@ Hallucinations in large language models represent a fundamental challenge where 
 Our central hypothesis is that intrinsic hallucinations can be understood as a breakdown in the mutual information flow between input queries and generated responses within the model's intermediate representations. This perspective offers several advantages:
 
 \begin{itemize}
-    \item \textbf{Theoretical Foundation}: Provides a principled framework for understanding hallucination mechanisms
-    \item \textbf{Measurable Quantities}: Mutual information offers quantifiable metrics for hallucination analysis
-    \item \textbf{Intervention Strategies}: Information-theoretic insights can guide targeted mitigation approaches
-    \item \textbf{Generalizability}: Framework applies across different model architectures and domains
+    \item \textbf{Theoretical Foundation}: Provides a principled framework for understanding hallucination mechanisms by grounding the analysis in rigorous information theory rather than relying on empirical observations alone. This mathematical foundation enables the development of formal proofs and theoretical guarantees about when and why hallucinations occur, moving beyond descriptive approaches to predictive models.
+    \item \textbf{Measurable Quantities}: Mutual information offers quantifiable metrics for hallucination analysis that can be computed directly from model representations without requiring external knowledge bases or human annotation. These metrics provide objective, numerical assessments of information flow that can be tracked across different layers, time steps, and model architectures to identify precise failure points.
+    \item \textbf{Intervention Strategies}: Information-theoretic insights can guide targeted mitigation approaches by identifying specific layers or attention mechanisms where information degradation occurs most severely. Rather than applying broad regularization techniques, this framework enables surgical interventions that address the root causes of hallucination while preserving model performance on legitimate tasks.
+    \item \textbf{Generalizability}: Framework applies across different model architectures and domains because mutual information is a fundamental property of any information-processing system, not dependent on specific architectural choices. The approach can be adapted to analyze transformers, state-space models, or future architectures, and extends beyond language models to any domain where input-output information preservation is critical.
 \end{itemize}
 
 \section{Theoretical Framework}
@@ -119,7 +119,7 @@ We propose a novel contrastive learning approach specifically designed for estim
 
 Our approach builds on the fundamental insight that mutual information between two random variables can be understood through their ability to predict each other. In the context of transformer layers processing question-answer pairs, we hypothesize that layers with high mutual information should contain representations that maintain consistent relationships for the same QA pair while exhibiting distinct patterns for different QA pairs.
 
-Given two layers $l_i$ and $l_j$ in a transformer model, our method learns contrastive representations that maximize similarity for the same question-answer pair across these layers while minimizing similarity for different QA pairs. This approach directly targets the preservation of QA-specific information, making it particularly well-suited for understanding hallucination mechanisms where the loss of question-answer coherence is a primary concern.
+Given two layers $l_i$ and $l_j$ in a transformer model, our method learns contrastive representations that maximize similarity for the same question-answer pair across these layers while minimizing similarity for different QA pairs. This approach directly targets the preservation of QA-specific information, making it particularly well-suited for understanding hallucination mechanisms where the loss of question-answer coherence is a primary concern. Figure~\ref{fig:hallucination_architecture} illustrates the complete system architecture, showing how the secondary analysis model processes embeddings from the primary language model to detect potential hallucinations.
 
 \paragraph{Formal Mathematical Framework}
 
@@ -189,6 +189,82 @@ Study how the information bottleneck principle applies to language generation an
 \label{sec:experiments}
 
 Our experimental design follows a systematic approach to validate the proposed contrastive mutual information estimation method and its effectiveness for hallucination detection. The experiments are structured to address three primary research questions: (1) How accurately can our contrastive method estimate mutual information compared to existing approaches? (2) What is the relationship between MI estimates and hallucination occurrence in large language models? (3) How effectively can MI-based metrics detect hallucinations in real-world scenarios?
+
+\begin{figure}[htbp]
+\centering
+\scalebox{0.8}{
+\begin{tikzpicture}[
+    node distance=1.2cm and 1.5cm,
+    box/.style={rectangle, draw, rounded corners, minimum width=2cm, minimum height=0.8cm, align=center, font=\tiny},
+    primary/.style={box, fill=blue!20, draw=blue!60},
+    secondary/.style={box, fill=purple!20, draw=purple!60},
+    analysis/.style={box, fill=orange!20, draw=orange!60},
+    decision/.style={box, fill=green!20, draw=green!60},
+    warning/.style={box, fill=red!20, draw=red!60},
+    arrow/.style={->, thick},
+    dasharrow/.style={->, thick, dashed}
+]
+
+% Primary Model Pipeline
+\node[primary] (input) {Input Query\\$\mathbf{x}$};
+\node[primary, below=of input] (llm) {Primary Language\\Model};
+\node[primary, below left=0.6cm and 0.8cm of llm] (layer1) {Layer 1\\$\mathbf{z}_1$};
+\node[primary, below=0.6cm of llm] (layer6) {Layer 6\\$\mathbf{z}_6$};
+\node[primary, below right=0.6cm and 0.8cm of llm] (layer12) {Layer 12\\$\mathbf{z}_{12}$};
+
+
+% Embedding Analysis Pipeline
+\node[analysis, below=1.5cm of layer6] (extractor) {Embedding\\Extractor};
+\node[secondary, below=of extractor] (estimator) {Secondary Model\\Analysis\\(Contrastive MI)};
+\node[analysis, below=of estimator] (mi) {Mutual Information\\$I(\mathbf{z}_i; \mathbf{z}_j)$};
+
+% Decision Pipeline
+\node[decision, below=of mi] (threshold) {$I(\mathbf{X};\mathbf{Y}) \geq \tau_{critical}$?};
+\node[decision, below left=of threshold] (reliable) {Reliable\\Response};
+\node[warning, below right=of threshold] (hallucination) {Potential\\Hallucination};
+
+% Training Components
+\node[primary, left=5cm of extractor] (training_qa) {Training\\QA Dataset};
+\node[primary, below=of training_qa] (training_model) {Primary Model\\(Training Mode)};
+\node[analysis, below=of training_model] (training_embeddings) {Generated\\Embeddings\\+ Labels};
+\node[analysis, below=of training_embeddings] (contrastive) {Contrastive\\Learning};
+
+% Training group box
+\node[draw, dashed, rounded corners, fit=(training_qa)(training_model)(training_embeddings)(contrastive), inner sep=0.3cm, label={[font=\tiny]above:Secondary Model Training}] (training_group) {};
+
+% Inference group box
+\node[draw, dashed, rounded corners, fit=(input)(llm)(layer1)(layer6)(layer12)(extractor)(estimator)(mi)(threshold)(reliable)(hallucination), inner sep=0.3cm, label={[font=\tiny]above:Hallucination Detection Pipeline}] (inference_group) {};
+
+% Arrows
+\draw[arrow] (input) -- (llm);
+\draw[arrow] (llm) -- (layer1);
+\draw[arrow] (llm) -- (layer6);
+\draw[arrow] (llm) -- (layer12);
+
+
+\draw[arrow] (layer1) -- (extractor);
+\draw[arrow] (layer6) -- (extractor);
+\draw[arrow] (layer12) -- (extractor);
+
+
+\draw[arrow] (extractor) -- (estimator);
+\draw[arrow] (estimator) -- (mi);
+\draw[arrow] (mi) -- (threshold);
+
+\draw[arrow] (threshold) -- node[left=0.3cm, font=\tiny] {Yes} (reliable);
+\draw[arrow] (threshold) -- node[right=0.3cm, font=\tiny] {No} (hallucination);
+
+% Training pipeline arrows
+\draw[arrow] (training_qa) -- (training_model);
+\draw[arrow] (training_model) -- (training_embeddings);
+\draw[arrow] (training_embeddings) -- (contrastive);
+\draw[dasharrow] (contrastive) -- (estimator);
+
+\end{tikzpicture}
+}
+\caption{System architecture for hallucination detection through mutual information analysis. The primary language model generates responses while extracting layer-wise embeddings. During training, the same primary model processes training QA pairs to generate embeddings with hallucination labels, which are used to train a secondary analysis model via contrastive learning. At inference time, this secondary model estimates mutual information between question-answer representations to detect potential hallucinations when information content falls below a critical threshold $\tau_{critical}$.}
+\label{fig:hallucination_architecture}
+\end{figure}
 
 \subsection{Datasets and Benchmarks}
 \label{subsec:datasets}

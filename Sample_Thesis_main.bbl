@@ -1,4 +1,4 @@
-\begin{thebibliography}{122}
+\begin{thebibliography}{123}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -301,6 +301,14 @@ Jonathan Ho, Ajay Jain, and Pieter Abbeel.
 \bibitem[Hossain et~al.(2021)Hossain, Uddin, Nahin, and Ibne~Eunus]{rock_data}
 Shahriar Hossain, Jahir Uddin, Rakibul Nahin, and Salman Ibne~Eunus.
 \newblock Rock classification dataset, 08 2021.
+
+\bibitem[Huang et~al.(2020)Huang, Kroening, Ruan, Sharp, Sun, Thamo, Wu, and
+  Yi]{huang2020survey}
+Xiaowei Huang, Daniel Kroening, Wenjie Ruan, James Sharp, Youcheng Sun, Emese
+  Thamo, Min Wu, and Xinping Yi.
+\newblock A survey of safety and trustworthiness of deep neural networks:
+  Verification, testing, adversarial attack and defence, and interpretability.
+\newblock \emph{Computer Science Review}, 37:\penalty0 100270, 2020.
 
 \bibitem[Hughes \& Salath{\'{e} }(2015)Hughes and Salath{\'{e} }]{plant}
 David~P. Hughes and Marcel Salath{\'{e} }.

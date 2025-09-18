@@ -92,6 +92,72 @@
 % (in separate .tex files)
 \chapter{Introduction}
 
+The deployment of machine learning systems in real-world applications has revealed a critical challenge: the ability to recognize when a model encounters inputs that fall outside its training distribution. This challenge, known as out-of-distribution (OOD) detection, has become increasingly important as machine learning systems are deployed in safety-critical domains such as healthcare, autonomous driving, and financial services. When models encounter unfamiliar inputs, they often produce overconfident predictions that can lead to dangerous consequences, highlighting the urgent need for reliable uncertainty quantification and OOD detection mechanisms.
+
+The fundamental problem lies in the inherent limitations of supervised learning paradigms, which excel at making predictions within the distribution of their training data but struggle to recognize their own knowledge boundaries. Traditional machine learning models are trained to minimize prediction error on a fixed set of classes or tasks, but they lack the ability to identify when test inputs represent entirely new categories, domains, or scenarios that were not present during training \citep{hendrycks2016baseline}. This limitation becomes particularly problematic in open-world settings where the assumption of a closed, well-defined input space is violated.
+
+Recent advances in deep learning have exacerbated this challenge while simultaneously providing new opportunities for solutions. Large-scale neural networks, particularly transformer-based language models, demonstrate remarkable capabilities in learning complex patterns and generating human-like responses. However, these same models are prone to hallucinations—generating plausible-sounding but factually incorrect or unverifiable content \citep{li2023halueval,lin2021truthfulqa}. The intersection of OOD detection and hallucination detection represents a critical frontier in ensuring the reliability and safety of modern AI systems \citep{huang2020survey}.
+
+\section{Problem Statement and Motivation}
+
+This dissertation addresses three fundamental challenges in the reliable deployment of machine learning systems: (1) the failure of existing OOD detection methods in single-domain settings where domain-specific features are discarded during training, (2) the limitations of unlabeled OOD detection approaches that ignore critical label information, and (3) the lack of principled information-theoretic frameworks for understanding and detecting hallucinations in large language models.
+
+The first challenge emerges from a phenomenon we term \emph{domain feature collapse}, where supervised learning models trained on single-domain datasets learn to discard domain-specific features in favor of class-specific features. This creates dangerous blind spots in OOD detection, as models cannot distinguish between in-domain and out-of-domain samples that share similar class features. For example, a medical imaging model trained exclusively on X-ray images may confidently classify MRI scans of the same anatomical structures, despite the fundamental difference in imaging modality.
+
+The second challenge concerns the growing interest in unlabeled OOD detection methods that aim to detect distributional shifts without relying on supervised learning objectives. While these approaches offer theoretical elegance and practical advantages in scenarios where labels are expensive or unavailable, they suffer from a fundamental limitation we term \emph{label blindness}. When the features learned by unsupervised or self-supervised methods are independent of the features relevant for the target classification task, OOD detection performance degrades significantly, particularly in scenarios where OOD samples share semantic similarity with in-distribution data.
+
+The third challenge addresses the critical need for principled approaches to hallucination detection in large language models. Despite significant progress in developing language models with impressive capabilities, these systems frequently generate content that appears plausible but lacks factual grounding. Existing approaches to hallucination detection rely primarily on post-hoc analysis or external verification systems, but lack theoretical frameworks for understanding why hallucinations occur and how they can be predicted or prevented.
+
+\section{Research Objectives and Contributions}
+
+This dissertation proposes to advance the state of knowledge in OOD detection and hallucination detection through three primary research objectives, each addressing one of the fundamental challenges outlined above.
+
+\textbf{Objective 1: Theoretical Analysis and Mitigation of Domain Feature Collapse}
+
+We aim to provide the first comprehensive theoretical characterization of domain feature collapse in single-domain OOD detection settings. Through information-theoretic analysis, we will prove that supervised learning models inevitably discard domain-specific features when trained on single-domain datasets, leading to systematic failures in OOD detection. We will develop and validate domain filtering techniques that can mitigate these failures by explicitly preserving domain-relevant information during the detection process.
+
+Our theoretical contributions will include formal definitions of domain features and their relationship to class features, mathematical proofs demonstrating the inevitability of domain feature collapse under standard supervised learning objectives, and analysis of the conditions under which domain filtering can restore effective OOD detection performance. The practical contributions will include novel two-stage detection frameworks that combine domain-level and class-level detection mechanisms.
+
+\textbf{Objective 2: Understanding and Addressing Label Blindness in Unlabeled OOD Detection}
+
+We will develop a comprehensive theoretical framework for understanding when and why unlabeled OOD detection methods fail, with particular focus on the label blindness phenomenon. Through information-theoretic analysis, we will characterize the conditions under which unsupervised learning objectives capture features that are independent of the target classification task, leading to systematic OOD detection failures.
+
+Our contributions will include the introduction of Adjacent OOD detection as a novel evaluation paradigm that captures the theoretically predicted failures of unlabeled methods, comprehensive empirical validation across multiple datasets and architectures, and theoretical analysis of the fundamental limitations of label-agnostic approaches. We will also explore hybrid approaches that combine supervised and unsupervised objectives to mitigate label blindness while preserving the advantages of unlabeled methods.
+
+\textbf{Objective 3: Information-Theoretic Framework for Hallucination Detection}
+
+We propose to develop the first comprehensive information-theoretic framework for understanding and detecting hallucinations in large language models. Our central hypothesis is that hallucinations arise from insufficient mutual information between input queries and generated responses, particularly in the intermediate layers of transformer architectures. We will develop novel contrastive mutual information estimation methods specifically designed for analyzing information flow in question-answering contexts.
+
+Our theoretical contributions will include formal definitions of hallucinations in terms of information-theoretic quantities, analysis of how mutual information degrades across transformer layers, and identification of critical information bottlenecks that predict hallucination emergence. The practical contributions will include novel detection methods based on layer-wise mutual information analysis and validation across multiple language model architectures and hallucination benchmarks.
+
+\section{Methodology and Approach}
+
+Our research methodology combines rigorous theoretical analysis with comprehensive empirical validation across multiple domains and datasets. We employ information theory as the unifying mathematical framework for understanding the fundamental limitations and opportunities in both OOD detection and hallucination detection \citep{shannon1948mathematical,cover1999elements}.
+
+For the theoretical analysis, we leverage tools from information theory, including mutual information, entropy, and the information bottleneck principle \citep{tishby2000information}, to characterize the conditions under which detection methods succeed or fail. We develop formal mathematical proofs that establish fundamental limitations of existing approaches and identify the theoretical foundations for improved methods.
+
+The empirical validation encompasses both controlled synthetic experiments and real-world applications across diverse domains including computer vision, natural language processing, and specialized applications such as medical imaging and satellite imagery. We employ standardized benchmarks where available and develop novel evaluation protocols where existing benchmarks are insufficient to capture the theoretical phenomena we investigate.
+
+Our experimental design emphasizes reproducibility and statistical rigor, employing multiple random seeds, cross-validation, and bootstrap sampling to ensure robust conclusions. We conduct comprehensive ablation studies to isolate the contributions of different components and validate the generalizability of our findings across different model architectures, scales, and training paradigms.
+
+\section{Dissertation Organization}
+
+This dissertation is organized into six main chapters that systematically address the research objectives outlined above. Chapter 2 provides comprehensive background on the theoretical foundations, including detailed coverage of out-of-distribution detection, information theory, and hallucination detection in large language models. Chapter 3 presents a thorough literature review that positions our work within the broader context of uncertainty quantification, representation learning, and language model safety.
+
+Chapters 4 and 5 present our primary research contributions addressing domain feature collapse and label blindness respectively. Chapter 4 focuses on single-domain OOD detection, providing theoretical analysis of domain feature collapse and empirical validation of domain filtering approaches. Chapter 5 addresses unlabeled OOD detection, introducing the label blindness theorem and the Adjacent OOD evaluation paradigm.
+
+Chapter 6 presents our proposed research on hallucination detection through information-theoretic analysis, including the development of contrastive mutual information estimation methods and their application to understanding information flow in transformer architectures. Chapter 7 outlines a detailed research timeline for completing the proposed work, and Chapter 8 provides conclusions and discusses the broader implications of our research for the reliable deployment of machine learning systems.
+
+\section{Expected Impact and Significance}
+
+This research addresses fundamental challenges in the safe and reliable deployment of machine learning systems, with implications spanning both theoretical understanding and practical applications. The theoretical contributions advance our understanding of the fundamental limitations of existing approaches, providing mathematical frameworks that can guide the development of more robust and reliable systems.
+
+The practical contributions offer immediate benefits for practitioners deploying machine learning systems in real-world applications. The domain filtering techniques developed for single-domain OOD detection can improve the safety of specialized applications such as medical diagnosis and industrial monitoring. The insights into label blindness can guide the selection and design of OOD detection methods for scenarios where labeled data is scarce or expensive.
+
+The information-theoretic framework for hallucination detection addresses one of the most pressing challenges in the deployment of large language models, providing tools for understanding, predicting, and mitigating the generation of factually incorrect content. This work has particular relevance for applications where factual accuracy is critical, such as educational systems, medical question-answering, and scientific literature analysis.
+
+More broadly, this research contributes to the growing field of AI safety by providing principled approaches to uncertainty quantification and failure detection in modern machine learning systems. The information-theoretic perspective offers a unifying framework that can be applied across different domains and architectures, potentially influencing the design of future AI systems that are inherently more robust and reliable.
+
 \chapter{Background and Definitions}
 
 \section{Out of Distribution Detection}
@@ -1338,7 +1404,85 @@ Community adoption of our open-source tools and methods will indicate the practi
 
 
 
-\chapter{Discussion}
+\chapter{Conclusion}
+
+This dissertation proposal has outlined a comprehensive research program addressing fundamental challenges in out-of-distribution detection and hallucination detection through the lens of information theory. The proposed work aims to advance both theoretical understanding and practical applications in ensuring the reliable deployment of machine learning systems, particularly in safety-critical domains where model failures can have serious consequences.
+
+\section{Summary of Proposed Contributions}
+
+The research program outlined in this proposal makes several interconnected contributions that advance the state of knowledge in uncertainty quantification and AI safety. These contributions span theoretical analysis, methodological innovations, and practical applications across multiple domains.
+
+\subsection{Theoretical Foundations}
+
+Our theoretical contributions center on the application of information theory to understand fundamental limitations in existing approaches to OOD detection and hallucination detection. The identification and formal characterization of domain feature collapse provides the first rigorous mathematical framework for understanding why supervised learning models fail in single-domain OOD detection scenarios. Through information-theoretic analysis, we demonstrate that the discarding of domain-specific features is not an artifact of particular training procedures or architectures, but rather an inevitable consequence of optimizing supervised learning objectives on single-domain datasets.
+
+The label blindness theorem represents another significant theoretical contribution, providing formal conditions under which unlabeled OOD detection methods are guaranteed to fail. This theorem fills a critical gap in the theoretical understanding of unsupervised and self-supervised approaches to OOD detection, explaining empirical observations of poor performance in scenarios where OOD samples share semantic similarity with in-distribution data.
+
+The proposed information-theoretic framework for hallucination detection offers the first principled mathematical approach to understanding why large language models generate factually incorrect content. By characterizing hallucinations as manifestations of insufficient mutual information between input queries and generated responses, we provide a theoretical foundation that can guide both detection and mitigation strategies.
+
+\subsection{Methodological Innovations}
+
+The methodological contributions of this research include novel approaches to both OOD detection and hallucination detection that are grounded in the theoretical insights developed through our information-theoretic analysis. The domain filtering framework provides a practical solution to the domain feature collapse problem, offering a two-stage detection approach that explicitly preserves domain-relevant information while maintaining the benefits of class-specific detection mechanisms.
+
+The introduction of Adjacent OOD detection as an evaluation paradigm addresses a critical gap in existing benchmarks, providing a systematic way to evaluate OOD detection methods in scenarios where the theoretical limitations of unlabeled approaches are most apparent. This evaluation framework enables more nuanced assessment of method performance and can guide the selection of appropriate approaches for different deployment scenarios.
+
+The proposed contrastive mutual information estimation method represents a significant methodological innovation specifically designed for analyzing information flow in transformer architectures during question-answering tasks. Unlike existing MI estimation techniques that assume general distributional properties, our method leverages the structured nature of QA tasks and the specific representational characteristics of transformer models to provide more accurate and computationally efficient estimation.
+
+\subsection{Practical Applications and Impact}
+
+The practical contributions of this research have immediate relevance for practitioners deploying machine learning systems in real-world applications. The domain filtering techniques can improve the safety and reliability of specialized applications such as medical imaging, satellite imagery analysis, and industrial monitoring, where models are typically trained on data from narrow, well-defined domains.
+
+The insights into label blindness provide actionable guidance for selecting and designing OOD detection methods in scenarios where labeled data is scarce or expensive. By understanding the fundamental limitations of unlabeled approaches, practitioners can make informed decisions about when to invest in labeled data collection versus when unlabeled methods are likely to be sufficient.
+
+The information-theoretic framework for hallucination detection addresses one of the most pressing challenges in the deployment of large language models, providing tools for understanding, predicting, and mitigating the generation of factually incorrect content. This work has particular relevance for applications where factual accuracy is critical, such as educational systems, medical question-answering, and scientific literature analysis.
+
+\section{Broader Implications and Future Directions}
+
+The research outlined in this proposal has implications that extend beyond the specific technical contributions to influence broader questions in AI safety, machine learning theory, and the responsible deployment of AI systems.
+
+\subsection{AI Safety and Reliability}
+
+This research contributes to the growing field of AI safety by providing principled approaches to uncertainty quantification and failure detection in modern machine learning systems \citep{lakshminarayanan2017simple}. The information-theoretic perspective offers a unifying framework that can be applied across different domains and architectures, potentially influencing the design of future AI systems that are inherently more robust and reliable.
+
+The identification of fundamental limitations in existing approaches, such as domain feature collapse and label blindness, highlights the importance of considering the theoretical foundations of safety mechanisms rather than relying solely on empirical validation. This perspective can inform the development of safety standards and evaluation protocols for AI systems deployed in critical applications.
+
+\subsection{Information Theory in Machine Learning}
+
+Our work demonstrates the power of information theory as a tool for understanding and improving machine learning systems. The application of mutual information analysis to understand hallucination mechanisms in large language models opens new avenues for research at the intersection of information theory and natural language processing.
+
+The development of specialized MI estimation techniques for transformer architectures contributes to the broader toolkit of information-theoretic methods in machine learning, potentially enabling new insights into the internal mechanisms of deep neural networks and their failure modes.
+
+\subsection{Evaluation and Benchmarking}
+
+The introduction of Adjacent OOD detection as an evaluation paradigm highlights the importance of developing benchmarks that capture theoretically predicted failure modes rather than relying solely on empirically observed phenomena. This approach to benchmark development can inform the creation of more comprehensive evaluation frameworks for other aspects of AI safety and reliability.
+
+The emphasis on single-domain evaluation scenarios addresses a gap between laboratory research, which often focuses on multi-domain settings, and real-world deployment, which frequently occurs in specialized, narrow domains. This perspective can influence the development of more realistic evaluation protocols across multiple areas of machine learning research.
+
+\section{Research Timeline and Feasibility}
+
+The proposed research program is designed to be completed within a 12-month timeframe, with careful attention to the dependencies between different components and the availability of computational resources and datasets. The timeline emphasizes early validation of theoretical insights through synthetic experiments, followed by comprehensive empirical validation on real-world datasets and applications.
+
+The feasibility of the proposed work is supported by the availability of established benchmarks for OOD detection, the growing collection of hallucination detection datasets, and the accessibility of pre-trained language models for analysis. The computational requirements are manageable within typical academic research environments, and the theoretical components can proceed in parallel with empirical validation.
+
+The modular structure of the research program allows for adaptive prioritization based on preliminary results and emerging opportunities. The core theoretical contributions can be developed independently, while the empirical validation can be scaled based on available resources and the specific requirements of different application domains.
+
+\section{Expected Outcomes and Success Metrics}
+
+The success of this research program will be measured through multiple complementary criteria that capture both theoretical advances and practical impact. The theoretical contributions will be evaluated through peer review in top-tier venues, with particular emphasis on the novelty and rigor of the mathematical frameworks developed.
+
+The practical contributions will be assessed through empirical validation on established benchmarks, with success defined by significant improvements in detection performance compared to existing methods. The development of new evaluation paradigms, such as Adjacent OOD detection, will be validated through adoption by the broader research community and integration into standard evaluation protocols.
+
+The broader impact will be measured through the influence of our theoretical insights on subsequent research, the adoption of our methodological innovations by practitioners, and the integration of our safety-focused perspectives into the development of real-world AI systems.
+
+\section{Concluding Remarks}
+
+The research program outlined in this dissertation proposal addresses fundamental challenges in ensuring the reliable and safe deployment of machine learning systems. By combining rigorous theoretical analysis with comprehensive empirical validation, this work aims to advance both our understanding of the limitations of existing approaches and our ability to develop more robust and reliable systems.
+
+The information-theoretic perspective provides a unifying framework that connects seemingly disparate challenges in OOD detection and hallucination detection, revealing common underlying principles that can guide the development of principled solutions. The emphasis on understanding fundamental limitations, rather than simply developing incremental improvements, positions this work to make lasting contributions to the field of AI safety.
+
+The practical relevance of this research is underscored by the growing deployment of machine learning systems in safety-critical applications, where the consequences of model failures extend far beyond academic metrics. By providing both theoretical insights and practical tools for improving the reliability of these systems, this research contributes to the responsible development and deployment of AI technologies that can benefit society while minimizing potential harms.
+
+The proposed work represents a significant step toward the goal of developing AI systems that not only perform well on their intended tasks but also possess the self-awareness to recognize their own limitations and the robustness to fail safely when confronted with scenarios beyond their training experience. This capability is essential for the continued advancement and acceptance of AI technologies in domains where reliability and safety are paramount.
 
 
 

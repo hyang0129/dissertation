@@ -1035,7 +1035,7 @@ ReAct & 64.2 / 36.4 & 71.9 / 47.7 & NA & 75.9 / 86.3 & 74.4 / 84.9 & NA \\
 Key findings from our experiments include:
 
 \begin{enumerate}
-\item \textbf{Domain feature collapse is real}: All methods show significantly worse performance on out-of-domain OOD detection compared to in-domain detection, confirming our theoretical predictions.
+\item \textbf{Domain feature collapse is real}: All methods perform worse at out of domain OOD detection than in domain OOD detection for specific OOD datasets, suggesting that those OOD datasets contain overlapping class features that lead to domain feature collapse.
 
 \item \textbf{Domain filtering is effective}: Adding domain filtering consistently reduces FPR@95 for out-of-domain OOD detection by substantial margins, sometimes reducing error rates from over 40\% to under 5\%.
 

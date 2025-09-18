@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  18 SEP 2025 13:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  18 SEP 2025 13:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -710,19 +710,19 @@ Package thesisfrontmatter Warning: prevdegreeA is not defined on input line 69.
 {C:/Users/HongM/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2] [3]
 \openout2 = `Abstract.aux'.
 
- (Abstract.tex) [4
+ (Abstract.tex [4
 
-]
+]) [5]
 \openout2 = `Acknowledgements.aux'.
 
- (Acknowledgements.tex) [5
+ (Acknowledgements.tex) [6
 
 
 
 ]
 \openout2 = `Dedication.aux'.
 
- (Dedication.tex) [6
+ (Dedication.tex) [7
 
 
 
@@ -734,25 +734,25 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
  (C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [7
+) [8
 
 
 
-] [8] [9] [10] [11] [12] [13] [14])
+] [9] [10] [11] [12] [13] [14] [15])
 \tf@toc=\write4
 \openout4 = `Sample_Thesis_main.toc'.
 
- [15] (Sample_Thesis_main.lof)
+ [16] (Sample_Thesis_main.lof)
 \tf@lof=\write5
 \openout5 = `Sample_Thesis_main.lof'.
 
- [16
+ [17
 
 ] (Sample_Thesis_main.lot)
 \tf@lot=\write6
 \openout6 = `Sample_Thesis_main.lot'.
 
- [17
+ [18
 
 ]
 Chapter 1.
@@ -801,7 +801,7 @@ Overfull \hbox (3.31694pt too wide) in paragraph at lines 627--628
 [31
 
 ]
-<gradcam_example_faces.png, id=177, 716.6775pt x 359.54324pt>
+<gradcam_example_faces.png, id=181, 716.6775pt x 359.54324pt>
 File: gradcam_example_faces.png Graphic file (type png)
 <use gradcam_example_faces.png>
 Package pdftex.def Info: gradcam_example_faces.png  used on input line 639.
@@ -858,197 +858,22 @@ Overfull \hbox (6.72105pt too wide) in paragraph at lines 29--30
 []\OT1/cmr/bx/n/10.95 Definition 6.2.1. []Information-Preserving Gen-er-a-tion\OT1/cmr/m/n/10.95 : A lan-guage model ex-hibits information-
  []
 
-
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 62
- []
-
-[62]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 63
- []
-
-[63]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 64
- []
-
-[64]
+[62] [63] [64]
 Overfull \hbox (20.01468pt too wide) in paragraph at lines 98--99
 []\OT1/cmr/m/n/10.95 However, kernel-based ap-proaches face sig-nif-i-cant prac-ti-cal lim-i-ta-tions when ap-plied to high-dimensional
  []
 
-
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 65
- []
-
-[65]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 66
- []
-
-[66]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 67
- []
-
-[67]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 68
- []
-
-[68]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 69
- []
-
-[69]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 70
- []
-
-[70]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 71
- []
-
-[71]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 72
- []
-
-[72]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 73
- []
-
-[73]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 74
- []
-
-[74]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 75
- []
-
-[75]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 76
- []
-
-[76]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 77
- []
-
-[77]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 78
- []
-
-[78]
+[65] [66] [67] [68] [69] [70] [71] [72] [73] [74] [75] [76] [77] [78]
 Overfull \hbox (2.05876pt too wide) in paragraph at lines 422--423
 \OT1/cmr/m/n/10.95 sump-tions. We em-ploy heavy-tailed dis-tri-bu-tions, mul-ti-modal dis-tri-bu-tions, and discrete-continuous
  []
 
-
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 79
- []
-
-[79]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 80
- []
-
-[80]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 81
- []
-
-[81]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 82
- []
-
-[82]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 83
- []
-
-[83]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 84
- []
-
-[84]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 85
- []
-
-[85]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 86
- []
-
-[86]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 87
- []
-
-[87]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 88
- []
-
-[88]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 89
- []
-
-[89]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 90
- []
-
-[90]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 91
- []
-
-[91]
+[79] [80] [81] [82] [83] [84] [85] [86] [87] [88] [89] [90] [91]
 Overfull \hbox (0.12228pt too wide) in paragraph at lines 601--602
 \OT1/cmr/m/n/10.95 (1988) in-tro-duced In-fo-Max prin-ci-ples that max-i-mize mu-tual in-for-ma-tion be-tween in-puts and learned
  []
 
-
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 92
- []
-
-[92]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 93
- []
-
-[93]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 94
- []
-
-[94]
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 95
- []
-
-[95])
-Overfull \hbox (180.13759pt too wide) has occurred while \output is active
-\OT1/cmr/m/sl/10.95 CHAPTER 6.  HALLUCINATIONS THROUGH THE LENS OF MUTUAL INFORMATION AND REPRESENTATION LEARNING \OT1/cmr/m/n/10.95 96
- []
-
-[96]
+[92] [93] [94] [95]) [96]
 Chapter 7.
 [97
 
@@ -1121,9 +946,9 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  84i,16n,87p,1294b,822s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1095.pk><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on Sample_Thesis_main.pdf (160 pages, 1063001 bytes).
+Output written on Sample_Thesis_main.pdf (161 pages, 1064725 bytes).
 PDF statistics:
- 659 PDF objects out of 1000 (max. 8388607)
+ 662 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

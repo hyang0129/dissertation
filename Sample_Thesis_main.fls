@@ -275,7 +275,6 @@ INPUT .\CoverPage.tex
 INPUT .\CoverPage.tex
 INPUT CoverPage.tex
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
-INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 OUTPUT Sample_Thesis_main.pdf
@@ -350,6 +349,7 @@ INPUT .\Sample_Thesis_main.lot
 INPUT Sample_Thesis_main.lot
 OUTPUT Sample_Thesis_main.lot
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmr17.tfm
+INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt10.tfm
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmtt8.tfm

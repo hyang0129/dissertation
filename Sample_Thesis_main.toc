@@ -110,40 +110,40 @@
 \contentsline {subsubsection}{Information Bottleneck Dynamics}{70}{}%
 \contentsline {section}{\numberline {6.4}Experimental Design}{70}{}%
 \contentsline {subsection}{\numberline {6.4.1}Datasets and Benchmarks}{72}{}%
-\contentsline {subsubsection}{Factual Question Answering Datasets}{72}{}%
+\contentsline {subsubsection}{Factual Question Answering Datasets:}{72}{}%
 \contentsline {paragraph}{Natural Questions}{72}{}%
 \contentsline {paragraph}{TriviaQA}{72}{}%
 \contentsline {paragraph}{WebQuestions}{72}{}%
-\contentsline {subsubsection}{Hallucination-Specific Benchmarks}{73}{}%
+\contentsline {subsubsection}{Hallucination-Specific Benchmarks:}{73}{}%
 \contentsline {paragraph}{HaluEval}{73}{}%
 \contentsline {paragraph}{TruthfulQA}{73}{}%
 \contentsline {paragraph}{FEVER}{74}{}%
 \contentsline {paragraph}{HalluLens}{74}{}%
-\contentsline {subsubsection}{Synthetic Validation Datasets}{74}{}%
+\contentsline {subsubsection}{Synthetic Validation Datasets:}{74}{}%
 \contentsline {paragraph}{Gaussian Mixture Models}{75}{}%
 \contentsline {paragraph}{Transformer-Based Synthetic Data}{75}{}%
 \contentsline {subsection}{\numberline {6.4.2}Model Analysis}{75}{}%
-\contentsline {subsubsection}{Architecture Comparison}{75}{}%
+\contentsline {subsubsection}{Architecture Comparison:}{75}{}%
 \contentsline {paragraph}{Transformer-Based Models}{75}{}%
 \contentsline {paragraph}{State-Space Models}{76}{}%
 \contentsline {paragraph}{Hybrid Architectures}{76}{}%
-\contentsline {subsubsection}{Scale Analysis}{76}{}%
+\contentsline {subsubsection}{Scale Analysis:}{76}{}%
 \contentsline {paragraph}{Parameter Count Effects}{76}{}%
 \contentsline {paragraph}{Training Data Scale}{77}{}%
 \contentsline {paragraph}{Context Length Analysis}{77}{}%
 \contentsline {subsection}{\numberline {6.4.3}Evaluation Metrics and Protocols}{77}{}%
-\contentsline {subsubsection}{Mutual Information Estimation Metrics}{77}{}%
+\contentsline {subsubsection}{Mutual Information Estimation Metrics:}{77}{}%
 \contentsline {paragraph}{Synthetic Data Validation}{77}{}%
 \contentsline {paragraph}{Cross-Method Consistency}{78}{}%
-\contentsline {subsubsection}{Hallucination Detection Metrics}{78}{}%
+\contentsline {subsubsection}{Hallucination Detection Metrics:}{78}{}%
 \contentsline {paragraph}{Area Under the Receiver Operating Characteristic Curve (AUROC)}{78}{}%
 \contentsline {paragraph}{False Positive Rate at 95\% True Positive Rate (FPR95)}{78}{}%
 \contentsline {paragraph}{Precision-Recall Analysis}{78}{}%
-\contentsline {subsubsection}{Statistical Significance and Robustness}{79}{}%
+\contentsline {subsubsection}{Statistical Significance and Robustness:}{79}{}%
 \contentsline {paragraph}{Cross-Validation and Bootstrap Sampling}{79}{}%
 \contentsline {paragraph}{Multiple Random Seeds}{79}{}%
 \contentsline {paragraph}{Ablation Studies}{79}{}%
-\contentsline {subsubsection}{Contrastive MI Estimation Validation}{79}{}%
+\contentsline {subsubsection}{Contrastive MI Estimation Validation:}{79}{}%
 \contentsline {paragraph}{Synthetic Validation Protocol}{79}{}%
 \contentsline {paragraph}{Cross-Method Comparison Framework}{80}{}%
 \contentsline {paragraph}{Layer Consistency Analysis}{80}{}%

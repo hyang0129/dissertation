@@ -271,7 +271,7 @@ Our experimental design follows a systematic approach to validate the proposed c
 
 We employ a diverse collection of datasets spanning factual question answering, hallucination detection, and synthetic validation scenarios. Each dataset serves specific purposes in our experimental pipeline, from method validation to real-world performance assessment.
 
-\subsubsection{Factual Question Answering Datasets}
+\subsubsection{Factual Question Answering Datasets:}
 
 \paragraph{Natural Questions}
 The Natural Questions dataset \citep{kwiatkowski2019natural} provides a large-scale collection of real user questions paired with Wikipedia articles containing answers. We utilize the open-domain variant, which contains over 300,000 question-answer pairs derived from actual Google search queries. For our experiments, we construct training and test sets of 50,000 and 15,000 samples respectively, ensuring sufficient statistical power for reliable MI estimation and hallucination detection evaluation.
@@ -288,7 +288,7 @@ WebQuestions \citep{berant2013semantic} focuses on questions answerable from the
 
 This dataset is particularly valuable for studying hallucinations in structured knowledge domains, where the ground truth can be precisely verified against the knowledge base. The questions often require multi-hop reasoning, making them suitable for analyzing how information flows through multiple transformer layers.
 
-\subsubsection{Hallucination-Specific Benchmarks}
+\subsubsection{Hallucination-Specific Benchmarks:}
 
 \paragraph{HaluEval}
 HaluEval \citep{li2023halueval} represents the most comprehensive benchmark specifically designed for hallucination evaluation in large language models. The dataset encompasses multiple task types including question answering, dialogue, summarization, and text completion, with over 35,000 samples across all categories.
@@ -318,7 +318,7 @@ The benchmark comprises three main tasks for extrinsic hallucination evaluation:
 
 HalluLens provides particularly valuable insights for our MI-based detection approach through its systematic evaluation of model behavior at knowledge boundaries. The NonExistentRefusal task, which tests whether models appropriately abstain from answering questions about fabricated entities, directly aligns with our information-theoretic framework for detecting when models lack sufficient knowledge to provide reliable responses.
 
-\subsubsection{Synthetic Validation Datasets}
+\subsubsection{Synthetic Validation Datasets:}
 
 To validate the accuracy of our contrastive MI estimation method, we construct synthetic datasets where the ground truth mutual information can be computed analytically. These datasets serve as crucial benchmarks for method validation before application to real-world scenarios.
 
@@ -333,7 +333,7 @@ We create synthetic datasets by extracting representations from small, controlle
 
 Our model analysis encompasses a comprehensive evaluation across different architectures, scales, and training paradigms to understand how mutual information dynamics vary across the landscape of modern language models.
 
-\subsubsection{Architecture Comparison}
+\subsubsection{Architecture Comparison:}
 
 \paragraph{Transformer-Based Models}
 We conduct extensive analysis across the transformer family, including both encoder-only and decoder-only architectures. The GPT family (GPT-2, GPT-3.5, GPT-4) serves as our primary focus for decoder-only models, given their widespread use in question-answering applications. We analyze models ranging from GPT-2 small (124M parameters) to GPT-3.5 (175B parameters), providing insights into how architectural scale affects information flow patterns.
@@ -352,7 +352,7 @@ We examine hybrid models that combine transformer attention with alternative mec
 
 Mixture-of-experts (MoE) models represent another important hybrid category, where different expert networks may specialize in different types of information processing. We analyze how expert routing decisions correlate with mutual information patterns and hallucination emergence.
 
-\subsubsection{Scale Analysis}
+\subsubsection{Scale Analysis:}
 
 \paragraph{Parameter Count Effects}
 We systematically investigate how model scale affects mutual information preservation and hallucination rates across parameter counts ranging from 100M to 175B parameters. This analysis reveals scaling laws for information flow, identifying whether larger models consistently preserve more mutual information between questions and answers or whether there are optimal scales for different types of reasoning tasks.
@@ -372,7 +372,7 @@ We conduct specialized experiments examining how context length affects informat
 
 Our evaluation framework employs multiple complementary metrics to provide comprehensive assessment of both mutual information estimation accuracy and hallucination detection performance.
 
-\subsubsection{Mutual Information Estimation Metrics}
+\subsubsection{Mutual Information Estimation Metrics:}
 
 \paragraph{Synthetic Data Validation}
 For synthetic datasets where ground truth mutual information is known, we employ mean squared error (MSE) and mean absolute error (MAE) between estimated and true MI values. We also compute correlation coefficients to assess the ranking consistency of our estimates across different MI regimes.
@@ -382,7 +382,7 @@ Bias and variance decomposition provides insights into the systematic errors and
 \paragraph{Cross-Method Consistency}
 When ground truth MI is unavailable, we assess consistency across different estimation methods (MINE, InfoNCE, kernel-based, and our contrastive approach). High correlation between methods provides confidence in the reliability of estimates, while systematic differences reveal method-specific biases that must be accounted for in interpretation.
 
-\subsubsection{Hallucination Detection Metrics}
+\subsubsection{Hallucination Detection Metrics:}
 
 \paragraph{Area Under the Receiver Operating Characteristic Curve (AUROC)}
 AUROC serves as our primary metric for evaluating hallucination detection performance, providing a threshold-independent measure of discriminative ability. We compute AUROC scores for each dataset and model combination, with scores above 0.85 considered indicative of strong detection performance.
@@ -399,7 +399,7 @@ We conduct comprehensive precision-recall analysis to understand performance acr
 
 Area under the precision-recall curve (AUPR) provides a summary metric that is less sensitive to class imbalance than AUROC, making it valuable for datasets where hallucinations represent a small fraction of total samples.
 
-\subsubsection{Statistical Significance and Robustness}
+\subsubsection{Statistical Significance and Robustness:}
 
 \paragraph{Cross-Validation and Bootstrap Sampling}
 All experiments employ 5-fold cross-validation to ensure robust performance estimates and reduce dependence on particular train-test splits. Bootstrap sampling with 1,000 iterations provides confidence intervals for all reported metrics, enabling statistical significance testing between different methods and conditions.
@@ -410,7 +410,7 @@ We conduct all experiments across multiple random seeds (minimum 5 per condition
 \paragraph{Ablation Studies}
 Systematic ablation studies isolate the contribution of different components in our contrastive MI estimation method. These studies examine the effects of projection function architecture, temperature parameter values, negative sampling strategies, and pooling methods on both MI estimation accuracy and hallucination detection performance.
 
-\subsubsection{Contrastive MI Estimation Validation}
+\subsubsection{Contrastive MI Estimation Validation:}
 
 Our proposed contrastive mutual information estimation method requires comprehensive validation to establish its accuracy, reliability, and practical utility for hallucination detection. This validation encompasses both theoretical verification on synthetic data and empirical assessment on real-world language model representations.
 

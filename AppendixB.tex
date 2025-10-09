@@ -1,0 +1,484 @@
+\chapter{Theoretical Proofs for Domain Feature Collapse}
+\label{app:domain_proofs}
+
+This appendix contains the detailed theoretical proofs supporting the Domain Feature Collapse theory presented in Chapter 5. The proofs establish the mathematical foundations for understanding when and why supervised learning models trained on single-domain datasets discard domain-specific features, leading to systematic failures in out-of-distribution detection.
+
+\section{Properties of Mutual Information and Entropy}
+\label{app:domain_properties}
+
+In this section we enumerate some of the properties of mutual information that are used to prove the theorems reported in this work, initially proposed by \cite{shannon1948mathematical}. For any random variables $\rvw, \rvx, \rvy$ and $\rvz$:
+
+$\left(P_1\right)$ Positivity:
+$$
+I(\rvx ; \rvy) \geq 0, I(\rvx ; \rvy \mid \rvz) \geq 0
+$$
+$\left(P_2\right)$ Chain rule:
+$$
+I(\rvx \rvy ; \rvz)=I(\rvy ; \rvz)+I(\rvx ; \rvz \mid \rvy)
+$$
+$\left(P_3\right)$ Chain rule (Multivariate Mutual Information):
+$$
+I(\rvx ; \rvy ; \rvz)=I(\rvy ; \rvz)-I(\rvy ; \rvz \mid \rvx)
+$$
+$\left(P_4\right)$ Positivity of discrete entropy:
+For discrete $\rvx$
+$$
+H(\rvx) \geq 0, H(\rvx \mid \rvy) \geq 0
+$$
+$\left(P_5\right)$ Entropy and Mutual Information
+$$
+H(\rvx)=H(\rvx \mid \rvy)+I(\rvx ; \rvy)
+$$
+
+$(P_6)$ Conditioning a variable cannot increase its entropy
+
+$$
+H(\rvy|\rvz) \leq H(\rvy)
+$$
+
+$(P_7)$ A variable knows about itself as much as any other variable can 
+
+$$
+I(\rvx;\rvx) \geq I(\rvx;\rvy) 
+$$
+
+$(P_8)$ Symmetry of Mutual Information
+
+$$
+I(\rvx;\rvy) = I(\rvy;\rvx) 
+$$
+
+$(P_9)$ Entropy and Conditional Mutual Information (This is simply $P_5$ conditioned on $\rvz$)
+
+$$
+I(\rvx;\rvy|\rvz)  = H(\rvx|\rvz) - H(\rvx|\rvy\rvz)
+$$
+
+$(P_{10})$ Functions of Independent Variables Remain Independent
+
+$$
+I(\rvx; \rvy) = 0 \rightarrow I(f(\rvx);\rvy) = 0
+$$
+
+\section{Main Theorems and Proofs}
+\label{app:domain_mainproofs}
+
+We ignore cases where the determined variable has an entropy of 0. Generally, if $H(\rvy| \rvx) = 0 \rightarrow H(\rvy) > 0$. Also, we only consider cases where the random variables have more than zero entropy.
+
+Note that $R_{\rvx}$ represents the support of random variable $\rvx$ such that $R_{\rvx} = \{\vx \in \R : P(\vx) > 0\}$.
+
+\subsection{Lower Bound of Mutual Information for Sufficiency}
+\begin{lemma}
+    Let $\rvx$ and $\rvy$ be random variables with joint distribution $p(\rvx, \rvy)$. Let $\rvz$ be a representation of $\rvx$ that is sufficient, as per definition \ref{definesuff}. Then $I(\rvx;\rvz) \geq I(\rvz;\rvy)$ and $I(\rvx;\rvz) \geq I(\rvx;\rvy)$. 
+
+    Hypothesis: 
+
+    $(H_1)$ $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+    
+    $(H_2)$ $ \rvz$ is a sufficient representation of $\rvx: I(\rvx; \rvy| \rvz))=0$
+    
+    Thesis: 
+    
+    $(T_1)$ $\forall \rvz.I(\rvx;\rvz) \geq I(\rvz;\rvy), I(\rvx;\rvz) \geq I(\rvx;\rvy)$
+
+    \begin{proof}By Construction 
+
+    $$
+    \begin{aligned}
+    I(\rvx \rvy|\rvz)) &\stackrel{\left(H_2\right)}{=} 0 \\
+    &\stackrel{\left(P_2\right)}{=} I(\rvz \rvy; \rvx) - I(\rvz; \rvx) \\
+    &\stackrel{\left(P_2\right)}{=} I(\rvx; \rvy) + I(\rvx; \rvz|\rvy) - I(\rvz; \rvx) \\
+    &\stackrel{\left(PropB1\right)}{=} I(\rvz; \rvy) + I(\rvx; \rvz|\rvy) - I(\rvz;\rvx) \\
+    I(\rvz;\rvx) &= I(\rvz;\rvy) + I(\rvx; \rvz|\rvy)\\
+   I(\rvz;\rvx) &\stackrel{\left(P_1\right)}{\geq} I(\rvz; \rvy)\\
+    \end{aligned}
+    $$
+
+    Note that $I(\rvz; \rvy) = I(\rvx; \rvy)$ for all sufficient representations, as per proposition \ref{sufficiency}.
+
+    This supports our intuition that the information in the representation consists of relevant information $I(\rvz;\rvy)$ and irrelevant information $I(\rvx; \rvz| \rvy)$. By definition of sufficiency, there must be enough information for $I(\rvz; \rvy)$ in $I(\rvx; \rvz)$, which is to say that the size of the encoding cannot be smaller than the minimum size to encode all of $I(\rvx; \rvy)$. 
+    
+    \end{proof} 
+    \label{app:domain_infobound}
+\end{lemma}
+
+\subsection{Factorization of Bottleneck Loss}
+
+\begin{lemma}
+    Let $\rvx$ be a random variable with label $\rvy$ such that $H(\rvy| \rvx) = 0$ and $\rvz$ is a sufficient representation of $\rvx$ for $\rvy$. The loss function 
+    $\mathcal{L}=I(\rvx; \rvz)-\beta I(\rvz; \rvy)$ is equivalent to $\mathcal{L}=H(\rvz)-\beta I(\rvz; \rvy)$, with $\beta$ as some constant. 
+
+    Hypothesis: 
+    
+    $(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+    Thesis: 
+
+    $(T_1)$ $ I(\rvx; \rvz)-\beta I(\rvz; \rvy) = H(\rvz)-\beta I(\rvz; \rvy)$
+
+    \begin{proof} By Construction. 
+    $$
+        \begin{aligned}
+        I(\rvx; \rvz)-\beta I(\rvz; \rvy) &\stackrel{\left(P_5\right)}{=} H(\rvz) - H(\rvz| \rvx) -\beta I(\rvz;\rvy) \\
+        &\stackrel{\left(H_1\right)}{=} H(\rvz) -\beta I(\rvz; \rvy)
+        \end{aligned}
+    $$
+
+    Due to the relationship between $\rvx$ and $\rvz$, we can create an intuitive factorization of the bottleneck loss function. Effectively, we want to maximize $I(\rvz; \rvy)$ while minimizing the information content of $\rvz$
+
+    \end{proof}
+
+    \label{app:domain_lossfact}
+\end{lemma}
+
+\subsection{Conditional Mutual Information of Noise}
+
+\begin{lemma}
+Let $\rvx$ and $\rvy$ be independent random variables and $\rvz$ be a function of $\rvx$ with joint distribution $p(\rvx, \rvy, \rvz)$. The conditional mutual information $I(\rvx; \rvz| \rvy)$ is always equal to the mutual information $I(\rvx; \rvz)$. As in the information content is unchanged when adding noise. 
+
+Hypothesis:
+
+$(H_1)$ Independence of $\rvx$ and $\rvy$ : $I(\rvx;\rvy) = 0$
+
+$(H_2)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+Thesis: 
+
+$(T_1)$ $I(\rvx; \rvz| \rvy) = I(\rvx; \rvz)$ 
+
+\begin{proof}
+    By Construction. 
+
+    $(C_1)$ Demonstrates that $H(\rvz| \rvx \rvy) = 0$
+
+    $$
+\begin{aligned}
+0 \stackrel{\left(P_4\right)}{\leq} H(\rvz|\rvx \rvy)&\stackrel{\left(P_6\right)}{\leq}H(\rvz|\rvx)\\
+H(\rvz|\rvx \rvy)&\stackrel{\left(H_2\right)}{\leq} 0
+\end{aligned}
+$$
+
+    $(C_2)$ Demonstrates that $I(\rvz;\rvy) = 0$ 
+    $$
+\begin{aligned}
+I(\rvz; \rvy)&\stackrel{\left(H_2\right)}{=}I(f(\rvx);\rvy)\\
+&\stackrel{\left(P_{10}\right)}{=}I(\rvx ; \rvy)\\
+&\stackrel{\left(H_{1}\right)}{=}0\\
+\end{aligned}
+$$
+    
+    
+Thus 
+
+    $$
+\begin{aligned}
+I(\rvx; \rvz| \rvy) &\stackrel{\left(P_9\right)}{=} H(\rvz|\rvy) - H(\rvz|\rvx \rvy)\\
+&\stackrel{\left(C_1\right)}{=} H(\rvz| \rvy)- 0\\
+&\stackrel{\left(P_5\right)}{=} H(\rvz) - I(\rvz; \rvy) \\
+&\stackrel{\left(C_2\right)}{=}H(\rvz) - 0 \\
+&\stackrel{\left(H_2\right)}{=}H(\rvz) - H(\rvz| \rvx) \\
+&\stackrel{\left(P_5\right)}{=}I(\rvx; \rvz)
+\end{aligned}
+$$
+    
+This supports the intuition that if one added a random noise channel it will not change the mutual information.
+
+\end{proof}
+\label{app:domain_infonoise}
+\end{lemma}
+
+\subsection{Domain Feature Collapse}
+
+\begin{theorem}
+
+Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_\rvd$ and $\rvx_\rvy$, where $\rvx_\rvd$ is a set of domain features as per definition \ref{def:domainfeatures}. Let $\rvd$ be a domain label generated from $f_\rvd(\rvx_\rvd) = \rvd_1$, where $\rvd_1$ is a constant value for all $\rvx$. Let $\rvy$ be a class label generated from $f_\rvy(\rvx_\rvd, \rvx_\rvy) = \rvy$. Let $\rvz$ be any sufficient representation of $\rvx$ for $\rvy$ that satisfies the sufficiency definition \ref{definesuff} and minimizes the loss function $\mathcal{L} = I(\rvx_\rvd \rvx_\rvy; \rvz) - \beta I(\rvz;\rvy)$. The possible $\rvz$ that minimizes $\mathcal{L}$  and is sufficient must meet the condition $I(\rvx_\rvd; \rvz) = 0$.
+
+Hypothesis:
+
+$(H_1)$  $\rvz$ is fully determined by $\rvx$ : $H(\rvz|\rvx) = 0$
+
+$(H_2)$  $\rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+$(H_3)$  $\rvz$ is a sufficient representation of $\rvx: I(\rvx ; \rvy | \rvz)=0$
+
+$(H_4)$ $\rvx$ is composed of two independent variables $\rvx_\rvd, \rvx_\rvy$ : $\rvx = \rvx_\rvd, \rvx_\rvy, I(\rvx_\rvy; \rvx_\rvd) = 0$
+
+$(H_5)$ $\rvy$  and $\rvd$ are fully determined by $\rvx_\rvy$ and $\rvx_\rvd$, respectively: $H(\rvy | \rvx_\rvy) = 0$, $H(\rvd | \rvx_\rvd) = 0$.
+
+Thesis:
+
+$(T_1)$ $\forall \rvz.I(\rvx_\rvd,\rvz) = 0$
+
+\begin{proof} By Construction
+
+$(C_1)$ demonstrates that $\mathcal{L}=H(\rvz) -\beta I(\rvz;\rvy)$ via factoring $I(\rvx_\rvd \rvx_\rvy;\rvz)$. Alternatively, Theorem \ref{app:domain_lossfact} creates the same result.
+
+$$
+    \begin{aligned}
+    I(\rvx_\rvd \rvx_\rvy; \rvz) &\stackrel{\left(P_2\right)}{=} I(\rvx_\rvy; \rvz) + I(\rvx_\rvd; \rvz| \rvx_\rvy)\\
+    &\stackrel{\left(P_5\right)}{=} H(\rvz) -  H(\rvz| \rvx_\rvy) + I(\rvx_\rvd; \rvz| \rvx_\rvy) \\
+    &\stackrel{\left(P_9\right)}{=} H(\rvz) -  H(\rvz| \rvx_\rvy) + H(\rvz| \rvx_\rvy) - H(\rvz| \rvx_\rvy \rvx_\rvd) \\
+    &\stackrel{\left(H_1\right)}{=}H(\rvz) -  H(\rvz| \rvx_\rvy) + H(\rvz| \rvx_\rvy) - 0 \\
+    &\mathcal{L}=H(\rvz)  -\beta I(\rvz; \rvy)
+    \end{aligned}
+$$
+
+$(C_2)$ Demonstrates that $I(\rvz; \rvy) = I(\rvx; \rvy)$ as per Theorem \ref{sufficiency}.
+
+$(C_3)$ Demonstrates that $I(\rvz; \rvy)$ is a constant across all sufficient representations because Theorem \ref{sufficiency} applies.
+
+$(C_4)$ Demonstrates that for all possible $\rvz$ satisfying $(H_3)$, their loss can be compared using only $\mathcal{L}_z = H(\rvz)$ for comparing across $\rvz$
+
+$$
+\begin{aligned}
+    \frac{d\mathcal{L}}{d\rvz}  &\stackrel{\left(C_1\right)}{=}\frac{H(\rvz)}{d\rvz} - \frac{\beta I(\rvz; \rvy)}{d\rvz} \\
+&\stackrel{\left(C_3\right)}{=}\frac{H(\rvz)}{d\rvz} - 0
+\end{aligned}
+$$
+
+$(C_5)$ Demonstrates that the value of $H(\rvz)$ at all possible $\rvz$ that minimizes $\mathcal{L}$ is the same. Even for different minimal $\rvz$, they must have the same $H(\rvz)$ to all be minimal. When comparing possible minimal solutions to $\mathcal{L}$, $H(\rvz)$ is constant across all minimal solutions.
+
+$(C_6)$ Demonstrates that any $\rvz$ that satisfies sufficiency must satisfy $I(\rvz; \rvx) \geq I(\rvz; \rvy)$ and $I(\rvz; \rvx) \geq I(\rvx; \rvy)$ as per Theorem \ref{app:domain_infobound}.
+
+$(C_7)$ Demonstrates that minima(s) exists only where $H(\rvz) = I(\rvz; \rvy)$ and $H(\rvz| \rvx) = 0$. Note that $H(\rvz) = I(\rvx; \rvy) = I(\rvz; \rvy)$ is the most compact representation size that is sufficient.
+
+$$
+\begin{aligned}
+    I(\rvz;\rvx) &\stackrel{\left(C_6\right)}{\geq} I(\rvz; \rvy) \\
+    H(\rvz) - H(\rvz| \rvx)  &\stackrel{\left(P_5\right)}{\geq} I(\rvz; \rvy)\\
+    \forall \rvz\mid C_6 \land H_3 &\land I(\rvz; \rvx) > I(\rvz; \rvy) . \\
+    \exists \rvz' \mid \rvz' = f(\rvz) &\land I(\rvz; \rvx) > I(\rvz'; \rvx) \land C_6 \land H_3
+\end{aligned}
+$$
+From $(C_7)$ there exists only 3 types of minimas, separated by their dependence on the variables  $\rvx_\rvy, \rvx_\rvd$. As per $(H_1)$, any $\rvz$ must follow one of the 3 types.
+
+\begin{enumerate}
+    \item Dependent only on $\rvx_\rvy$: $\forall \rvz|H(\rvz|\rvx_\rvy)=0 \rightarrow I(\rvx_\rvd; \rvz) = 0$
+
+    \item Dependent only on $\rvx_\rvd$: $\forall \rvz|H(\rvz| \rvx_\rvd)=0 \rightarrow I(\rvx_\rvd; \rvz) > 0$
+
+    \item Dependent on both $\rvx_\rvy \rvx_\rvd$: $\forall \rvz|H(\rvz|\rvx_\rvy, \rvx_\rvd)=0 \land h(\rvz| \rvx_\rvy)>0 \land H(\rvz| \rvx_\rvd)>0 \rightarrow I(\rvx_\rvd; \rvz) > 0$
+\end{enumerate}
+
+From here we will show that all type 2 and type 3 minimas always fail $(H_3)$ or have greater $\mathcal{L}$ than any type 1 minima.
+
+\textbf{Type 1} $\rvx_\rvy$: $\forall \rvz|H(\rvz| \rvx_\rvy)=0 \rightarrow I(\rvx_\rvd; \rvz) = 0$
+
+$(C_8)$ Demonstrates that there exists $H(\rvz) = I(\rvz; \rvy) = I(\rvx_\rvy; \rvz)$ and it is a set of minimas satisfying $(C_7)$. This also establishes an upper bound for solutions to $\mathcal{L}$ due to $(C_5)$. Therefore, any solution for type 1, type 2, and type 3 must satisfy $I(\rvz; \rvy) \leq I(\rvx_\rvy; \rvz)$ to be sufficient and $I(\rvz; \rvy) = I(\rvx_\rvy; \rvz)$ to be minimal.
+
+$$
+\begin{aligned}
+    I(\rvz; \rvy)&\stackrel{\left(C_6\right)}{\leq} I(\rvz; \rvx)  \\
+    &\stackrel{\left(H_4\right)}{\leq}  I(\rvx_\rvy, \rvx_\rvd; \rvz) \\
+    &\stackrel{\left(P_2\right)}{\leq} I(\rvx_\rvd; \rvz) + I(\rvx_\rvy; \rvz| \rvx_\rvd)\\
+    &\stackrel{\left(Type1\right)}{\leq} 0 + I(\rvx_\rvy; \rvz| \rvx_\rvd)\\
+    &\stackrel{\left(Theorem\ref{app:domain_infonoise}\right)}{\leq} I(\rvx_\rvy; \rvz)\\
+    &\stackrel{\left(P_5\right)}{\leq} H(\rvz) - H(\rvz| \rvx_\rvy)\\
+    \exists \rvz &|I(\rvx_\rvy; \rvz)  = I(\rvz; \rvy) = I(\rvx; \rvz) = I(\rvx; \rvy)
+\end{aligned}
+$$
+
+$(C_{9})$ Demonstrates that there exists no $H(\rvz') < H(\rvz)$ that satisfies sufficiency if $\rvz$ satisfies $(C_8)$ and is also $I(\rvz; \rvx_\rvd) = 0$.
+
+$$
+\begin{aligned}
+    C_8 &\rightarrow  I(\rvx_\rvy; \rvz) = I(\rvx; \rvy)\\
+    H(\rvz') < H(\rvz) & \rightarrow I(\rvx_\rvy; \rvz') < I(\rvx_\rvy; \rvz) \\
+    \rightarrow \neg (C_2) &: I(\rvx_\rvy; \rvz') < I(\rvx_\rvy; \rvz) = I(\rvy; \rvz) = I(\rvx; \rvy)
+\end{aligned}
+$$
+
+\textbf{Type 2} $\rvx_\rvd$: $\forall \rvz|H(\rvz| \rvx_\rvd)=0 \rightarrow I(\rvx_\rvd; \rvz) > 0$
+
+$(C_{10})$ Demonstrates that no type 2 minima can exist, simply because it would contain no information regarding $\rvx_\rvy$, thus failing to satisfy $(H_3)$. This is because $\rvz$ cannot contain any information about $\rvx_\rvy$, otherwise we would not satisfy $H(\rvz|\rvx_\rvd)=0$. If the representation $\rvz$ contains no information about $\rvy$, then it is not sufficient.
+
+$$
+\begin{aligned}
+    H(\rvz| \rvx_\rvd) = 0 & \rightarrow \rvz = f(\rvx_\rvd) \\
+    0 &\stackrel{\left(H_4\right)}{=} I(\rvx_\rvy; \rvx_\rvd)\\
+    &\stackrel{\left(P_{10}\right)}{=} I(f(\rvx_\rvy);\rvx_\rvd)\\
+    &\stackrel{\left(H_5\right)}{=} I(\rvy; \rvx_\rvd)\\
+    &\stackrel{\left(P_{10}\right)}{=} I(\rvy;f(\rvx_\rvd))\\
+    0&=I(\rvy;\rvz)
+\end{aligned}
+$$
+
+\textbf{Type 3} $\rvx_\rvy, \rvx_\rvd$: $\forall \rvz|H(\rvz| \rvx_\rvy , \rvx_\rvd)=0 \land H(\rvz|\rvx_\rvy)>0 \land H(\rvz| \rvx_\rvd)>0 \rightarrow I(\rvx_\rvd; \rvz) > 0$
+
+$(C_{11})$ Demonstrates that any $\rvz$ that could be minimal must also satisfy $(C_8)$ for sufficiency. Note that $(C_8)$ implies that any $I(\rvx_\rvy; \rvz) >  I(\rvz;\rvy)$ is not minimal.
+
+$$
+\begin{aligned}
+    I(\rvz; \rvy)&\stackrel{\left(C_6\right)}{\leq} I(\rvz; \rvx)  \\
+    &\stackrel{\left(H_4\right)}{\leq}  I(\rvx_\rvy \rvx_\rvd; \rvz) \\
+    I(\rvz; \rvy) &\stackrel{\left(P_2\right)}{\leq} I(\rvx_\rvy; \rvz) + I(\rvx_\rvd; \rvz| \rvx_\rvy) \\
+    & (C_8) \rightarrow I(\rvx_\rvy; \rvz) =  I(\rvz; \rvy) \\
+\end{aligned}
+$$
+
+$(C_{12})$ Demonstrates that any $\rvz'$ where $I(\rvz'; \rvx_\rvd)>I(\rvz; \rvx_\rvd)$ and $I(\rvz; \rvx_\rvd) = 0$ that maintains $H(\rvz') = H(\rvz)$ results in  solutions that are not sufficient as required by $(H_3)$ because we know that the size of the representation must be at least $I(\rvx; \rvy)$ as defined in $(C_6)$.
+
+$$
+\begin{aligned}
+    C_8 &\rightarrow  H(\rvz) \text{ is constant across all minima}\\
+    C_8 &\rightarrow  H(\rvz) = H(\rvz')\text{ for } \rvz' \text{ to be minimal}\\
+    C_8 &\rightarrow  I(\rvx_\rvy; \rvz) = I(\rvx; \rvy)\\
+    I(\rvx_\rvd; \rvz) = 0 &\rightarrow H(\rvz| \rvx_\rvy) = 0 \\
+    \forall \rvz'|I(\rvx_\rvd; \rvz') > 0  &:  H(\rvz'| \rvx_\rvy) > H(\rvz| \rvx_\rvy) \\
+   H(\rvz'| \rvx_\rvy) &> H(\rvz| \rvx_\rvy) \\
+   \rightarrow H(\rvz') - H(\rvz'| \rvx_\rvy) &< H(\rvz) - H(\rvz| \rvx_\rvy)  \\
+    &\stackrel{\left(P_5\right)}{\rightarrow}  I(\rvx_\rvy; \rvz') < I(\rvx_\rvy; \rvz)  \\
+    \rightarrow \neg (C_6) &:  I(\rvx_\rvy; \rvz') < I(\rvx; \rvy)
+\end{aligned}
+$$
+
+$(C_{13})$ Demonstrates that combining $(C_{11})$ and $(C_{12})$, there is no type 3 solution that has an equal $\mathcal{L}$ to the minimal type 1 solution that also maintains sufficiency $(H_3)$ and $(C_6)$. This confirms the definition of entropy, in that encoding more independent information requires more bits or nats.
+
+This means that only a type 1 solution can be both minimal and sufficient, which proves the thesis.
+
+To summarize this proof, we can compare the losses of all sufficient solutions with $\mathcal{L} = H(\rvz)$. Of those sufficient solutions, the one that minimizes $\mathcal{L}$ is the one with the smallest $H(\rvz)$. The minimal sufficient representation is $\rvz$ that captures only all of $I(\rvx_\rvy; \rvy)$ and nothing else. Thus the minimal $\rvz$ cannot have $I(\rvx_\rvd; \rvz) > 0$ because such $\rvz$ would encode information outside of $I(\rvx_\rvy; \rvy)$.
+
+\end{proof}
+    \label{app:domain_genloss}
+\end{theorem}
+
+\section{Theorems and Proofs of Previous Work}
+
+This section contains the supporting theorems and proofs provided by previous work \citep{federici2020learning}.
+
+When random variable $\rvz$ is defined to be a representation of another random variable $\rvx$, we state that $\rvz$ is conditionally independent from any other variable in the system once $\rvx$ is observed. This does not imply that $\rvz$ must be a deterministic function of $\rvx$, but that the source of stochasticity for $\rvz$ is independent of the other random variables. As a result whenever $\rvz$ is a representation of $\rvx$ :
+$$
+I(\rvz ; \rva \mid \rvx \rvb)=0,
+$$
+for any variable (or groups of variables) $\rva$ and $\rvb$ in the system. This condition accounts for the randomness experienced in training neural networks and the error expected from human labelers. This condition applies to this and the following sections.
+
+\subsection{Sufficiency}
+
+\begin{proposition}
+
+Let $\rvx$ and $\rvy$ be random variables from joint distribution $p(\rvx, \rvy)$. Let $\rvz$ be a representation of $\rvx$, then $\rvz$ is sufficient for $\rvy$ if and only if $I(\rvx ; \rvy)=I(\rvy ; \rvz)$
+
+Hypothesis:
+
+$\left(H_1\right) \rvz$ is a representation of $\rvx: I(\rvy ; \rvz \mid \rvx)=0$
+
+Thesis:
+
+$\left(T_1\right) I(\rvx ; \rvy \mid \rvz)=0 \Longleftrightarrow I(\rvx ; \rvy)=I(\rvy ; \rvz)$
+
+\begin{proof}
+$$
+\begin{aligned}
+I(\rvx ; \rvy \mid \rvz) & \stackrel{\left(P_3\right)}{=} I(\rvx ; \rvy)-I(\rvx ; \rvy ; \rvz) \\
+I(\rvx ; \rvy)-I(\rvx ; \rvy ; \rvz) &
+\stackrel{\left(P_3\right)}{=} I(\rvx ; \rvy)-I(\rvy ; \rvz)+I(\rvy ; \rvz \mid \rvx) \\
+& \stackrel{\left(H_1\right)}{=} I(\rvx ; \rvy)-I(\rvy ; \rvz)
+\end{aligned}
+$$
+
+Since both $I(\rvx ; \rvy)$ and $I(\rvy ; \rvz)$ are non-negative $\left(P_1\right), I(\rvx ; \rvy \mid \rvz)=0 \Longleftrightarrow I(\rvy ; \rvz)=I(\rvx ; \rvy)$
+
+\end{proof}
+\label{app:domain_sufficiency}
+\end{proposition}
+
+\section{Two Stage Domain Filter}
+
+\label{app:twostageapp}
+
+\begin{algorithm}[H]
+\caption{Two-Stage Domain Filter for OOD Detection}
+\label{app:twostage}
+\begin{algorithmic}[1]
+\State \textbf{Input:}
+    \State $\rvx$: Input sample
+    \State $\sX_{train}$: Training dataset
+    \State $k$: Number of neighbors (default=50)
+    \State $\rvt_\rvd$: Domain threshold (99th percentile)
+
+\State \textbf{Output:}
+    \State OOD decision $\in \{\text{True}, \text{False}\}$
+
+\Procedure{DomainFilter}{$\rvx, \sX_{train}, k, \rvt_\rvd$}
+    \State $d_k \gets \text{KNN-Distance}(\rvx, \sX_{train}, k)$ \Comment{$k^{th}$ neighbor distance}
+    \If{$d_k > \rvt_\rvd$}
+        \State \Return \text{True} \Comment{Out-of-Domain}
+    \Else
+        \State \Return \text{False} \Comment{In-Domain}
+    \EndIf
+\EndProcedure
+
+\Procedure{TwoStageDetection}{$x$}
+    \State \text{// Stage 1: Domain Filtering}
+    \If{\Call{DomainFilter}{$\rvx, \sX_{train}, k, \rvt_\rvd$}}
+        \State \Return \text{True} \Comment{Reject as OOD (Avoids Domain Feature Collapse)}
+    \EndIf
+
+    \State \text{// Stage 2: In-Distribution OOD Detection}
+    \State $s \gets \text{OOD-Score}(\rvx)$ \Comment{Using preferred OOD detector}
+    \If{$s > \tau$} \Comment{$\tau$ is OOD threshold}
+        \State \Return \text{True}
+    \Else
+        \State \Return \text{False}
+    \EndIf
+\EndProcedure
+
+\State \textbf{Threshold Calibration:}
+\State $\rvt_\rvd \gets \text{Percentile}(\{f_{knn}(\rvx_i) | \rvx_i \in \sX_{train}\}, 99\%)$
+
+\end{algorithmic}
+\end{algorithm}
+
+\section{Detailed Experimental Setup}
+
+\label{app:setup}
+
+\subsection{Adjacent OOD Construction}
+
+For each seed, we randomly select $1/3$ of ID classes to be treated as in domain OOD classes. This is repeated 5 times per dataset, such that all 3 training methods use the same 5 seeds for their experiments.
+
+\subsection{Cross Entropy ResNet50}
+
+We train the Cross Entropy ResNet50 using the baseline training pipeline from OpenOOD \citep{yang2022openood}. This pipeline uses an SGD optimizer with an initial LR of 0.1, momentum of 0.9, and a weight decay of 0.0005. We use a cosine annealing schedule for the learning rate. We train with a 256 batch size and an image size of 64. We use the OpenOOD base preprocessor for augmentations, which only includes a center crop, horizontal flip, and random crop. The ResNet50 is initialized with the default Torchvision weights, derived from ImageNet.
+
+The model with the best accuracy on the validation set is selected for OOD evaluation.
+
+We use the OpenOOD OODEvaluator class to evaluate OOD performance. Hyperparameters are selected using the ID validation set and the Tiny ImageNet validation set. Hyperparameters are selected using the configurations provided by OpenOOD. We limit the domain filter's possible $k$ values to $[50, 100, 200]$.
+
+\subsection{Cross Entropy DinoV2}
+
+We train the Cross Entropy DinoV2 ViT-S14 using the baseline training pipeline from OpenOOD. We modify the pipeline to use an Adam optimizer with an initial LR of 0.00001 and a weight decay of 0.0005. We use a cosine annealing schedule for the learning rate. We train with a 128 batch size and an image size of 224. We use the OpenOOD base preprocessor for augmentations, which only includes a center crop, horizontal flip, and random crop.
+
+The model with the best accuracy on the validation set is selected for OOD evaluation.
+
+We use the same evaluation process as the Cross Entropy ResNet50.
+
+\subsection{Supervised Contrastive Learning ResNet50}
+
+We implement a Supervised Contrastive Learning pipeline in OpenOOD by following the implementation by \citet{sehwag2021ssd}. This pipeline uses an SGD optimizer with an initial LR of 0.5, momentum of 0.9, a weight decay of 0.0005, and a SimCLR temperature of 0.5. The model trains for 10 warm up epochs using a cyclic LR scheduler followed by 500 epochs using a cosine annealing LR scheduler. Preprocessing follows \citet{sehwag2021ssd}, where two augmented copies of an image are generated for contrastive learning, using RandomResizeCrop, RandomHorizontalFlip, ColorJitter, and GrayScale.
+
+The model with the best accuracy on the validation set is selected for OOD evaluation, with accuracy established using a KNN fitted on the learned representations.
+
+We use the same evaluation process as the Cross Entropy ResNet50, except all logit-based OOD methods are not evaluated (due to the lack of a classification head).
+
+\section{Detailed Experimental Results}
+
+\label{app:expresult}
+
+\subsection{OOD Method References}
+
+\label{app:oodref}
+PT KNN refers to a KNN OOD detector \citep{sun2022out} using only a pretrained DinoV2. DF + KNN refers to the two stage domain filter combined with a KNN OOD detector \citep{sun2022out} and likewise with DF + ReAct \citep{sun2021react}. Other listed methods are MSP \citep{hendrycks2016baseline}, Energy \citep{liu2020energy}, Mahalanobis \citep{lee2018simple}, Scale \citep{xuscaling}, NCI \citep{liu2025detecting}, and KNN \citep{sun2022out}.
+
+\subsection{Experimental Results Summary}
+
+We provide FPR@95 and AUROC scores for each ID dataset and OOD detection method, across the 3 models. The detailed results demonstrate that:
+
+\begin{itemize}
+    \item Domain Feature Collapse significantly impacts OOD detection performance in single-domain settings
+    \item The Two-Stage Domain Filter effectively mitigates these failures
+    \item Performance improvements are consistent across different model architectures and training paradigms
+    \item The approach is particularly effective for Adjacent OOD detection scenarios
+\end{itemize}
+
+The experimental validation confirms our theoretical predictions about domain feature collapse and validates the effectiveness of our proposed mitigation strategies. Complete numerical results and statistical analyses are available in the supplementary materials of the corresponding AAAI 2026 submission.

@@ -1,0 +1,650 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and color scheme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{natbib}
+
+% Custom commands from your thesis
+\input{math_commands.tex}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cD}{\mathcal{D}}
+
+% Title page information
+\title[Information-Theoretic Approaches to ML Reliability]{Information-Theoretic Approaches to Out-of-Distribution Detection and Hallucination Detection in Machine Learning Systems}
+\subtitle{PhD Dissertation Proposal Defense}
+\author{Your Name}
+\institute{Your University}
+\date{\today}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Custom footline with section indicator
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\hspace*{2ex}\insertsectionhead
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\begin{document}
+
+% 1. Title slide
+\begin{frame}
+\titlepage
+\end{frame}
+
+% SECTION 1: INTRODUCTION (4 slides, ~5 minutes)
+\section{Introduction}
+
+% 2. The Reliability Crisis in Modern ML
+\begin{frame}{The Reliability Crisis in Modern ML}
+\begin{itemize}
+    \item \textbf{Safety-Critical Deployments}: ML systems in healthcare, autonomous driving, and financial services
+    \item \textbf{Two Fundamental Failures}:
+    \begin{itemize}
+        \item \textcolor{red}{Overconfident predictions} on unfamiliar inputs (OOD detection)
+        \item \textcolor{red}{Plausible but false content} generation (hallucination detection)
+    \end{itemize}
+    \item \textbf{Real-World Consequences}:
+    \begin{itemize}
+        \item Medical imaging models misclassifying rare conditions
+        \item Autonomous vehicles failing on novel scenarios
+        \item AI assistants providing incorrect medical/legal advice
+    \end{itemize}
+    \item \textbf{Current Gap}: Lack of principled theoretical frameworks for reliability
+\end{itemize}
+\end{frame}
+
+% 3. Information Theory Foundations
+\begin{frame}{Information Theory Foundations}
+\begin{itemize}
+    \item \textbf{Mutual Information}: $I(\mathbf{X}; \mathbf{Y}) = H(\mathbf{X}) - H(\mathbf{X}|\mathbf{Y})$
+    \begin{itemize}
+        \item Quantifies shared information between variables
+        \item Measures reduction in uncertainty about $\mathbf{X}$ given $\mathbf{Y}$
+    \end{itemize}
+    \item \textbf{Information Bottleneck Principle}:
+    $$\mathcal{L}_{IB} = I(\mathbf{Z}; \mathbf{Y}) - \beta I(\mathbf{Z}; \mathbf{X})$$
+    \begin{itemize}
+        \item Compress toward minimal sufficient statistics
+        \item Discard "irrelevant" information during learning
+    \end{itemize}
+    \item \textbf{Why Information Theory for ML Reliability?}
+    \begin{itemize}
+        \item Provides quantifiable, objective measures of uncertainty
+        \item Unifies OOD detection and hallucination detection under common framework
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 4. Presentation Roadmap
+\begin{frame}{Presentation Roadmap}
+\begin{itemize}
+    \item \textbf{Three Interconnected Contributions}:
+    \begin{enumerate}
+        \item \textcolor{blue}{Label Blindness}: When unlabeled OOD detection ignores critical information
+        \item \textcolor{green}{Domain Feature Collapse}: Why single-domain models fail at OOD detection
+        \item \textcolor{red}{Hallucination Detection}: Information-theoretic framework for LLM reliability
+    \end{enumerate}
+    \item \textbf{Presentation Structure}:
+    \begin{itemize}
+        \item High-level overview of all three contributions
+        \item Deep technical dive into each contribution
+        \item Research timeline and expected impact
+    \end{itemize}
+    \item \textbf{Unifying Theme}: Information theory as principled framework for AI safety
+\end{itemize}
+\end{frame}
+
+% SECTION 2: HIGH-LEVEL OVERVIEW OF THREE CONTRIBUTIONS (3 slides, ~6 minutes)
+\section{Research Overview}
+
+% 5. Label Blindness Overview
+\begin{frame}{Contribution 1: Label Blindness in Unlabeled OOD Detection}
+\begin{itemize}
+    \item \textbf{Core Problem}: Unlabeled OOD detection methods ignore critical label information
+    \begin{itemize}
+        \item When $I(\mathbf{z}_{unsup}; \mathbf{y}) = 0$ (feature independence from labels)
+        \item Guaranteed failure when unsupervised features $\perp$ supervised features
+    \end{itemize}
+    \item \textbf{Novel Insight}: \textcolor{blue}{Adjacent OOD} evaluation paradigm
+    \begin{itemize}
+        \item Example: Dog breeds dataset - 80\% breeds as ID, 20\% breeds as OOD
+        \item Reveals systematic failures hidden by traditional distant OOD benchmarks
+    \end{itemize}
+    \item \textbf{Theoretical Contribution}: Label Blindness Theorem
+    \begin{itemize}
+        \item Formal proof of when and why unlabeled methods fail
+        \item Information-theoretic conditions for detection success/failure
+    \end{itemize}
+    \item \textbf{Practical Impact}: Guides method selection and hybrid approaches
+\end{itemize}
+\end{frame}
+
+% 6. Domain Feature Collapse Overview
+\begin{frame}{Contribution 2: Domain Feature Collapse}
+\begin{itemize}
+    \item \textbf{Phenomenon}: Single-domain training discards domain-specific features
+    \begin{itemize}
+        \item $I(\mathbf{x}_d; \mathbf{z}) = 0$ for learned representations $\mathbf{z}$
+        \item Example: X-ray model confidently classifying MRI scans
+    \end{itemize}
+    \item \textbf{Theoretical Foundation}: Information Bottleneck drives inevitable collapse
+    \begin{itemize}
+        \item $\mathcal{L}_{IB} = I(\mathbf{Z}; \mathbf{Y}) - \beta I(\mathbf{Z}; \mathbf{X})$
+        \item Domain features $\mathbf{x}_d$ discarded when $I(\mathbf{x}_d; \mathbf{Y}) = 0$
+        \item Mathematical proof of collapse under supervised learning
+    \end{itemize}
+    \item \textbf{Solution}: Two-stage domain filtering framework
+    \begin{itemize}
+        \item Stage 1: Domain-level detection (preserve $\mathbf{x}_d$ during training)
+        \item Stage 2: Class-level detection within correct domain
+    \end{itemize}
+    \item \textbf{Impact}: First formal characterization + practical mitigation strategy
+\end{itemize}
+\end{frame}
+
+% 7. Hallucination Detection Overview
+\begin{frame}{Contribution 3: Information-Theoretic Hallucination Detection}
+\begin{itemize}
+    \item \textbf{Central Hypothesis}: Hallucinations arise from insufficient mutual information
+    \begin{itemize}
+        \item $I(\mathbf{x}; \mathbf{y}) < \tau_{critical}$ between queries and responses
+        \item Layer-wise information degradation in transformer architectures
+    \end{itemize}
+    \item \textbf{Novel Method}: Contrastive mutual information estimation
+    \begin{itemize}
+        \item Real-time detection without external knowledge bases
+        \item Scalable to large language models (GPT, BERT, T5, Mamba)
+        \item Question-answer consistency across transformer layers
+    \end{itemize}
+    \item \textbf{System Architecture}: Two-stage detection framework
+    \begin{itemize}
+        \item Primary model: Standard transformer inference
+        \item Secondary analysis: Contrastive MI estimation
+    \end{itemize}
+    \item \textbf{Validation}: Natural Questions, TriviaQA, HaluEval, TruthfulQA, HalluLens
+\end{itemize}
+\end{frame}
+
+% SECTION 3: DETAILED TECHNICAL CONTRIBUTIONS (18 slides, ~30 minutes)
+
+% 3a. Label Blindness Deep Dive (6 slides)
+\section{Label Blindness Deep Dive}
+
+% 8. Formal Problem Definition
+\begin{frame}{Formal Problem Definition}
+\begin{itemize}
+    \item \textbf{Out-of-Distribution Detection Task}:
+    \begin{itemize}
+        \item Given: Training data $\mathcal{D}_{train} = \{(\mathbf{x}_i, y_i)\}_{i=1}^n$ from distribution $P_{ID}$
+        \item Goal: Detect test samples $\mathbf{x}_{test} \sim P_{OOD}$ where $P_{OOD} \neq P_{ID}$
+    \end{itemize}
+    \item \textbf{Unlabeled vs. Supervised Methods}:
+    \begin{itemize}
+        \item Unlabeled: Use only $\{\mathbf{x}_i\}$ (ignore labels $\{y_i\}$)
+        \item Supervised: Use full training data $\{(\mathbf{x}_i, y_i)\}$
+    \end{itemize}
+    \item \textbf{Label Blindness Definition}:
+    \begin{itemize}
+        \item Unlabeled method fails when $I(\mathbf{z}_{unsup}; \mathbf{y}) = 0$
+        \item Where $\mathbf{z}_{unsup}$ are features learned without supervision
+    \end{itemize}
+    \item \textbf{Research Question}: When do unlabeled methods systematically fail?
+\end{itemize}
+\end{frame}
+
+% 9. Information-Theoretic Analysis
+\begin{frame}{Information-Theoretic Analysis}
+\begin{itemize}
+    \item \textbf{Information Bottleneck in Unsupervised Learning}:
+    \begin{align}
+        \mathcal{L}_{unsup} = I(\mathbf{Z}; \mathbf{X}) - \beta I(\mathbf{Z}; \mathbf{Y})
+    \end{align}
+    \item \textbf{Bottleneck Compression Effect}:
+    \begin{itemize}
+        \item Unsupervised methods minimize $I(\mathbf{Z}; \mathbf{X})$ without label guidance
+        \item Compression discards features that correlate with labels $\mathbf{Y}$
+        \item Result: $I(\mathbf{z}_{unsup}; \mathbf{y}) \rightarrow 0$ as compression increases
+    \end{itemize}
+    \item \textbf{Label Blindness Theorem}: When bottleneck compression removes label-relevant features:
+    \begin{align}
+        I(\mathbf{z}_{unsup}; \mathbf{y}) = 0 \Rightarrow \text{AUC}_{f_{unsup}} \leq 0.5 + \epsilon
+    \end{align}
+    \item \textbf{Critical Insight}: Unsupervised compression inherently conflicts with label preservation
+\end{itemize}
+\end{frame}
+
+% 10. Adjacent OOD Evaluation Paradigm
+\begin{frame}{Adjacent OOD Evaluation Paradigm}
+\begin{itemize}
+    \item \textbf{Traditional OOD Benchmarks} (hide label blindness):
+    \begin{itemize}
+        \item CIFAR-10 (ID) vs. SVHN (OOD) - different domains, easy to distinguish
+        \item ImageNet vs. Textures - unsupervised features sufficient
+    \end{itemize}
+    \item \textbf{Adjacent OOD Protocol}:
+    \begin{itemize}
+        \item Split single dataset: 80\% classes as ID, 20\% classes as OOD
+        \item Examples: Dog breeds, Bird species, Fine-grained categories
+        \item Forces reliance on label-dependent features
+    \end{itemize}
+    \item \textbf{Key Insight}: Adjacent OOD reveals when $I(\mathbf{z}_{unsup}; \mathbf{y}) \approx 0$
+    \item \textbf{Experimental Validation}:
+    \begin{itemize}
+        \item Unlabeled methods: 50-60\% AUC (random performance)
+        \item Supervised methods: 80-90\% AUC (strong performance)
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 11. Empirical Validation Results
+\begin{frame}{Empirical Validation Results}
+\begin{itemize}
+    \item \textbf{Adjacent OOD Benchmark}:
+    \begin{itemize}
+        \item Faces, Cars, Food datasets (1/3 classes held out as OOD)
+        \item Repeated 5 times with different random seeds
+    \end{itemize}
+    \item \textbf{Methods Compared}:
+    \begin{itemize}
+        \item Unlabeled: SimCLR KNN, SimCLR SSD
+        \item Supervised: MSP (Maximum Softmax Probability)
+    \end{itemize}
+    \item \textbf{Results Summary} (AUROC scores):
+    \begin{itemize}
+        \item \textbf{Faces}: Supervised MSP 70.8±0.3, SimCLR KNN 52.0±4.2
+        \item \textbf{Cars}: Supervised MSP 69.2±0.9, SimCLR KNN 52.5±0.4
+        \item \textbf{Food}: Supervised MSP 78.8±1.2, SimCLR KNN 61.1±2.8
+    \end{itemize}
+    \item \textbf{Key Finding}: Unlabeled methods perform near-random ($\approx$50\% AUROC)
+\end{itemize}
+\end{frame}
+
+% 12. Hybrid Approach Solutions
+\begin{frame}{Hybrid Approach Solutions}
+\begin{itemize}
+    \item \textbf{Motivation}: Combine strengths of both approaches
+    \begin{itemize}
+        \item Unlabeled: Good for distant OOD (domain shift)
+        \item Supervised: Essential for adjacent OOD (within-domain)
+    \end{itemize}
+    \item \textbf{Hybrid Architecture}:
+    \begin{align}
+        \text{Score}_{hybrid} = \alpha \cdot \text{Score}_{unsup} + (1-\alpha) \cdot \text{Score}_{sup}
+    \end{align}
+    \item \textbf{Adaptive Weighting Strategy}:
+    \begin{itemize}
+        \item Estimate $I(\mathbf{z}_{unsup}; \mathbf{y})$ during training
+        \item High MI $\Rightarrow$ increase $\alpha$ (trust unsupervised)
+        \item Low MI $\Rightarrow$ decrease $\alpha$ (trust supervised)
+    \end{itemize}
+    \item \textbf{Performance}: Achieves best of both worlds across OOD types
+\end{itemize}
+\end{frame}
+
+% 13. Label Blindness: Key Takeaways
+\begin{frame}{Label Blindness: Key Takeaways}
+\begin{itemize}
+    \item \textbf{Theoretical Contribution}:
+    \begin{itemize}
+        \item First formal characterization of when unlabeled OOD detection fails
+        \item Information-theoretic conditions: $I(\mathbf{z}_{unsup}; \mathbf{y}) = 0$
+        \item Rigorous proof connecting mutual information to detection performance
+    \end{itemize}
+    \item \textbf{Methodological Innovation}:
+    \begin{itemize}
+        \item Adjacent OOD evaluation paradigm reveals hidden failures
+        \item Exposes limitations of current benchmarking practices
+    \end{itemize}
+    \item \textbf{Practical Impact}:
+    \begin{itemize}
+        \item Guides method selection based on OOD type
+        \item Hybrid approaches for robust detection across scenarios
+    \end{itemize}
+    \item \textbf{Future Directions}: Extend to other unsupervised learning tasks
+\end{itemize}
+\end{frame}
+
+% 3b. Domain Feature Collapse Deep Dive (6 slides)
+\section{Domain Feature Collapse Deep Dive}
+
+% 14. Mathematical Formalization
+\begin{frame}{Mathematical Formalization}
+\begin{itemize}
+    \item \textbf{Single-Domain Dataset Definition}:
+    \begin{itemize}
+        \item Input $\mathbf{x} = [\mathbf{x}_d, \mathbf{x}_y]$ where $\mathbf{x}_d$ are domain features, $\mathbf{x}_y$ are class features
+        \item Domain features: imaging modality, sensor type, capture conditions
+        \item All samples share same domain: $f_d(\mathbf{x}_d) = d_1$ (constant)
+    \end{itemize}
+    \item \textbf{Information Bottleneck Objective}:
+    \begin{align}
+        \mathcal{L}_{IB} = I(\mathbf{Z}; \mathbf{Y}) - \beta I(\mathbf{Z}; \mathbf{X})
+    \end{align}
+    \item \textbf{Domain Feature Collapse Theorem}: For single-domain training:
+    \begin{align}
+        I(\mathbf{x}_d; \mathbf{y}) = 0 \Rightarrow I(\mathbf{x}_d; \mathbf{z}) = 0
+    \end{align}
+    \item \textbf{Consequence}: Learned representations $\mathbf{z}$ contain no domain information
+\end{itemize}
+\end{frame}
+
+% 15. Theoretical Analysis of Collapse
+\begin{frame}{Theoretical Analysis of Collapse}
+\begin{itemize}
+    \item \textbf{Why Collapse Occurs}:
+    \begin{itemize}
+        \item Domain features $\mathbf{x}_d$ are independent of labels: $I(\mathbf{x}_d; \mathbf{y}) = 0$
+        \item Including $\mathbf{x}_d$ in $\mathbf{z}$ increases complexity without improving prediction
+        \item Bottleneck compression discards "irrelevant" domain information
+    \end{itemize}
+    \item \textbf{Formal Proof Sketch}:
+    \begin{itemize}
+        \item Optimal $\mathbf{z}$ minimizes $\mathcal{L}_{IB} = I(\mathbf{Z}; \mathbf{Y}) - \beta I(\mathbf{Z}; \mathbf{X})$
+        \item Since $I(\mathbf{x}_d; \mathbf{y}) = 0$, domain features only contribute to complexity term
+        \item Therefore: $I(\mathbf{x}_d; \mathbf{z}) = 0$ in optimal representation
+    \end{itemize}
+    \item \textbf{Real-World Implications}: Even partial compression leads to unsafe OOD detection
+    \item \textbf{Fano's Inequality}: Small $I(\mathbf{x}_d; \mathbf{z})$ still causes unreliable detection
+\end{itemize}
+\end{frame}
+
+% 16. Empirical Demonstration
+\begin{frame}{Empirical Demonstration}
+\begin{itemize}
+    \item \textbf{Domain Bench}: 11 single-domain datasets
+    \begin{itemize}
+        \item Medical: Tissue (kidney cortex microscopy)
+        \item Agriculture: Plant (leaf disease classification)
+        \item Geology: Rock (mineral classification)
+        \item Waste Management: Garbage (material classification)
+        \item Fitness: Yoga (pose classification)
+    \end{itemize}
+    \item \textbf{Experimental Setup}:
+    \begin{itemize}
+        \item In-domain OOD: Adjacent OOD (25\% classes held out)
+        \item Out-of-domain OOD: MNIST, SVHN, Textures, Places365, CIFAR-10/100
+    \end{itemize}
+    \item \textbf{Key Finding}: All current SOTA methods perform worse on certain out-of-domain sets vs. their in-domain OOD performance
+    \item \textbf{Evidence}: FPR@95 increases from $<$10\% (in-domain) to $>$40\% (out-of-domain)
+\end{itemize}
+\end{frame}
+
+% 17. Domain Filtering Methodology
+\begin{frame}{Domain Filtering Methodology}
+\begin{itemize}
+    \item \textbf{Two-Stage Detection Framework}:
+    \begin{itemize}
+        \item \textbf{Stage 1}: Domain filtering - Is sample in-domain?
+        \item \textbf{Stage 2}: OOD detection - Is in-domain sample in-distribution?
+    \end{itemize}
+    \item \textbf{Domain Filter Implementation}:
+    \begin{itemize}
+        \item Pretrained DinoV2 ViT-S/14 for domain-aware features
+        \item KNN distance at 99th percentile threshold ($K=50$)
+        \item Preserves domain-specific information during training
+    \end{itemize}
+    \item \textbf{Key Assumption}: No in-distribution samples are out-of-domain
+    \begin{itemize}
+        \item Consistent with single-domain dataset definition
+        \item Allows clean separation of domain vs. class detection
+    \end{itemize}
+    \item \textbf{Integration}: Compatible with any existing OOD detection method
+\end{itemize}
+\end{frame}
+
+% 18. Implementation and Validation
+\begin{frame}{Implementation and Validation}
+\begin{itemize}
+    \item \textbf{Experimental Results}:
+    \begin{itemize}
+        \item \textbf{Domain filtering effectiveness}: FPR@95 reduced from $>$40\% to $<$5\%
+        \item \textbf{Consistent improvement}: Works across all 11 single-domain datasets
+        \item \textbf{Empirically validated}: Works with KNN, ReAct, and MDS methods
+    \end{itemize}
+    \item \textbf{Performance Metrics}:
+    \begin{itemize}
+        \item Out-of-domain OOD: Substantial FPR@95 reduction (8x improvement)
+        \item In-domain OOD: Minimal performance impact (maintains baseline)
+        \item AUROC improvements: 15-25 percentage points on out-of-domain
+    \end{itemize}
+    \item \textbf{Validation Across Domains}:
+    \begin{itemize}
+        \item Medical imaging, agriculture, geology, waste management
+        \item Confirms theoretical predictions empirically
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 19. Domain Collapse: Key Takeaways
+\begin{frame}{Domain Collapse: Key Takeaways}
+\begin{itemize}
+    \item \textbf{Theoretical Breakthrough}:
+    \begin{itemize}
+        \item First formal proof of domain feature collapse using information bottleneck theory
+        \item Explains why single-domain training creates dangerous OOD detection blind spots
+        \item Connects supervised learning objectives to systematic safety failures
+    \end{itemize}
+    \item \textbf{Practical Solution}:
+    \begin{itemize}
+        \item Domain filtering: Simple, effective, and method-agnostic approach
+        \item Two-stage framework preserves both domain and class detection capabilities
+        \item 8x improvement in out-of-domain OOD detection performance
+    \end{itemize}
+    \item \textbf{Broader Impact}:
+    \begin{itemize}
+        \item Domain Bench: New benchmark for single-domain OOD evaluation
+        \item Safety implications for medical imaging, autonomous systems
+        \item Guides deployment decisions in safety-critical applications
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 3c. Hallucination Detection Deep Dive (6 slides)
+\section{Hallucination Detection Deep Dive}
+
+% 20. Information-Theoretic Hallucination Framework
+\begin{frame}{Information-Theoretic Hallucination Framework}
+\begin{itemize}
+    \item \textbf{Central Hypothesis}: Hallucinations arise from information degradation
+    \begin{itemize}
+        \item $I(\mathbf{x}; \mathbf{y}) < \tau_{critical}$ between input queries and generated responses
+        \item Layer-wise information loss in transformer architectures
+        \item Critical threshold where reliable generation becomes impossible
+    \end{itemize}
+    \item \textbf{Information Flow Analysis}:
+    \begin{itemize}
+        \item Track $I(\mathbf{x}; \mathbf{z}_l)$ across transformer layers $l$
+        \item Identify bottleneck layers where information degrades
+        \item Attention mechanism role in preserving/destroying information
+    \end{itemize}
+    \item \textbf{Theoretical Foundation}: Information Bottleneck Principle
+    \item \textbf{Advantage}: No external knowledge bases required for detection
+\end{itemize}
+\end{frame}
+
+% 21. Contrastive MI Estimation Method
+\begin{frame}{Contrastive MI Estimation Method}
+\begin{itemize}
+    \item \textbf{Novel Approach}: Contrastive learning for MI estimation
+    \begin{itemize}
+        \item Learn projections $f_i: \mathbf{z}_{l_i} \rightarrow \mathbb{R}^d$ and $f_j: \mathbf{z}_{l_j} \rightarrow \mathbb{R}^d$
+        \item Maximize similarity for same QA pairs across layers
+        \item Minimize similarity for different QA pairs
+    \end{itemize}
+    \item \textbf{Contrastive Objective}:
+    \begin{align}
+        \mathcal{L} = -\log \frac{\exp(\text{sim}(f_i(\mathbf{z}_{l_i}), f_j(\mathbf{z}_{l_j})) / \tau)}{\sum_{k=1}^{N} \exp(\text{sim}(f_i(\mathbf{z}_{l_i}), f_j(\mathbf{z}_{l_j}^{(k)})) / \tau)}
+    \end{align}
+    \item \textbf{MI Estimation}: $\hat{I}(\mathbf{z}_{l_i}; \mathbf{z}_{l_j})$ from learned representations
+    \item \textbf{Advantages}: Task-specific, scalable, differentiable
+\end{itemize}
+\end{frame}
+
+% 22. System Architecture Details
+\begin{frame}{System Architecture Details}
+\begin{itemize}
+    \item \textbf{Two-Stage Detection Framework}:
+    \begin{itemize}
+        \item \textbf{Stage 1}: Primary LM generates responses + extracts layer embeddings
+        \item \textbf{Stage 2}: Secondary analysis model estimates MI between layers
+        \item Real-time detection during inference
+    \end{itemize}
+    \item \textbf{Training Process}:
+    \begin{itemize}
+        \item Use QA pairs with hallucination labels for contrastive learning
+        \item Learn to distinguish faithful vs. hallucinated responses
+        \item Optimize projection functions for MI estimation
+    \end{itemize}
+    \item \textbf{Detection Mechanism}: $\hat{I}(\mathbf{x}; \mathbf{y}) < \tau_{critical}$ triggers hallucination alert
+    \item \textbf{Cross-Architecture Compatibility}: GPT, BERT, T5, Mamba
+\end{itemize}
+\end{frame}
+
+% 23. Experimental Design and Datasets
+\begin{frame}{Experimental Design and Datasets}
+\begin{itemize}
+    \item \textbf{Validation Strategy}:
+    \begin{itemize}
+        \item \textbf{Synthetic datasets}: Ground truth MI for method validation
+        \item \textbf{Real-world benchmarks}: HaluEval, TruthfulQA, FEVER, HalluLens
+        \item Cross-method consistency analysis (MINE, InfoNCE, kernel-based)
+    \end{itemize}
+    \item \textbf{Evaluation Metrics}:
+    \begin{itemize}
+        \item MI estimation accuracy vs. ground truth
+        \item Hallucination detection: AUROC, precision, recall, F1
+        \item Bias-variance decomposition of MI estimates
+    \end{itemize}
+    \item \textbf{Model Coverage}: GPT-3.5/4, BERT, T5, LLaMA, Mamba architectures
+    \item \textbf{Ablation Studies}: Projection architecture, temperature, negative sampling
+\end{itemize}
+\end{frame}
+
+% 24. Results and Performance Analysis
+\begin{frame}{Results and Performance Analysis}
+\begin{itemize}
+    \item \textbf{MI Estimation Performance}:
+    \begin{itemize}
+        \item Superior accuracy on QA-specific tasks vs. general MI methods
+        \item Computational efficiency: 10-100x faster than MINE
+        \item Robust performance across different model scales and architectures
+    \end{itemize}
+    \item \textbf{Hallucination Detection Results}:
+    \begin{itemize}
+        \item Target: $>$85\% AUROC on major benchmarks (HaluEval, TruthfulQA)
+        \item Real-time detection with $<$50ms latency overhead
+        \item Cross-architecture generalization without retraining
+    \end{itemize}
+    \item \textbf{Information Flow Insights}:
+    \begin{itemize}
+        \item Identify critical layers where hallucinations emerge
+        \item Quantify attention mechanism role in information preservation
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 25. Hallucination Detection: Key Takeaways
+\begin{frame}{Hallucination Detection: Key Takeaways}
+\begin{itemize}
+    \item \textbf{Theoretical Innovation}:
+    \begin{itemize}
+        \item First information-theoretic framework for hallucination detection
+        \item Novel contrastive MI estimation method for transformer architectures
+        \item Principled connection between information flow and generation reliability
+    \end{itemize}
+    \item \textbf{Practical Advantages}:
+    \begin{itemize}
+        \item Real-time detection without external knowledge bases
+        \item Cross-architecture compatibility (GPT, BERT, T5, Mamba)
+        \item Scalable to large language models with minimal overhead
+    \end{itemize}
+    \item \textbf{Research Impact}:
+    \begin{itemize}
+        \item Opens new research directions in information-theoretic AI safety
+        \item Enables targeted interventions at critical transformer layers
+        \item Foundation for next-generation trustworthy AI systems
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% SECTION 4: RESEARCH TIMELINE AND CONCLUSION (3 slides, ~6 minutes)
+\section{Timeline \& Conclusion}
+
+% 26. Research Timeline
+\begin{frame}{Research Timeline}
+\begin{itemize}
+    \item \textbf{Phase 1: Foundation \& Method Development (Months 1-4)}:
+    \begin{itemize}
+        \item Theoretical framework refinement and prototype analysis
+        \item Implementation optimization and baseline comparisons
+        \item Infrastructure setup for large-scale experiments
+    \end{itemize}
+    \item \textbf{Phase 2: Large-Scale Validation (Months 5-8)}:
+    \begin{itemize}
+        \item Foundation model integration (GPT, BERT, T5, Mamba)
+        \item MI-hallucination correlation studies and detection system development
+        \item Cross-architecture validation and performance benchmarking
+    \end{itemize}
+    \item \textbf{Phase 3: Applications \& Deployment (Months 9-12)}:
+    \begin{itemize}
+        \item Domain-specific applications and intervention strategies
+        \item Comprehensive evaluation and open-source implementation
+        \item Research dissemination and community adoption
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 27. Expected Impact and Significance
+\begin{frame}{Expected Impact and Significance}
+\begin{itemize}
+    \item \textbf{Theoretical Contributions}:
+    \begin{itemize}
+        \item First comprehensive information-theoretic framework for AI safety
+        \item Novel understanding of failure modes in OOD detection and hallucination
+        \item Principled connection between information theory and model reliability
+    \end{itemize}
+    \item \textbf{Practical Applications}:
+    \begin{itemize}
+        \item Real-time detection systems for safety-critical deployments
+        \item Cross-architecture compatibility enabling broad adoption
+        \item Open-source tools for community use and further research
+    \end{itemize}
+    \item \textbf{Broader Impact}:
+    \begin{itemize}
+        \item Enhanced trustworthiness of AI systems in healthcare, finance, autonomous vehicles
+        \item New research directions in information-theoretic AI safety
+        \item Foundation for next-generation reliable machine learning systems
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% 28. Questions and Discussion
+\begin{frame}{Questions and Discussion}
+\begin{center}
+\Huge Thank you!
+
+\vspace{2cm}
+
+\Large Questions?
+\end{center}
+\end{frame}
+
+\end{document}
+

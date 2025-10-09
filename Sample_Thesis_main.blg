@@ -16,50 +16,52 @@ The style file: iclr2025_conference.bst
 Reallocating 'name_of_file' (item size: 1) to 13 items.
 Reallocating 'name_of_file' (item size: 1) to 14 items.
 A level-1 auxiliary file: AppendixA.aux
+Reallocating 'name_of_file' (item size: 1) to 14 items.
+A level-1 auxiliary file: AppendixB.aux
 Database file #1: Bibliography.bib
 Warning--entry type for "rock_data" isn't style-file defined
---line 201 of file Bibliography.bib
+--line 401 of file Bibliography.bib
 Warning--can't use both volume and number fields in esmaeilpour2022zero
 Warning--empty journal in netzer2011reading
-You've used 123 entries,
+You've used 126 entries,
             2773 wiz_defined-function locations,
-            1208 strings with 30678 characters,
-and the built_in function-call counts, 72064 in all, are:
-= -- 6215
-> -- 5333
-< -- 61
-+ -- 1790
-- -- 1663
-* -- 6173
-:= -- 10986
-add.period$ -- 383
-call.type$ -- 123
-change.case$ -- 909
-chr.to.int$ -- 119
-cite$ -- 248
-duplicate$ -- 2968
-empty$ -- 5076
-format.name$ -- 1814
-if$ -- 15105
-int.to.chr$ -- 5
+            1221 strings with 31197 characters,
+and the built_in function-call counts, 73425 in all, are:
+= -- 6330
+> -- 5423
+< -- 62
++ -- 1821
+- -- 1690
+* -- 6287
+:= -- 11197
+add.period$ -- 392
+call.type$ -- 126
+change.case$ -- 927
+chr.to.int$ -- 121
+cite$ -- 254
+duplicate$ -- 3032
+empty$ -- 5187
+format.name$ -- 1846
+if$ -- 15387
+int.to.chr$ -- 6
 int.to.str$ -- 1
-missing$ -- 117
-newline$ -- 628
-num.names$ -- 494
-pop$ -- 1850
+missing$ -- 120
+newline$ -- 643
+num.names$ -- 506
+pop$ -- 1887
 preamble$ -- 1
-purify$ -- 787
+purify$ -- 802
 quote$ -- 0
-skip$ -- 2576
+skip$ -- 2620
 stack$ -- 0
-substring$ -- 2579
-swap$ -- 548
+substring$ -- 2610
+swap$ -- 554
 text.length$ -- 39
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 1348
+type$ -- 1381
 warning$ -- 2
-while$ -- 538
+while$ -- 549
 width$ -- 0
-write$ -- 1585
+write$ -- 1622
 (There were 3 warnings)

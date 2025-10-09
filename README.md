@@ -72,3 +72,9 @@ This work is licensed under [appropriate license - to be determined].
 ## Contact
 
 Hong Yang - [email] - [institution]
+
+## Notes 
+
+Add citations to references 
+Add ICLR 2025 paper to label blindness 
+Make a clear distinction between completed and proposed work 

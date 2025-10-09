@@ -1,4 +1,4 @@
-\begin{thebibliography}{123}
+\begin{thebibliography}{126}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -458,6 +458,12 @@ Ralph Linsker.
 \newblock Self-organization in a perceptual network.
 \newblock \emph{Computer}, 21\penalty0 (3):\penalty0 105--117, 1988.
 
+\bibitem[Liu \& Qin(2025)Liu and Qin]{liu2025detecting}
+Litian Liu and Yao Qin.
+\newblock Detecting out-of-distribution through the lens of neural collapse.
+\newblock \emph{IEEE Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, 2025.
+
 \bibitem[Liu et~al.(2020)Liu, Wang, Owens, and Li]{liu2020energy}
 Weitang Liu, Xiaoyun Wang, John Owens, and Yixuan Li.
 \newblock Energy-based out-of-distribution detection.
@@ -697,6 +703,12 @@ sumanthvrao.
 \newblock URL \url{https://www.kaggle.com/datasets/sumanthvrao/yoga-poses}.
 \newblock Version 6.
 
+\bibitem[Sun et~al.(2021)Sun, Guo, and Li]{sun2021react}
+Yiyou Sun, Chuan Guo, and Yixuan Li.
+\newblock React: Out-of-distribution detection with rectified activations.
+\newblock \emph{Advances in neural information processing systems},
+  34:\penalty0 144--157, 2021.
+
 \bibitem[Sun et~al.(2022)Sun, Ming, Zhu, and Li]{sun2022out}
 Yiyou Sun, Yifei Ming, Xiaojin Zhu, and Yixuan Li.
 \newblock Out-of-distribution detection with deep nearest neighbors.
@@ -788,15 +800,23 @@ Aolin Xu and Maxim Raginsky.
 \newblock \emph{IEEE Transactions on Information Theory}, 63\penalty0
   (9):\penalty0 5948--5964, 2017.
 
-\bibitem[Xu et~al.(2024)Xu, Yu, Xu, Inkawhich, and Chen]{pmlr-v235-xu24ae}
+\bibitem[Xu et~al.(2024{\natexlab{a}})Xu, Yu, Xu, Inkawhich, and
+  Chen]{pmlr-v235-xu24ae}
 Chenhui Xu, Fuxun Yu, Zirui Xu, Nathan Inkawhich, and Xiang Chen.
 \newblock Out-of-distribution detection via deep multi-comprehension ensemble.
 \newblock In Ruslan Salakhutdinov, Zico Kolter, Katherine Heller, Adrian
   Weller, Nuria Oliver, Jonathan Scarlett, and Felix Berkenkamp (eds.),
   \emph{Proceedings of the 41st International Conference on Machine Learning},
   volume 235 of \emph{Proceedings of Machine Learning Research}, pp.\
-  55465--55489. PMLR, 21--27 Jul 2024.
+  55465--55489. PMLR, 21--27 Jul 2024{\natexlab{a}}.
 \newblock URL \url{https://proceedings.mlr.press/v235/xu24ae.html}.
+
+\bibitem[Xu et~al.(2024{\natexlab{b}})Xu, Chen, Franchi, and Yao]{xuscaling}
+Kai Xu, Rongyu Chen, Gianni Franchi, and Angela Yao.
+\newblock Scaling for training time and post-hoc out-of-distribution detection
+  enhancement.
+\newblock In \emph{The Twelfth International Conference on Learning
+  Representations}, 2024{\natexlab{b}}.
 
 \bibitem[Yang et~al.(2025)Yang, Yu, and Desell]{yangcan}
 Hong Yang, Qi~Yu, and Travis Desell.

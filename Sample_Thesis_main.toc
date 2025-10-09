@@ -232,3 +232,21 @@
 \contentsline {subsection}{\numberline {A.3.2}Independence of Filtered Distributions}{140}{}%
 \contentsline {subsection}{\numberline {A.3.3}Strict Label Blindness in Filtered Distributions - Guaranteed OOD Failure}{141}{}%
 \contentsline {subsection}{\numberline {A.3.4}Unavoidable Risk of Overlapping Out of Distribution Data}{143}{}%
+\contentsline {chapter}{\numberline {B}Theoretical Proofs for Domain Feature Collapse}{144}{}%
+\contentsline {section}{\numberline {B.1}Properties of Mutual Information and Entropy}{144}{}%
+\contentsline {section}{\numberline {B.2}Main Theorems and Proofs}{145}{}%
+\contentsline {subsection}{\numberline {B.2.1}Lower Bound of Mutual Information for Sufficiency}{146}{}%
+\contentsline {subsection}{\numberline {B.2.2}Factorization of Bottleneck Loss}{147}{}%
+\contentsline {subsection}{\numberline {B.2.3}Conditional Mutual Information of Noise}{147}{}%
+\contentsline {subsection}{\numberline {B.2.4}Domain Feature Collapse}{149}{}%
+\contentsline {section}{\numberline {B.3}Theorems and Proofs of Previous Work}{153}{}%
+\contentsline {subsection}{\numberline {B.3.1}Sufficiency}{153}{}%
+\contentsline {section}{\numberline {B.4}Two Stage Domain Filter}{155}{}%
+\contentsline {section}{\numberline {B.5}Detailed Experimental Setup}{156}{}%
+\contentsline {subsection}{\numberline {B.5.1}Adjacent OOD Construction}{156}{}%
+\contentsline {subsection}{\numberline {B.5.2}Cross Entropy ResNet50}{156}{}%
+\contentsline {subsection}{\numberline {B.5.3}Cross Entropy DinoV2}{156}{}%
+\contentsline {subsection}{\numberline {B.5.4}Supervised Contrastive Learning ResNet50}{157}{}%
+\contentsline {section}{\numberline {B.6}Detailed Experimental Results}{157}{}%
+\contentsline {subsection}{\numberline {B.6.1}OOD Method References}{157}{}%
+\contentsline {subsection}{\numberline {B.6.2}Experimental Results Summary}{157}{}%

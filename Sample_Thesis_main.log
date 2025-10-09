@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  25 SEP 2025 14:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.8.14)  25 SEP 2025 16:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -828,7 +828,7 @@ File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 \l__pdf_internal_box=\box136
 ) (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
 (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux)
-(AppendixA.aux))
+(AppendixA.aux) (AppendixB.aux))
 \openout1 = `Sample_Thesis_main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
@@ -958,18 +958,18 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write4
 \openout4 = `Sample_Thesis_main.toc'.
 
- [16] (Sample_Thesis_main.lof)
+ [16] [17] (Sample_Thesis_main.lof)
 \tf@lof=\write5
 \openout5 = `Sample_Thesis_main.lof'.
 
- [17
 
-]
-(Sample_Thesis_main.lot)
+[18
+
+] (Sample_Thesis_main.lot)
 \tf@lot=\write6
 \openout6 = `Sample_Thesis_main.lot'.
 
- [18
+ [19
 
 ]
 Chapter 1.
@@ -1025,7 +1025,7 @@ n We Ig-nore La-bels in Out-of-Distribution
 [31
 
 ]
-<images/gradcam_example_faces.png, id=181, 716.6775pt x 359.54324pt>
+<images/gradcam_example_faces.png, id=184, 716.6775pt x 359.54324pt>
 File: images/gradcam_example_faces.png Graphic file (type png)
 <use images/gradcam_example_faces.png>
 Package pdftex.def Info: images/gradcam_example_faces.png  used on input line 6
@@ -1051,12 +1051,12 @@ ks al-most ex-clu-sively use in-distribution
 [47
 
 ] [48] [49] [50] [51] [52] [53]
-Overfull \hbox (20.535pt too wide) in paragraph at lines 1015--1034
+Overfull \hbox (20.535pt too wide) in paragraph at lines 1017--1036
  [][] 
  []
 
 [54]
-Overfull \hbox (11.06973pt too wide) in paragraph at lines 1058--1076
+Overfull \hbox (11.06973pt too wide) in paragraph at lines 1060--1078
  [][] 
  []
 
@@ -1064,7 +1064,7 @@ Overfull \hbox (11.06973pt too wide) in paragraph at lines 1058--1076
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Overfull \hbox (21.14633pt too wide) in paragraph at lines 1088--1106
+Overfull \hbox (21.14633pt too wide) in paragraph at lines 1090--1108
  [][] 
  []
 
@@ -1111,13 +1111,13 @@ Chapter 7.
 
 
 ] [98] [99] [100] [101]
-Overfull \hbox (4.01564pt too wide) in paragraph at lines 1313--1314
+Overfull \hbox (4.01564pt too wide) in paragraph at lines 1315--1316
 []\OT1/cmr/m/n/10.95 Our anal-y-sis ex-tends to hallucination-specific bench-ma
 rks in-clud-ing HaluE-val, Truth-fulQA, FEVER,
  []
 
 [102] [103]
-Overfull \hbox (9.73389pt too wide) in paragraph at lines 1337--1338
+Overfull \hbox (9.73389pt too wide) in paragraph at lines 1339--1340
 \OT1/cmr/m/n/10.95 The tenth month fo-cuses on de-vel-op-ing proac-tive in-ter-
 ven-tion strate-gies that lever-age our information-
  []
@@ -1147,7 +1147,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 179--184
  []
 
 [119] [120] [121] [122] [123] [124]
-Underfull \hbox (badness 1931) in paragraph at lines 689--693
+Underfull \hbox (badness 1931) in paragraph at lines 695--699
 []\OT1/cmr/m/n/10.95 Aditya Soni.  Play-ing cards dataset, 2020.  URL $\OT1/cmt
 t/m/n/10.95 https : / / www . kaggle . com / datasets /
  []
@@ -1173,20 +1173,31 @@ now that in-de-pen-dent func-tions stay in-de-pen-dent and thus $\OML/cmm/m/it/
 m/n/10.95 ) =
  []
 
-[142]) [143] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
+[142]) [143]
+\openout2 = `AppendixB.aux'.
+
+ (AppendixB.tex
+Appendix B.
+[144
+
+
+
+
+] [145] [146] [147] [148] [149] [150] [151] [152] [153] [154] [155]
+[156] [157]) [158] (Sample_Thesis_main.aux (CoverPage.aux) (Abstract.aux)
 (Acknowledgements.aux) (Dedication.aux) (Chapter6_Hallucinations.aux)
-(AppendixA.aux))
+(AppendixA.aux) (AppendixB.aux))
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 20279 strings out of 474486
- 416354 string characters out of 5743755
+ 20337 strings out of 474486
+ 417705 string characters out of 5743755
  1954542 words of memory out of 5000000
- 42127 multiletter control sequences out of 15000+600000
- 574875 words of font info for 97 fonts, out of 8000000 for 9000
+ 42177 multiletter control sequences out of 15000+600000
+ 575176 words of font info for 98 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,16n,87p,1240b,822s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\HongM\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
@@ -1197,32 +1208,33 @@ ype1/public/amsfonts/cm/cmbx6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX
 /fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/HongM/AppData/Local/Program
 s/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/HongM/AppData/Local
 /Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Users/HongM/Ap
-pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users
-/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-<C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-mi5.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfon
-ts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX
-/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppData/Local/P
-rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/HongM/AppData
-/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/HongM
-/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/User
-s/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><
-C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr
-8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
-msfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppData/Local/Pr
-ograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/HongM/AppData
-/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Hong
-M/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-
-Output written on Sample_Thesis_main.pdf (161 pages, 1064935 bytes).
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/User
+s/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb
+><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
+mmi10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
+onts/cm/cmmi5.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmmi6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/t
+ype1/public/amsfonts/cm/cmmi8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users/HongM/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb><C:/Users/HongM/AppDa
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/Hon
+gM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/U
+sers/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pf
+b><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmr6.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr8.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmr9.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmsl10.pfb><C:/Users/HongM/AppData/Local/Programs/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/HongM/AppData/Local/Programs
+/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/HongM/AppData/Local/
+Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/HongM/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Hon
+gM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/
+Users/HongM/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/m
+sbm10.pfb>
+Output written on Sample_Thesis_main.pdf (177 pages, 1113123 bytes).
 PDF statistics:
- 662 PDF objects out of 1000 (max. 8388607)
+ 718 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

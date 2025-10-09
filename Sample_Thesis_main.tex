@@ -922,6 +922,8 @@ Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent varia
 The proof follows from the information bottleneck principle and the independence of domain and class features in single-domain settings. Since $\rvx_\rvd$ and $\rvx_\rvy$ are independent ($I(\rvx_\rvd:\rvx_\rvy) = 0$) and the domain label $\rvd$ is constant for all training samples, the domain features $\rvx_\rvd$ provide no information about the class label $\rvy$ within the training distribution.
 
 Under the information bottleneck objective, the representation $\rvz$ seeks to minimize $I(\rvx; \rvz)$ while maximizing $I(\rvz; \rvy)$. Since $I(\rvx_\rvd; \rvy) = 0$ in the training distribution, including domain features in $\rvz$ would increase the complexity term $I(\rvx; \rvz)$ without contributing to the utility term $I(\rvz; \rvy)$. Therefore, the optimal representation under bottleneck compression will satisfy $I(\rvx_\rvd; \rvz) = 0$.
+
+The complete formal proof with detailed mathematical derivations is provided in Appendix~\ref{app:domain_proofs}.
 \end{proof}
 
 Intuitively, the minimal sufficient representation cannot encode any information independent of the learning objective, otherwise it would not be minimal. Due to the definition of $\rvx_\rvd$ as domain features independent of class features, it is clear that compression results in the loss of domain features in the learned representation. This is contrary to the desired outcome, which is to learn $\hat{\rvy} = g(\rvx_\rvd, \rvx_\rvy)$, as this would match the labeling function $\rvy = f_\rvy(\rvx_\rvd, \rvx_\rvy)$. Instead, the model learns $\hat{\rvy} = g(\rvx_\rvy)$ because the domain features $\rvx_\rvd$ are not predictive of the class in the context of the training data.
@@ -960,7 +962,7 @@ We evaluate a K-nearest neighbors (KNN)-based domain filter, similar to a KNN-ba
 \end{algorithmic}
 \end{algorithm}
 
-This process ensures that only a small percentage (1\%) of in-domain samples will be flagged as false positives in the first stage. While there are alternative distance calculation methods and percentile thresholds available, we find that a KNN filter at the 99th percentile with $K = 50$ works well as a first stage domain filter.
+This process ensures that only a small percentage (1\%) of in-domain samples will be flagged as false positives in the first stage. While there are alternative distance calculation methods and percentile thresholds available, we find that a KNN filter at the 99th percentile with $K = 50$ works well as a first stage domain filter. A more detailed algorithmic description with implementation details is provided in Appendix~\ref{app:twostageapp}.
 
 \subsection{Relationship to Near, Far, and Adjacent OOD}
 
@@ -1002,7 +1004,7 @@ For each narrow domain dataset, we generate ID train, ID validation, ID test, an
 \item \textbf{Supervised Contrastive Learning ResNet50 (SC ResNet)}: ResNet50 trained using supervised contrastive learning for 500 epochs using SGD optimizer with initial learning rate of 0.5 and temperature of 0.5
 \end{itemize}
 
-For OOD evaluation, we use both in-domain and out-of-domain benchmarks. The out-of-domain OOD benchmark includes datasets from OpenOOD \citep{zhang2023openood}: MNIST \citep{lecun1998gradient}, SVHN \citep{netzer2011reading}, Texture \citep{cimpoi2014describing}, Places365 \citep{zhou2017places}, CIFAR10/100 \citep{cifar10}, and Tiny ImageNet. For in-domain OOD evaluation, we use the adjacent OOD benchmark \citep{yangcan}.
+For OOD evaluation, we use both in-domain and out-of-domain benchmarks. The out-of-domain OOD benchmark includes datasets from OpenOOD \citep{zhang2023openood}: MNIST \citep{lecun1998gradient}, SVHN \citep{netzer2011reading}, Texture \citep{cimpoi2014describing}, Places365 \citep{zhou2017places}, CIFAR10/100 \citep{cifar10}, and Tiny ImageNet. For in-domain OOD evaluation, we use the adjacent OOD benchmark \citep{yangcan}. Complete experimental setup details, including hyperparameters, training procedures, and evaluation protocols, are provided in Appendix~\ref{app:setup}.
 
 \subsection{Results and Analysis}
 
@@ -1049,7 +1051,7 @@ For example, on the Colon dataset, ReAct achieves the best in-domain performance
 
 \subsection{Detailed Results by Dataset}
 
-To provide additional insight into the performance characteristics across different single-domain datasets, Table \ref{tab:fpr95_selected} shows FPR@95 results for a representative subset of Domain Bench datasets. This table highlights the variability in both in-domain and out-of-domain performance across different application domains.
+To provide additional insight into the performance characteristics across different single-domain datasets, Table \ref{tab:fpr95_selected} shows FPR@95 results for a representative subset of Domain Bench datasets. This table highlights the variability in both in-domain and out-of-domain performance across different application domains. Comprehensive experimental results across all datasets and methods are provided in Appendix~\ref{app:expresult}.
 
 \begin{table}[h]
 \centering
@@ -1496,6 +1498,7 @@ The proposed work represents a significant step toward the goal of developing AI
 % (OPTIONAL) Appendices
 \begin{appendices}
 \include{AppendixA}
+\include{AppendixB}
 \end{appendices}
 
 \end{document}

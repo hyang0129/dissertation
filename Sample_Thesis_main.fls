@@ -259,6 +259,9 @@ INPUT Chapter6_Hallucinations.aux
 INPUT .\AppendixA.aux
 INPUT .\AppendixA.aux
 INPUT AppendixA.aux
+INPUT .\AppendixB.aux
+INPUT .\AppendixB.aux
+INPUT AppendixB.aux
 OUTPUT Sample_Thesis_main.aux
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
@@ -394,6 +397,13 @@ OUTPUT AppendixA.aux
 INPUT .\AppendixA.tex
 INPUT .\AppendixA.tex
 INPUT AppendixA.tex
+INPUT .\AppendixB.tex
+INPUT .\AppendixB.tex
+OUTPUT AppendixB.aux
+INPUT .\AppendixB.tex
+INPUT .\AppendixB.tex
+INPUT AppendixB.tex
+INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmcsc10.tfm
 INPUT Sample_Thesis_main.aux
 INPUT .\CoverPage.aux
 INPUT .\CoverPage.aux
@@ -413,6 +423,9 @@ INPUT Chapter6_Hallucinations.aux
 INPUT .\AppendixA.aux
 INPUT .\AppendixA.aux
 INPUT AppendixA.aux
+INPUT .\AppendixB.aux
+INPUT .\AppendixB.aux
+INPUT AppendixB.aux
 INPUT C:\Users\HongM\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\tcrm1095.pk
 INPUT C:\Users\HongM\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\tcrm1095.pk
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
@@ -427,6 +440,8 @@ INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\c
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx9.pfb
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbxti10.pfb
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmbxti10.pfb
+INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmcsc10.pfb
+INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmcsc10.pfb
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
 INPUT C:\Users\HongM\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb

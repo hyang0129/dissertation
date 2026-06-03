@@ -1,0 +1,96 @@
+% Standalone document: Dataset descriptions extracted from
+% Yang et al., "Domain Feature Collapse: Implications for Out-of-Distribution Detection and Solutions"
+% 
+% This document contains:
+%   1. The "Single-Domain Datasets" subsection from the Experiments section
+%   2. The "In and Out-of-Domain OOD Benchmarking" subsection (dataset definitions)
+%   3. The full "Single Domain Dataset Details" appendix section
+%   4. All related bibliography entries (in datasets.bib)
+
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\title{Dataset Descriptions for Domain Bench:\\Extracted from the Domain Feature Collapse Paper}
+\author{Hong Yang, Devroop Kar, Qi Yu, Alex Ororbia, Travis Desell\\
+Rochester Institute of Technology}
+\date{}
+
+\begin{document}
+\maketitle
+
+%% ================================================================
+%% Section 1: Benchmark Design (from Experiments, Sec 4)
+%% ================================================================
+\section{In and Out-of-Domain OOD Benchmarking}
+\label{sec:domainbench}
+
+Our experimental evaluation distinguishes between two types of OOD samples based on domain characteristics:
+
+\paragraph{Out-of-Domain OOD.} These are samples from entirely different domains than the training data. For example, when training on EuroSat (satellite imagery), out-of-domain OOD samples include MNIST (handwritten digits), SVHN (street numbers), medical images, etc. These samples differ fundamentally in their domain features from the training domain. For the out-of-domain OOD benchmark, we use the following datasets as provided by OpenOOD \cite{zhang2023openood}: MNIST \citep{lecun1998gradient}, SVHN \citep{netzer2011reading}, Texture \citep{cimpoi2014describing}, Places365 \citep{zhou2017places}, Cifar10/100 \citep{cifar10}, and Tiny Image Net \citep{deng2009imagenet}. We also add samples from Chest X-rays \citep{yang2023medmnist} into the out-of-domain OOD benchmark, as it does not share a domain with the Tissue or Colon ID datasets.
+
+\paragraph{In-Domain OOD.} These are samples that share the same domain as the training data but belong to classes not seen during training. For example, when training on a subset of EuroSat classes (e.g., ``Residential'' and ``Industrial''), in-domain OOD samples are other EuroSat classes (e.g., ``Forest'' and ``River'') that were held out. These samples share domain features (satellite imagery characteristics) but have different class labels. To construct in-domain OOD sets, we use the adjacent OOD benchmark methodology proposed by \cite{yangcan}, which randomly selects $1/3$ of the original dataset's classes to serve as in-domain OOD. Because this class selection affects performance variance, we repeat our experiments 5 times with 5 different random seeds.
+
+
+%% ================================================================
+%% Section 2: Single-Domain Datasets Summary (from Experiments, Sec 4)
+%% ================================================================
+\section{Single-Domain Datasets}
+\label{sec:datasets}
+
+We use $8$ single-domain datasets where all training samples share common domain features, ensuring domain features are independent of class features. Datasets include: \textbf{Colon} (pathology \citep{yang2023medmnist}), \textbf{Eurosat} (satellite land use \citep{helber2019eurosat}), \textbf{Fashion} (FashionMNIST \citep{fashion}), \textbf{Food} (Food101 \citep{food}), \textbf{Garbage} (waste materials \citep{single2023realwaste}), \textbf{Rock} (minerals \citep{rock_data}), \textbf{Tissue} (kidney cortex \citep{yang2023medmnist}), and \textbf{Yoga} (poses \citep{yoga_data}).
+
+
+%% ================================================================
+%% Section 3: Detailed Dataset Descriptions (from Appendix)
+%% ================================================================
+\section{Single Domain Dataset Details}
+\label{sec:dataset_details}
+
+\subsection{Colon} This is a colon pathology dataset with different diseases labeled \citep{yang2023medmnist}. This dataset consists of 89,996 images in 9 different classes of colon disease.
+
+\subsection{Eurosat} This is a satellite images dataset for classifying different types of land use \citep{helber2019eurosat}. It contains 27,000 labeled images and only RGB images were used from the dataset.
+
+\subsection{Fashion} The FashionMNIST dataset describing different articles of clothing \citep{fashion}. It consists of 70,000 grey scale images labeled into 10 classes.
+
+\subsection{Food} The Food101 dataset \citep{food} contains $101$ classes of different types of food. It consists of 101,000 images with 1000 images per class.
+
+\subsection{Garbage} This is a dataset to classify the material of different waste objects \citep{single2023realwaste}. The dataset is split into 9 classes with more than 4000 images and at least 300 images per class.
+
+\subsection{Rock} This is a dataset of different types of rocks and minerals \citep{rock_data}. It consists of 7 different classes across more than 2000 images.
+
+\subsection{Tissue} This is a kidney cortex microscope dataset with various types of tissue labeled \citep{yang2023medmnist}. It consists of over 200,000 images across 8 different classes.
+
+\subsection{Yoga} This is a dataset of people performing different yoga poses from the internet \citep{yoga_data}. It consists of 2,964 images across 6 classes.
+
+
+%% ================================================================
+%% Section 4: Out-of-Domain OOD Datasets (for reference)
+%% ================================================================
+\section{Out-of-Domain OOD Datasets}
+\label{sec:ood_datasets}
+
+The following datasets are used as out-of-domain OOD benchmarks (sourced from OpenOOD \citep{zhang2023openood} unless noted):
+
+\begin{itemize}
+    \item \textbf{MNIST} \citep{lecun1998gradient}: Handwritten digit recognition. 70,000 greyscale images across 10 classes.
+    \item \textbf{SVHN} \citep{netzer2011reading}: Street View House Numbers. Over 600,000 digit images from Google Street View.
+    \item \textbf{Texture} \citep{cimpoi2014describing}: Describable Textures Dataset (DTD). 5,640 images across 47 texture categories.
+    \item \textbf{Places365} \citep{zhou2017places}: Scene recognition dataset with 365 scene categories.
+    \item \textbf{CIFAR-10/100} \citep{cifar10}: 60,000 color images in 10/100 classes.
+    \item \textbf{Tiny ImageNet} \citep{deng2009imagenet}: Subset of ImageNet with 200 classes, images resized to 64$\times$64.
+    \item \textbf{Chest X-ray} \citep{yang2023medmnist}: Medical chest X-ray images from MedMNIST. Added to the OOD benchmark as it does not share a domain with the Tissue or Colon ID datasets.
+\end{itemize}
+
+
+%% ================================================================
+%% Bibliography
+%% ================================================================
+\bibliographystyle{plainnat}
+\bibliography{datasets}
+
+\end{document}

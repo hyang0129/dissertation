@@ -1,0 +1,126 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\setlist[itemize]{leftmargin=*, itemsep=2pt, topsep=2pt}
+
+\title{Filled Content Entry: TGT for OOD Detection (ECCV 2026)}
+\author{Project Entry}
+\date{Last Updated: 2026-03-09}
+
+\begin{document}
+
+\maketitle
+
+\section*{Global Metadata}
+\begin{itemize}
+    \item \textbf{Name of entry:} Teacher-Guided Training for Single-Domain OOD Detection (ECCV 2026)
+    \item \textbf{Entry type:} research project
+    \item \textbf{One-line summary:} First-authored research paper (submitted to ECCV 2026) introducing Teacher-Guided Training (TGT), a method that restores domain-sensitive feature geometry in single-domain models for reliable out-of-distribution detection.
+    \item \textbf{Priority for resume use:} high
+\end{itemize}
+
+\section*{Evidence and Constraints}
+\begin{itemize}
+    \item \textbf{Known facts:}
+    \begin{itemize}
+        \item Paper submitted to ECCV 2026 (submission ID 8208), currently under review.
+        \item Full experimental pipeline built on top of the OpenOOD framework.
+        \item Evaluated across 8 single-domain image classification benchmarks (Colon, Tissue, EuroSAT, Fashion, Food, Rock, Yoga, Garbage).
+        \item Two backbone architectures: ResNet-50 and DINOv2 ViT-S/14.
+        \item Eight post-hoc OOD scoring methods evaluated (MSP, EBO, MDS, kNN, ViM, ReAct, SCALE, NCI).
+        \item Theory section formalizes Domain-Sensitivity Collapse (DSC) with testable geometric predictions.
+        \item SLURM-based training on A100 GPUs.
+    \end{itemize}
+    \item \textbf{Unknowns/placeholders:}
+    \begin{itemize}
+        \item Exact FPR@95 improvement numbers are stored as LaTeX macros; representative claims use ``double-digit pp'' reductions for distance-based scorers.
+        \item Acceptance decision pending.
+    \end{itemize}
+    \item \textbf{Numbers and metrics available:}
+    \begin{itemize}
+        \item MDS FPR@95 reduction on ResNet-50: double-digit pp improvement on out-of-domain OOD.
+        \item ViM and kNN FPR@95 also improve by double-digit pp on ResNet-50.
+        \item Classification accuracy maintained or slightly improved.
+        \item Effective rank ($r_{\mathrm{eff}}$) increases by +20 to +120 after TGT across datasets.
+        \item Null-space energy separation confirmed in 28/30 CE and 29/30 TGT splits across severe-DSC datasets.
+    \end{itemize}
+    \item \textbf{No-claim zones:}
+    \begin{itemize}
+        \item Do not claim specific numeric FPR@95 values without referencing the paper's macro-defined numbers.
+        \item Do not claim TGT solves in-domain near-OOD (acknowledged as largely unsolved in the paper).
+        \item DINOv2 student gains are smaller and less uniform; do not overstate DINOv2 results.
+    \end{itemize}
+\end{itemize}
+
+\section{Project Entry}
+
+\subsection{Header}
+\begin{itemize}
+    \item \textbf{Project name:} Beyond the Class Subspace: Teacher-Guided Training for Reliable Out-of-Distribution Detection in Single-Domain Models
+    \item \textbf{Type:} research (academic paper, ECCV 2026 submission)
+    \item \textbf{Timeline:} 2025 -- March 2026
+    \item \textbf{Team setup:} multi-author collaboration
+    \item \textbf{Link(s):} \url{https://github.com/hyang0129/SubclassOOD}
+\end{itemize}
+
+\subsection{Problem and Scope}
+\begin{itemize}
+    \item \textbf{Objective:} Improve out-of-distribution detection for models trained on single-domain data (e.g., histopathology, satellite imagery, industrial inspection), where standard post-hoc OOD methods degrade sharply because supervised training collapses feature representations into a low-rank class-aligned subspace.
+    \item \textbf{Scale:} 8 single-domain image classification benchmarks (4--101 classes each), 2 backbone architectures (ResNet-50, DINOv2 ViT-S/14), 8 post-hoc OOD scoring methods, both in-domain and out-of-domain OOD evaluation splits.
+    \item \textbf{Main constraints:} No OOD training data available; method must add zero inference overhead; must preserve or improve classification accuracy; must work with any standard post-hoc OOD scorer.
+\end{itemize}
+
+\subsection{Approach}
+\begin{itemize}
+    \item \textbf{Baselines:} Standard cross-entropy (CE) trained ResNet-50 and DINOv2 ViT-S/14; supervised contrastive learning (SupCon) as an alternative DSC-mitigation strategy; Teacher-Only MDS oracle (MDS on frozen DINOv2 features) as an upper bound.
+    \item \textbf{Core method:} Teacher-Guided Training (TGT)---an auxiliary cosine-similarity loss that distills \emph{class-suppressed residual structure} from a frozen DINOv2 teacher into the student during training. Class-discriminative directions are projected out of the teacher features, and the remaining domain-aware residual becomes the auxiliary supervision target. The teacher and auxiliary MLP head are discarded after training.
+    \item \textbf{Data/evaluation strategy:} Per-dataset random splits into in-domain training classes + held-out in-domain OOD classes + out-of-domain OOD sources; FPR@95 as primary metric, AUROC secondary; results averaged across 8 benchmarks. Ablation on $\lambda_{\mathrm{TGT}}$ trade-off parameter.
+    \item \textbf{System implementation:} Built on OpenOOD evaluation framework; SLURM-based distributed training; teacher features computed online per batch; geometry audit pipeline measuring effective rank, participation ratio, and null-space energy to validate DSC predictions.
+\end{itemize}
+
+\subsection{Results}
+\begin{itemize}
+    \item \textbf{Primary outcomes:} TGT yields large out-of-domain FPR@95 reductions for distance-based scorers on ResNet-50 (MDS, ViM, kNN all improve by double-digit pp averaged across 8 benchmarks). In-domain OOD also improves without trading off out-of-domain gains.
+    \item \textbf{Comparative improvement:} CE baseline ResNet-50 $\rightarrow$ TGT ResNet-50: consistent double-digit pp FPR@95 reductions for MDS/ViM/kNN on out-of-domain OOD. Effective rank increases +20 to +120 per dataset. Classification accuracy maintained or slightly improved.
+    \item \textbf{What did not work:}
+    \begin{itemize}
+        \item Supervised contrastive learning (SupCon) did not reliably alleviate DSC---underperformed CE baseline on key distance-based scorers.
+        \item DINOv2 student gains from TGT are smaller and less uniform due to shared architecture/pre-training reducing teacher--student complementarity.
+        \item Logit-based scorers (EBO, MSP, SCALE) can worsen on specific benchmarks because TGT's isotropic redistribution weakens softmax confidence separation.
+        \item In-domain near-OOD remains inherently difficult; geometry repair alone cannot close same-domain feature overlap.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Technical Stack}
+\begin{itemize}
+    \item \textbf{Languages:} Python 3.9
+    \item \textbf{Frameworks:} PyTorch, OpenOOD evaluation framework, DINOv2 (teacher backbone)
+    \item \textbf{Infra:} A100 GPUs via SLURM cluster
+    \item \textbf{Tooling:} LaTeX (ECCV llncs template), NumPy/SciPy for geometry audits, SLURM job scheduling
+\end{itemize}
+
+\subsection{Project Summary for Resume Selection}
+\begin{itemize}
+    \item \textbf{Top resume bullets:}
+    \begin{itemize}
+        \item First-authored ECCV 2026 submission introducing Teacher-Guided Training (TGT), a training-time method that restores domain-sensitive feature geometry for reliable OOD detection in single-domain models with zero inference overhead.
+        \item Formalized Domain-Sensitivity Collapse (DSC) as a geometric failure mode of supervised single-domain learning, with theoretical bounds showing when and why distance-based and logit-based OOD scores fail.
+        \item Reduced out-of-domain FPR@95 by double-digit pp for distance-based scorers (MDS, ViM, kNN) across 8 benchmarks on ResNet-50, while preserving classification accuracy.
+        \item Designed and ran a large-scale evaluation pipeline (2 backbones $\times$ 8 datasets $\times$ 8 scorers $\times$ multiple splits) on a SLURM-managed GPU cluster using the OpenOOD framework.
+    \end{itemize}
+    \item \textbf{Role alignment:} ML research scientist, applied scientist, research engineer, ML engineer
+    \item \textbf{Key keyword coverage:} OOD detection, representation geometry, knowledge distillation, computer vision, single-domain learning, neural collapse, DINOv2, ResNet, PyTorch, large-scale evaluation
+\end{itemize}
+
+\section{Writing Quality Checklist}
+\begin{itemize}
+    \item[$\checkmark$] Every major claim has supporting evidence from the paper.
+    \item[$\checkmark$] Numbers are concrete (double-digit pp reductions, +20 to +120 effective rank gain) and internally consistent.
+    \item[$\checkmark$] No over-claiming; DINOv2 limitations, logit-based score regressions, and in-domain difficulty acknowledged explicitly.
+    \item[$\checkmark$] Problem $\rightarrow$ method $\rightarrow$ impact flow is clear.
+    \item[$\checkmark$] Content is reusable for selective resume extraction.
+\end{itemize}
+
+\end{document}

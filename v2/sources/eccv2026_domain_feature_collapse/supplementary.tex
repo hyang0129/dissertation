@@ -1,0 +1,608 @@
+\documentclass[runningheads]{llncs}
+
+% ---------------------------------------------------------------
+% ECCV 2026 Supplementary Material
+% Compile this file separately to produce the supplementary PDF.
+% Main paper: main.tex
+
+\usepackage[review,year=2026,ID=8208]{eccv}
+\usepackage{eccvabbrv}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[accsupp]{axessibility}
+\usepackage{hyperref}
+\usepackage{orcidlink}
+\usepackage{multirow}
+\usepackage{xcolor}
+
+% ---------------------------------------------------------------
+% Note: llncs already defines theorem, lemma, proposition, corollary,
+% definition, remark, and proof -- no redefinition needed.
+
+% ---------------------------------------------------------------
+% Convenient cross-reference commands
+\newcommand{\secref}[1]{Sec.~\ref{#1}} % Convenience macro: section reference formatting.
+\newcommand{\tabref}[1]{Table~\ref{#1}} % Convenience macro: table reference formatting.
+\newcommand{\figref}[1]{Fig.~\ref{#1}} % Convenience macro: figure reference formatting.
+\newcommand{\eqnref}[1]{Eq.~(\ref{#1})} % Convenience macro: equation reference formatting.
+\newcommand{\code}[1]{\nolinkurl{#1}} % Monospace code/path text with safe line breaks.
+
+\input{results_macros.tex}
+
+\begin{document}
+
+\title{Supplementary Material:\\Beyond the Class Subspace: Teacher-Guided Training for Reliable Out-of-Distribution Detection in Single-Domain Models}
+
+\titlerunning{Supplementary -- Beyond the Class Subspace: TGT for OOD Detection}
+
+\author{First Author\inst{1}\orcidlink{0000-1111-2222-3333} \and
+Second Author\inst{2,3}\orcidlink{1111-2222-3333-4444} \and
+Third Author\inst{3}\orcidlink{2222-3333-4444-5555}}
+
+\authorrunning{F.~Author et al.}
+
+\institute{Princeton University, Princeton NJ 08544, USA \and
+Springer Heidelberg, Tiergartenstr.~17, 69121 Heidelberg, Germany\\
+\and
+ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany}
+
+\maketitle
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\noindent This document provides supplementary material for the main paper.
+Sections, tables, figures, and equations are prefixed with ``S'' to distinguish them from
+those in the main text.
+
+% ================================================================
+%  S1: DATASET DETAILS
+% ================================================================
+\section{Dataset Details}
+\label{sec:supp:datasets}
+
+\tabref{tab:supp:datasets} summarises all 8 single-domain benchmarks used in the
+experiments.  For each dataset we list the total number of classes, the train/withheld
+class split, the training / test split sizes, the image resolution, and the domain-shift
+characteristic.
+
+\begin{table}[h]
+  \centering
+  \caption{Dataset summary. \textbf{Tot.}: total classes. \textbf{Tr./Wh.}: training
+  classes / withheld classes (withheld classes serve as in-domain OOD targets; values
+  from training config YAMLs). $N_{\text{train}}$ and $N_{\text{test}}$ are approximate.
+  For datasets not divisible by~3 (Tissue, EuroSAT, Fashion, Rock) the split
+  approximates the $\tfrac{1}{3}$-withheld protocol.}
+  \label{tab:supp:datasets}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\linewidth}{!}{\begin{tabular}{@{}lrrrrrlp{4.2cm}@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{Tot.} & \textbf{Tr./Wh.}
+      & $N_{\text{train}}$ & $N_{\text{test}}$
+      & \textbf{Res.} & \textbf{Domain characteristic} \\
+    \midrule
+    Colon (PathMNIST)~\cite{yang2023medmnist}     &  9 & 6/3   &  67,497 & 22,499 & $64\times64$   & Sensor-homogeneous: histopathology tiles \\
+    Tissue (TissueMNIST)~\cite{yang2023medmnist}  &  8 & 5/3   & 124,099 & 41,367 & $64\times64$   & Sensor-homogeneous: microscopy tissue slices \\
+    EuroSAT~\cite{helber2019eurosat}               & 10 & 7/3   &  20,250 &  6,750 & $64\times64$   & Sensor-homogeneous: Sentinel-2 satellite \\
+    Fashion (FashionMNIST)~\cite{fashion}          & 10 & 7/3   &  45,000 & 15,000 & $28\times28$   & Sensor-homogeneous: greyscale product images \\
+    Food-101~\cite{food}                           & 101 & 67/34 &  75,750 & 25,250 & $224\times224$ & Semantically narrow: food photography \\
+    Rock (Rock Gallery)~\cite{rock_data}           &  7 & 5/2   &   1,551 &    518 & $224\times224$ & Semantically narrow: macro rock photography \\
+    Yoga (Yoga)~\cite{yoga_data}                   &  6 & 4/2   &   3,576 &  1,193 & $224\times224$ & Semantically narrow: web-sourced pose images \\
+    Garbage (RealWaste)~\cite{single2023realwaste} &  9 & 6/3   &   4,752 &  1,188 & $224\times224$ & Semantically narrow: waste / recycling items \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/eurosat_lambda_ablation_farood_fpr95.png}
+  \caption{EuroSAT out-of-domain (FarOOD) FPR@95 by method across teacher-guidance strengths $\lambda$, averaged over 5 splits. The effect of $\lambda$ is method-dependent: for example, React improves at higher $\lambda$, while SCALE worsens. Many methods also perform poorly at $\lambda=0.5$.}
+  \label{fig:supp:eurosat-lambda-ablation:farood-fpr95}
+\end{figure*}
+
+\paragraph{OOD test sets.}
+For each dataset, we construct in-domain OOD using held-out classes from the same visual domain
+(the OpenOOD ``nearood'' adjacent split for that dataset). Out-of-domain OOD follows the standard
+OpenOOD far-OOD benchmark configuration used in our evaluation pipeline. Concretely, the far-OOD
+pool contains the standard OpenOOD sets MNIST, SVHN, DTD/Textures, Places365, CIFAR-10,
+CIFAR-100, and Tiny-ImageNet (TIN), plus an additional ChestMNIST set. ChestMNIST is not part of
+the standard far-OOD suite and is included to assess performance on data beyond the DINOv2 training
+domain. All test sets are balanced and have no overlap with training data.
+
+\paragraph{Preprocessing.}
+All images are resized to the resolution listed in \tabref{tab:supp:datasets} and
+normalised using ImageNet mean and standard deviation $(0.485,0.456,0.406)$ and
+$(0.229,0.224,0.225)$.  For greyscale datasets (Colon, Tissue, Fashion) channels are
+replicated three times before normalisation.  All other datasets (EuroSAT, Food-101, Rock,
+Yoga, Garbage) provide native RGB images.
+
+
+
+% ================================================================
+%  S2: EXTENDED PROOFS AND THEORY
+% ================================================================
+\section{Extended Proofs}
+\label{sec:supp:proofs}
+
+This section provides full proofs for the theoretical results stated in the main paper.
+
+\subsection{Linear-Model Illustration (Main-Text Companion)}
+\label{sec:supp:toy-linear}
+
+For completeness, we record the linear objective used in the main-text illustration.
+Let $y \in \{\pm 1\}$, $x = y\,a + s$ with class direction $a \in \mathbb{R}^p$, nuisance $s \perp y$, and representation $z = Ax$.
+The regularized logistic objective is
+\begin{equation}
+  \min_{A,w}\;\mathbb{E}\bigl[\log(1 + e^{-y\,w^\top\!Ax})\bigr] + \tfrac{\lambda}{2}(\|w\|_2^2 + \|A\|_F^2).
+  \label{eq:supp:toy-loss}
+\end{equation}
+An optimum $A^\star$ can be chosen with row space in $\mathrm{span}(a)$, because the component orthogonal to $a$ carries no label signal while increasing the regularizer.
+Hence for an OOD shift $\delta \in \mathrm{span}(a)^\perp$, one has $z_{\mathrm{OOD}} - z_{\mathrm{ID}} = A^\star\delta \approx 0$.
+
+\subsection{Proof of Theorem~1 (Distance Failure under Variance--Discriminability Mismatch)}
+\label{sec:supp:proof-thm1}
+
+We restate the theorem for convenience.
+
+\begin{theorem}[Distance failure]\label{thm:supp:dist-fail}
+Let $\lambda_1 \ge \cdots \ge \lambda_d$ be the eigenvalues of $\mathrm{Cov}(z_{\mathrm{ID}})$
+with eigenvectors $v_1,\ldots,v_d$.
+Suppose the ID-vs-OOD separation concentrates in a set of directions
+$\{v_j : j \in \mathcal{J}\}$ with $\lambda_j / \lambda_1 \le \rho$ for all $j \in \mathcal{J}$ and some $\rho \ll 1$.
+Then the Euclidean KNN score distributions satisfy
+\begin{equation}
+  W_1\!\bigl(S_{\mathrm{KNN}}(z_{\mathrm{ID}}),\; S_{\mathrm{KNN}}(z_{\mathrm{OOD}})\bigr)
+  \;\le\; L_k\,\varepsilon + 4L_k\,\tau^2,
+  \label{eq:supp:knn-fail}
+\end{equation}
+where $L_k \le 1$ is the Lipschitz constant of the $k$-NN distance statistic, $\varepsilon$ captures the residual ID-vs-OOD discrepancy in the high-variance
+subspace, and $\tau^2$ bounds the tail energy outside $\mathcal{S}_{\mathrm{cls}}$.
+\end{theorem}
+
+\begin{proof}
+Write the $k$-nearest-neighbour score for a test point $z$ as
+$S_k(z) = \|z - z_{(k)}\|_2$,
+where $z_{(k)}$ denotes the $k$-th closest training point in Euclidean distance.
+$S_k$ is $1$-Lipschitz in $z$ (for fixed training set).
+
+\textbf{Step 1: Projection bound (Lemma~1 of main paper).}
+For any two vectors $a, b \in \mathbb{R}^d$,
+$\bigl|\|a-b\|_2 - \|Pa - Pb\|_2\bigr| \le \|P_\perp(a-b)\|_2$.
+Under assumption~(3) of the main paper, $\mathbb{E}[\|P_\perp z\|_2^2] \le \tau^2$ for
+ID samples; the same assumption applied to OOD gives a bound $\tau^2_{\mathrm{OOD}}$.
+Hence replacing full-space distances by $\mathcal{S}_{\mathrm{cls}}$-projected distances
+changes the KNN score by at most $O(\tau + \tau_{\mathrm{OOD}})$ in $L_1$.
+
+\textbf{Step 2: Matching within $\mathcal{S}_{\mathrm{cls}}$.}
+Let $\delta_{\mathcal{J}} = \mathbb{E}_{j \in \mathcal{J}}[\|Pz_{\mathrm{ID}} - Pz_{\mathrm{OOD}}\|]$
+denote the expected projected distance between ID and OOD within the class-discriminative
+subspace.
+By hypothesis, the main separation is in the low-$\lambda_j$ directions, so
+$\delta_{\mathcal{J}} \le \varepsilon$ (the residual in the dominant subspace is small).
+
+\textbf{Step 3: Wasserstein bound.}
+From Steps 1--2, the distributions of $S_k(z_{\mathrm{ID}})$ and $S_k(z_{\mathrm{OOD}})$
+are within $c_1\varepsilon$ of each other in $W_1$ (from the projected-space matching),
+plus a perturbation of $c_2\tau^2$ from the null-space residual.
+Combining gives~\eqref{eq:supp:knn-fail} with $L_k \le 1$ (1-Lipschitz property of $k$-NN distance)
+and the coefficient $4L_k$ arising from the orthogonal-energy bound in Lemma~1 of the main paper.
+\end{proof}
+
+\paragraph{Explicit constant characterization.}
+The constant $L_k \le 1$ follows because the $k$-NN distance $S_k(z) = \|z - z_{(k)}\|_2$ satisfies
+$|S_k(z) - S_k(z')| \le \|z - z'\|_2$ by the triangle inequality (for fixed training set).
+The coefficient $4$ arises from Lemma~1: for any pair $(z, z')$ with
+$\mathbb{E}[\|P_\perp z\|^2] \le \tau^2$ and $\mathbb{E}[\|P_\perp z'\|^2] \le \tau^2$,
+the expected squared-distance perturbation from the null space is bounded by $4\tau^2$.
+In the regime where $\varepsilon \approx 0$ (OOD data projects similarly to ID in $\mathcal{S}_{\mathrm{cls}}$)
+and $\tau^2 \ll 1$ (strong DSC), the bound becomes $W_1 \le 4\tau^2$, which is small.
+Conversely, when DSC is absent ($\tau \approx \sqrt{d}$), the bound is vacuous, as expected.
+
+\subsection{Proof of Proposition~1 (MSP/Energy Insensitivity)}
+\label{sec:supp:proof-prop1}
+
+\begin{proof}
+Let $S_{\mathrm{Energy}}(\ell) = -T\log\sum_{c}\exp(\ell_c/T)$ (with $T=1$ in the main
+paper).
+The gradient satisfies $\nabla_\ell S_{\mathrm{Energy}} = -\mathrm{softmax}(\ell)$,
+so $\|\nabla_\ell S_{\mathrm{Energy}}\|_2 \le \|\mathrm{softmax}(\ell)\|_2 \le 1$.
+Thus $S_{\mathrm{Energy}}$ is $1$-Lipschitz in $\ell$.
+
+The logit difference is $\ell(x_{\mathrm{OOD}}) - \ell(x_{\mathrm{ID}}) = W(z_{\mathrm{OOD}} - z_{\mathrm{ID}})$.
+Decompose $z_{\mathrm{OOD}} - z_{\mathrm{ID}} = P(z_{\mathrm{OOD}}-z_{\mathrm{ID}}) + P_\perp(z_{\mathrm{OOD}}-z_{\mathrm{ID}})$.
+By the dominant-subspace matching assumption, $\|P(z_{\mathrm{OOD}}-z_{\mathrm{ID}})\| \le \varepsilon$.
+By head insensitivity ($\|WP_\perp\|_{\mathrm{op}} \le \eta$) and Eq.~(3) of the main paper
+(applied to both ID and OOD),
+$\|WP_\perp(z_{\mathrm{OOD}}-z_{\mathrm{ID}})\| \le \eta(\tau + \tau_{\mathrm{OOD}})$.
+Composing with the Lipschitz bound yields
+$W_1(S_{\mathrm{Energy}}(z_{\mathrm{ID}}),S_{\mathrm{Energy}}(z_{\mathrm{OOD}}))
+\le \|W\|_{\mathrm{op}}\varepsilon + L_S\eta\tau$,
+where $L_S \le 1$ for $S_{\mathrm{Energy}}$ and $L_S \le 2$ for $S_{\mathrm{MSP}}$.
+An analogous argument applies to MSP via
+$\|\nabla_\ell\mathrm{softmax}\|_\infty \le 2$.
+\end{proof}
+
+\paragraph{Explicit constant characterization.}
+Both constants are directly computable from the trained model:
+$\|W\|_{\mathrm{op}}$ is the largest singular value of the classifier head (typically $O(1)$ under standard weight decay),
+and the Lipschitz constants $L_S$ are intrinsic to the score function ($L_S = 1$ for Energy, $L_S \le 2$ for MSP).
+The head insensitivity $\eta = \|WP_\perp\|_{\mathrm{op}}$ is also measurable:
+it is the spectral norm of $W$ restricted to the null space, which approaches zero under neural collapse alignment.
+
+% ================================================================
+%  S3: GEOMETRY AUDIT DETAILS
+% ================================================================
+\section{Geometry Audit Details}
+\label{sec:supp:geometry}
+
+\tabref{tab:supp:geometry} reports the per-dataset geometry metrics (effective rank
+$r_{\mathrm{eff}}$, participation ratio, variance concentration in the top-$k$ principal
+components) for CE-trained vs.\ TGT-trained models on all 8 benchmarks.
+
+\begin{table}[h]
+  \centering
+  \caption{Geometry audit: effective rank $r_{\mathrm{eff}}$, participation ratio (PR),
+  and variance concentration in the top-64 PCs ($\rho_{64}$, in \%).
+  ResNet-50 backbone ($d{=}2048$).}
+  \label{tab:supp:geometry}
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \resizebox{\linewidth}{!}{\input{generated_geometry_table.tex}}
+\end{table}
+
+These numbers confirm the DSC theory predictions at scale:
+CE training produces extreme concentration ($r_{\mathrm{eff}} \approx 5$--$31$ vs.\ the
+$d{=}2048$ ambient dimension),
+while TGT consistently increases the effective rank (mean improvement: $+19.7$).
+
+\tabref{tab:supp:rank} consolidates the DSC severity characterisation by showing the effective rank and within-class variance ratio $\rho_{\mathrm{within}}$ for each dataset, and \tabref{tab:supp:within-class-var} gives the underlying within-class and total trace values used to compute $\rho_{\mathrm{within}}$.
+
+\begin{table}[h]
+  \centering
+  \caption{DSC severity characterisation for all 8 benchmarks (CE-trained ResNet-50).
+  $C$ is the number of ID training classes; $r_{\mathrm{eff}}$ is the effective rank of the
+  learned feature covariance; $\rho_{\mathrm{within}} = \operatorname{tr}(\Sigma_{\mathrm{within}})/\operatorname{tr}(\Sigma)$
+  measures intra-class heterogeneity.
+  Datasets with $r_{\mathrm{eff}}/C \approx 1$ exhibit severe DSC; Rock and Garbage
+  ($r_{\mathrm{eff}}/C \gg 1$) serve as within-class-diverse controls.}
+  \label{tab:supp:rank}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \resizebox{\linewidth}{!}{\begin{tabular}{@{}lrrrrl@{}}
+    \toprule
+    \textbf{Dataset} & $C$ & $r_{\mathrm{eff}}$ (CE) & $r_{\mathrm{eff}}$ (TGT) & $r_{\mathrm{eff}}/C$ (CE) & DSC severity \\
+    \midrule
+    Colon    &  6 &   5.19 &  12.09 & 0.86 & Severe \\
+    Fashion  &  7 &   6.18 &  17.97 & 0.88 & Severe \\
+    Food     & 67 &  65.29 & 117.13 & 0.97 & Severe \\
+    Tissue   &  5 &   5.32 &   9.90 & 1.06 & Severe \\
+    Yoga     &  4 &   4.53 &  46.97 & 1.13 & Severe \\
+    EuroSAT  &  7 &   8.07 &  15.95 & 1.15 & Severe \\
+    \midrule
+    Garbage  &  6 &  79.01 &  64.88 & 13.17 & Mild \\
+    Rock     &  5 & 307.92 & 389.31 & 61.58 & Mild \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \caption{Within-class variance ratio $\rho_{\mathrm{within}}$ for CE-trained ResNet-50 features.
+  $\operatorname{tr}(\Sigma_{\mathrm{within}})$ and $\operatorname{tr}(\Sigma_{\mathrm{total}})$
+  are the traces of the weighted within-class and total covariance matrices, respectively.
+  Datasets are sorted by $\rho_{\mathrm{within}}$ (ascending); the two datasets with
+  $\rho_{\mathrm{within}} > 0.65$ (Garbage, Rock) coincide exactly with those showing
+  mild DSC in \tabref{tab:supp:rank}.}
+  \label{tab:supp:within-class-var}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \resizebox{\linewidth}{!}{\begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    \textbf{Dataset} & $\rho_{\mathrm{within}}$ & $\operatorname{tr}(\Sigma_{\mathrm{within}})$
+      & $\operatorname{tr}(\Sigma_{\mathrm{total}})$ & $N_{\mathrm{train}}$ \\
+    \midrule
+    Colon    & 0.009 & 0.0067 & 0.7765 & 46{,}650 \\
+    Food     & 0.020 & 0.0173 & 0.8726 & 50{,}250 \\
+    Fashion  & 0.028 & 0.0200 & 0.7164 & 31{,}500 \\
+    EuroSAT  & 0.065 & 0.0520 & 0.8020 & 14{,}625 \\
+    Tissue   & 0.072 & 0.0367 & 0.5107 & 108{,}060 \\
+    Yoga     & 0.651 & 0.4992 & 0.7665 &  2{,}307 \\
+    Garbage  & 0.772 & 0.7058 & 0.9143 &  2{,}310 \\
+    Rock     & 0.895 & 0.8315 & 0.9286 &  1{,}245 \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+% ================================================================
+%  S4: IMPLEMENTATION AND REPRODUCIBILITY DETAILS
+% ================================================================
+\section{Implementation and Reproducibility Details}
+\label{sec:supp:impl}
+
+\paragraph{Training setup.}
+Training jobs are launched via \code{run_training.sh}, which calls
+\code{OpenOOD-main/train_cross_entropy.py} (ultimately \code{main.py}) with method-specific
+YAMLs and CLI overrides.
+We report the exact settings used for the five methods in this paper:
+\begin{itemize}
+  \item \textbf{resnet}: \code{resnet50_base}.\\
+  Config file: \code{configs/networks/resnet50.yml}.\\
+  Pipeline file: \code{configs/pipelines/train/baseline.yml}.
+  SGD, lr $0.1$, momentum $0.9$, weight decay $5\times 10^{-4}$,
+  batch size $256$, $300$ epochs.
+
+  \item \textbf{traresnet}: \code{tra_resnet50_ce}.\\
+  Config file: \code{configs/networks/tra_resnet50.yml}.\\
+  Pipeline file: \code{configs/pipelines/train/train_tra.yml}.
+  SGD, lr $0.1$, momentum $0.9$, weight decay $5\times 10^{-4}$,
+  batch size $256$, $300$ epochs.
+  Trainer args: \code{lambda_tra=1.0}, \code{eps=1e-4}, \code{teacher_name=dinov2_vits14}.\\
+  Normalization: \code{normalize_teacher=True}, \code{normalize_student=True}.\\
+  TRA loss: \code{tra_loss=cosine}.
+  The TRA head is an MLP with \code{domain_hidden_dim=2048},
+  \code{domain_dim=384}, and LayerNorm enabled.
+
+  \item \textbf{dinov2}: \code{dinov2_base}.\\
+  Config file: \code{configs/networks/dinov2_classifier.yml}.\\
+  Pipeline file: \code{configs/pipelines/train/baseline.yml}.
+  Adam, lr $10^{-4}$, weight decay $0.05$, batch size $128$, $75$ epochs;
+  image preprocessing is forced to image size $224$, pre-size $256$,
+  ImageNet normalization, bicubic interpolation.
+
+  \item \textbf{tradinov2}: \code{tra_dinov2_ce}.\\
+  Config file: \code{configs/networks/tra_dinov2.yml}.\\
+  Pipeline file: \code{configs/pipelines/train/train_tra.yml}.
+  Adam, lr $10^{-4}$, weight decay $0.05$, batch size $128$, $75$ epochs,
+  with the same preprocessing overrides as \code{dinov2}.
+  Trainer args match \code{traresnet} (including \code{lambda_tra=1.0});
+  the TRA head uses \code{domain_hidden_dim=384} and \code{domain_dim=384}.
+
+  \item \textbf{resnetsupcon}: \code{simclr_supcon}.\\
+  Config file: \code{configs/networks/simclr.yml}.\\
+  Pipeline file: \code{configs/pipelines/train/train_simclr.yml}.
+  SGD, lr $0.5$, momentum $0.9$, weight decay $10^{-4}$,
+  batch size $192$, $500$ epochs,
+  \code{simclr_temp=0.5}, warm-up $10$ epochs.
+\end{itemize}
+
+\paragraph{TGT details.}
+For \code{traresnet} and \code{tradinov2}, the teacher-guided loss is implemented in
+\code{openood/trainers/tra_trainer.py} as
+$\mathcal{L}=\mathcal{L}_{\mathrm{CE}}+\lambda_{\mathrm{TRA}}\mathcal{L}_{\mathrm{TRA}}$ with
+$\lambda_{\mathrm{TRA}}=1.0$.
+Teacher residual targets are computed online per mini-batch from a frozen
+DINOv2 ViT-S/14 teacher (\code{dinov2_vits14}) using class-prototype suppression
+with projection regularizer \code{eps=1e-4}; the configured TRA loss is cosine alignment.
+
+\paragraph{Evaluation.}
+Evaluation is launched via \code{run_evaluation.sh}.
+It calls \code{OpenOOD-main/train_then_evaluate.py} with \code{--skip_train}.
+For each dataset, both training and evaluation run over five predefined splits
+(\code{dataset}, \code{dataset_1}, \code{dataset_2}, \code{dataset_3}, \code{dataset_4}).
+
+\paragraph{Code availability.}
+Code, pretrained weights, and data splits will be released upon acceptance.
+
+% ================================================================
+%  S5: CLASSIFICATION ACCURACY COMPARISON (ResNet-50)
+% ================================================================
+\section{Classification Accuracy: CE vs.\ TGT (ResNet-50)}
+\label{sec:supp:accuracy}
+
+\tabref{tab:supp:accuracy} reports the best test-set classification accuracy achieved by
+the standard cross-entropy (CE) baseline and the TGT-trained ResNet-50 on each of the
+8 benchmarks.
+
+\begin{table}[h]
+  \centering
+  \caption{Classification accuracy (\%) for CE-trained and TGT-trained ResNet-50 on each
+  benchmark.
+  $\Delta$ (pp) is the change from CE to TGT: positive values indicate TGT
+  \emph{improves} classification accuracy.
+  All values are the best accuracy over 3 seeds.}
+  \label{tab:supp:accuracy}
+  \resizebox{\linewidth}{!}{\input{generated_training_weight_accuracy_tabular.tex}}
+\end{table}
+
+\paragraph{Discussion.}
+On average, TGT improves classification accuracy.
+TGT improves classification accuracy on five of the eight benchmarks (Rock, Food,
+Garbage, Tissue, Colon), with gains as large as $\AccDeltaRockPP$\,pp on Rock and $\AccDeltaFoodPP$\,pp on
+Food---likely because the richer representation learned under TGT also benefits class
+separability on visually heterogeneous domains.
+On Fashion and EuroSAT the change is negligible ($<0.1$\,pp in either direction), i.e., effectively unchanged.
+The only notable degradation occurs on Yoga ($\AccDeltaYogaPP$\,pp), a highly constrained
+pose-classification dataset where the domain-residual auxiliary loss may conflict with
+the fine-grained class boundaries.
+In all other cases, the classification accuracy change is within $\pm\AccMaxDegOtherPP$\,pp, supporting
+the claim that the TGT auxiliary loss preserves class-level discriminability while
+substantially enriching the domain-shift signal.
+
+% ================================================================
+%  S6: TEACHER-ONLY ORACLE ANALYSIS
+% ================================================================
+\section{Teacher-Only Oracle Analysis}
+\label{sec:supp:teacher-oracle}
+
+This section provides the full per-dataset breakdown for the MDS Teacher Only experiment:
+running MDS directly on frozen DINOv2 ViT-S/14 features without any student involvement.
+This analysis underpins the signal-orthogonality argument developed in the main paper
+(Secs.~1, 3, 4, and 5).
+
+\subsection{Per-Dataset Results}
+
+% NOTE: The per-dataset teacher-only FPR@95 numbers are reported in the main paper's
+% generated tables (Tables 1--2) and in the extended per-dataset tables (Sec.~S8 below).
+% The table below consolidates the teacher-only row from both OOD regimes for ease of reference.
+% The dedicated auto-generated teacher-only per-dataset table is not included in this draft,
+% so we report the consolidated values directly here.
+
+\begin{table}[h]
+  \centering
+  \caption{MDS Teacher Only: per-dataset FPR@95 (\%) on frozen DINOv2 features.
+  The teacher achieves near-perfect out-of-domain OOD detection but fails catastrophically
+  on in-domain OOD, confirming the orthogonality of domain-shift and class-boundary signals.}
+  \label{tab:supp:teacher-oracle}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \resizebox{\linewidth}{!}{\input{generated_teacher_oracle_tabular.tex}}
+\end{table}
+
+\subsection{Why Specific Datasets Fail Harder}
+
+The severity of in-domain OOD failure varies across datasets and correlates with the
+degree of visual homogeneity within the domain:
+
+\begin{itemize}
+  \item \textbf{Colon (100\% FPR@95):} All colon pathology subtypes share identical
+  tissue texture at the domain level. The class-suppressed teacher residuals encode
+  ``histopathology'' but retain no information about tumour grading or tissue subtype,
+  yielding complete failure.
+
+  \item \textbf{Food (89\%) and Tissue (89\%):} Food photography and tissue microscopy
+  each present high visual uniformity within the domain. Held-out classes (e.g., new food
+  categories or tissue types) look identical to training classes in the teacher's
+  domain-level representation.
+
+  \item \textbf{EuroSAT (65\%) and Fashion (63\%):} These domains exhibit somewhat more
+  spectral or structural diversity across classes. Satellite land-use categories have
+  different spectral signatures (forest vs.\ urban vs.\ water), and fashion items have
+  distinct silhouettes, allowing the domain-level features to achieve partial (but still
+  poor) in-domain OOD separation.
+\end{itemize}
+
+% ================================================================
+%  S7: EUROSAT LAMBDA ABLATION
+% ================================================================
+\section{EuroSAT Lambda Ablation}
+\label{sec:supp:eurosat-lambda-ablation}
+
+This section reports the generated EuroSAT lambda-ablation tables.
+
+\begin{table*}[htbp]
+  \centering
+  \caption{EuroSAT in-domain (NearOOD) lambda ablation across teacher-guidance strengths $\lambda$.}
+  \label{tab:supp:eurosat-lambda-ablation:nearood}
+  \small
+  \begingroup
+  \catcode`\_=12\relax
+  \input{generated_eurosat_lambda_ablation_in_domain_tabular.tex}
+  \endgroup
+\end{table*}
+
+\begin{table*}[htbp]
+  \centering
+  \caption{EuroSAT out-of-domain (FarOOD) lambda ablation across teacher-guidance strengths $\lambda$.}
+  \label{tab:supp:eurosat-lambda-ablation:farood}
+  \small
+  \begingroup
+  \catcode`\_=12\relax
+  \input{generated_eurosat_lambda_ablation_tabular.tex}
+  \endgroup
+\end{table*}
+
+\paragraph{Discussion.}
+The effect of $\lambda$ is strongly method-dependent. Across both NearOOD and FarOOD,
+$\lambda{=}0.5$ is often too weak: many methods improve substantially at $\lambda\in[1.0,1.5]$.
+For example, React improves sharply as $\lambda$ increases (FarOOD FPR@95: $36.08\rightarrow14.58$
+from $\lambda{=}0.5$ to $2.0$; NearOOD: $68.74\rightarrow36.57$ from $\lambda{=}0.5$ to $1.5$).
+In contrast, SCALE does not benefit from very large $\lambda$ on FarOOD: it is best at
+$\lambda{=}1.0$ (FPR@95 $10.19$) and degrades at $\lambda{=}1.5/2.0$ (FPR@95 $22.87/24.47$).
+NearOOD also shows non-monotonic behavior (SCALE: $47.40\rightarrow35.35\rightarrow43.88$
+for $\lambda{=}0.5\rightarrow1.5\rightarrow2.0$), reinforcing that different methods prefer
+different operating points rather than a single universally optimal $\lambda$.
+
+% ================================================================
+%  S8: EXTENDED EXPERIMENT TABLES
+% ================================================================
+\section{Extended Per-Dataset Results}
+\label{sec:supp:extended-tables}
+
+This section contains the generated extended per-dataset results; see Tables~\ref{tab:supp:extended:fpr95:dino:in} to~\ref{tab:supp:extended:auprout:tra_resnet:out}.
+
+\begingroup
+\catcode`\_=12\relax
+
+\newcommand{\extendedresulttablein}[4]{%
+\begin{table*}[htbp]
+  \centering
+  \caption{#1 (#2 backbone). #3}
+  \label{#4}
+  \small
+  \resizebox{\linewidth}{!}{\input{generated_extended_per_dataset/#1/#2/in_domain/table.tex}}
+\end{table*}
+}
+
+\newcommand{\extendedresulttableout}[4]{%
+\begin{table*}[htbp]
+  \centering
+  \caption{#1 (#2 backbone). #3}
+  \label{#4}
+  \small
+  \resizebox{\linewidth}{!}{\input{generated_extended_per_dataset/#1/#2/out_of_domain/table.tex}}
+\end{table*}
+}
+
+\subsection{FPR@95}
+\extendedresulttablein{FPR@95}{dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:fpr95:dino:in}
+\extendedresulttableout{FPR@95}{dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:fpr95:dino:out}
+\extendedresulttablein{FPR@95}{resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:fpr95:resnet:in}
+\extendedresulttableout{FPR@95}{resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:fpr95:resnet:out}
+\extendedresulttablein{FPR@95}{simclr}{Per-dataset in-domain OOD results.}{tab:supp:extended:fpr95:simclr:in}
+\extendedresulttableout{FPR@95}{simclr}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:fpr95:simclr:out}
+\extendedresulttablein{FPR@95}{tra_dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:fpr95:tra_dino:in}
+\extendedresulttableout{FPR@95}{tra_dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:fpr95:tra_dino:out}
+\extendedresulttablein{FPR@95}{tra_resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:fpr95:tra_resnet:in}
+\extendedresulttableout{FPR@95}{tra_resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:fpr95:tra_resnet:out}
+
+\subsection{AUROC}
+\extendedresulttablein{AUROC}{dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:auroc:dino:in}
+\extendedresulttableout{AUROC}{dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auroc:dino:out}
+\extendedresulttablein{AUROC}{resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:auroc:resnet:in}
+\extendedresulttableout{AUROC}{resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auroc:resnet:out}
+\extendedresulttablein{AUROC}{simclr}{Per-dataset in-domain OOD results.}{tab:supp:extended:auroc:simclr:in}
+\extendedresulttableout{AUROC}{simclr}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auroc:simclr:out}
+\extendedresulttablein{AUROC}{tra_dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:auroc:tra_dino:in}
+\extendedresulttableout{AUROC}{tra_dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auroc:tra_dino:out}
+\extendedresulttablein{AUROC}{tra_resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:auroc:tra_resnet:in}
+\extendedresulttableout{AUROC}{tra_resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auroc:tra_resnet:out}
+
+\subsection{AUPR-IN}
+\extendedresulttablein{AUPR_IN}{dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprin:dino:in}
+\extendedresulttableout{AUPR_IN}{dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprin:dino:out}
+\extendedresulttablein{AUPR_IN}{resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprin:resnet:in}
+\extendedresulttableout{AUPR_IN}{resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprin:resnet:out}
+\extendedresulttablein{AUPR_IN}{simclr}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprin:simclr:in}
+\extendedresulttableout{AUPR_IN}{simclr}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprin:simclr:out}
+\extendedresulttablein{AUPR_IN}{tra_dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprin:tra_dino:in}
+\extendedresulttableout{AUPR_IN}{tra_dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprin:tra_dino:out}
+\extendedresulttablein{AUPR_IN}{tra_resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprin:tra_resnet:in}
+\extendedresulttableout{AUPR_IN}{tra_resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprin:tra_resnet:out}
+
+\subsection{AUPR-OUT}
+\extendedresulttablein{AUPR_OUT}{dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprout:dino:in}
+\extendedresulttableout{AUPR_OUT}{dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprout:dino:out}
+\extendedresulttablein{AUPR_OUT}{resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprout:resnet:in}
+\extendedresulttableout{AUPR_OUT}{resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprout:resnet:out}
+\extendedresulttablein{AUPR_OUT}{simclr}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprout:simclr:in}
+\extendedresulttableout{AUPR_OUT}{simclr}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprout:simclr:out}
+\extendedresulttablein{AUPR_OUT}{tra_dino}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprout:tra_dino:in}
+\extendedresulttableout{AUPR_OUT}{tra_dino}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprout:tra_dino:out}
+\extendedresulttablein{AUPR_OUT}{tra_resnet}{Per-dataset in-domain OOD results.}{tab:supp:extended:auprout:tra_resnet:in}
+\extendedresulttableout{AUPR_OUT}{tra_resnet}{Per-dataset out-of-domain OOD results.}{tab:supp:extended:auprout:tra_resnet:out}
+
+\endgroup
+
+% ================================================================
+%  BIBLIOGRAPHY
+% ================================================================
+\bibliographystyle{splncs04}
+\bibliography{main}
+
+\end{document}

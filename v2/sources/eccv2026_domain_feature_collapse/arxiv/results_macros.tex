@@ -1,0 +1,61 @@
+% Centralized headline results and intro-level numeric claims
+% Keep all paper-facing summary numbers here to avoid drift.
+
+
+
+\newcommand{\SingleDomainExtremeShiftFpr}{50\%} % Constant: narrative threshold used to describe extreme single-domain shift.
+\newcommand{\DSCRhoKLow}{0.80} % Constant: lower bound of correlation band used in the DSC narrative.
+\newcommand{\DSCRhoKHigh}{0.95} % Constant: upper bound of correlation band used in the DSC narrative.
+\newcommand{\DSCReffLow}{4} % Calculated from analyze_outputs.ipynb: representative low effective-rank level observed in base geometry-audit rows.
+\newcommand{\DSCReffHigh}{6} % Calculated from analyze_outputs.ipynb: representative high effective-rank level for the same low-rank DSC regime.
+\newcommand{\DSCTopPCCount}{64} % Constant: fixed top-k principal-component cutoff used for variance-concentration checks.
+\newcommand{\DSCTopPCVarCapture}{88\%} % Calculated from analyze_outputs.ipynb: top-\DSCTopPCCount PCs capture approximately this share of variance in DSC examples.
+\newcommand{\DSCOodMeanGtIdMeanCESplits}{38/40} % Calculated from analyze_outputs.ipynb null-space comparison: CE/base splits with ood_mean > id_mean.
+\newcommand{\DSCOodMeanGtIdMeanTGTSplits}{39/40} % Calculated from analyze_outputs.ipynb null-space comparison: TRA/TGT splits with ood_mean > id_mean.
+\newcommand{\DSCReffIncreaseSplits}{39/40} % Calculated from analyze_outputs.ipynb geometry comparison: matched splits where effective_rank_tra > effective_rank_base.
+\newcommand{\DSCColonReffFrom}{5.2} % Calculated from analyze_outputs.ipynb geometry-audit matched rows: Colon example effective rank (base/CE).
+\newcommand{\DSCColonReffTo}{12.1} % Calculated from analyze_outputs.ipynb geometry-audit matched rows: Colon example effective rank (TRA/TGT).
+\newcommand{\DSCYogaReffFrom}{4.5} % Calculated from analyze_outputs.ipynb geometry-audit matched rows: Yoga example effective rank (base/CE).
+\newcommand{\DSCYogaReffTo}{47.0} % Calculated from analyze_outputs.ipynb geometry-audit matched rows: Yoga example effective rank (TRA/TGT).
+\newcommand{\DSCEuroSATReffFrom}{8.1} % Calculated from analyze_outputs.ipynb geometry-audit matched rows: EuroSAT example effective rank (base/CE).
+\newcommand{\DSCEuroSATReffTo}{15.9} % Calculated from analyze_outputs.ipynb geometry-audit matched rows: EuroSAT example effective rank (TRA/TGT).
+
+% Main-results metrics (in-domain OOD)
+\newcommand{\NearoodViMTGTDino}{59.07\%} % Calculated: near-OOD average FPR95 for ViM+TGT (DINO) from evaluation tables.
+\newcommand{\NearoodViMStdDino}{64.10\%} % Calculated: near-OOD average FPR95 baseline for ViM (DINO) from evaluation tables.
+\newcommand{\NearoodViMImprovementPP}{5.03} % Calculated: absolute percentage-point change = \NearoodViMStdDino - \NearoodViMTGTDino.
+\newcommand{\NearoodMDSTGTDino}{64.17\%} % Calculated: near-OOD average FPR95 for MDS+TGT (DINO) from evaluation tables.
+\newcommand{\NearoodMDSStdDino}{68.30\%} % Calculated: near-OOD average FPR95 baseline for MDS (DINO) from evaluation tables.
+\newcommand{\NearoodMDSStdResNet}{70.12\%} % Calculated: near-OOD average FPR95 baseline for MDS (ResNet50) from evaluation tables.
+\newcommand{\NearoodMDSTGTResNet}{59.07\%} % Calculated: near-OOD average FPR95 for MDS+TGT (ResNet50) from evaluation tables.
+\newcommand{\NearoodMDSImprovementPPResNet}{11.05} % Calculated: absolute percentage-point change = \NearoodMDSStdResNet - \NearoodMDSTGTResNet.
+\newcommand{\NearoodViMStdResNet}{70.12\%} % Calculated: near-OOD average FPR95 baseline for ViM (ResNet50) from evaluation tables.
+\newcommand{\NearoodViMTGTResNet}{60.68\%} % Calculated: near-OOD average FPR95 for ViM+TGT (ResNet50) from evaluation tables.
+\newcommand{\NearoodViMImprovementPPResNet}{9.44} % Calculated: absolute percentage-point change = \NearoodViMStdResNet - \NearoodViMTGTResNet.
+\newcommand{\NearoodMDSImprovementPPDino}{4.13} % Calculated: absolute percentage-point change = \NearoodMDSStdDino - \NearoodMDSTGTDino.
+
+\newcommand{\TeacherOnlyFaroodFPR}{1.09\%} % Calculated: FAR-OOD average FPR95 for teacher-only MDS oracle from evaluation tables.
+\newcommand{\TeacherOnlyNearoodFPR}{81.21\%} % Calculated: near-OOD average FPR95 for teacher-only MDS oracle from evaluation tables.
+
+\newcommand{\FaroodMDSStdDino}{22.30\%} % Calculated: far-OOD average FPR95 baseline for MDS (DINO) from evaluation tables.
+\newcommand{\FaroodMDSTGTDino}{21.46\%} % Calculated: far-OOD average FPR95 for MDS+TGT (DINO) from evaluation tables.
+\newcommand{\FaroodMDSStdResNet}{25.55\%} % Calculated: far-OOD average FPR95 baseline for MDS (ResNet50) from evaluation tables.
+\newcommand{\FaroodMDSTGTResNet}{13.94\%} % Calculated: far-OOD average FPR95 for MDS+TGT (ResNet50) from evaluation tables.
+\newcommand{\FaroodMDSImprovementPPResNet}{11.61} % Calculated: absolute percentage-point change = \FaroodMDSStdResNet - \FaroodMDSTGTResNet.
+\newcommand{\FaroodViMStdResNet}{26.43\%} % Calculated: far-OOD average FPR95 baseline for ViM (ResNet50) from evaluation tables.
+\newcommand{\FaroodViMTGTResNet}{15.65\%} % Calculated: far-OOD average FPR95 for ViM+TGT (ResNet50) from evaluation tables.
+\newcommand{\FaroodViMImprovementPPResNet}{10.78} % Calculated: absolute percentage-point change = \FaroodViMStdResNet - \FaroodViMTGTResNet.
+\newcommand{\FaroodKnnStdResNet}{34.98\%} % Calculated: far-OOD average FPR95 baseline for kNN (ResNet50) from evaluation tables.
+\newcommand{\FaroodKnnTGTResNet}{22.71\%} % Calculated: far-OOD average FPR95 for kNN+TGT (ResNet50) from evaluation tables.
+\newcommand{\FaroodKnnImprovementPPResNet}{12.27} % Calculated: absolute percentage-point change = \FaroodKnnStdResNet - \FaroodKnnTGTResNet.
+\newcommand{\FaroodEBOStdResNet}{52.69\%} % Calculated: far-OOD average FPR95 baseline for EBO (ResNet50) from evaluation tables.
+\newcommand{\FaroodEBOTGTResNet}{41.73\%} % Calculated: far-OOD average FPR95 for EBO+TGT (ResNet50) from evaluation tables.
+\newcommand{\FaroodEBOImprovementPPResNet}{8.93} % Calculated: absolute percentage-point change = \FaroodEBOStdResNet - \FaroodEBOTGTResNet.
+\newcommand{\FaroodKnnStdDino}{31.87\%} % Calculated: far-OOD average FPR95 baseline for kNN (DINO) from evaluation tables.
+\newcommand{\FaroodKnnTGTDino}{29.99\%} % Calculated: far-OOD average FPR95 for kNN+TGT (DINO) from evaluation tables.
+
+
+\newcommand{\AccDeltaRockPP}{+7.7} % Calculated: TGT minus CE classification accuracy change (pp) on Rock from evaluation tables.
+\newcommand{\AccDeltaFoodPP}{+4.8} % Calculated: TGT minus CE classification accuracy change (pp) on Food from evaluation tables.
+\newcommand{\AccDeltaYogaPP}{-4.1} % Calculated: TGT minus CE classification accuracy change (pp) on Yoga from evaluation tables.
+\newcommand{\AccMaxDegOtherPP}{0.01} % Constant: max absolute degradation (pp) across non-Yoga datasets in accuracy summary.

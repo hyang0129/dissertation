@@ -109,6 +109,7 @@ the check.
 | `Makefile` | Build orchestration |
 | `data/*.csv` | Provenance-headed CSVs (single source of truth for numbers) |
 | `figures_src/*.py` | Figure renderers; each emits a PDF + `*.numbers.csv` sidecar |
+| `sources/` | Original paper source per chapter — **reference only**, not compiled or gated (see `sources/README.md`) |
 | `generated/` | Build outputs (git-ignored): `values.tex`, `figures/*.pdf`, ... |
 
 ## Current whitelist (non-exhaustive)

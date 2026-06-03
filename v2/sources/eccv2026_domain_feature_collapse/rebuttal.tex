@@ -1,0 +1,49 @@
+\documentclass[runningheads]{llncs}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[margin=0.75in]{geometry}
+
+\begin{document}
+
+\noindent We thank all reviewers for their constructive feedback. We address each concern below.
+
+\medskip
+\noindent\textbf{R1 (sd1P): Numerical inconsistencies between Sec.~5.2 and Table~1.}
+We sincerely apologize for these errors. The discrepancies arose from stale LaTeX macros that were not re-synchronized after the final table-generation pass. \textbf{Table~1 is correct.} The corrected in-text claims are:
+\begin{itemize}\setlength\itemsep{0pt}
+\item ResNet-50 kNN FPR@95: 34.98\%\,$\to$\,22.71\% ($-$12.27\,pp), not 20.06\%
+\item DINOv2 kNN FPR@95: 31.87\%\,$\to$\,29.99\% ($-$1.88\,pp), not 28.69\%\,$\to$\,29.09\%
+\end{itemize}
+All other table entries and macro-derived numbers have been verified against the auto-generated tables and are consistent. We will correct these in the camera-ready.
+
+\medskip
+\noindent\textbf{R3 (Pz5d): If DSC makes the model blind to domain, why is Far-OOD (25.55\%) much easier than Near-OOD (70.12\%)?}
+DSC is a \emph{partial} collapse, not total blindness---this is precisely what our theory formalizes. Theorem~1 bounds kNN score separation as $W_1 \leq L_k\,\varepsilon + 4L_k\,\tau^2$, where $\varepsilon$ captures how much ID and OOD differ \emph{within the class subspace} and $\tau^2$ bounds energy outside it. Far-OOD data differs substantially even in the class-aligned directions ($\varepsilon$ large), so detection partially succeeds despite low $\tau^2$. Near-OOD data shares the same visual domain, so $\varepsilon \approx 0$ and detection depends entirely on $\tau^2$---which DSC suppresses. The 3$\times$ gap between Far- and Near-OOD is therefore a \emph{prediction} of the theory, not a contradiction. TGT increases $\tau^2$ (restoring null-space energy), improving both regimes.
+
+\medskip
+\noindent\textbf{R2 (qAEz): When is a dataset ``single-domain''? Could DSC just reflect low accuracy?}
+We agree the boundary deserves sharpening. DSC severity is a continuous spectrum measured by $r_\text{eff}/C$ (effective rank normalized by class count). Our 8 benchmarks span this spectrum: 6 severe-DSC datasets have $r_\text{eff}/C \in [0.86, 1.15]$, while Rock and Garbage ($r_\text{eff}/C > 13$) serve as mild-DSC controls where TGT gains are smaller, as predicted. SVHN and MNIST would have high $r_\text{eff}/C$ due to sufficient intra-class visual diversity, placing them in the mild regime where existing detectors already succeed. We recommend practitioners compute $r_\text{eff}/C$ on their training features; values near 1 indicate severe DSC where TGT is most beneficial.
+
+DSC is not an accuracy artifact. Classification accuracy is high across all 8 benchmarks (ResNet-50 CE average: 83.8\%; TGT: 85.2\%), including Colon (99.7\%), EuroSAT (99.3\%), and Fashion (98.4\%). OOD detection fails despite near-perfect ID accuracy because the feature \emph{geometry}---not the decision boundary---is collapsed.
+
+\medskip
+\noindent\textbf{R3 (Pz5d): Is class suppression necessary, or would standard distillation suffice?}
+The class-suppressed projection is the core design choice of TGT, and we argue it is necessary on theoretical grounds. Without projection, the teacher signal $u(x) - \mu$ is dominated by the between-class directions that the cross-entropy loss already learns (these are the highest-variance components by construction of $\Sigma_\text{between}$). The student's domain head would therefore be supervised to predict features the backbone already captures, providing redundant signal rather than recovering the missing orthogonal structure. The projection $I - P_\text{cls}$ explicitly removes this redundancy, isolating the domain-sensitive residual that supervised training suppresses. This is directly analogous to how PCA-based whitening removes dominant directions to expose secondary structure---but applied to the \emph{teacher target} rather than the score function. We will include an explicit ablation (full-feature distillation vs.\ class-suppressed) in the revision.
+
+\medskip
+\noindent\textbf{All reviewers: Teacher choice---what about CLIP?}
+TGT's teacher requirements are minimal: (1) multi-domain pre-training that preserves within-class variation, and (2) sufficient feature dimensionality to carry domain-level signal after class suppression. Both DINOv2 and CLIP satisfy these criteria---CLIP is trained on 400M image-text pairs spanning diverse visual domains, and its ViT-B/16 backbone produces 512-dimensional features with rich within-class structure. The class-suppressed residual (Eq.~7) depends only on the centered teacher features and the class-mean projection $P_\text{cls}$; this computation is architecture-agnostic. We chose DINOv2 because self-supervised objectives explicitly preserve non-class-discriminative variation, but any foundation model with diverse pre-training should work. We have implemented CLIP teacher support and will include a full teacher-ablation comparison (DINOv2 vs.\ CLIP) in the revision.
+
+\medskip
+\noindent\textbf{R1, R2: More training-time baselines.}
+TGT is a \emph{representation-repair} method, orthogonal to training-based OOD detectors (Outlier Exposure, VOS, NPOS) that require or synthesize OOD data---a resource unavailable in our setting by definition. SupCon is the most relevant comparison as it also modifies representation geometry without OOD data; Tables~1--2 show it \emph{worsens} distance-based OOD scores (Far-OOD MDS: 32.02 vs.\ 25.55 CE; kNN: 44.39 vs.\ 34.98 CE), confirming that contrastive objectives do not address DSC. We will discuss the taxonomy of training-time methods more clearly in the revision.
+
+\medskip
+\noindent\textbf{Minor issues.}
+\begin{itemize}\setlength\itemsep{0pt}
+\item \textbf{Missing citation (line 111):} Fixed---Li et al.\ [14] (NCI).
+\item \textbf{Method figure:} Will be added in revision.
+\item \textbf{$\lambda$ ablation:} Supplementary Sec.~S7 provides extended $\lambda$ analysis across all 8 scorers; $\lambda{=}1.0$ is robust across all 8 datasets.
+\end{itemize}
+
+\end{document}

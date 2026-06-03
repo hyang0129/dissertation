@@ -13,6 +13,9 @@
 \usepackage{booktabs}
 \usepackage{natbib}
 
+% Bibliography settings
+\bibliographystyle{plain}
+
 % Custom commands from your thesis
 \input{math_commands.tex}
 \newcommand{\cX}{\mathcal{X}}
@@ -21,19 +24,20 @@
 % Title page information
 \title[Information-Theoretic Approaches to ML Reliability]{Information-Theoretic Approaches to Out-of-Distribution Detection and Hallucination Detection in Machine Learning Systems}
 \subtitle{PhD Dissertation Proposal Defense}
-\author{Your Name}
-\institute{Your University}
+\author{Hong Yang}
+\institute{Rochester Institute of Technology}
 \date{\today}
 
 % Remove navigation symbols
 \setbeamertemplate{navigation symbols}{}
 
-% Custom footline with section indicator
+% Custom footline with section indicator and publication info
+\newcommand{\sectionpubinfo}{}
 \setbeamertemplate{footline}{
   \leavevmode%
   \hbox{%
   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
-    \usebeamerfont{author in head/foot}\hspace*{2ex}\insertsectionhead
+    \usebeamerfont{author in head/foot}\hspace*{2ex}\insertsectionhead\sectionpubinfo
   \end{beamercolorbox}%
   \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{title in head/foot}%
     \usebeamerfont{title in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
@@ -170,24 +174,40 @@
     \item \textbf{Novel Method}: Contrastive mutual information estimation
     \begin{itemize}
         \item Real-time detection without external knowledge bases
-        \item Scalable to large language models (GPT, BERT, T5, Mamba)
-        \item Question-answer consistency across transformer layers
+        \item Scalable to large language models \citep{brown2020language,devlin2018bert,raffel2020exploring}
+        \item Question-answer consistency across transformer layers \citep{vaswani2017attention}
     \end{itemize}
     \item \textbf{System Architecture}: Two-stage detection framework
     \begin{itemize}
         \item Primary model: Standard transformer inference
         \item Secondary analysis: Contrastive MI estimation
     \end{itemize}
-    \item \textbf{Validation}: Natural Questions, TriviaQA, HaluEval, TruthfulQA, HalluLens
+    \item \textbf{Validation}: Natural Questions \citep{kwiatkowski2019natural}, TriviaQA \citep{joshi2017triviaqa}, HaluEval \citep{li2023halueval}, TruthfulQA \citep{lin2022truthfulqa}, HalluLens \citep{bang2025hallulens}
 \end{itemize}
 \end{frame}
 
-% SECTION 3: DETAILED TECHNICAL CONTRIBUTIONS (18 slides, ~30 minutes)
+% SECTION 3: DETAILED TECHNICAL CONTRIBUTIONS (20 slides, ~30 minutes)
 
-% 3a. Label Blindness Deep Dive (6 slides)
+% 3a. Label Blindness Deep Dive (7 slides)
+\renewcommand{\sectionpubinfo}{\hspace{1ex}(Published at ICLR 2025)}
 \section{Label Blindness Deep Dive}
 
-% 8. Formal Problem Definition
+% 8. Motivating Example: GradCAM Visualization
+\begin{frame}{Motivating Example: When Features Mislead}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{images/gradcam_example_faces.png}
+\end{center}
+\vspace{0.5cm}
+\textbf{High Gradient Areas for Facial Expressions when trained without Labels}
+
+\vspace{0.3cm}
+Notice that the neural network focuses on easy to identify features (e.g., glasses) rather than the features relevant for facial expression classification.
+
+\vspace{0.2cm}
+\footnotesize{GradCAM visualization \citep{selvaraju2017grad}}
+\end{frame}
+
+% 9. Formal Problem Definition
 \begin{frame}{Formal Problem Definition}
 \begin{itemize}
     \item \textbf{Out-of-Distribution Detection Task}:
@@ -321,10 +341,27 @@
 \end{itemize}
 \end{frame}
 
-% 3b. Domain Feature Collapse Deep Dive (6 slides)
+% 3b. Domain Feature Collapse Deep Dive (7 slides)
+\renewcommand{\sectionpubinfo}{\hspace{1ex}(Submitted to AAAI 2026)}
 \section{Domain Feature Collapse Deep Dive}
 
-% 14. Mathematical Formalization
+% 14. Motivating Question: What Do We Really Learn?
+\begin{frame}{Motivating Question: What Do We Really Learn?}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\centering
+\includegraphics[width=0.9\textwidth]{images/butterfly_1_sample.jpg}
+\end{column}
+\begin{column}{0.5\textwidth}
+\centering
+\vspace{1.5cm}
+\Large
+\textbf{We learn butterfly features,\\[0.3cm] but do we learn the butterfly shape?}
+\end{column}
+\end{columns}
+\end{frame}
+
+% 15. Mathematical Formalization
 \begin{frame}{Mathematical Formalization}
 \begin{itemize}
     \item \textbf{Single-Domain Dataset Definition}:
@@ -457,6 +494,7 @@
 \end{frame}
 
 % 3c. Hallucination Detection Deep Dive (6 slides)
+\renewcommand{\sectionpubinfo}{\hspace{1ex}(Work In Progress)}
 \section{Hallucination Detection Deep Dive}
 
 % 20. Information-Theoretic Hallucination Framework
@@ -474,7 +512,7 @@
         \item Identify bottleneck layers where information degrades
         \item Attention mechanism role in preserving/destroying information
     \end{itemize}
-    \item \textbf{Theoretical Foundation}: Information Bottleneck Principle
+    \item \textbf{Theoretical Foundation}: Information Bottleneck Principle \citep{tishby2000information}
     \item \textbf{Advantage}: No external knowledge bases required for detection
 \end{itemize}
 \end{frame}
@@ -523,8 +561,8 @@
     \item \textbf{Validation Strategy}:
     \begin{itemize}
         \item \textbf{Synthetic datasets}: Ground truth MI for method validation
-        \item \textbf{Real-world benchmarks}: HaluEval, TruthfulQA, FEVER, HalluLens
-        \item Cross-method consistency analysis (MINE, InfoNCE, kernel-based)
+        \item \textbf{Real-world benchmarks}: HaluEval \citep{li2023halueval}, TruthfulQA \citep{lin2022truthfulqa}, FEVER \citep{thorne2018fever}, HalluLens \citep{bang2025hallulens}
+        \item Cross-method consistency analysis (MINE \citep{belghazi2018mutual}, InfoNCE \citep{oord2018representation}, kernel-based)
     \end{itemize}
     \item \textbf{Evaluation Metrics}:
     \begin{itemize}
@@ -543,7 +581,7 @@
     \item \textbf{MI Estimation Performance}:
     \begin{itemize}
         \item Superior accuracy on QA-specific tasks vs. general MI methods
-        \item Computational efficiency: 10-100x faster than MINE
+        \item Computational efficiency: 10-100x faster than MINE \citep{belghazi2018mutual}
         \item Robust performance across different model scales and architectures
     \end{itemize}
     \item \textbf{Hallucination Detection Results}:
@@ -644,6 +682,12 @@
 
 \Large Questions?
 \end{center}
+\end{frame}
+
+% References
+\begin{frame}[allowframebreaks]{References}
+\footnotesize
+\bibliography{Bibliography}
 \end{frame}
 
 \end{document}

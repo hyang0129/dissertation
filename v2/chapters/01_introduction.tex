@@ -1,0 +1,15 @@
+% chapters/01_introduction.tex — stub.
+% Fill from ../v1/Introduction.tex. Every number must go through a \result{}
+% macro (backed by data/*.csv) or the BIB GATE (make lint) will fail the build.
+
+\chapter{Introduction}
+\label{ch:introduction}
+
+TODO: introduction.
+
+% --- Example demonstrating the bib gate (delete once real prose lands) -------
+% A number pulled from data/example_metrics.csv via the \result macro, and a
+% citation resolved through references.bib. Both are gate-approved contexts.
+As a worked example, the scaffold reports an AUROC of
+\result{example_metrics}{example:auroc:value}[3] on the placeholder split,
+following the out-of-distribution detection setting of \citet{hendrycks2016baseline}.

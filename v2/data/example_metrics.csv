@@ -1,0 +1,8 @@
+# source_commit: placeholder
+# generated: 2026-06-03T00:00:00Z
+# generator: hand-built — scaffold example; replace with a real experiment CSV
+# key_schema: dataset:metric
+# default_precision: 3
+dataset,metric,value
+example,auroc,0.912
+example,fpr95,0.184

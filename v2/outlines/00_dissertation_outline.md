@@ -164,6 +164,26 @@ same information-theoretic frame onto generative models.
 | Numbers hard-coded in prose | `\result{}` macros ← `data/*.csv` | The v2 bib gate |
 | `references.bib` edited freely | human-gated; propose in `outlines/` | Bib gate |
 
+## Publications & out-of-scope work
+
+A "Publications During Candidacy" page lives in
+`frontmatter/Publications.tex` (front matter, not a chapter; not gated), split
+into two groups:
+
+- **Forming this dissertation** — the three papers behind Chapters 4–6.
+- **Other publications during candidacy** (acknowledged only, not chapters):
+  - **onlycodes** — *"When Does Code-Execution Beat IDE Tools for Coding
+    Agents?"* (KDD 2026 SE 3.0 workshop, non-archival). Software-engineering
+    research, no information-theoretic tie to the spine.
+  - **AAAI 2022** — *"Predictive Maintenance for General Aviation Using
+    Convolutional Transformers"* (Yang, LaBella, Desell). Off-spine (time-series
+    predictive maintenance); no source materials available, so not portable as a
+    chapter regardless.
+
+Decision (2026-06-03): both are **acknowledged only, not chapters** — including
+off-spine work would weaken the unifying thesis. TODO: fill author lists / exact
+statuses for the dissertation papers on that page.
+
 ## Open questions for you
 
 1. **Keep Ch.2 Background and Ch.3 Literature Review separate**, or merge?

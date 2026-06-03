@@ -11,6 +11,7 @@ build or the bib gate.
 |---|---|---|
 | `iclr2025_label_blindness/` | Chapter 4 — Label Blindness in Unlabeled OOD Detection | ICLR 2025 camera-ready (`paper.tex`, `iclr2025_conference.bib`, figures). **Public** — committed. |
 | `eccv2026_domain_feature_collapse/` | Chapter 5 — Domain Feature Collapse | ECCV 2026 paper *"Beyond the Class Subspace: Teacher-Guided Training…"* (`main.tex`, `main.bib`, `results_macros.tex`, `generated_*` tables, figures). Source: `hyang0129/eccv2026`. **Under review — tracked, but this whole repo is PRIVATE.** See note below. |
+| `hallulens_mi_hallucination/` | Chapter 6 — Information-Theoretic Hallucination Detection | Paper *"Detecting Hallucinations via Mutual Information Analysis of Intermediate Layer Activations"* (`main.tex`, `sections/`, `data/*.csv`, `macros.tex`, `references.bib`). Source: `hyang0129/HalluLens` (`paper/`). **Already uses this exact bib-gate build system.** Public source. |
 
 > ⚠️ **This source is under review; the dissertation repo is therefore PRIVATE.**
 > The ECCV 2026 paper is unpublished (likely double-blind). It is committed here

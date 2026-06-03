@@ -1,0 +1,22 @@
+# source_commit: a2484b1d2b989b9a8f37bf4b59f2925b6e327042
+# generated: 2026-05-21T14:31:42Z
+# generator: scripts/aggregate_transfer.py
+# key_schema: model:method:scope
+# default_precision: 3
+model,method,scope,auroc_mean,auroc_std,n_seeds,n_cells_used,n_cells_total
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,in_domain,0.8116,0.0017,5,5,5
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,out_of_domain,0.6834,0.0043,5,20,20
+Llama-3.1-8B-Instruct,act_vit,in_domain,0.7972,0.004,5,5,5
+Llama-3.1-8B-Instruct,act_vit,out_of_domain,0.6829,0.004,5,20,20
+Llama-3.1-8B-Instruct,llmsknow_probe,in_domain,0.7741,0.0018,5,5,5
+Llama-3.1-8B-Instruct,llmsknow_probe,out_of_domain,0.6255,0.0075,5,20,20
+Llama-3.1-8B-Instruct,saplma,in_domain,0.6417,0.0021,5,5,5
+Llama-3.1-8B-Instruct,saplma,out_of_domain,0.5521,0.0019,5,20,20
+Qwen3-8B,contrastive_logprob_recon,in_domain,0.8551,0.0052,5,5,5
+Qwen3-8B,contrastive_logprob_recon,out_of_domain,0.7233,0.0047,5,20,20
+Qwen3-8B,act_vit,in_domain,0.8361,0.0024,4,5,5
+Qwen3-8B,act_vit,out_of_domain,0.7218,0.0016,4,20,20
+Qwen3-8B,llmsknow_probe,in_domain,0.7889,0.0048,5,5,5
+Qwen3-8B,llmsknow_probe,out_of_domain,0.6324,0.0077,5,20,20
+Qwen3-8B,saplma,in_domain,0.7276,0.0032,5,5,5
+Qwen3-8B,saplma,out_of_domain,0.6132,0.0024,5,20,20

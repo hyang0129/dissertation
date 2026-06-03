@@ -111,15 +111,22 @@ same information-theoretic frame onto generative models.
   `data/` with provenance headers and re-express via `\result{}`.
 - **Proofs:** Appendix B (pending — tied to this chapter's DSC theory).
 
-### Chapter 6 — Information-Theoretic Hallucination Detection ⬜ blank (pending source)
-- **Source:** **PENDING** — the MI-Hallucination paper, to be provided. Do
-  **not** port v1 §6 (which is a *proposal*, not results).
-- **Status:** Leave a stub chapter.
-- **Tentative thrust (subject to paper):** hallucination as a loss of mutual
-  information between query and response in intermediate layers; a contrastive
-  MI-estimation method; validation on QA + hallucination benchmarks
-  (Natural Questions, TriviaQA, HaluEval, TruthfulQA, FEVER, HalluLens).
-- **Numbers/figures:** TBD from paper → `data/`, `figures_src/`.
+### Chapter 6 — Information-Theoretic Hallucination Detection ⬜ blank (source located, not yet drafted)
+- **Source:** paper *"Detecting Hallucinations via Mutual Information Analysis of
+  Intermediate Layer Activations"* (repo `hyang0129/HalluLens`, `paper/`). Copied
+  to `sources/hallulens_mi_hallucination/`. Do **not** port v1 §6 (that was a
+  *proposal*, no results). Public source.
+- **Big advantage:** this paper **already uses the same bib-gate build system**
+  (the v2 system was itself adapted from it). Its `sections/*.tex`, `macros.tex`,
+  `data/*.csv` (provenance headers), and `references.bib` port over almost
+  directly — re-namespace its macros and fold its CSVs into `v2/data/`.
+- **Tentative sections (from the paper, to confirm):** Introduction · Related
+  Work · Method (MI between query/response across intermediate layers;
+  contrastive MI estimation) · Experimental Setup · Results · Domain Transfer ·
+  Limitations.
+- **Numbers/figures:** port `sources/hallulens_mi_hallucination/data/*.csv`
+  (headline_results, baseline_comparison, transfer_*) into `v2/data/` and reuse
+  `figures_src/` renderers.
 
 ### Chapter 7 — Conclusion ✅ carry-over ✏️ (was v1 Ch.8)
 - **Source:** [v1 §8](../../v1/Sample_Thesis_main.tex)

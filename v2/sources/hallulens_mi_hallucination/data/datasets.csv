@@ -1,0 +1,11 @@
+# source_commit: 498bb52144704077f354a8550af8a3ab4fb1773e
+# generated: 2026-05-21T12:53:47Z
+# generator: scripts/aggregate_datasets.py
+# key_schema: dataset
+# default_precision: 3
+dataset,train_size,test_size,pct_hallucinated_llama,pct_hallucinated_qwen,evaluator,license
+hotpotqa,,,,,substring-match,TBD
+nq,,,,,substring-match,TBD
+popqa,,,,,substring-match,TBD
+sciq,,,,,substring-match,TBD
+searchqa,,,,,substring-match,TBD

@@ -87,16 +87,24 @@ impossibility results.
   concept (variance in a low-rank class subspace, suppressed domain-shift
   directions), not the superseded DFC one. 2.6/2.7 carry over as-is.
 
-### Chapter 3 — Literature Review ✅ carry-over
+### Chapter 3 — Literature Review ✅ carry-over ✏️
 - **Source:** [v1 §3](../../v1/Sample_Thesis_main.tex)
-- **Purpose:** Position all three pillars against prior work.
-- **Sections:** 3.1 Information Theory in ML · 3.2 Representation Learning
-  (unsupervised, self-supervised) · 3.3 OOD Detection (classical /
-  self-supervised / benchmarking / single-domain / domain adaptation /
-  ensembles) · 3.4 Hallucination Detection (taxonomy, info-theoretic,
-  evaluation) · 3.5 Model Architectures (CNNs, Transformers, foundation models)
-- **Decision needed:** keep Ch.2 and Ch.3 separate (v1 does) or merge into one
-  "Background & Related Work" chapter. Recommendation: keep separate.
+- **Full plan:** [03_literature_review.md](03_literature_review.md) — RW
+  architecture (division of labor with per-chapter RW), organizing principle, and
+  per-section reference buckets (mapped to the 190-entry bib).
+- **Purpose:** Position all three pillars against prior work under the
+  representation-structure lens (info theory + geometry). Organize around the **two
+  lenses** (§3.1–3.2 shared frame; §3.3–3.4 = two applications of one question;
+  §3.5 substrate) so it reads as one review, not three.
+- **Sections:** 3.1 Information Theory in ML · 3.2 **Representation Learning &
+  Geometry** (self-/unsupervised + **neural collapse / alignment-uniformity /
+  probes**) · 3.3 OOD Detection (scorers / benchmarking / unlabeled / single-domain
+  + collapse / ensembles) · 3.4 Hallucination Detection (surveys / evaluation /
+  sampling / **internal-state probing**) · 3.5 Architectures & Foundation Models
+- **Status:** not a clean carry-over — §3.2 gains the geometry lens, §3.3 gets the
+  single-domain/DSC reframe, §3.4 is largely rewritten for the real Ch.6 methods.
+- **Architecture:** Ch.3 owns breadth + cross-pillar synthesis; per-chapter RW
+  (Ch.4/5/6) owns depth + comparators and back-references §3.x (no duplication).
 
 ### Chapter 4 — Label Blindness in Unlabeled OOD Detection ✅ carry-over (strongest chapter)
 - **Source:** [v1 §4](../../v1/Sample_Thesis_main.tex); paper source at
@@ -112,6 +120,9 @@ impossibility results.
   LPIPS/MSE, CLIPN CTW/ATD/MSP} → `data/label_blindness_results.csv`
   (mean±std, 3 seeds). GradCAM/example figures → `figures_src/`.
 - **Proofs:** Appendix A.
+- **Related Work scope** (see [03_literature_review.md](03_literature_review.md) §4):
+  unlabeled/SSL-OOD baselines tested (SimCLR-KNN/SSD, RotLoss, diffusion, CLIPN) +
+  near/far/**adjacent**-OOD benchmarking. Defer sufficiency/MI → §3.1, SSL → §3.2.
 
 ### Chapter 5 — Domain-Sensitivity Collapse and Teacher-Guided Training for Single-Domain OOD Detection ⬜ blank (source located, not yet drafted)
 - **Title decided (2026-06-03):** adopt the paper's **DSC / TGT** naming (was
@@ -145,6 +156,11 @@ impossibility results.
   `generated_*.tex/.csv` — port those CSVs into `data/` with provenance headers,
   re-express via `\result{}`; figures (effective-rank vs FPR@95, etc.) →
   `figures_src/`.
+- **Related Work scope** (see [03_literature_review.md](03_literature_review.md) §4):
+  single-domain OOD + the distance/logit scorers DSC degrades (MDS/kNN/ViM/MSP/
+  Energy), neural collapse as the diagnosis's neighbor (§3.2 back-ref), the
+  teacher-distillation lineage TGT builds on (CRD-style, DINOv2 teacher). Defer
+  broad OOD → §3.3, geometry → §3.2.
 - **Proofs → Appendix B** (changed; see below): Theorem 1 (distance failure under
   variance–discriminability mismatch) and Proposition 1 (MSP/Energy insensitivity).
 
@@ -209,6 +225,12 @@ impossibility results.
   `figures_src/` renderers. Honesty discipline from the source carries over: the
   bolding rule (bold a cell only when it beats the runner-up by > max std) and the
   two NQ losses must survive into the chapter prose.
+- **Related Work scope** (see [03_literature_review.md](03_literature_review.md) §4):
+  the three comparator families — output-space scalar (logprob/entropy/P(true)),
+  activation probes (SAPLMA/LLMsKnow/**ACT-ViT**), sampling (SelfCheckGPT/semantic
+  entropy) — + the contrastive-distillation precedent it extends (CRD/CoDIR/CDS,
+  SEP). Defer info-theory → §3.1, contrastive → §3.2, taxonomy/eval → §3.4. Hosts
+  the §2.3 novelty claim (layer-pair one-class contrastive vs CRD/CoDIR/CDS).
 
 ### Chapter 7 — Conclusion ✅ carry-over ✏️ (was v1 Ch.8)
 - **Source:** [v1 §8](../../v1/Sample_Thesis_main.tex)

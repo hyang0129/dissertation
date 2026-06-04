@@ -43,6 +43,11 @@ Already present (good recency, no action): `Wang2022vim` (ViM), `Sun2022dice`
 ---
 
 ## Recommendation
+> **✅ The two ⭐ must-adds were applied to `references.bib` on 2026-06-04**
+> (web-verified, ICLR 2024): `chen2024inside` (INSIDE/EigenScore, arXiv:2402.03744)
+> and `BenAmmar2024neco` (NECO, arXiv:2310.06823). Bib: 190 → 192 entries. The ➕/◦
+> sets remain proposals for §3.3/§3.4 draft time.
+
 Add the **two ⭐ must-adds now** (INSIDE/EigenScore, NECO) — they are the
 published methods nearest our two contributions and their absence is the kind of
 gap a committee flags immediately. Add the ➕ set when §3.3/§3.4 are drafted; the

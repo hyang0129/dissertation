@@ -10,6 +10,32 @@ are excluded.
 
 **Legend:** ✅ web-verified 2026-06-04 · ⭐ Tier-1 method anchor (verify first) · ⚠️ probable duplicate (verify, likely skip)
 
+## Verification status (2026-06-04) — ALL CLEAR
+
+Every staged candidate was checked against its canonical source (arXiv / ACL /
+CVF / PNAS / PMLR / Kaggle / publisher). **No fabrications; all real and correctly
+attributed.** Safe to merge at draft time (still apply via the gate).
+
+- **Ch.5 (15/15):** ViM (CVPR'22, arXiv:2203.10807), Outlier Exposure (ICLR'19,
+  1812.04606), DICE (ECCV'22, 2111.09805), Papyan neural collapse (PNAS'20,
+  doi:10.1073/pnas.2015509117), Zhu neural collapse (NeurIPS'21, 2105.02375),
+  Haas (TMLR'23, 2209.08378 — note: published TMLR, not 2022), DINO (ICCV'21,
+  2104.14294), DeiT (ICML'21), Jing dimensional collapse (ICLR'22, 2110.09348),
+  Galanti (ICLR'22, 2112.15121), Yang PSKD (**ICML'25** — confirmed), Kumar LP-FT
+  (ICLR'22, 2202.10054), Winkens (2007.05566), Berger (2107.02568), and
+  **`card_data`** = gpiosenka *Cards Image Dataset-Classification* (live Kaggle,
+  53 classes) — the legitimate replacement for the removed broken entry.
+- **Ch.6 (16/16):** Tier-1 — ACT-ViT (NeurIPS'25), SAPLMA/`azaria2023internal`
+  (Findings EMNLP'23), SEP/`kossen2024semantic` (2406.15927), ITI/`li2023iti`
+  (NeurIPS'23, 2306.03341), `marks2024geometry` (COLM'24, 2310.06824). Tier-2 —
+  `alain2017understanding` (1610.01644), `kadavath2022language` (2207.05221),
+  `min2023factscore` (EMNLP'23), `ji2022survey` (ACM CSUR), `tian2020crd`
+  (ICLR'20), `sun2020codir` (EMNLP'20), `zhang2022cds` (ECCV'22),
+  `wang2021understanding` (CVPR'21), `zhang2025icr` (ACL'25), `suresh2025clap`
+  (arXiv'25). `belinkov2019analysis` (TACL'19, doi:10.1162/tacl_a_00254) — page
+  paywalled; confirmed by DOI + well-known survey.
+- **Ch.4 (1):** `ritrc` is an institutional acknowledgement (RIT Research
+  Computing), not a paper — no web verification applies.
 
 ## Ch.4 — ICLR Label Blindness
 

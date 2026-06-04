@@ -86,6 +86,10 @@ impossibility results.
   *geometric* account, so §2.5 must be renamed and reconciled to prime the DSC
   concept (variance in a low-rank class subspace, suppressed domain-shift
   directions), not the superseded DFC one. 2.6/2.7 carry over as-is.
+- **Boundary with Ch.3:** §2.3 (Information Theory) and §2.4 (IB & Minimal
+  Sufficient Statistic) own the **definitions/formalism**; Ch.3 §3.1 owns the
+  **usage-literature** (info theory *in* ML). Definitions live here, the literature
+  there — avoids the §2.3–2.4 ↔ §3.1 overlap.
 
 ### Chapter 3 — Literature Review ✅ carry-over ✏️
 - **Source:** [v1 §3](../../v1/Sample_Thesis_main.tex)
@@ -370,3 +374,13 @@ paper *Under review, 2026*).
    (Methodology) and the abstract must lead with the representation-structure
    framing (both info theory and geometry as tools for "what the representation
    preserves"), not an info-theory-only umbrella.
+
+## TODO — research tasks
+
+- 🔜 **Literature currency sweep (before §3.3/§3.4 freeze).** The bib was seeded
+  from v1 + the three source papers, so concurrent **2024–25** work may be
+  under-covered. Find the 3–5 recent methods *per pillar* a committee would expect
+  and that the bib lacks — hallucination (e.g. EigenScore/INSIDE, Lookback Lens,
+  Haloscope, semantic-entropy follow-ups), OOD (e.g. GEN, NNGuide, fDBD). Scope:
+  positioning only, not exhaustive; route any additions through the bib gate
+  (propose → verify → apply). See [03_literature_review.md](03_literature_review.md) §6.

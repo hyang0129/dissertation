@@ -43,6 +43,13 @@ lenses** (domain-agnostic), so the chapter enacts the title:
 Open with a framing paragraph stating the thesis + two lenses; end each section
 with a one-sentence tie back to the spine.
 
+**Bridge the two lenses (else it's two topics, not one thesis).** §3.1→§3.2 must
+explicitly link information-theoretic and geometric views as *two measurements of
+the same representational structure* — e.g. `achille2018emergence` (invariance/
+sufficiency ↔ geometry), `wang2021understanding` (a contrastive loss read
+geometrically), `shwartz2023compress` / IB ↔ neural-collapse compression. Without
+this connective tissue §3.1 and §3.2 read as unrelated surveys.
+
 ---
 
 ## 3. Section structure
@@ -57,6 +64,10 @@ with a one-sentence tie back to the spine.
   `oord2018representation` `poole2019variational` `belghazi2018mutual`
   `hjelm2019learning` `mcallester1999pac` `xu2017information` `robert1952fano`
   `linsker1988self`
+- **Boundary with Ch.2 (no duplication):** Ch.2 §2.3–2.4 own the **definitions/
+  formalism** (what entropy, MI, the information bottleneck, and minimal
+  sufficiency *are*). §3.1 owns **how these have been used in ML** — the
+  literature, not the definitions. §3.1 assumes §2.3–2.4 and cites forward sparingly.
 - **Spine tie:** the formal language for "what a representation preserves about the
   label/shift."
 
@@ -69,15 +80,25 @@ with a one-sentence tie back to the spine.
 - **Self-/unsup + contrastive:** `chen2020simclr` `chen2020simple` `he2020momentum`
   `gidaris2018unsupervised` `Caron2021dino` `he2022masked` `chen2021exploring`
   `khosla2020supervised` `gao2021simcse` `oquab2023dinov2`
-- **Latent-variable / generative:** `hinton2006reducing` `vincent2008extracting`
-  `rifai2011contractive` `ng2011sparse` `kingma2014auto` `higgins2017beta`
-  `goodfellow2014generative` `chen2016infogan` `rezende2014stochastic`
-  `locatello2019challenging` `bartholomew1987latent` `tipping1999probabilistic`
-  `hyvarinen2000independent` `pearson1901liii` `baldi2012autoencoders`
+- **Classical lineage (compress to ~2 sentences — context only):** pre-deep
+  representation learning — PCA/ICA/factor analysis + autoencoders:
+  `pearson1901liii` `hyvarinen2000independent` `tipping1999probabilistic`
+  `bartholomew1987latent` `hinton2006reducing` `vincent2008extracting`
+  `baldi2012autoencoders`.
+  - **Pruned from Ch.3** (v1 baggage; generative modeling is not the thesis — keep
+    in the bib, omit from the review): `goodfellow2014generative` `kingma2014auto`
+    `higgins2017beta` `chen2016infogan` `rezende2014stochastic`
+    `dumoulin2016adversarially` `donahue2016adversarial` `creswell2018generative`
+    `locatello2019challenging` `rifai2011contractive` `ng2011sparse`. Diffusion
+    (`ho2020denoising` `song2020score` `karras2017progressive`) appears only as a
+    **Ch.4 OOD baseline**, not here.
 - **Geometry (new emphasis):** `Papyan2020nc` `Zhu2021nc` `Galanti2022collapse`
-  `Haas2022ncood` `Jing2022rank` `wang2021understanding` `alain2017understanding`
-- **Distillation (introduce here; Ch.6 positions against):** `hinton2015distilling`
-  `tian2020crd` `sun2020codir` `zhang2022cds`
+  `Haas2022ncood` `Jing2022rank` `wang2021understanding`. (Linear probing as a
+  geometry tool is introduced in §3.5; back-reference it here.)
+- **Distillation — cross-cutting thread (introduce here):** `hinton2015distilling`
+  `tian2020crd` `sun2020codir` `zhang2022cds`. **Load-bearing for two chapters** —
+  Ch.5 (TGT *is* teacher distillation) and Ch.6 (positions its layer-pair method
+  *against* contrastive distillation). Flag explicitly so it isn't under-weighted.
 - **Spine tie:** the second lens — *geometry* of what the representation keeps.
 
 ### 3.3 OOD detection  ✏️ revise (single-domain / DSC reframe)
@@ -109,7 +130,8 @@ with a one-sentence tie back to the spine.
   `kossen2024semantic`
 - **Internal-state probing (the family Ch.6 lives in):** `azaria2023internal`
   `li2023iti` `marks2024geometry` `kadavath2022language` `burns2023discovering`
-  `zhang2025icr` `suresh2025clap` `barshalom2025actvit` `alain2017understanding`
+  `zhang2025icr` `suresh2025clap` `barshalom2025actvit` — *applies* the probing
+  paradigm introduced in §3.5 (back-ref, don't re-introduce).
 - **Spine tie:** hallucination as loss of label-relevant structure across layers.
 
 ### 3.5 Architectures & foundation models  ✅ carry-over (+ LLMs)
@@ -119,9 +141,11 @@ with a one-sentence tie back to the spine.
   `Touvron2021deit`
 - **Foundation models:** `radford2021learning` `oquab2023dinov2` `devlin2018bert`
   `brown2020language` `raffel2020exploring` `radford2018improving`
-- **Interpretability / probing of internals:** `tenney2019bert` `hewitt2019structural`
-  `voita2019analyzing` `voita2019information` `belinkov2019analysis`
-  `kim2018interpretability` `olah2020zoom` `selvaraju2017grad`
+- **Interpretability / probing of internals (HOME of the probing paradigm):**
+  `alain2017understanding` `belinkov2019analysis` `tenney2019bert`
+  `hewitt2019structural` `voita2019analyzing` `voita2019information`
+  `kim2018interpretability` `olah2020zoom` `selvaraju2017grad`. Introduce probing
+  *here*; §3.2 (geometry) and §3.4 (hallucination) apply it with a back-ref.
 - **Spine tie:** the substrate whose internal representations §3.3/§3.4 probe.
 
 > **Dataset / benchmark cites are NOT in Ch.3.** Keys like `cifar10` `food`
@@ -160,9 +184,25 @@ distinguishes from). Convention: **§3.2 introduces and defines them; Ch.6 posit
 against them with a back-ref.** Don't let both carry the novelty argument.
 
 ## 6. Open items
-- Confirm the role of a few unbucketed keys at draft time (e.g. `liu2025detecting`,
-  `chen2020simple` vs `chen2020simclr` possible overlap, `guille2024cadet`,
-  `ekim2024distribution`, domain-specific OOD apps `kafunah2023out`/`kim2021wafer`/
+
+**Resolved 2026-06-04** (review of the plan):
+- ✅ **§3.2 pruned** — generative/latent-variable v1 baggage cut to a brief
+  classical-lineage sentence; GANs/VAEs/disentanglement omitted from the review;
+  diffusion demoted to Ch.4 OOD baseline.
+- ✅ **Ch.2 ↔ Ch.3 boundary** stated (§3.1): Ch.2 = definitions/formalism, §3.1 =
+  usage-literature.
+- ✅ **Two-lens bridge** added (§2): explicit info-theoretic↔geometric linking refs.
+- ✅ **Distillation** elevated to a flagged cross-cutting thread (§3.2).
+- ✅ **Probing** consolidated — introduced in §3.5; §3.2/§3.4 apply with back-ref.
+
+**Still open:**
+- 🔜 **Currency sweep (the one piece of new work).** Bib seeded from v1 + the three
+  source papers, so concurrent 2024–25 SOTA may be thin. Before §3.3/§3.4 freeze,
+  find the 3–5 recent methods per pillar a reviewer would expect and that the bib
+  lacks (hallucination: EigenScore/INSIDE, Lookback Lens, Haloscope, SE follow-ups;
+  OOD: GEN, NNGuide, fDBD, …). Positioning only, not exhaustive. Tracked as a TODO
+  in [00_dissertation_outline.md](00_dissertation_outline.md).
+- Confirm a few unbucketed keys at draft time: `liu2025detecting`,
+  `chen2020simple` vs `chen2020simclr` (possible overlap), `guille2024cadet`,
+  `ekim2024distribution`, domain-specific OOD apps (`kafunah2023out`/`kim2021wafer`/
   `narayanaswamy2023exploring`).
-- Decide whether §3.2's latent-variable/generative subsection stays full or
-  compresses (it is broad and only lightly load-bearing for the three pillars).

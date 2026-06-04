@@ -377,10 +377,10 @@ paper *Under review, 2026*).
 
 ## TODO — research tasks
 
-- 🔜 **Literature currency sweep (before §3.3/§3.4 freeze).** The bib was seeded
-  from v1 + the three source papers, so concurrent **2024–25** work may be
-  under-covered. Find the 3–5 recent methods *per pillar* a committee would expect
-  and that the bib lacks — hallucination (e.g. EigenScore/INSIDE, Lookback Lens,
-  Haloscope, semantic-entropy follow-ups), OOD (e.g. GEN, NNGuide, fDBD). Scope:
-  positioning only, not exhaustive; route any additions through the bib gate
-  (propose → verify → apply). See [03_literature_review.md](03_literature_review.md) §6.
+- ✅ **Literature currency sweep — done 2026-06-04.** Results in
+  [currency_sweep_2026-06-04.md](currency_sweep_2026-06-04.md): ~5 recent methods
+  per pillar absent from the bib, with two **must-adds** (INSIDE/EigenScore for
+  Ch.6; NECO for Ch.5 — each the closest published neighbor to our own method).
+  **Follow-up:** add the two must-adds via the gate (verify identifier → apply);
+  add the rest when §3.3/§3.4 are drafted. *Also surfaced:* the Ch.5 ECCV paper may
+  now be public (arXiv:2603.11269) — confirm; would lift the keep-private constraint.

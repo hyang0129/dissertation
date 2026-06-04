@@ -5,6 +5,8 @@
 **Method:** multi-agent workflow `reference-audit` — 27 parallel verification batches (~6 refs each) → adversarial re-check of every non-confirmed entry → synthesis. 33 agents, 287 web lookups, ~6.8 min.  
 **Purpose:** detect hallucinated / fabricated references before any chapter cites from this file.
 
+> **Resolution (2026-06-04):** all findings actioned — see [../outlines/bib_corrections_2026-06-04.md](../outlines/bib_corrections_2026-06-04.md). 8 entries corrected; `zhang2023sirens`, `rogers2020primer`, `card_data` removed; a pre-existing orphaned `huang2021mos` fragment removed. `references.bib`: 161 → 158 entries.
+
 ## Verdict
 
 | Status | Count | % |

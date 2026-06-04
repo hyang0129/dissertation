@@ -10,7 +10,12 @@ are excluded.
 
 **Legend:** ✅ web-verified 2026-06-04 · ⭐ Tier-1 method anchor (verify first) · ⚠️ probable duplicate (verify, likely skip)
 
-## Verification status (2026-06-04) — ALL CLEAR
+## Verification status (2026-06-04) — ALL CLEAR · ✅ APPLIED
+
+**Applied to `references.bib` on 2026-06-04 (158 → 190 entries).** Venue `@string`
+macros expanded inline; `Haas2022ncood` corrected to TMLR 2023; `card_data` →
+gpiosenka. `Fort2021pretrained` skipped (dup of `fort2021exploring`). All entries
+remain uncited until chapters are drafted (expected).
 
 Every staged candidate was checked against its canonical source (arXiv / ACL /
 CVF / PNAS / PMLR / Kaggle / publisher). **No fabrications; all real and correctly

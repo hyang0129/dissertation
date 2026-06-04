@@ -4,9 +4,11 @@
 #   make deps     — install Python dependencies from requirements.txt
 #   make figures  — render all figures_src/*.py scripts → generated/figures/
 #   make values   — build_numbers.py: CSVs + sidecars → generated/values.tex
-#   make lint     — BIB GATE: bare-digit-not-in-citation check on prose .tex
-#   make paper    — figures + values + lint + latexmk -pdf main.tex
-#   make clean    — remove generated/ and latexmk byproducts
+#   make lint      — BIB GATE (numbers): bare-digit-not-in-citation check on prose
+#   make check-refs— BIB GATE (citations): undefined/duplicate/orphan reference check
+#                    (add ONLINE=1 to also resolve arXiv/DOI titles; needs network)
+#   make paper     — figures + values + lint + check-refs + latexmk -pdf main.tex
+#   make clean     — remove generated/ and latexmk byproducts
 #
 # First-time setup:
 #   make deps     (installs pandas, numpy, scipy, matplotlib)
@@ -26,7 +28,10 @@ FIGURE_SCRIPTS := $(wildcard figures_src/*.py)
 # Sentinel file: figures are up to date when this exists
 FIGURES_STAMP  := generated/.figures_stamp
 
-.PHONY: deps check-deps figures values lint paper clean
+.PHONY: deps check-deps figures values lint check-refs paper clean
+
+# ONLINE=1 makes check-refs resolve arXiv/DOI titles (needs network)
+CHECKREFS_FLAGS := $(if $(ONLINE),--online,)
 
 # ---------------------------------------------------------------------------
 # deps: install Python dependencies declared in requirements.txt
@@ -70,9 +75,16 @@ lint:
 	$(PYTHON) lint.py --paper-dir $(PAPER_DIR)
 
 # ---------------------------------------------------------------------------
+# check-refs: the CITATION half of the bib gate — undefined / duplicate /
+# orphaned references (ONLINE=1 also resolves arXiv/DOI titles). stdlib only.
+# ---------------------------------------------------------------------------
+check-refs:
+	$(PYTHON) check_refs.py --paper-dir $(PAPER_DIR) $(CHECKREFS_FLAGS)
+
+# ---------------------------------------------------------------------------
 # paper: end-to-end build (requires latexmk)
 # ---------------------------------------------------------------------------
-paper: figures values lint
+paper: figures values lint check-refs
 	latexmk -pdf -interaction=nonstopmode $(MAIN).tex
 
 # ---------------------------------------------------------------------------

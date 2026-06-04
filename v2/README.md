@@ -50,12 +50,31 @@ a CSV via a `\result`-family macro, or the build fails.
 To allow a legitimate bare digit, add a literal string to `WHITELIST` in
 `lint.py` and document it below.
 
-### 2. Citation gate — human-gated `references.bib`
+### 2. Citation gate — human-gated `references.bib` + `make check-refs`
 
-`references.bib` is **never edited by an agent**. New citations are proposed in
-`outlines/<chapter>.md` first, with enough detail for a human to verify, and
-only then added to the `.bib` by a human. (The seed `references.bib` was copied
-from `../v1/Bibliography.bib`.)
+**Policy.** `references.bib` is **never edited by an agent** (enforced by a
+`PreToolUse` deny-hook in `.claude/settings.json`). New citations are proposed in
+`outlines/<chapter>.md` first, with enough detail for a human to verify, and only
+then added to the `.bib` by a human. (The seed `references.bib` was copied from
+`../v1/Bibliography.bib`.)
+
+**Tooling — `check_refs.py` (`make check-refs`).** Offline, stdlib-only, fails
+the build on:
+- an **undefined citation** (`\cite` key with no entry),
+- a **duplicate bibkey**,
+- an **orphaned/malformed entry body** (field lines outside any `@entry` — the
+  corruption that hid a broken `huang2021mos` entry in the seed bib).
+
+It also summarizes two advisories (entries with no DOI/arXiv/url; entries not yet
+cited — expected while chapters are stubs); list them with `--show-no-id` /
+`--show-uncited`. `make check-refs ONLINE=1` additionally resolves each arXiv id /
+DOI and **fails if the resolved title doesn't match the bib title** — the check
+that catches an identifier pointing at the wrong paper (needs network; for CI /
+pre-submission, not the default build).
+
+**Periodic deep audit.** A full web re-verification of every entry (the
+`reference-audit` multi-agent workflow) is re-runnable on demand; its last run is
+in `reports/reference_audit.md`.
 
 ## Citation macros
 

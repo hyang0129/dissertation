@@ -52,11 +52,17 @@ To allow a legitimate bare digit, add a literal string to `WHITELIST` in
 
 ### 2. Citation gate — human-gated `references.bib` + `make check-refs`
 
-**Policy.** `references.bib` is **never edited by an agent** (enforced by a
-`PreToolUse` deny-hook in `.claude/settings.json`). New citations are proposed in
-`outlines/<chapter>.md` first, with enough detail for a human to verify, and only
-then added to the `.bib` by a human. (The seed `references.bib` was copied from
-`../v1/Bibliography.bib`.)
+**Policy.** `references.bib` is human-gated: new citations are proposed in
+`outlines/<chapter>.md` first, with enough detail to verify, and only then added
+by a human. (The seed `references.bib` was copied from `../v1/Bibliography.bib`.)
+
+**Enforcement.** A `PreToolUse` hook (`.claude/settings.json` →
+`.claude/hooks/protect_references_bib.py`) intercepts every agent attempt to
+*write* `references.bib` — via `Edit`/`Write`/`MultiEdit` **or** a `Bash` command
+that writes it (redirects, `tee`, `sed -i`, `cp`/`mv`, or a script's `open(...,
+'w')`) — and escalates to a user-approval prompt (`permissionDecision: "ask"`).
+You approve a verified entry or reject it; reading the file is never blocked. The
+hook fails open on parse errors and does not affect your own edits in the editor.
 
 **Tooling — `check_refs.py` (`make check-refs`).** Offline, stdlib-only, fails
 the build on:

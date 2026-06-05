@@ -71,25 +71,27 @@ impossibility results.
   abstract, and Ch.6 results prose must all use this same verb (per the source's
   cross-section consistency rule).
 
-### Chapter 2 — Background and Definitions ✅ carry-over ✏️
-- **Source:** [v1 §2](../../v1/Sample_Thesis_main.tex), [v1/Background.tex](../../v1/Background.tex)
-- **Purpose:** Shared formal vocabulary used by all three pillars.
-- **Sections:** 2.1 OOD Detection · 2.2 Anomaly Detection (scope, training
-  assumptions, evaluation) · 2.3 Information Theory (entropy, mutual information)
-  · 2.4 Information Bottleneck & Minimal Sufficient Statistic · 2.5 Dataset
-  Domain (incl. Domain Features & **Domain-Sensitivity Collapse, DSC** — renamed
-  from v1's "Domain Feature Collapse") · 2.6 Unlabeled OOD Detection · 2.7 Large
-  Language Models
-- **Note:** 2.5/2.6 prime Chapters 4–5; 2.7 primes Chapter 6. ⚠️ **§2.5 needs a
-  revise, not a clean carry-over:** v1's §2.5 defines "Domain Feature Collapse"
-  under the old info-bottleneck framing; Ch.5/App.B now use **DSC** with a
-  *geometric* account, so §2.5 must be renamed and reconciled to prime the DSC
-  concept (variance in a low-rank class subspace, suppressed domain-shift
-  directions), not the superseded DFC one. 2.6/2.7 carry over as-is.
-- **Boundary with Ch.3:** §2.3 (Information Theory) and §2.4 (IB & Minimal
-  Sufficient Statistic) own the **definitions/formalism**; Ch.3 §3.1 owns the
-  **usage-literature** (info theory *in* ML). Definitions live here, the literature
-  there — avoids the §2.3–2.4 ↔ §3.1 overlap.
+### Chapter 2 — Background and Definitions ✅ carry-over ✏️ (substantial revise — see 2026-06-05 note)
+- **Source:** [v1 §2](../../v1/Sample_Thesis_main.tex#L163-L473) (content is inline
+  in the main file; `v1/Background.tex` is a stub).
+- **Full plan:** [02_background.md](02_background.md) — per-section primitive
+  inventory (provenance + consumer map), the two boundaries, and drafting cautions.
+- **Purpose:** Supply the **lens-neutral primitives** every results chapter reuses,
+  delivering *both* lenses the title promises (information-theoretic **and**
+  geometric).
+- **Principle (decided 2026-06-05): primitives-only** — Ch.2 defines only reused
+  vocabulary; each results chapter names its own phenomenon/method (so the DFC
+  *definition* leaves Background and Ch.5 owns DSC). Full rationale: the 2026-06-05
+  decision note below + [02_background.md](02_background.md) §1.
+- **Sections** (detail + provenance in [02_background.md](02_background.md) §2):
+  *Tasks* — 2.1 OOD Detection · 2.2 Anomaly Detection · 2.3 Unlabeled OOD · 2.4
+  Dataset Domain & Single-Domain (DFC def **deleted** → forward-pointer to DSC) ·
+  2.5 LLMs & Hallucination (**+ residual stream**). *Two lenses* — 2.6 Information
+  Theory (**+ DPI**) · 2.7 IB, Sufficiency & MI Estimation (**+ variational/InfoNCE
+  bound**) · 2.8 **Representation Geometry** (new).
+- **Boundary with Ch.3:** §2.6–2.8 own the definitions/formalism; Ch.3 §3.1–3.2 own
+  the usage-literature. Ch.2 ends on the two lenses in Ch.3's opening order
+  (§2.6/2.7→§3.1, §2.8→§3.2). Detail in [02_background.md](02_background.md) §1.
 
 ### Chapter 3 — Literature Review ✅ carry-over ✏️
 - **Source:** [v1 §3](../../v1/Sample_Thesis_main.tex)
@@ -107,8 +109,7 @@ impossibility results.
   sampling / **internal-state probing**) · 3.5 Architectures & Foundation Models
 - **Status:** not a clean carry-over — §3.2 gains the geometry lens, §3.3 gets the
   single-domain/DSC reframe, §3.4 is largely rewritten for the real Ch.6 methods.
-- **Architecture:** Ch.3 owns breadth + cross-pillar synthesis; per-chapter RW
-  (Ch.4/5/6) owns depth + comparators and back-references §3.x (no duplication).
+  (Division of labor with per-chapter RW: [03_literature_review.md](03_literature_review.md) §1.)
 
 ### Chapter 4 — Label Blindness in Unlabeled OOD Detection ✅ carry-over (strongest chapter)
 - **Source:** [v1 §4](../../v1/Sample_Thesis_main.tex); paper source at
@@ -133,9 +134,9 @@ impossibility results.
   "Domain Feature Collapse"). Label remains `ch:domain-sensitivity-collapse`.
 - **Source:** ECCV 2026 paper *"Beyond the Class Subspace: Teacher-Guided
   Training for Reliable OOD Detection in Single-Domain Models"* (repo
-  `hyang0129/eccv2026`), at `sources/eccv2026_domain_feature_collapse/`. Tracked,
-  but the repo is **private** (paper under review) — keep it private until the
-  paper is public. Do **not** port v1 §5: the phenomenon was renamed (Domain
+  `hyang0129/eccv2026`), at `sources/eccv2026_domain_feature_collapse/`. **Public
+  as of 2026-06-05** — arXiv:2603.11269 (submitted 2026-03-11); the earlier
+  keep-private embargo no longer applies. Do **not** port v1 §5: the phenomenon was renamed (Domain
   Feature Collapse → **Domain-Sensitivity Collapse, DSC**) **and the solution
   changed** (v1's domain filtering / two-stage detector → **Teacher-Guided
   Training, TGT**). This is a rewrite, not a port.
@@ -355,6 +356,29 @@ paper *Under review, 2026*).
   are its two tools. Ch.1 §1.3 and the abstract must lead with this, not an
   info-theory-only umbrella.
 
+### Added 2026-06-05 — Ch.2 reframed as a two-lens primitives chapter
+
+Driven by the ECCV (DSC) and hallucination (MI) source changes: v1's §2 was
+monolithically information-theoretic and centered on the IB/MSS → Domain-Feature-
+Collapse chain, which two of three chapters have moved out from under (Ch.5 is now
+geometric; Ch.6 uses cross-layer MI/InfoNCE, not IB/sufficiency). Three decisions:
+
+- **Primitives-only principle.** Ch.2 holds only lens-neutral, reused vocabulary;
+  each results chapter names its own phenomenon/method. → **DFC definition deleted
+  from Background** (Ch.5 defines DSC fresh); §2.4 keeps domain/single-domain defs
+  + a forward-pointer only.
+- **Geometry lens added (§2.8).** New section — spectrum/anisotropy, effective
+  rank, class vs domain-shift subspaces, distance/logit scores, neural-collapse
+  definition. Gives the title's "geometric" half a background home; primes
+  Ch.5/DSC and Ch.3 §3.2.
+- **MI-estimation primitives centralized.** Data Processing Inequality (§2.6) +
+  variational/InfoNCE lower bound (§2.7) move into Ch.2; Ch.6 keeps only the
+  method-specific one-class layer-pair construction. Primes Ch.6 and Ch.3 §3.1/§3.4.
+
+Net: Ch.2 ends on the two lenses in the order Ch.3 opens with them, so the
+precursor handoff is one beat — *Ch.2 defines → Ch.3 surveys → Ch.4–6 deploy.* See
+the Ch.2 entry above for the full section map.
+
 ## Open questions for you
 
 1. ~~**Keep Ch.2 Background and Ch.3 Literature Review separate**, or merge into one
@@ -381,6 +405,13 @@ paper *Under review, 2026*).
   [currency_sweep_2026-06-04.md](currency_sweep_2026-06-04.md): ~5 recent methods
   per pillar absent from the bib, with two **must-adds** (INSIDE/EigenScore for
   Ch.6; NECO for Ch.5 — each the closest published neighbor to our own method).
-  **Follow-up:** add the two must-adds via the gate (verify identifier → apply);
-  add the rest when §3.3/§3.4 are drafted. *Also surfaced:* the Ch.5 ECCV paper may
-  now be public (arXiv:2603.11269) — confirm; would lift the keep-private constraint.
+  **Follow-up:** ✅ both must-adds added via the gate (commit `12fa28c`, bib
+  190→192: `chen2024inside`, `BenAmmar2024neco`). 🔜 add the rest when §3.3/§3.4 are
+  drafted. *Also surfaced:* ✅ **confirmed public 2026-06-05** — arXiv:2603.11269
+  (submitted 2026-03-11) is the Ch.5 paper exactly (title, authors Yang/Kar/Yu/
+  Desell/Ororbia, DSC+TGT abstract all match). The "paper under review — keep
+  private until public" rationale is now moot *for the preprint content*. Open for
+  the author: (i) relax the keep-private constraint on `hyang0129/eccv2026` (and the
+  dissertation repo) — author's call; (ii) update [Publications.tex](../frontmatter/Publications.tex)
+  status (currently "Under review, 2026") to cite the arXiv id; (iii) the Ch.5 entry
+  + App.B "repo is private" notes below can drop their privacy caveat.

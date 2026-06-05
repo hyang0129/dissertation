@@ -64,10 +64,11 @@ this connective tissue §3.1 and §3.2 read as unrelated surveys.
   `oord2018representation` `poole2019variational` `belghazi2018mutual`
   `hjelm2019learning` `mcallester1999pac` `xu2017information` `robert1952fano`
   `linsker1988self`
-- **Boundary with Ch.2 (no duplication):** Ch.2 §2.3–2.4 own the **definitions/
-  formalism** (what entropy, MI, the information bottleneck, and minimal
-  sufficiency *are*). §3.1 owns **how these have been used in ML** — the
-  literature, not the definitions. §3.1 assumes §2.3–2.4 and cites forward sparingly.
+- **Boundary with Ch.2 (no duplication):** Ch.2 §2.6–2.7 own the **definitions/
+  formalism** (what entropy, MI, DPI, the information bottleneck, minimal
+  sufficiency, and the variational/InfoNCE MI bound *are*). §3.1 owns **how these
+  have been used in ML** — the literature, not the definitions. §3.1 assumes
+  §2.6–2.7 and cites forward sparingly.
 - **Spine tie:** the formal language for "what a representation preserves about the
   label/shift."
 
@@ -76,7 +77,10 @@ this connective tissue §3.1 and §3.2 read as unrelated surveys.
   contrastive learning; latent-variable/generative representations; **and the
   geometric structure of learned features (neural collapse, dimensional collapse,
   alignment/uniformity, linear probes)** — the new co-lens that makes Ch.5's
-  geometric DSC account and Ch.6's layer-pair views legible.
+  geometric DSC account and Ch.6's layer-pair views legible. **Builds on Ch.2 §2.8
+  (Representation Geometry):** §2.8 *defines* the geometric primitives (spectrum,
+  effective rank, subspaces, the bare neural-collapse definition); §3.2 surveys how
+  the field has *used* them. Same definitions-vs-literature boundary as §3.1↔§2.6–2.7.
 - **Self-/unsup + contrastive:** `chen2020simclr` `chen2020simple` `he2020momentum`
   `gidaris2018unsupervised` `Caron2021dino` `he2022masked` `chen2021exploring`
   `khosla2020supervised` `gao2021simcse` `oquab2023dinov2`

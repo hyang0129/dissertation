@@ -10,14 +10,14 @@ build or the bib gate.
 | Directory | Feeds | Status |
 |---|---|---|
 | `iclr2025_label_blindness/` | Chapter 4 — Label Blindness in Unlabeled OOD Detection | ICLR 2025 camera-ready (`paper.tex`, `iclr2025_conference.bib`, figures). **Public** — committed. |
-| `eccv2026_domain_feature_collapse/` | Chapter 5 — Domain Feature Collapse | ECCV 2026 paper *"Beyond the Class Subspace: Teacher-Guided Training…"* (`main.tex`, `main.bib`, `results_macros.tex`, `generated_*` tables, figures). Source: `hyang0129/eccv2026`. **Under review — tracked, but this whole repo is PRIVATE.** See note below. |
+| `eccv2026_domain_feature_collapse/` | Chapter 5 — Domain Feature Collapse | ECCV 2026 paper *"Beyond the Class Subspace: Teacher-Guided Training…"* (`main.tex`, `main.bib`, `results_macros.tex`, `generated_*` tables, figures). Source: `hyang0129/eccv2026`. **Public as of 2026-06-05** — arXiv:2603.11269 (submitted 2026-03-11); under review at venue but preprint is public. |
 | `hallulens_mi_hallucination/` | Chapter 6 — Information-Theoretic Hallucination Detection | Paper *"Detecting Hallucinations via Mutual Information Analysis of Intermediate Layer Activations"* (`main.tex`, `sections/`, `data/*.csv`, `macros.tex`, `references.bib`). Source: `hyang0129/HalluLens` (`paper/`). **Already uses this exact bib-gate build system.** Public source. |
 
-> ⚠️ **This source is under review; the dissertation repo is therefore PRIVATE.**
-> The ECCV 2026 paper is unpublished (likely double-blind). It is committed here
-> only because `hyang0129/dissertation` was switched to **private** to hold it.
-> **Do not make the dissertation repo public again** until this paper is public
-> (arXiv / camera-ready), or move/remove this source first.
+> ℹ️ **Embargo lifted 2026-06-05.** The ECCV 2026 paper is now a public arXiv
+> preprint (arXiv:2603.11269, submitted 2026-03-11), so vendoring its source here
+> no longer requires the dissertation repo to stay private. The repo had been
+> switched to private on 2026-06-03 solely to hold this source; that constraint no
+> longer applies and the repo may be made public again at the author's discretion.
 
 ## Rules (so source material can't defeat the v2 design)
 

@@ -1,0 +1,15 @@
+# source_commit: placeholder
+# generated: 2026-06-06T00:00:00Z
+# generator: hand-transcribed from sources/eccv2026_domain_feature_collapse/generated_dual_metric_farood_tabular.tex (OpenOOD generate_paper_tables.ipynb). Far-OOD FPR@95/AUROC (%), averaged across single-domain benchmarks. SupCon '-' cells left blank.
+# key_schema: scorer
+# default_precision: 2
+scorer,dino_fpr95,dino_auroc,tgdino_fpr95,tgdino_auroc,resnet_fpr95,resnet_auroc,tgresnet_fpr95,tgresnet_auroc,supcon_fpr95,supcon_auroc
+ebo,47.73,79.77,38.92,83.68,52.69,81.74,41.73,85.43,,
+mds,22.30,91.36,21.46,91.99,25.55,91.21,13.94,95.57,32.02,85.85
+msp,52.47,76.54,44.41,80.48,51.31,80.99,42.18,84.32,,
+knn,31.87,87.68,29.99,88.32,34.98,87.44,22.71,92.41,44.39,82.66
+nci,43.42,82.47,41.41,82.87,44.77,83.67,28.14,89.95,,
+react,45.76,80.89,37.98,84.42,51.92,80.78,37.59,87.06,,
+scale,49.73,79.21,38.52,84.19,55.47,81.53,41.85,85.74,,
+vim,22.60,91.67,22.21,91.90,26.43,90.81,15.65,95.32,,
+mds_teacher_only,1.09,99.63,1.09,99.63,1.09,99.63,1.09,99.63,,

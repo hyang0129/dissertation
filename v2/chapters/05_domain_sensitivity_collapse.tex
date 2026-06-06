@@ -1,8 +1,384 @@
-% chapters/05_domain_sensitivity_collapse.tex — BLANK, pending drafting.
-% Source: ECCV 2026 paper at ../sources/eccv2026_domain_feature_collapse/.
-% Do NOT port v1 §5 — different phenomenon name (DFC -> DSC) AND different method
-% (domain filtering -> Teacher-Guided Training). See ../outlines/00_dissertation_outline.md (Ch.5).
+% chapters/05_domain_sensitivity_collapse.tex
+% Ported from the ECCV 2026 DSC/TGT paper (../sources/eccv2026_domain_feature_collapse/).
+% Assembled from .ch5_frag/s51..s56 (Phase B). Numbers gated via \result -> data/dsc_*.csv.
 \chapter{Domain-Sensitivity Collapse and Teacher-Guided Training for Single-Domain OOD Detection}
 \label{ch:domain-sensitivity-collapse}
 
-TODO: port from the ECCV 2026 DSC/TGT paper. Intentionally left blank.
+% ===================== s51 =====================
+\section{Introduction}
+\label{sec:dsc:intro}
+
+Out-of-distribution (OOD) detection is most often studied in settings where the training distribution is itself visually diverse, as in the CIFAR-10/100 and ImageNet variants that dominate standard benchmarks~\citep{yang2022openood,yang2021generalized}. Many deployed systems, however, are trained on \emph{single-domain} data: one acquisition pipeline, one texture regime, one visual style, with a stable set of domain-shared features. Histopathology slides, multispectral satellite imagery, and industrial inspection photographs are all of this kind. A detector in this regime must flag two quite different anomalies: samples from unseen classes that nonetheless belong to the same visual domain (in-domain OOD), and samples from an entirely different domain (out-of-domain OOD). This is precisely where many otherwise strong post-hoc scorers degrade, and the degradation can be severe---under extreme domain shift, standard single-domain models can yield out-of-domain false-positive rates above $\result{dsc_narrative}{single_domain_extreme_shift_fpr:value}[0]\%$ at $95\%$ recall.
+
+This chapter argues that the failure is, at root, \emph{geometric}, and it proceeds by diagnosis and then by recovery. Supervised single-domain training drives the representation toward low-rank, class-aligned structure: variance concentrates in a class-discriminative subspace while the orthogonal directions are suppressed, for in-distribution and out-of-distribution inputs alike. We formalise this phenomenon as \emph{Domain-Sensitivity Collapse} (DSC). Under DSC, distance-based scorers (Mahalanobis, $k$-nearest-neighbour, ViM) and logit-based scorers (maximum softmax probability, energy) alike lose sensitivity to domain shift, because the very feature directions that would express the domain discrepancy are the ones the training objective has collapsed. The geometric machinery this rests on---effective rank, neural collapse, and the class-discriminative subspace---was introduced in \Cref{ch:background}; here we put it to work to define DSC, to bound when standard OOD scores must fail, and to confirm the prediction empirically.
+
+The diagnosis is sharp enough to suggest its own remedy. If the problem is that single-domain supervision collapses the domain-sensitive directions, then a training-time signal that re-populates those directions should restore detection performance. We introduce \emph{Teacher-Guided Training} (TGT), which transfers domain-shift sensitivity from a frozen multi-domain foundation model (DINOv2~\citep{oquab2023dinov2}) into a single-domain student. The transferred signal is a \emph{class-suppressed teacher residual}: we project out the class-discriminative directions of the teacher's features and supervise the student on what remains, through an auxiliary domain head. This preserves the standard cross-entropy classification objective while injecting domain-aware structure that single-domain supervision alone cannot recover. Crucially, the teacher and the auxiliary head are discarded after training, so inference uses only the student together with any off-the-shelf post-hoc scorer and incurs no test-time overhead.
+
+The recovery is measurable. Across eight single-domain benchmarks, TGT reverses the collapse it diagnoses: on a ResNet-50 student it raises the mean effective rank of the learned representation from $\result{dsc_geometry}{mean:ce:r_eff}[1]$ under cross-entropy to $\result{dsc_geometry}{mean:tgt:r_eff}[1]$ under TGT (\Cref{sec:dsc:phenomenon}), and that restored feature diversity translates into double-digit reductions in out-of-domain false-positive rate for the distance-based scorers. The Mahalanobis detector, for instance, improves from $\result{dsc_main_farood}{mds:resnet_fpr95}$ to $\result{dsc_main_farood}{mds:tgresnet_fpr95}$ FPR@95, a reduction of $\resdelta{dsc_main_farood}{mds:resnet_fpr95}{mds:tgresnet_fpr95}$~percentage points, while in-domain OOD also improves and classification accuracy is maintained (\Cref{sec:dsc:experiments}). A frozen multi-domain teacher used on its own does not suffice: it is near-perfect on out-of-domain OOD but fails on the harder in-domain regime, so only the distilled student improves both at once.
+
+The contributions of this chapter are therefore threefold:
+\begin{itemize}
+  \item We identify and formalise \emph{Domain-Sensitivity Collapse} (DSC) as a root-cause failure mode of single-domain OOD detection, supported by diagnostic theory (\Cref{thm:dsc:dist-fail,prop:dsc:msp-insens}) and by testable predictions about feature geometry that we confirm empirically.
+  \item We propose \emph{Teacher-Guided Training} (TGT), a training-time auxiliary objective that restores domain-sensitive geometry by distilling a class-suppressed teacher residual, with no inference-time overhead.
+  \item We validate TGT on eight single-domain benchmarks across two architectures, showing consistent FPR@95 reductions in both the out-of-domain and in-domain OOD settings.
+\end{itemize}
+
+% ===================== s52 =====================
+\section{Related Work}
+\label{sec:dsc:related}
+
+The broad landscape of out-of-distribution detection, representation geometry, and knowledge distillation is surveyed in \Cref{ch:literature-review}, and the geometric primitives this chapter relies on---effective rank, neural collapse, and the class-discriminative subspace---are introduced in \Cref{ch:background}. Rather than re-survey that ground, this section positions the chapter against the specific lines of work it builds on or directly improves upon.
+
+\paragraph{Post-hoc OOD scorers.}
+The methods this chapter evaluates all attach a scoring function to a trained classifier and flag below-threshold inputs as out-of-distribution. The logit- and softmax-family scorers include Maximum Softmax Probability~\citep{hendrycks2016baseline}, ODIN~\citep{liang2017enhancing}, Energy~\citep{liu2020energy}, and the activation-shaping methods ReAct~\citep{sun2021react} and SCALE~\citep{xuscaling}; the distance-family scorers include the class-conditional Mahalanobis detector~\citep{lee2018simple}, $k$-nearest-neighbour distances~\citep{sun2022out}, ViM~\citep{Wang2022vim}, and the neural-collapse-inspired NCI detector~\citep{liu2025detecting}. These scorers attain strong results on multi-domain benchmarks such as CIFAR and ImageNet~\citep{yang2022openood,yang2021generalized}, where the in-distribution training data already spans rich visual diversity. The contribution of this chapter is not a new scorer but a diagnosis of \emph{why} this entire family degrades in the single-domain regimes (medical imaging, remote sensing, industrial inspection~\citep{cao2020benchmark,Berger2021medood}) that standard benchmarks overlook, and a training-time intervention that recovers the performance of the existing scorers rather than replacing them.
+
+\paragraph{Feature geometry and rank collapse.}
+The closest theoretical antecedent is the neural-collapse literature: \citet{Papyan2020nc} characterised the equiangular-tight-frame geometry to which deep classifiers converge, \citet{Zhu2021nc} established it as a global minimiser of the cross-entropy loss, and \citet{Haas2022ncood} observed that collapse-adjacent representations harm OOD separability. The NCI detector of \citet{liu2025detecting} exploits this geometry at scoring time; \citet{Jing2022rank} and \citet{Galanti2022collapse} studied the related dimensional collapse and its persistence across transfer. This chapter departs from these works in object and emphasis: where neural collapse concerns the \emph{class-mean} geometry, the phenomenon formalised here---Domain-Sensitivity Collapse (DSC)---concerns the suppression of feature directions \emph{orthogonal} to the class-discriminative subspace, for in-distribution and out-of-distribution inputs alike, and identifies that suppression as the direct cause of distance-based OOD failure (\Cref{sec:dsc:phenomenon}).
+
+\paragraph{Distillation and fine-tuning of pretrained features.}
+The proposed Teacher-Guided Training (TGT) is a teacher--student method in the lineage of knowledge distillation~\citep{hinton2015distilling} and self-supervised foundation models used as teachers~\citep{Caron2021dino,oquab2023dinov2,Touvron2021deit}; \citet{Yang2025pskd} likewise use a distillation loss to sharpen OOD separation. TGT differs in target: rather than matching the teacher's outputs or full features, it transfers only the teacher's \emph{class-suppressed residual} so as to repopulate the directions DSC would otherwise collapse. This is necessary because, as \citet{fort2021exploring} and \citet{Kumar2022lp} showed, pretrained features supply strong OOD baselines but naive single-domain fine-tuning distorts them and reintroduces rank collapse, so preserving pretrained geometry requires an explicit objective beyond cross-entropy. \Cref{sec:dsc:method} develops that objective.
+
+% ===================== s53 =====================
+\section{Domain-Sensitivity Collapse}
+\label{sec:dsc:phenomenon}
+
+This section develops a formal account of the phenomenon that gives this chapter its name: \emph{Domain-Sensitivity Collapse} (DSC). The geometry of learned representations was primed in \Cref{ch:background}; here we use that machinery to define DSC, state sufficient conditions under which standard out-of-distribution (OOD) scores fail, identify DSC as an inherent consequence of supervised single-domain training, and confirm the resulting predictions empirically. All of the formal results in this section are \emph{diagnostic upper bounds}: they characterise \emph{when} and \emph{why} standard scores fail, and are not intended as tight convergence guarantees.
+
+\paragraph{The single-domain setting.}
+A training set is \emph{single-domain} when all classes share a coherent visual context---a sensor, a style, or a semantic subcategory---whose boundary is obvious to a human but invisible to the supervised loss. Formally, there exist domain-level features that separate this context from the broader visual world, and these features are \emph{class-invariant}: within the training distribution they carry no signal about the label $y$. All eight benchmarks used in this chapter satisfy this criterion (histopathology, satellite imagery, food, rock, waste, fashion, tissue, and yoga); what varies across their classes is fine-grained subcategory identity, not domain. Multi-domain benchmarks such as CIFAR-10 or ImageNet do not satisfy it: their classes span heterogeneous visual domains, so domain cues are entangled with class structure.
+
+\paragraph{Mechanism and severity.}
+Because domain features are class-invariant, the cross-entropy objective provides no gradient to preserve them; training therefore drives the representation toward exactly the class-discriminative subspace. How far this compression proceeds depends on the \emph{within-class visual diversity}. When intra-class images are visually homogeneous, the network fully collapses within-class variance and the effective rank approaches the number of classes ($r_{\mathrm{eff}}/C \approx 1$, severe DSC). When within-class diversity is intrinsically high, the same objective cannot eliminate $\Sigma_{\mathrm{within}}$ without discarding classification-relevant cues, so the representation retains higher rank ($r_{\mathrm{eff}}/C \gg 1$, mild DSC).
+
+\paragraph{Connection to neural collapse.}
+The equiangular tight frame geometry of neural collapse~\citep{Papyan2020nc,Zhu2021nc} is the extreme of DSC: $\Sigma_{\mathrm{within}} \to 0$, the class means form the vertices of a $(C{-}1)$-simplex, and all $d - (C{-}1)$ orthogonal dimensions have exactly zero variance. This geometry is optimal for classification but catastrophic for OOD detection, because domain-shift directions are mapped into the null space. DSC generalises neural collapse by characterising anisotropy at any training stage, not only at convergence, and by predicting \emph{which} datasets will exhibit rank deficiency, which makes it a testable claim rather than an asymptotic ideal.
+
+\subsection{Anisotropic Geometry and Distance Failure}
+\label{subsec:dsc:aniso}
+
+\paragraph{Covariance decomposition.}
+Let $z = f_\theta(x) \in \mathbb{R}^d$ be the learned feature representation for a $C$-class single-domain dataset. The empirical covariance on in-distribution (ID) data decomposes as
+\begin{equation}
+  \Sigma = \Sigma_{\mathrm{between}} + \Sigma_{\mathrm{within}},
+  \label{eq:dsc-cov-decomp}
+\end{equation}
+where $\Sigma_{\mathrm{between}} = \sum_{c=1}^C p_c (\mu_c - \mu)(\mu_c - \mu)^\top$ captures inter-class spread and $\Sigma_{\mathrm{within}} = \sum_{c=1}^C p_c\,\mathbb{E}[(z-\mu_c)(z-\mu_c)^\top \mid y{=}c]$ captures intra-class scatter. Because $\Sigma_{\mathrm{between}}$ has rank at most $C{-}1$, a model that drives $\Sigma_{\mathrm{within}} \to 0$ (as in neural collapse~\citep{Papyan2020nc}) concentrates essentially all variance into a $(C{-}1)$-dimensional subspace. We define
+\begin{equation}
+  \rho_{\mathrm{within}} = \operatorname{tr}(\Sigma_{\mathrm{within}})/\operatorname{tr}(\Sigma)
+  \label{eq:dsc-rho-within}
+\end{equation}
+as a scalar measure of intra-class heterogeneity, so that small $\rho_{\mathrm{within}}$ corresponds to severe collapse.
+
+\paragraph{Anisotropy measures.}
+We quantify concentration through the \emph{participation ratio} and the \emph{effective rank}:
+\begin{equation}
+  \mathrm{PR}(\Sigma) = \frac{\bigl(\sum_i \lambda_i\bigr)^2}{\sum_i \lambda_i^2}, \qquad
+  r_{\mathrm{eff}}(\Sigma) = \exp\!\Bigl(-\sum_i \hat{\lambda}_i \log \hat{\lambda}_i\Bigr),
+  \label{eq:dsc-pr-reff}
+\end{equation}
+where $\lambda_1 \ge \cdots \ge \lambda_d$ are the eigenvalues of $\Sigma$ and $\hat{\lambda}_i = \lambda_i / \sum_j \lambda_j$. Let $\mathcal{S}_{\mathrm{cls}} = \mathrm{span}\{v_1,\ldots,v_k\}$ denote the \emph{class-discriminative subspace} spanned by the top-$k$ eigenvectors. Single-domain supervised models empirically exhibit extreme concentration: the cumulative spectral mass $\rho_k = \sum_{i=1}^{k}\lambda_i / \sum_{i=1}^{d}\lambda_i$ reaches roughly $\result{dsc_narrative}{dsc_rho_k_low:value}[2]$ to $\result{dsc_narrative}{dsc_rho_k_high:value}[2]$ for $k \approx C{-}1$, with $r_{\mathrm{eff}} \ll d$. We confirm these values empirically in \Cref{subsec:dsc:empirical}.
+
+\paragraph{Subspace decomposition.}
+Let $P$ denote the orthogonal projector onto $\mathcal{S}_{\mathrm{cls}}$ and $P_\perp = I - P$. Any feature vector decomposes as $z = z_\parallel + z_\perp$ with $z_\parallel = Pz$ and $z_\perp = P_\perp z$. The DSC regime is characterised by ID features carrying negligible energy outside the dominant subspace:
+\begin{equation}
+  \mathbb{E}\bigl[\|z_\perp\|_2^2\bigr] \le \tau^2 \quad \text{for } z = f_\theta(x_{\mathrm{ID}}).
+  \label{eq:dsc-A1}
+\end{equation}
+
+\paragraph{Distance failure via variance--discriminability mismatch.}
+Standard distance-based OOD scores---$k$-nearest-neighbour (KNN)~\citep{sun2022out} and Mahalanobis~\citep{lee2018simple}---weight directions by coordinate differences in the ambient Euclidean geometry. When the ID covariance is strongly anisotropic, squared Euclidean distance is dominated by the high-variance directions in $\mathcal{S}_{\mathrm{cls}}$, regardless of their discriminative value. We call this the \emph{variance--discriminability mismatch}: the directions that carry the ID-versus-OOD discrepancy have low ID variance and are therefore down-weighted by standard metrics. \Cref{thm:dsc:dist-fail} makes this precise.
+
+\begin{theorem}[Distance failure under variance--discriminability mismatch]\label{thm:dsc:dist-fail}
+Let $\lambda_1 \ge \cdots \ge \lambda_d$ be the eigenvalues of $\mathrm{Cov}(z_{\mathrm{ID}})$ with eigenvectors $v_1,\ldots,v_d$. Suppose the ID-versus-OOD separation concentrates in a set of directions $\{v_j : j \in \mathcal{J}\}$ with $\lambda_j / \lambda_1 \le \rho$ for all $j \in \mathcal{J}$ and some $\rho \ll 1$. Then the Euclidean KNN score distributions satisfy
+\begin{equation}
+  W_1\!\bigl(S_{\mathrm{KNN}}(z_{\mathrm{ID}}),\; S_{\mathrm{KNN}}(z_{\mathrm{OOD}})\bigr) \;\le\; L_k\,\varepsilon + 4L_k\,\tau^2,
+  \label{eq:dsc-knn-fail}
+\end{equation}
+where $L_k \le 1$ is the Lipschitz constant of the $k$-NN distance statistic with respect to feature perturbations, $\varepsilon$ captures the residual ID-versus-OOD discrepancy in the high-variance subspace, and $\tau^2$ bounds the tail energy in~\eqref{eq:dsc-A1}. The coefficient $4L_k$ arises from an orthogonal-energy bound. The full proof is given in \Cref{app:dsc-proofs}.
+\end{theorem}
+
+The same geometry defeats Mahalanobis-style scores. The shrinkage-regularised score $M_c(z) = (z - \mu_c)^\top(\Sigma_c + \lambda I)^{-1}(z - \mu_c)$ is often believed to up-weight low-variance directions. However, when both ID and OOD features have small energy outside $\mathcal{S}_{\mathrm{cls}}$---that is, when~\eqref{eq:dsc-A1} holds for both---the contribution from $\mathcal{S}_{\mathrm{cls}}^\perp$ is bounded by $(1/\lambda)\|P_\perp(z - \mu_c)\|_2^2$, which remains $O(\tau^2/\lambda)$. Shrinkage caps the amplification, so Mahalanobis---and any post-hoc metric including ZCA whitening, which is algebraically equivalent to Mahalanobis with the global covariance estimate---cannot exploit the null space when condition~\eqref{eq:dsc-A1} holds for both ID and OOD inputs. We do not claim that no scoring rule could ever recover the signal; rather, the entire class of distance-based scores operating on the same low-rank features fails for the same geometric reason.
+
+\paragraph{Extension to logit-based scores.}
+The same geometric conditions break the maximum-softmax-probability (MSP) score~\citep{hendrycks2016baseline} and the energy score~\citep{liu2020energy}, because the sensitivity of the classifier head is confined to $\mathcal{S}_{\mathrm{cls}}$. Let $\ell(x) = Wz(x) + b$ denote the logits. Under neural-collapse alignment, the row space of $W$ concentrates in $\mathcal{S}_{\mathrm{cls}}$, yielding a small \emph{head insensitivity} $\|WP_\perp\|_{\mathrm{op}} \le \eta$. \Cref{prop:dsc:msp-insens} bounds the resulting score separation.
+
+\begin{proposition}[MSP/Energy insensitivity]\label{prop:dsc:msp-insens}
+Under condition~\eqref{eq:dsc-A1}, dominant-subspace matching (OOD projections close to ID within $\mathcal{S}_{\mathrm{cls}}$), and head insensitivity $\|WP_\perp\|_{\mathrm{op}} \le \eta$, the induced score distributions satisfy
+\begin{equation}
+  W_1\!\bigl(S(\ell(x_{\mathrm{ID}})),\; S(\ell(x_{\mathrm{OOD}}))\bigr) \;\le\; \|W\|_{\mathrm{op}}\,\varepsilon + L_S\,\eta\tau,
+  \label{eq:dsc-logit-fail}
+\end{equation}
+for $S \in \{S_{\mathrm{Energy}}, S_{\mathrm{MSP}}\}$, where $L_S \le 1$ for the energy score (since $\|\nabla_\ell S_{\mathrm{Energy}}\|_2 = \|\mathrm{softmax}(\ell)\|_2 \le 1$) and $L_S \le 2$ for MSP. The proof is given in \Cref{app:dsc-proofs}.
+\end{proposition}
+
+\begin{remark}[Interpretation and tightness]\label{rem:dsc:tightness}
+All constants in \Cref{thm:dsc:dist-fail} and \Cref{prop:dsc:msp-insens} are expressed in terms of measurable model quantities: $L_k \le 1$, $\|W\|_{\mathrm{op}}$ (the spectral norm of the classifier head, typically $O(1)$ under standard weight decay), and $L_S \le 2$. The bounds are informative precisely in the DSC regime: when $\varepsilon \ll 1$ (OOD data projects similarly to ID within $\mathcal{S}_{\mathrm{cls}}$) and $\tau \ll 1$ (the tail energy is small). Conversely, they become vacuous when features are isotropic ($\tau$ large) or OOD data differs strongly within the class subspace ($\varepsilon$ large)---exactly the regime in which standard scores \emph{should} succeed. We therefore present them as a \emph{diagnostic tool} that explains \emph{why} scores fail under DSC, not as sharp guarantees.
+\end{remark}
+
+\subsection{DSC Is Induced by Single-Domain Supervised Training}
+\label{subsec:dsc:cause}
+
+DSC is not an incidental artifact but an inherent consequence of the supervised objective on single-domain data.
+
+\paragraph{Domain versus class features.}
+Decompose the input as $x = (x_d, x_y)$, where $x_d$ denotes \emph{domain features} (acquisition modality, texture statistics, sensor characteristics) and $x_y$ denotes \emph{class features}, with $I(x_d; x_y) \approx 0$. Under single-domain training the domain $D = d_1$ almost surely, so variation in $x_d$ is negligible and $x_d$ carries approximately zero information about $y$. The cross-entropy objective therefore provides little gradient incentive to preserve $x_d$-aligned directions, while regularisation---explicit (weight decay, dropout) or implicit (the gradient-descent bias toward simpler solutions)---discourages allocating capacity to them. The resulting representation tends to attenuate $x_d$, relegating domain-sensitive directions to low-energy components outside $\mathcal{S}_{\mathrm{cls}}$. This parallels the well-known result that $\ell_2$-regularised models discard task-irrelevant directions~\citep{Jing2022rank}; a formal linear-model derivation accompanies the proofs in \Cref{app:dsc-proofs}.
+
+\paragraph{Deep-network mechanisms.}
+Several deep-network phenomena reinforce DSC: (i)~\emph{neural collapse}~\citep{Papyan2020nc} drives within-class variability to zero, concentrating representations in a $(C{-}1)$-simplex; (ii)~the \emph{implicit max-margin bias} of gradient descent amplifies label-predictive directions; (iii)~\emph{augmentation-driven invariance} (colour jitter, random crop) explicitly suppresses style variation; and (iv)~the \emph{low-rank classifier head} $W \in \mathbb{R}^{C \times d}$ starves unused directions of gradient signal. Taken together, these make DSC a pervasive byproduct of supervised single-domain training.
+
+\paragraph{Fine-tuning reintroduces DSC.}
+Even starting from a rich, multi-domain initialisation such as DINOv2~\citep{oquab2023dinov2}, supervised fine-tuning on single-domain data progressively collapses the representation. The effective rank $r_{\mathrm{eff}}$ decreases over training epochs while FPR@95 rises overall, which confirms that DSC is induced by the training objective rather than by poor initial feature quality. We return to this point with measured geometry in \Cref{subsec:dsc:empirical}.
+
+\subsection{Empirical Validation}
+\label{subsec:dsc:empirical}
+
+The theory yields three testable predictions, each with a direct experimental diagnostic; the full experimental protocol is deferred to \Cref{sec:dsc:experiments}.
+
+\begin{description}
+  \item[P1 (anisotropy).] Single-domain cross-entropy training yields severely anisotropic representations. Tested through geometry audits ($r_{\mathrm{eff}}$, participation ratio, variance concentration); the prediction is $r_{\mathrm{eff}} \ll d$, with the top principal components capturing more than $\result{dsc_narrative}{dsc_top_pc_var_capture:value}[0]\%$ of the variance.
+  \item[P2 (null-space concentration).] OOD energy concentrates in $\mathcal{S}_{\mathrm{cls}}^\perp$. Tested by measuring $\|P_\perp z\|$ for ID versus OOD inputs; the prediction is that the OOD mean exceeds the ID mean.
+  \item[P3 (recovery).] Teacher-Guided Training (TGT, developed in \Cref{sec:dsc:method}) reverses the DSC geometry. Tested by comparing cross-entropy and TGT geometry and null-space separation on matched splits; the prediction is an improved $r_{\mathrm{eff}}$ and stronger null-space separation.
+\end{description}
+
+\paragraph{Geometry audits confirm anisotropy and its repair.}
+\Cref{tab:dsc:geometry} reports the per-dataset feature geometry of a ResNet-50 student under cross-entropy training versus TGT. The cross-entropy representations are severely concentrated: the six homogeneous datasets (Colon, Tissue, EuroSAT, Fashion, Food, Yoga) all have effective rank in the single or low double digits, with the top $\result{dsc_narrative}{dsc_top_pc_count:value}[0]$ principal components capturing essentially all of the variance ($\rho_{64}$ near $100\%$). Yoga is the most extreme case, with an effective rank of only $\result{dsc_geometry}{yoga:ce:r_eff}[1]$ across its four classes. The two heterogeneous datasets, Rock and Garbage, behave as natural controls: their high intra-class diversity prevents full collapse, leaving effective ranks of $\result{dsc_geometry}{rock:ce:r_eff}[1]$ and $\result{dsc_geometry}{garbage:ce:r_eff}[1]$ respectively, exactly as the severity argument predicts. Reading the cumulative-mass diagnostic against the theory confirms the band: across the collapsed datasets the leading directions hold the $\result{dsc_narrative}{dsc_rho_k_low:value}[2]$--$\result{dsc_narrative}{dsc_rho_k_high:value}[2]$ spectral mass anticipated in \eqref{eq:dsc-pr-reff}, with effective ranks of order $\result{dsc_narrative}{dsc_reff_low:value}[0]$--$\result{dsc_narrative}{dsc_reff_high:value}[0]$ for the smallest-class datasets.
+
+TGT systematically reverses this concentration. On every collapsed dataset the effective rank rises sharply---for example, Colon from $\result{dsc_geometry}{colon:ce:r_eff}[1]$ to $\result{dsc_geometry}{colon:tgt:r_eff}[1]$, Yoga from $\result{dsc_geometry}{yoga:ce:r_eff}[1]$ to $\result{dsc_geometry}{yoga:tgt:r_eff}[1]$, and EuroSAT from $\result{dsc_geometry}{eurosat:ce:r_eff}[1]$ to $\result{dsc_geometry}{eurosat:tgt:r_eff}[1]$---and the participation ratio increases comparably, while the top-$64$ variance share falls as energy is redistributed into previously collapsed directions. Averaged over all eight datasets, the mean effective rank increases from $\result{dsc_geometry}{mean:ce:r_eff}[1]$ to $\result{dsc_geometry}{mean:tgt:r_eff}[1]$ and the mean participation ratio from $\result{dsc_geometry}{mean:ce:pr}[1]$ to $\result{dsc_geometry}{mean:tgt:pr}[1]$. The effective rank increases in $\result{dsc_narrative}{dsc_reff_increase_num:value}[0]$ of $\result{dsc_narrative}{dsc_splits_den:value}[0]$ splits.
+
+\begin{table}[t]
+  \centering
+  \caption{Per-dataset feature geometry of a ResNet-50 student under cross-entropy (CE) training versus Teacher-Guided Training (TGT). We report the effective rank $r_{\mathrm{eff}}$, the participation ratio $\mathrm{PR}$, and $\rho_{64}$, the share of variance (in percent) captured by the top $64$ principal components. CE produces severely anisotropic representations on the six homogeneous datasets (low $r_{\mathrm{eff}}$, $\rho_{64}$ near $100$); Rock and Garbage retain high rank as natural controls. TGT increases $r_{\mathrm{eff}}$ and $\mathrm{PR}$ and redistributes variance away from the top components on every collapsed dataset.}
+  \label{tab:dsc:geometry}
+  \begin{tabular}{l ccc ccc}
+    \toprule
+    & \multicolumn{3}{c}{CE} & \multicolumn{3}{c}{TGT} \\
+    \cmidrule(lr){2-4}\cmidrule(lr){5-7}
+    Dataset & $r_{\mathrm{eff}}$ & $\mathrm{PR}$ & $\rho_{64}$ & $r_{\mathrm{eff}}$ & $\mathrm{PR}$ & $\rho_{64}$ \\
+    \midrule
+    Colon   & \result{dsc_geometry}{colon:ce:r_eff}   & \result{dsc_geometry}{colon:ce:pr}   & \result{dsc_geometry}{colon:ce:rho64}   & \textbf{\result{dsc_geometry}{colon:tgt:r_eff}}   & \textbf{\result{dsc_geometry}{colon:tgt:pr}}   & \textbf{\result{dsc_geometry}{colon:tgt:rho64}}   \\
+    Tissue  & \result{dsc_geometry}{tissue:ce:r_eff}  & \result{dsc_geometry}{tissue:ce:pr}  & \result{dsc_geometry}{tissue:ce:rho64}  & \textbf{\result{dsc_geometry}{tissue:tgt:r_eff}}  & \textbf{\result{dsc_geometry}{tissue:tgt:pr}}  & \textbf{\result{dsc_geometry}{tissue:tgt:rho64}}  \\
+    EuroSAT & \result{dsc_geometry}{eurosat:ce:r_eff} & \result{dsc_geometry}{eurosat:ce:pr} & \result{dsc_geometry}{eurosat:ce:rho64} & \textbf{\result{dsc_geometry}{eurosat:tgt:r_eff}} & \textbf{\result{dsc_geometry}{eurosat:tgt:pr}} & \textbf{\result{dsc_geometry}{eurosat:tgt:rho64}} \\
+    Fashion & \result{dsc_geometry}{fashion:ce:r_eff} & \result{dsc_geometry}{fashion:ce:pr} & \result{dsc_geometry}{fashion:ce:rho64} & \textbf{\result{dsc_geometry}{fashion:tgt:r_eff}} & \textbf{\result{dsc_geometry}{fashion:tgt:pr}} & \textbf{\result{dsc_geometry}{fashion:tgt:rho64}} \\
+    Food    & \result{dsc_geometry}{food:ce:r_eff}    & \result{dsc_geometry}{food:ce:pr}    & \result{dsc_geometry}{food:ce:rho64}    & \textbf{\result{dsc_geometry}{food:tgt:r_eff}}    & \textbf{\result{dsc_geometry}{food:tgt:pr}}    & \textbf{\result{dsc_geometry}{food:tgt:rho64}}    \\
+    Rock    & \result{dsc_geometry}{rock:ce:r_eff}    & \result{dsc_geometry}{rock:ce:pr}    & \result{dsc_geometry}{rock:ce:rho64}    & \textbf{\result{dsc_geometry}{rock:tgt:r_eff}}    & \textbf{\result{dsc_geometry}{rock:tgt:pr}}    & \textbf{\result{dsc_geometry}{rock:tgt:rho64}}    \\
+    Yoga    & \result{dsc_geometry}{yoga:ce:r_eff}    & \result{dsc_geometry}{yoga:ce:pr}    & \result{dsc_geometry}{yoga:ce:rho64}    & \textbf{\result{dsc_geometry}{yoga:tgt:r_eff}}    & \textbf{\result{dsc_geometry}{yoga:tgt:pr}}    & \textbf{\result{dsc_geometry}{yoga:tgt:rho64}}    \\
+    Garbage & \result{dsc_geometry}{garbage:ce:r_eff} & \result{dsc_geometry}{garbage:ce:pr} & \result{dsc_geometry}{garbage:ce:rho64} & \textbf{\result{dsc_geometry}{garbage:tgt:r_eff}} & \textbf{\result{dsc_geometry}{garbage:tgt:pr}} & \textbf{\result{dsc_geometry}{garbage:tgt:rho64}} \\
+    \midrule
+    Mean    & \result{dsc_geometry}{mean:ce:r_eff}    & \result{dsc_geometry}{mean:ce:pr}    & \result{dsc_geometry}{mean:ce:rho64}    & \textbf{\result{dsc_geometry}{mean:tgt:r_eff}}    & \textbf{\result{dsc_geometry}{mean:tgt:pr}}    & \textbf{\result{dsc_geometry}{mean:tgt:rho64}}    \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Null-space concentration.}
+The null-space diagnostic (P2) holds almost universally: the projected OOD energy $\|P_\perp z\|$ exceeds the ID mean in $\result{dsc_narrative}{dsc_ood_gt_id_ce_num:value}[0]$ of $\result{dsc_narrative}{dsc_splits_den:value}[0]$ cross-entropy splits and in $\result{dsc_narrative}{dsc_ood_gt_id_tgt_num:value}[0]$ of $\result{dsc_narrative}{dsc_splits_den:value}[0]$ TGT splits, confirming that domain-shift signal is pushed into the very directions that distance- and logit-based scores ignore.
+
+\paragraph{Coupling of rank recovery and detection gains.}
+\Cref{fig:dsc:rank-fpr-gains} visualises the central empirical signature of DSC on a representative subset of datasets: the per-dataset effective-rank increase under TGT tracks the corresponding reduction in out-of-domain FPR@95 almost proportionally. As TGT restores feature diversity, the false-positive rate falls in lockstep, which directly substantiates prediction P3 and motivates the method developed next.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.94\textwidth]{figures/dsc_rank_vs_fpr95_gains.png}
+    \caption{Per-dataset gains from Teacher-Guided Training (TGT) on a ResNet-50 student relative to the cross-entropy baseline. Blue bars report the effective-rank increase (TGT minus CE), and hatched orange bars report the FPR@95 reduction (CE minus TGT; larger is better). The datasets shown are EuroSAT, Colon, Fashion, Tissue, and Rock, with Rock plotted in a separate vertical region to accommodate its larger scale. The two quantities track one another closely: as TGT restores feature diversity (effective-rank gain), the out-of-domain false-positive rate falls proportionally, which is the central empirical signature of Domain-Sensitivity Collapse.}
+    \label{fig:dsc:rank-fpr-gains}
+\end{figure}
+
+\paragraph{Why a multi-domain teacher alone is insufficient.}
+Conversely, a frozen multi-domain teacher (DINOv2) excels at out-of-domain OOD but fails on in-domain OOD: its Mahalanobis score attains a far-OOD FPR@95 of only $\result{dsc_main_farood}{mds_teacher_only:dino_fpr95}\%$ yet a near-OOD FPR@95 of $\result{dsc_main_nearood}{mds_teacher_only:dino_fpr95}\%$, because self-supervised features carry no class-discriminative structure~\citep{yangcan}. The teacher cannot distinguish a held-out class from a known one when both share the same visual domain. Effective single-domain OOD detection therefore requires \emph{both} domain sensitivity and class discrimination---exactly the combination that the method of \Cref{sec:dsc:method} provides by distilling the teacher's domain signal while retaining the cross-entropy objective.
+
+% ===================== s54 =====================
+\section{Method}
+\label{sec:dsc:method}
+
+The diagnosis in \Cref{sec:dsc:phenomenon} is that single-domain training drives Domain-Sensitivity Collapse (DSC): the student concentrates variance in a low-dimensional, class-discriminative subspace and suppresses the domain-, style-, and acquisition-sensitive directions that distance-based scorers rely on. This section presents Teacher-Guided Training (TGT), a training-time auxiliary objective that restores that domain-sensitive geometry by distilling \emph{class-suppressed} domain residuals from a frozen foundation model into the student backbone. Crucially, TGT acts only during training: the deployed model is the student backbone alone, so the repaired representation carries no additional test-time cost.
+
+The starting observation is the one developed in \Cref{sec:dsc:phenomenon}: a frozen multi-domain foundation model excels at out-of-domain detection but is not specialised to the target classes, whereas the single-domain student is the converse---sharp in-domain discrimination but collapsed domain sensitivity. TGT bridges this gap by transferring the teacher's domain sensitivity into the student at training time, so that the student inherits both signals without ever querying the teacher at inference. \Cref{fig:dsc:teacher-compare} contrasts the three regimes: the broad-but-unspecialised teacher, the sharp-but-collapsed cross-entropy baseline, and the teacher-guided student that combines class discrimination with the recovered domain structure. The remainder of this section first isolates the domain-sensitive signal in the teacher (\Cref{sec:dsc:method:residuals}) and then defines the auxiliary objective that injects it into the student (\Cref{sec:dsc:method:tgt}).
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/dsc_teacher_compare.jpg}
+    \caption{Conceptual comparison of representation coverage in single-domain OOD detection across three models. The teacher-only model (a frozen multi-domain foundation model) offers broad domain coverage but is not specialised to the target classes; the cross-entropy baseline concentrates variance in a class-discriminative subspace and collapses domain-sensitive directions; the teacher-guided student combines the baseline's class discrimination with the domain-aware structure transferred from the teacher's class-suppressed residual.}
+    \label{fig:dsc:teacher-compare}
+\end{figure}
+
+\subsection{Class-Suppressed Teacher Residuals}
+\label{sec:dsc:method:residuals}
+
+The teacher's features carry both class-discriminative and domain-sensitive information. Distilling them wholesale would simply re-inject the teacher's class signal, which the student already learns from its own labels, and could blur the class boundaries the cross-entropy loss is tuned to sharpen. TGT therefore distils only the portion of the teacher representation that is \emph{orthogonal} to the class-discriminative directions---the residual that carries domain, style, and acquisition cues. We construct this residual explicitly.
+
+Let $T$ denote a frozen multi-domain teacher (we use a DINOv2 ViT-S/14 backbone~\citep{oquab2023dinov2}), and write $u(x) = T(x) \in \mathbb{R}^m$ for the teacher feature of input~$x$. On the training set, compute the per-class teacher means $\mu_c = \mathbb{E}[u(x) \mid y{=}c]$ and the global mean $\mu = \mathbb{E}[u(x)]$. The \emph{class-discriminative teacher subspace} is spanned by the centred class means, and we project onto it with the (regularised) orthogonal projector
+\begin{equation}
+  U = [\mu_1{-}\mu,\;\ldots,\;\mu_C{-}\mu] \in \mathbb{R}^{m \times C}, \qquad
+  P_{\mathrm{cls}} = U(U^\top U + \epsilon I)^{-1}U^\top,
+  \label{eq:dsc:pcls}
+\end{equation}
+where $C$ is the number of classes and $\epsilon > 0$ is a small ridge regulariser that stabilises the inverse when the class means are nearly collinear. The \emph{class-suppressed residual} is then obtained by removing the global mean and projecting out the class-discriminative component,
+\begin{equation}
+  u_{\mathrm{dom}}(x) = (I - P_{\mathrm{cls}})\bigl(u(x) - \mu\bigr),
+  \label{eq:dsc:udom}
+\end{equation}
+which discards the between-class teacher directions and retains a residual that emphasises within-class variation---precisely the domain, style, and acquisition structure that DSC suppresses in the single-domain student. Because the teacher is frozen and the projector in \Cref{eq:dsc:pcls} is fixed once the class means are estimated, $u_{\mathrm{dom}}(x)$ is a training-time target only: it is computed from cached teacher features and never participates in inference.
+
+\subsection{Teacher-Guided Training}
+\label{sec:dsc:method:tgt}
+
+TGT augments the student with an auxiliary \emph{domain head} $h$---a linear layer or shallow MLP---that predicts the class-suppressed teacher residual $u_{\mathrm{dom}}(x)$ from the student feature $z = f_\theta(x)$ (with the student notation as in \Cref{sec:dsc:phenomenon}). Forcing the student feature to be predictive of the domain residual pushes the backbone to retain the domain-sensitive directions it would otherwise collapse. The combined training objective is
+\begin{equation}
+  \mathcal{L}_{\mathrm{TGT}} = \mathcal{L}_{\mathrm{CE}} + \lambda_{\mathrm{TGT}} \cdot \mathcal{L}_{\mathrm{domain}}, \qquad
+  \mathcal{L}_{\mathrm{domain}} = \mathbb{E}_x\bigl[1 - \cos(\hat{h}(z), \hat{u}_{\mathrm{dom}}(x))\bigr],
+  \label{eq:dsc:tgt}
+\end{equation}
+where $\mathcal{L}_{\mathrm{CE}}$ is the standard cross-entropy classification loss, $\hat{h}(z)$ and $\hat{u}_{\mathrm{dom}}(x)$ denote the $\ell_2$-normalised prediction and target, and the cosine form makes $\mathcal{L}_{\mathrm{domain}}$ a directional alignment that is invariant to the scale of either vector. The single hyperparameter $\lambda_{\mathrm{TGT}} > 0$ balances classification against domain-residual prediction. Setting it too small recovers the cross-entropy baseline and its collapse; setting it too large trades away class separability for domain alignment. The objective is a form of feature distillation~\citep{hinton2015distilling} in which the distilled target is not the teacher's logits or full features but its class-suppressed residual, so the auxiliary signal is by construction complementary to the student's own class supervision rather than redundant with it. \Cref{sec:dsc:experiments} reports a $\lambda_{\mathrm{TGT}}$ ablation on EuroSAT and shows that the optimal setting is method-dependent.
+
+\paragraph{Effects on representation geometry.}
+TGT counteracts DSC by injecting the frozen teacher's multi-domain structure into the student's representation, and the effect is visible in the same geometric diagnostics introduced in \Cref{sec:dsc:phenomenon}. We observe three consistent changes:
+\begin{enumerate}
+  \item \textbf{Effective-rank gain.} The student's effective rank rises under TGT, $\Delta r_{\mathrm{eff}} = r_{\mathrm{eff}}^{\mathrm{TGT}} - r_{\mathrm{eff}}^{\mathrm{CE}} > 0$, across datasets; averaged over the benchmark suite the effective rank increases from \result{dsc_geometry}{mean:ce:r_eff} to \result{dsc_geometry}{mean:tgt:r_eff}. The per-dataset version of this gain is plotted against the corresponding FPR@95 reduction in \Cref{fig:dsc:rank-fpr-gains}.
+  \item \textbf{Variance redistribution.} Variance migrates out of the narrow class-aligned subspace and into domain-relevant directions, restoring the more isotropic geometry that distance-based detection requires; equivalently, the share of variance captured by the leading principal components falls (for the benchmark mean, top-$64$ variance capture drops from \result{dsc_geometry}{mean:ce:rho64}\,\% to \result{dsc_geometry}{mean:tgt:rho64}\,\%).
+  \item \textbf{Distance-score restoration.} With the representation repaired, a plain distance scorer applied to the student features recovers strong out-of-domain separation---on the FarOOD benchmark the Mahalanobis scorer improves from \result{dsc_main_farood}{mds:resnet_fpr95} to \result{dsc_main_farood}{mds:tgresnet_fpr95} FPR@95, an improvement of \resdelta{dsc_main_farood}{mds:resnet_fpr95}{mds:tgresnet_fpr95}\,points, confirming that the deficit lay in the representation itself rather than in the scorer.
+\end{enumerate}
+Classification accuracy is preserved because $\mathcal{L}_{\mathrm{CE}}$ remains in the objective; the domain head supplies an orthogonal training signal that enriches the representation without eroding class separability (\Cref{sec:dsc:experiments} quantifies the negligible accuracy effect).
+
+\paragraph{Teacher-free inference.}
+Once training is complete, the domain head $h$ is discarded. The deployed model is the student backbone alone: there is no teacher forward pass, no auxiliary head, and no additional test-time cost. Any standard post-hoc OOD scorer---Mahalanobis distance, ViM, $k$-NN, energy, and the others compared in \Cref{sec:dsc:experiments}---can be applied directly to the TGT-trained student features. TGT thus repairs the representation that DSC damages while leaving the inference-time interface of a single-domain model entirely unchanged.
+
+% ===================== s55 =====================
+\section{Experiments}
+\label{sec:dsc:experiments}
+
+We now test the two predictions developed earlier in this chapter: that Domain-Sensitivity Collapse (DSC) is the mechanism behind post-hoc detector failure in the single-domain regime (\Cref{sec:dsc:phenomenon}), and that Teacher-Guided Training (TGT) repairs it by re-injecting class-suppressed domain structure into the student representation (\Cref{sec:dsc:method}). The central empirical question is whether restoring feature diversity translates into measurable gains for off-the-shelf scorers, and whether those gains hold across both out-of-domain and in-domain out-of-distribution (OOD) settings rather than trading one against the other.
+
+\subsection{Datasets and Setup}
+
+\paragraph{Single-domain benchmarks.}
+We evaluate on eight single-domain benchmarks spanning diverse visual modalities. Four are \emph{sensor-homogeneous}: \textbf{Colon} (histopathology patches, nine tissue types), \textbf{Tissue} (kidney-cortex microscopy, eight sub-types), \textbf{EuroSAT} (Sentinel-2 multispectral satellite imagery, ten land-use classes), and \textbf{Fashion} (greyscale product-catalogue apparel images, ten classes). Four are \emph{semantically narrow}: \textbf{Food} (the Food-101 benchmark of web-scraped food photography, 101 categories), \textbf{Rock} (macro geological-sample photographs, seven types), \textbf{Yoga} (web-sourced pose images, six posture classes), and \textbf{Garbage} (waste-sorting photographs, six categories). All eight are single-domain in the sense developed in \Cref{sec:dsc:phenomenon}: domain-level visual statistics are approximately class-invariant.
+
+Six of the benchmarks (Colon, Tissue, EuroSAT, Fashion, Food, Yoga) exhibit the severe-DSC geometric signature, with an effective-rank-to-class ratio in the narrow band identified earlier; Rock and Garbage instead have high within-class diversity and correspondingly higher effective rank, placing them in the mild-DSC regime. We retain both as natural controls so that TGT is characterised across the full DSC-severity spectrum rather than only where the collapse is most acute (the per-dataset geometry audits are reported in \Cref{tab:dsc:geometry}).
+
+\paragraph{OOD evaluation protocol.}
+For each benchmark we construct two OOD splits. The \textbf{in-domain OOD} split draws test images from held-out classes within the \emph{same} visual domain as the training data; this asks whether a model can flag classes it was never trained on while the acquisition modality and texture statistics remain constant, which is the harder and more practically relevant regime. The \textbf{out-of-domain OOD} split draws test images from a \emph{different} visual domain, probing sensitivity to domain shift, for example presenting a satellite image to a histopathology model. Following the OpenOOD evaluation protocol~\citep{yang2022openood}, we add Chest X-ray images~\citep{yang2023medmnist} as an additional out-of-domain source to probe performance outside the DINOv2 pretrained domain. The primary metric is FPR@95 (the false-positive rate of in-distribution inputs at $95\%$ true-positive recall of OOD inputs); AUROC is reported as a secondary metric. All results are averaged across the eight benchmarks.
+
+\paragraph{Backbones and scorers.}
+We train and evaluate two architectures: a \textbf{ResNet-50} fine-tuned from ImageNet-pretrained weights, and a \textbf{DINOv2 ViT-S/14}~\citep{oquab2023dinov2}, each run both as a standard cross-entropy (CE) baseline and as the TGT-augmented variant (TG ResNet50, TG DinoV2). As an alternative DSC-mitigation strategy we additionally train a ResNet-50 with supervised contrastive learning~\citep{khosla2020supervised} (\textbf{SupCon}). For TGT, the teacher is a frozen DINOv2 ViT-S/14, the domain head is a two-layer MLP whose hidden dimension matches the student feature size, and the teacher residual targets are computed online for each training image; we use a guidance strength of $\lambda_{\mathrm{TGT}}=1.0$ for both backbones.
+
+We apply eight post-hoc OOD scorers to each backbone without modification: Maximum Softmax Probability (MSP)~\citep{hendrycks2016baseline}, Energy-Based (EBO)~\citep{liu2020energy}, Mahalanobis Distance Score (MDS)~\citep{lee2018simple}, $k$-Nearest-Neighbour (kNN)~\citep{sun2022out}, Virtual-Logit Matching (ViM)~\citep{Wang2022vim}, ReAct~\citep{sun2021react}, SCALE~\citep{xuscaling}, and Neural Collapse Inspired (NCI)~\citep{liu2025detecting}. We additionally report a \emph{Teacher-Only MDS} reference (MDS on frozen DINOv2 features, with no student) as an upper bound on out-of-domain sensitivity.
+
+\subsection{TGT Broadly Improves OOD Detection Across Scorers}
+
+\paragraph{Out-of-domain OOD.}
+\Cref{tab:dsc:farood} reports FPR@95 and AUROC averaged across the eight benchmarks for the out-of-domain setting. On \textbf{ResNet-50}, TGT improves all eight scorers on average. The largest gains accrue to the distance-based detectors that DSC theory predicts should be most starved of domain signal: MDS falls from \result{dsc_main_farood}{mds:resnet_fpr95} to \result{dsc_main_farood}{mds:tgresnet_fpr95} FPR@95, an improvement of \resdelta{dsc_main_farood}{mds:resnet_fpr95}{mds:tgresnet_fpr95}~pp; ViM from \result{dsc_main_farood}{vim:resnet_fpr95} to \result{dsc_main_farood}{vim:tgresnet_fpr95} (\resdelta{dsc_main_farood}{vim:resnet_fpr95}{vim:tgresnet_fpr95}~pp); kNN from \result{dsc_main_farood}{knn:resnet_fpr95} to \result{dsc_main_farood}{knn:tgresnet_fpr95} (\resdelta{dsc_main_farood}{knn:resnet_fpr95}{knn:tgresnet_fpr95}~pp); and the logit-based EBO from \result{dsc_main_farood}{ebo:resnet_fpr95} to \result{dsc_main_farood}{ebo:tgresnet_fpr95} (\resdelta{dsc_main_farood}{ebo:resnet_fpr95}{ebo:tgresnet_fpr95}~pp).
+
+Per dataset, the logit-based scorers (EBO, MSP, SCALE) can worsen on specific benchmarks --- Fashion out-of-domain is the clearest case --- because TGT redistributes feature variance to be more isotropic, which can weaken softmax confidence separation where the class-boundary geometry was already well calibrated; the distance-based scorers benefit uniformly from the same redistribution. On \textbf{DINOv2} the gains are smaller and less uniform (for example, aggregate kNN moves only from \result{dsc_main_farood}{knn:dino_fpr95} to \result{dsc_main_farood}{knn:tgdino_fpr95}), a behaviour we analyse in the next subsection. For reference, the \emph{MDS Teacher Only} model attains \result{dsc_main_farood}{mds_teacher_only:dino_fpr95} FPR@95 in this setting; TGT lowers MDS FPR@95 toward that ceiling on ResNet-50 (to \result{dsc_main_farood}{mds:tgresnet_fpr95}) and, more modestly, on DINOv2 (from \result{dsc_main_farood}{mds:dino_fpr95} to \result{dsc_main_farood}{mds:tgdino_fpr95}).
+
+\begin{table}[t]
+  \centering
+  \caption{Out-of-domain OOD detection averaged over the eight single-domain benchmarks, reported as FPR@95~/~AUROC (\%). Lower FPR@95 and higher AUROC are better. Bold columns are the Teacher-Guided variants; their structural improvement over the corresponding non-TG backbone is the central claim. SupCon columns are reported only for the distance-based scorers (MDS, kNN). The MDS Teacher Only row is a reference upper bound and is independent of the student backbone.}
+  \label{tab:dsc:farood}
+  \begin{tabular}{l cc cc cc cc cc}
+    \toprule
+     & \multicolumn{2}{c}{DinoV2} & \multicolumn{2}{c}{\textbf{TG DinoV2}} & \multicolumn{2}{c}{ResNet50} & \multicolumn{2}{c}{\textbf{TG ResNet50}} & \multicolumn{2}{c}{SupCon} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+    Scorer & FPR & AUC & FPR & AUC & FPR & AUC & FPR & AUC & FPR & AUC \\
+    \midrule
+    MSP   & \result{dsc_main_farood}{msp:dino_fpr95} & \result{dsc_main_farood}{msp:dino_auroc} & \textbf{\result{dsc_main_farood}{msp:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{msp:tgdino_auroc}} & \result{dsc_main_farood}{msp:resnet_fpr95} & \result{dsc_main_farood}{msp:resnet_auroc} & \textbf{\result{dsc_main_farood}{msp:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{msp:tgresnet_auroc}} & -- & -- \\
+    EBO   & \result{dsc_main_farood}{ebo:dino_fpr95} & \result{dsc_main_farood}{ebo:dino_auroc} & \textbf{\result{dsc_main_farood}{ebo:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{ebo:tgdino_auroc}} & \result{dsc_main_farood}{ebo:resnet_fpr95} & \result{dsc_main_farood}{ebo:resnet_auroc} & \textbf{\result{dsc_main_farood}{ebo:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{ebo:tgresnet_auroc}} & -- & -- \\
+    ReAct & \result{dsc_main_farood}{react:dino_fpr95} & \result{dsc_main_farood}{react:dino_auroc} & \textbf{\result{dsc_main_farood}{react:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{react:tgdino_auroc}} & \result{dsc_main_farood}{react:resnet_fpr95} & \result{dsc_main_farood}{react:resnet_auroc} & \textbf{\result{dsc_main_farood}{react:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{react:tgresnet_auroc}} & -- & -- \\
+    SCALE & \result{dsc_main_farood}{scale:dino_fpr95} & \result{dsc_main_farood}{scale:dino_auroc} & \textbf{\result{dsc_main_farood}{scale:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{scale:tgdino_auroc}} & \result{dsc_main_farood}{scale:resnet_fpr95} & \result{dsc_main_farood}{scale:resnet_auroc} & \textbf{\result{dsc_main_farood}{scale:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{scale:tgresnet_auroc}} & -- & -- \\
+    NCI   & \result{dsc_main_farood}{nci:dino_fpr95} & \result{dsc_main_farood}{nci:dino_auroc} & \textbf{\result{dsc_main_farood}{nci:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{nci:tgdino_auroc}} & \result{dsc_main_farood}{nci:resnet_fpr95} & \result{dsc_main_farood}{nci:resnet_auroc} & \textbf{\result{dsc_main_farood}{nci:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{nci:tgresnet_auroc}} & -- & -- \\
+    \midrule
+    MDS   & \result{dsc_main_farood}{mds:dino_fpr95} & \result{dsc_main_farood}{mds:dino_auroc} & \textbf{\result{dsc_main_farood}{mds:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{mds:tgdino_auroc}} & \result{dsc_main_farood}{mds:resnet_fpr95} & \result{dsc_main_farood}{mds:resnet_auroc} & \textbf{\result{dsc_main_farood}{mds:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{mds:tgresnet_auroc}} & \result{dsc_main_farood}{mds:supcon_fpr95} & \result{dsc_main_farood}{mds:supcon_auroc} \\
+    kNN   & \result{dsc_main_farood}{knn:dino_fpr95} & \result{dsc_main_farood}{knn:dino_auroc} & \textbf{\result{dsc_main_farood}{knn:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{knn:tgdino_auroc}} & \result{dsc_main_farood}{knn:resnet_fpr95} & \result{dsc_main_farood}{knn:resnet_auroc} & \textbf{\result{dsc_main_farood}{knn:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{knn:tgresnet_auroc}} & \result{dsc_main_farood}{knn:supcon_fpr95} & \result{dsc_main_farood}{knn:supcon_auroc} \\
+    ViM   & \result{dsc_main_farood}{vim:dino_fpr95} & \result{dsc_main_farood}{vim:dino_auroc} & \textbf{\result{dsc_main_farood}{vim:tgdino_fpr95}} & \textbf{\result{dsc_main_farood}{vim:tgdino_auroc}} & \result{dsc_main_farood}{vim:resnet_fpr95} & \result{dsc_main_farood}{vim:resnet_auroc} & \textbf{\result{dsc_main_farood}{vim:tgresnet_fpr95}} & \textbf{\result{dsc_main_farood}{vim:tgresnet_auroc}} & -- & -- \\
+    \midrule
+    \multicolumn{1}{l}{MDS Teacher Only} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} \\
+    \multicolumn{1}{l}{\quad (reference)} & \multicolumn{10}{c}{\result{dsc_main_farood}{mds_teacher_only:dino_fpr95}~/~\result{dsc_main_farood}{mds_teacher_only:dino_auroc}} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{In-domain OOD.}
+\Cref{tab:dsc:nearood} shows that TGT improves in-domain OOD detection as well: it does \emph{not} trade out-of-domain gains for in-domain losses. On ResNet-50, MDS drops from \result{dsc_main_nearood}{mds:resnet_fpr95} to \result{dsc_main_nearood}{mds:tgresnet_fpr95} FPR@95 (\resdelta{dsc_main_nearood}{mds:resnet_fpr95}{mds:tgresnet_fpr95}~pp) and ViM from \result{dsc_main_nearood}{vim:resnet_fpr95} to \result{dsc_main_nearood}{vim:tgresnet_fpr95} (\resdelta{dsc_main_nearood}{vim:resnet_fpr95}{vim:tgresnet_fpr95}~pp). On DINOv2, ViM improves from \result{dsc_main_nearood}{vim:dino_fpr95} to \result{dsc_main_nearood}{vim:tgdino_fpr95} (\resdelta{dsc_main_nearood}{vim:dino_fpr95}{vim:tgdino_fpr95}~pp) and MDS from \result{dsc_main_nearood}{mds:dino_fpr95} to \result{dsc_main_nearood}{mds:tgdino_fpr95} (\resdelta{dsc_main_nearood}{mds:dino_fpr95}{mds:tgdino_fpr95}~pp). By contrast, the \emph{MDS Teacher Only} model --- although near-perfect for out-of-domain OOD at \result{dsc_main_farood}{mds_teacher_only:dino_fpr95} FPR@95 --- reaches only \result{dsc_main_nearood}{mds_teacher_only:dino_fpr95} FPR@95 in the in-domain setting, confirming that deploying the frozen teacher directly \emph{cannot} address the harder regime. TGT is the only approach here that improves both regimes simultaneously, although individual dataset--scorer combinations may regress (particularly the logit-based scores and the Tissue and Rock datasets), and the DINOv2 gains are less consistent.
+
+\begin{table}[t]
+  \centering
+  \caption{In-domain OOD detection averaged over the eight single-domain benchmarks, reported as FPR@95~/~AUROC (\%). Lower FPR@95 and higher AUROC are better. Bold columns are the Teacher-Guided variants. SupCon columns are reported only for the distance-based scorers (MDS, kNN). The MDS Teacher Only row is a reference and is independent of the student backbone.}
+  \label{tab:dsc:nearood}
+  \begin{tabular}{l cc cc cc cc cc}
+    \toprule
+     & \multicolumn{2}{c}{DinoV2} & \multicolumn{2}{c}{\textbf{TG DinoV2}} & \multicolumn{2}{c}{ResNet50} & \multicolumn{2}{c}{\textbf{TG ResNet50}} & \multicolumn{2}{c}{SupCon} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+    Scorer & FPR & AUC & FPR & AUC & FPR & AUC & FPR & AUC & FPR & AUC \\
+    \midrule
+    MSP   & \result{dsc_main_nearood}{msp:dino_fpr95} & \result{dsc_main_nearood}{msp:dino_auroc} & \textbf{\result{dsc_main_nearood}{msp:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{msp:tgdino_auroc}} & \result{dsc_main_nearood}{msp:resnet_fpr95} & \result{dsc_main_nearood}{msp:resnet_auroc} & \textbf{\result{dsc_main_nearood}{msp:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{msp:tgresnet_auroc}} & -- & -- \\
+    EBO   & \result{dsc_main_nearood}{ebo:dino_fpr95} & \result{dsc_main_nearood}{ebo:dino_auroc} & \textbf{\result{dsc_main_nearood}{ebo:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{ebo:tgdino_auroc}} & \result{dsc_main_nearood}{ebo:resnet_fpr95} & \result{dsc_main_nearood}{ebo:resnet_auroc} & \textbf{\result{dsc_main_nearood}{ebo:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{ebo:tgresnet_auroc}} & -- & -- \\
+    ReAct & \result{dsc_main_nearood}{react:dino_fpr95} & \result{dsc_main_nearood}{react:dino_auroc} & \textbf{\result{dsc_main_nearood}{react:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{react:tgdino_auroc}} & \result{dsc_main_nearood}{react:resnet_fpr95} & \result{dsc_main_nearood}{react:resnet_auroc} & \textbf{\result{dsc_main_nearood}{react:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{react:tgresnet_auroc}} & -- & -- \\
+    SCALE & \result{dsc_main_nearood}{scale:dino_fpr95} & \result{dsc_main_nearood}{scale:dino_auroc} & \textbf{\result{dsc_main_nearood}{scale:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{scale:tgdino_auroc}} & \result{dsc_main_nearood}{scale:resnet_fpr95} & \result{dsc_main_nearood}{scale:resnet_auroc} & \textbf{\result{dsc_main_nearood}{scale:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{scale:tgresnet_auroc}} & -- & -- \\
+    NCI   & \result{dsc_main_nearood}{nci:dino_fpr95} & \result{dsc_main_nearood}{nci:dino_auroc} & \textbf{\result{dsc_main_nearood}{nci:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{nci:tgdino_auroc}} & \result{dsc_main_nearood}{nci:resnet_fpr95} & \result{dsc_main_nearood}{nci:resnet_auroc} & \textbf{\result{dsc_main_nearood}{nci:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{nci:tgresnet_auroc}} & -- & -- \\
+    \midrule
+    MDS   & \result{dsc_main_nearood}{mds:dino_fpr95} & \result{dsc_main_nearood}{mds:dino_auroc} & \textbf{\result{dsc_main_nearood}{mds:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{mds:tgdino_auroc}} & \result{dsc_main_nearood}{mds:resnet_fpr95} & \result{dsc_main_nearood}{mds:resnet_auroc} & \textbf{\result{dsc_main_nearood}{mds:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{mds:tgresnet_auroc}} & \result{dsc_main_nearood}{mds:supcon_fpr95} & \result{dsc_main_nearood}{mds:supcon_auroc} \\
+    kNN   & \result{dsc_main_nearood}{knn:dino_fpr95} & \result{dsc_main_nearood}{knn:dino_auroc} & \textbf{\result{dsc_main_nearood}{knn:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{knn:tgdino_auroc}} & \result{dsc_main_nearood}{knn:resnet_fpr95} & \result{dsc_main_nearood}{knn:resnet_auroc} & \textbf{\result{dsc_main_nearood}{knn:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{knn:tgresnet_auroc}} & \result{dsc_main_nearood}{knn:supcon_fpr95} & \result{dsc_main_nearood}{knn:supcon_auroc} \\
+    ViM   & \result{dsc_main_nearood}{vim:dino_fpr95} & \result{dsc_main_nearood}{vim:dino_auroc} & \textbf{\result{dsc_main_nearood}{vim:tgdino_fpr95}} & \textbf{\result{dsc_main_nearood}{vim:tgdino_auroc}} & \result{dsc_main_nearood}{vim:resnet_fpr95} & \result{dsc_main_nearood}{vim:resnet_auroc} & \textbf{\result{dsc_main_nearood}{vim:tgresnet_fpr95}} & \textbf{\result{dsc_main_nearood}{vim:tgresnet_auroc}} & -- & -- \\
+    \midrule
+    \multicolumn{1}{l}{MDS Teacher Only} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} \\
+    \multicolumn{1}{l}{\quad (reference)} & \multicolumn{10}{c}{\result{dsc_main_nearood}{mds_teacher_only:dino_fpr95}~/~\result{dsc_main_nearood}{mds_teacher_only:dino_auroc}} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Absolute in-domain performance remains high.}
+Despite the relative gains, absolute in-domain FPR@95 remains high across all methods. Same-domain held-out classes share acquisition modality and visual style with the training classes, creating inherent feature overlap that geometry repair alone cannot eliminate. Benchmarks such as OpenOOD~\citep{yang2022openood} emphasise multi-domain in-distribution sets and so under-represent this harder regime; in-domain OOD detection in the single-domain setting should be regarded as largely unsolved, and TGT moves the needle without closing the gap.
+
+\paragraph{SupCon does not alleviate DSC.}
+The SupCon columns of \Cref{tab:dsc:farood,tab:dsc:nearood} show that supervised contrastive training is not a reliable remedy for the DSC failure mode in our single-domain setting. For out-of-domain OOD, SupCon underperforms the CE baseline on both distance-based scorers (MDS at \result{dsc_main_farood}{mds:supcon_fpr95} versus \result{dsc_main_farood}{mds:resnet_fpr95}; kNN at \result{dsc_main_farood}{knn:supcon_fpr95} versus \result{dsc_main_farood}{knn:resnet_fpr95}), which is inconsistent with recovering domain-sensitive structure. In the in-domain setting SupCon is mixed --- kNN improves to \result{dsc_main_nearood}{knn:supcon_fpr95} from the CE baseline's \result{dsc_main_nearood}{knn:resnet_fpr95} --- but it remains substantially worse on MDS (\result{dsc_main_nearood}{mds:supcon_fpr95} versus \result{dsc_main_nearood}{mds:resnet_fpr95} for CE and \result{dsc_main_nearood}{mds:tgresnet_fpr95} for TG ResNet50). SupCon may tighten class compactness but does not consistently restore the domain-sensitive directions that DSC suppresses.
+
+\subsection{Why DINOv2 Improves Less with TGT}
+
+The weaker TGT gains on DINOv2 are consistent with limited teacher--student complementarity. Here the teacher and the student are both DINOv2, sharing architecture and pre-training initialisation. Because of this shared starting point, the teacher residual targets can be highly aligned with the student's own representation, which reduces the novelty of the auxiliary supervision. The teacher objective then tends to reinforce existing structure rather than inject new geometric information, so TGT delivers less of an ensemble-like benefit than it does for ResNet-50, where a different architecture and optimisation trajectory make DINOv2 distillation genuinely complementary. This is a property of the teacher--student pairing rather than of TGT itself: the mechanism repairs collapse most when the teacher carries domain structure the student lacks.
+
+\subsection{Ablations}
+
+\paragraph{TGT versus CE geometry.}
+The per-dataset geometry audits reported in \Cref{tab:dsc:geometry} confirm that TGT restores effective rank relative to the CE baseline, exactly as DSC predicts. \Cref{fig:dsc:rank-fpr-gains} provides the key ablation view, plotting the per-dataset effective-rank increase against the corresponding FPR@95 reduction; the two quantities track one another closely, which is the empirical signature that repairing feature diversity is what drives the detection gains. Split-level rank and null-space statistics are deferred to the extended version of this work.
+
+\paragraph{Guidance strength $\lambda$.}
+\Cref{fig:dsc:eurosat-lambda} and \Cref{tab:dsc:eurosat-lambda} report the EuroSAT out-of-domain FPR@95 as the teacher-guidance strength $\lambda$ is swept over $\{0.5, 1.0, 1.5, 2.0\}$, averaged across five random splits. The effect of $\lambda$ is method-dependent: ReAct improves at higher $\lambda$, whereas SCALE degrades, and several methods perform poorly at the smallest setting $\lambda=0.5$. The distance-based scorers are comparatively stable, with MDS and ViM near their best at the default $\lambda=1.0$, which motivates that choice for the main results.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/dsc_eurosat_lambda_ablation.png}
+    \caption{EuroSAT out-of-domain (FarOOD) FPR@95 by post-hoc scorer across teacher-guidance strengths $\lambda$, averaged over five random splits. The effect of $\lambda$ is method-dependent: ReAct improves at higher $\lambda$, whereas SCALE degrades, and several methods perform poorly at the smallest setting $\lambda=0.5$. The companion per-cell values are reported in \Cref{tab:dsc:eurosat-lambda}.}
+    \label{fig:dsc:eurosat-lambda}
+\end{figure}
+
+\begin{table}[t]
+  \centering
+  \caption{EuroSAT out-of-domain (FarOOD) ablation over the teacher-guidance strength $\lambda$ on a ResNet-50 student, averaged over five random splits. Each cell is FPR@95 (\%); lower is better. The distance-based scorers (MDS, ViM, kNN) are near their best at the default $\lambda=1.0$, while the logit-based scorers are more sensitive to the setting.}
+  \label{tab:dsc:eurosat-lambda}
+  \begin{tabular}{l cccc}
+    \toprule
+    Scorer & $\lambda=0.5$ & $\lambda=1.0$ & $\lambda=1.5$ & $\lambda=2.0$ \\
+    \midrule
+    MDS   & \result{dsc_eurosat_lambda}{0.5:mds:fpr95}   & \result{dsc_eurosat_lambda}{1.0:mds:fpr95}   & \result{dsc_eurosat_lambda}{1.5:mds:fpr95}   & \result{dsc_eurosat_lambda}{2.0:mds:fpr95}   \\
+    kNN   & \result{dsc_eurosat_lambda}{0.5:knn:fpr95}   & \result{dsc_eurosat_lambda}{1.0:knn:fpr95}   & \result{dsc_eurosat_lambda}{1.5:knn:fpr95}   & \result{dsc_eurosat_lambda}{2.0:knn:fpr95}   \\
+    ViM   & \result{dsc_eurosat_lambda}{0.5:vim:fpr95}   & \result{dsc_eurosat_lambda}{1.0:vim:fpr95}   & \result{dsc_eurosat_lambda}{1.5:vim:fpr95}   & \result{dsc_eurosat_lambda}{2.0:vim:fpr95}   \\
+    NCI   & \result{dsc_eurosat_lambda}{0.5:nci:fpr95}   & \result{dsc_eurosat_lambda}{1.0:nci:fpr95}   & \result{dsc_eurosat_lambda}{1.5:nci:fpr95}   & \result{dsc_eurosat_lambda}{2.0:nci:fpr95}   \\
+    EBO   & \result{dsc_eurosat_lambda}{0.5:ebo:fpr95}   & \result{dsc_eurosat_lambda}{1.0:ebo:fpr95}   & \result{dsc_eurosat_lambda}{1.5:ebo:fpr95}   & \result{dsc_eurosat_lambda}{2.0:ebo:fpr95}   \\
+    MSP   & \result{dsc_eurosat_lambda}{0.5:msp:fpr95}   & \result{dsc_eurosat_lambda}{1.0:msp:fpr95}   & \result{dsc_eurosat_lambda}{1.5:msp:fpr95}   & \result{dsc_eurosat_lambda}{2.0:msp:fpr95}   \\
+    ReAct & \result{dsc_eurosat_lambda}{0.5:react:fpr95} & \result{dsc_eurosat_lambda}{1.0:react:fpr95} & \result{dsc_eurosat_lambda}{1.5:react:fpr95} & \result{dsc_eurosat_lambda}{2.0:react:fpr95} \\
+    SCALE & \result{dsc_eurosat_lambda}{0.5:scale:fpr95} & \result{dsc_eurosat_lambda}{1.0:scale:fpr95} & \result{dsc_eurosat_lambda}{1.5:scale:fpr95} & \result{dsc_eurosat_lambda}{2.0:scale:fpr95} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Classification accuracy.}
+TGT improves average classification accuracy overall; where it does not, the change is typically within \result{dsc_narrative}{acc_max_deg_other_pp:value}[2]\,pp, with Yoga as the clear outlier (a change of \result{dsc_narrative}{acc_delta_yoga_pp:value}[1]\,pp). The largest gains are on Rock (an increase of \result{dsc_narrative}{acc_delta_rock_pp:value}[1]\,pp) and Food (an increase of \result{dsc_narrative}{acc_delta_food_pp:value}[1]\,pp). Detailed per-dataset accuracy, the within-class-variance breakdown, the precision-at-95 variants, the teacher-oracle analysis, and the full per-dataset OOD tables are deferred to the extended version of this work.
+
+% ===================== s56 =====================
+\section{Conclusion}
+\label{sec:dsc:conclusion}
+
+This chapter studied out-of-distribution (OOD) detection in the single-domain regime, where off-the-shelf post-hoc detectors frequently fail despite their strong results on the multi-domain benchmarks that dominate the literature. We traced this failure to a representational mechanism we named \emph{Domain-Sensitivity Collapse} (DSC): supervised cross-entropy training on a single visual domain compresses the representation into a low-rank, class-aligned subspace and suppresses precisely the domain-shift directions that distance- and logit-based scorers rely on (\Cref{sec:dsc:phenomenon}). \Cref{thm:dsc:dist-fail} and \Cref{prop:dsc:msp-insens} make this concrete by bounding the OOD-score degradation that follows once the relevant variance has collapsed, and the geometry audits of \Cref{tab:dsc:geometry} confirm the prediction empirically, with the mean effective rank under cross-entropy training compressed to \result{dsc_geometry}{mean:ce:r_eff} across the eight benchmarks.
+
+To repair the collapse we introduced \emph{Teacher-Guided Training} (TGT, \Cref{sec:dsc:method}), which distils the class-suppressed residual of a frozen multi-domain teacher into the student during ordinary supervised training. TGT requires no OOD data, preserves classification accuracy, and--because the domain head is discarded after training--adds no inference-time cost. It restores the suppressed geometry, raising the mean effective rank from \result{dsc_geometry}{mean:ce:r_eff} to \result{dsc_geometry}{mean:tgt:r_eff}, and this restored feature diversity translates into measurable detection gains: on a ResNet-50 student the out-of-domain Mahalanobis FPR@95 falls from \result{dsc_main_farood}{mds:resnet_fpr95} to \result{dsc_main_farood}{mds:tgresnet_fpr95} (\resdelta{dsc_main_farood}{mds:resnet_fpr95}{mds:tgresnet_fpr95}~pp), with the tightest coupling between rank recovery and FPR@95 reduction visible in \Cref{fig:dsc:rank-fpr-gains}. Critically, TGT improves both OOD regimes at once: a frozen teacher used directly is near-perfect out-of-domain (\result{dsc_main_farood}{mds_teacher_only:dino_fpr95} FPR@95) yet collapses to \result{dsc_main_nearood}{mds_teacher_only:dino_fpr95} FPR@95 in the harder in-domain setting, so only a teacher-guided student improves the in-domain regime without sacrificing the out-of-domain one. The gains are most reliable for the distance-based scorers that DSC theory singles out, smaller for DINOv2 fine-tuning where shared teacher--student initialisation limits complementarity, and per-dataset variable for the logit-based scorers.
+
+Read alongside its sister contribution in \Cref{ch:label-blindness}, this chapter completes a recurring argument of the dissertation: reliable OOD detection is governed by what the representation actually encodes, not only by the scoring rule applied on top of it. Where \Cref{ch:label-blindness} showed that a representation blind to label-relevant features cannot be rescued by any post-hoc detector, this chapter showed the dual failure---a representation that has collapsed away domain-sensitive features cannot be rescued either, and the remedy in both cases is to fix the geometry at training time rather than to engineer a cleverer score. The geometric primitives developed in \Cref{ch:background} supply the language for both diagnoses. Promising directions for future work include extending the DSC analysis to other architectures and modalities, learning adaptive teacher-residual targets rather than a fixed class-suppressed projection, and characterising when auxiliary supervision can finally close the gap on the difficult in-domain OOD regime that remains largely unsolved.
+

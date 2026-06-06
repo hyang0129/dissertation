@@ -42,34 +42,44 @@ generated tables), mismatched cite keys, and a 608-line supplementary to triage.
 | Conclusion | | 5.6 Conclusion | port; de-conference |
 | supplementary §Extended Proofs | | **Appendix B** (`app:dsc-proofs`) | linear illustration + Thm 1 + Prop 1 |
 
-## 2. Number-gate port inventory (the dominant work item)
+## 2. Number-gate port inventory — ✅ PHASE A DONE (2026-06-06)
 
 The paper bakes numbers two ways, both incompatible with the v2 gate
 (`\result{stem}{key}` ← `data/*.csv`). **Never `\input` a source tabular**
-(sources/README rule #1); rebuild each table with `\result` per cell (as in Ch.4).
+(sources/README rule #1); tables are rebuilt with `\result` per cell (as in Ch.4).
+**Five CSVs built (386 cells), all resolve via `build_numbers`:**
 
-### 2a. Headline scalars — `results_macros.tex` (50 `\newcommand`s)
-→ `data/dsc_narrative.csv`. ⚠️ Heterogeneous: clean decimals (e.g. `59.07%`,
-effective-rank `5.2`) port directly; **non-decimal constants need per-type
-handling** — split counts like `38/40` → two cells (num/den) rendered
-`\result/\result`; percentages → store bare number, render with literal `\%`;
-ranges (`0.80`–`0.95`) → two cells. Each macro's provenance comment carries over
-into the CSV header/notes.
-
-### 2b. Core results tables → CSVs + hand-built `\result` tabulars
-| Source tabular | → CSV stem | key_schema | value cols |
+| CSV stem | key_schema | value cols | cells |
 |---|---|---|---|
-| `generated_dual_metric_nearood_tabular.tex` | `dsc_main_nearood` | `scorer` | `{dino,tgdino,resnet,tgresnet,supcon}_{fpr95,auroc}` |
-| `generated_dual_metric_farood_tabular.tex` | `dsc_main_farood` | `scorer` | same |
-| `generated_geometry_table.tex` / `generated_rank_table.tex` | `dsc_geometry` | `dataset:variant` (base/TGT) | `eff_rank`, … |
-| `generated_eurosat_lambda_ablation.csv` (shipped, **no provenance header**) | `dsc_eurosat_lambda` | `lambda:scorer` | `fpr95,auroc,aupr_in,aupr_out,fpr98` |
+| `dsc_main_nearood` | `scorer` | `{dino,tgdino,resnet,tgresnet,supcon}_{fpr95,auroc}` | 77 |
+| `dsc_main_farood` | `scorer` | same | 77 |
+| `dsc_geometry` | `dataset:variant` (`ce`/`tgt`) | `r_eff,pr,rho64` | 55 |
+| `dsc_eurosat_lambda` | `lambda:method` | `fpr95,auroc,aupr_in,aupr_out,fpr98` | 161 |
+| `dsc_narrative` | `name` (→ keys carry `:value` suffix) | `value` | 16 |
 
-- Scorers (rows): EBO, MDS, MSP, kNN, NCI, ReAct, SCALE, ViM (+ "MDS Teacher Only").
-  Missing cells (`-`) → omit the row/col or store `NaN` (build_numbers skips NaN).
-- Bolding: source bolds the TGT columns. Keep as static `\textbf{\result{…}}` (the
-  win is structural — TGT vs base — not a per-run significance claim).
+- Scorer slugs: `ebo,mds,msp,knn,nci,react,scale,vim,mds_teacher_only`. SupCon `-`
+  cells left blank → `build_numbers` skips them (NaN), so only `mds`/`knn` have
+  `supcon_*` keys.
+- Bolding: source bolds the TGT columns. In the rebuilt table use static
+  `\textbf{\result{…}}` (the win is structural — TGT vs base — not per-run significance).
 - **Deferred (→ arXiv, not gated):** `generated_pr95_*`, `within_class_var`,
-  `teacher_oracle`, `training_weight_accuracy`, extended per-dataset tables.
+  `rank_table` (redundant raw export of `dsc_geometry`), `teacher_oracle`,
+  `training_weight_accuracy`, `eurosat_lambda_..._in_domain`, extended per-dataset tables.
+
+### 2a. The 50 `results_macros.tex` scalars — classified (so Phase B is mechanical)
+Most are **not** new numbers; reference the source-of-truth cell, don't duplicate:
+- **Table-cell duplicates (~22)** → `\result{dsc_main_nearood|farood}{scorer:col}`.
+  e.g. `\NearoodViMTGTDino` (59.07) = `\result{dsc_main_nearood}{vim:tgdino_fpr95}`;
+  `\TeacherOnlyFaroodFPR` (1.09) = `{dsc_main_farood}{mds_teacher_only:dino_fpr95}`.
+- **Improvement deltas (~13, `*ImprovementPP*`)** → `\resdelta{dsc_main_…}{std_key}{tgt_key}`.
+  e.g. `\NearoodViMImprovementPP` (5.03) = `\resdelta{dsc_main_nearood}{vim:dino_fpr95}{vim:tgdino_fpr95}`.
+- **Effective-rank cells (6, `DSC*ReffFrom/To`)** → `\result{dsc_geometry}{<ds>:ce|tgt:r_eff}`.
+- **Genuinely-new constants (15)** → `dsc_narrative` (keys below, `:value` suffix):
+  `single_domain_extreme_shift_fpr`(50, render `\%`, `[0]`),
+  `dsc_rho_k_low/high`(0.80/0.95), `dsc_reff_low/high`(4/6, `[0]`),
+  `dsc_top_pc_count`(64,`[0]`), `dsc_top_pc_var_capture`(88,`\%`,`[0]`),
+  split counts `dsc_ood_gt_id_ce_num`/`_tgt_num`/`dsc_reff_increase_num`(/`dsc_splits_den`=40, `[0]`),
+  `acc_delta_rock_pp/food_pp/yoga_pp`(7.7/4.8/−4.1, `[1]`), `acc_max_deg_other_pp`(0.01).
 
 ## 3. Citation reconciliation — VERIFIED CLEAN (2026-06-06)
 
@@ -107,9 +117,9 @@ App.B `B_dsc_proofs.tex` already exists as a stub.
 
 ## 5. Transform checklist (mirrors Ch.4's)
 
-1. 🔴 **Number gate** — §2 inventory: build `dsc_narrative`, `dsc_main_nearood/farood`,
-   `dsc_geometry`, `dsc_eurosat_lambda` CSVs (provenance headers); rebuild tables
-   with `\result`. *Largest item — ~10× Ch.4's single table.*
+1. ✅ **Number gate (CSVs)** — `dsc_main_nearood/farood`, `dsc_geometry`,
+   `dsc_eurosat_lambda`, `dsc_narrative` built (386 cells, all resolve). Remaining:
+   rebuild the `\result` tabulars in §5.3/§5.5 prose (Phase B).
 2. **Cite remap** — apply §3 remap table in prose (mechanical key substitution).
    No bib-gate additions: all 32 keys already resolve.
 3. **De-conference** — strip ECCV two-column/`llncs`/`\vspace` cruft; drop the
@@ -156,6 +166,8 @@ EuroSAT, ResNet50, DINOv2, MedMNIST, ViM, DINOv2…) → `build_numbers` → `la
 
 ### Open items
 - ✅ References verified clean (§3) — no bib work needed.
-- 🔜 `dsc_geometry` exact columns — finalize with §5.3's table (and Ch.2 §2.8).
-- 🔜 Non-decimal narrative-macro render convention — settle at A4.
-- 🔜 Figures: source ships data vs baked PDFs only? — determines D.
+- ✅ `dsc_geometry` columns settled: `r_eff` (effective rank), `pr` (participation
+  ratio), `rho64` (top-64 PC variance capture %). Ch.2 §2.8 should prime exactly these.
+- ✅ Narrative render convention settled (§2a): per-call precision (`[0]` counts,
+  `[1]` deltas), `\%` literals, split counts as `_num`/`_den` cells.
+- 🔜 Figures: source ships data vs baked PDFs only? — determines Phase D.

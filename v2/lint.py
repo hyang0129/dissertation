@@ -60,7 +60,7 @@ _STRUCTURAL_RE = re.compile(
 _INLINE_MATH_RE = re.compile(r"\$[^$]*\$")
 _DISPLAY_MATH_RE = re.compile(r"\\\[.*?\\\]", re.DOTALL)
 _ENV_MATH_RE = re.compile(
-    r"\\begin\{(?:equation|align|align\*|gather|gather\*|multline)\}.*?\\end\{(?:equation|align|align\*|gather|gather\*|multline)\}",
+    r"\\begin\{(?:equation|equation\*|align|align\*|gather|gather\*|multline|multline\*)\}.*?\\end\{(?:equation|equation\*|align|align\*|gather|gather\*|multline|multline\*)\}",
     re.DOTALL,
 )
 
@@ -124,13 +124,21 @@ WHITELIST: list[str] = [
     #     name, not a quantity; recur across results chapters). Added for Ch.4. ---
     "CIFAR10",      # also covers CIFAR100 (substring) within the ±60 context
     "CIFAR100",
+    "CIFAR-10",     # hyphenated form; also covers CIFAR-10/100 and CIFAR-100
     "ResNet50",
     "ResNet-50",
     "CC3M",
     "Food 101",
+    "Food-101",     # Ch.5: dataset proper noun ("Food-101, 101 categories")
     "BMW M3",
     "FPR95",        # metric label in tables/captions
     "FPR@95",
+    # --- Ch.5 (DSC/TGT) proper nouns, metrics, and prediction labels ---
+    "Sentinel-2",       # EuroSAT sensor proper noun
+    "precision-at-95",  # deferred-metric name (pr@95)
+    "P1",               # DSC prediction labels (description list + prose refs)
+    "P2",
+    "P3",
     # NOTE: This whitelist intentionally starts small. Add a literal string
     # here (and document it in README.md) when a legitimate digit in prose
     # cannot be expressed via a \result{}/\cite{}/\ref{} macro.
@@ -141,7 +149,9 @@ def _mask_spans(text: str, spans: list[tuple[int, int]]) -> str:
     text_list = list(text)
     for start, end in spans:
         for i in range(start, end):
-            if i < len(text_list):
+            # Preserve newlines so callers can mask multi-line spans (e.g. a
+            # display-math block) without collapsing line numbering.
+            if i < len(text_list) and text_list[i] != "\n":
                 text_list[i] = " "
     return "".join(text_list)
 
@@ -175,6 +185,18 @@ def lint_file(path: Path) -> list[str]:
     violations: list[str] = []
 
     text_no_comments = re.sub(r"(?<!\\)%.*", "", text)
+
+    # Block-level math (equation/align/gather/multline and display \[ \]) may
+    # span multiple lines, so mask it across the FULL text before splitting
+    # into lines. The per-line strip below only catches single-line $...$.
+    # _mask_spans preserves newlines, so line numbering stays aligned.
+    block_spans: list[tuple[int, int]] = []
+    for m in _ENV_MATH_RE.finditer(text_no_comments):
+        block_spans.append((m.start(), m.end()))
+    for m in _DISPLAY_MATH_RE.finditer(text_no_comments):
+        block_spans.append((m.start(), m.end()))
+    text_no_comments = _mask_spans(text_no_comments, block_spans)
+
     lines_original = text_no_comments.splitlines()
 
     for lineno, line in enumerate(lines_original, 1):

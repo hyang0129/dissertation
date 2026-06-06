@@ -2,6 +2,9 @@
 # waiting to happen; the build is the source of truth.
 generated/
 
+# Transient drafting scratch (Ch.5 port fragments; assembled into chapters/ then removed)
+.ch5_frag/
+
 # LaTeX byproducts
 *.aux
 *.bbl

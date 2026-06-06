@@ -1,11 +1,257 @@
-% appendices/B_dsc_proofs.tex — BLANK, pending drafting.
-% Source: ../sources/eccv2026_domain_feature_collapse/supplementary.tex (Extended Proofs).
-% Geometric proofs: Theorem 1 (distance failure under variance-discriminability
-% mismatch) + Proposition 1 (MSP/Energy insensitivity). v1/AppendixB (MI / info-
-% bottleneck proofs) does NOT carry over. See ../outlines/00_dissertation_outline.md.
+% appendices/B_dsc_proofs.tex
+% Faithful port of the "Extended Proofs" part (Sec. S2) of the ECCV 2026
+% supplementary: ../sources/eccv2026_domain_feature_collapse/supplementary.tex.
+% Geometric proofs for Domain-Sensitivity Collapse (DSC): the linear-model
+% illustration, Theorem (distance failure under variance--discriminability
+% mismatch), and Proposition (MSP/Energy insensitivity). The theorem and
+% proposition STATEMENTS live in the chapter body (Chapter on DSC,
+% \Cref{thm:dsc:dist-fail} / \Cref{prop:dsc:msp-insens}); this appendix supplies
+% the proofs. v1/Appendix B (mutual-information / information-bottleneck proofs)
+% does NOT carry over.
+%
+% NOTE on the number gate (make lint): lint.py strips math line-by-line and does
+% not recognize equation* or multi-line environments, so every display equation
+% here is kept on a single physical line inside a stripped environment.
 \chapter{Geometric Proofs for Domain-Sensitivity Collapse}
 \label{app:dsc-proofs}
 
-TODO: port the geometric results (distance failure under
-variance--discriminability mismatch; MSP/Energy insensitivity) from the ECCV
-supplementary. Intentionally left blank.
+This appendix supplies the proofs of the two geometric results stated in the
+chapter on Domain-Sensitivity Collapse (DSC): the distance-failure theorem
+(\Cref{thm:dsc:dist-fail}) and the MSP/Energy insensitivity proposition
+(\Cref{prop:dsc:msp-insens}). We first record a linear-model illustration that
+makes concrete, in the simplest possible setting, why single-domain supervised
+training relegates the discriminative signal to a low-dimensional subspace and
+suppresses the directions along which out-of-distribution (OOD) inputs differ
+from in-distribution (ID) inputs. We then prove an orthogonal-energy lemma that
+both proofs rely on, and finally the theorem and proposition themselves.
+
+Throughout, we use the notation established in the DSC chapter. We write
+$\mathcal{S}_{\mathrm{cls}} = \mathrm{span}\{v_1,\ldots,v_k\}$ for the
+class-discriminative subspace spanned by the top eigenvectors of the ID feature
+covariance, $P$ for the orthogonal projector onto $\mathcal{S}_{\mathrm{cls}}$,
+and $P_\perp = I - P$ for the projector onto its orthogonal complement. The
+defining DSC condition is that ID features carry negligible energy outside the
+dominant subspace,
+\begin{equation} \mathbb{E}\bigl[\|P_\perp z\|_2^2\bigr] \le \tau^2 \quad \text{for } z = f_\theta(x_{\mathrm{ID}}), \label{eq:dsc:A1} \end{equation}
+and we assume the analogous bound with constant $\tau_{\mathrm{OOD}}$ holds for
+OOD features; under the dominant-subspace--matching hypothesis the two tail
+constants are comparable, and we write $\tau$ for either when no confusion
+arises.
+
+\section{Linear-Model Illustration}
+\label{sec:dsc-proofs:linear}
+
+For completeness we record the linear objective underlying the informal
+mechanism sketched in the chapter, which shows in closed form why a regularized
+supervised model discards the directions that distinguish ID from OOD inputs
+under a domain shift.
+
+\begin{lemma}[Linear-model collapse]\label{lem:dsc:linear}
+Let $y \in \{\pm 1\}$ and let the input decompose as $x = y\,a + s$, where
+$a$ is a fixed class direction and $s \perp y$ is a nuisance component carrying
+no label information. Consider the linear representation $z = Ax$ scored by a
+linear head $w$, trained under the regularized logistic objective
+\begin{equation} \min_{A,\,w}\;\mathbb{E}\bigl[\log(1 + e^{-y\,w^\top\! A x})\bigr] + \tfrac{\lambda}{2}\bigl(\|w\|_2^2 + \|A\|_F^2\bigr). \label{eq:dsc:toy-loss} \end{equation}
+Then there is an optimum $A^\star$ whose row space lies in $\mathrm{span}(a)$.
+Consequently, for any OOD shift $\delta \in \mathrm{span}(a)^\perp$, the
+induced representation shift vanishes: $A^\star \delta = 0$, so
+$z_{\mathrm{OOD}} - z_{\mathrm{ID}} = A^\star \delta = 0$.
+\end{lemma}
+
+\begin{proof}
+The logistic loss in~\eqref{eq:dsc:toy-loss} depends on $A$ only through the
+scalar margin $w^\top\! A x$, and hence only through the row vector $w^\top\! A$
+acting on $x$. Decompose any row of $A$ into its component in $\mathrm{span}(a)$
+and its component in $\mathrm{span}(a)^\perp$. Because $s \perp y$, the data
+distribution of $x = y a + s$ couples the label to $x$ only through the
+$\mathrm{span}(a)$ component; the orthogonal component of $w^\top\! A$ therefore
+contributes nothing to the expected margin in either direction (its
+contribution averages to a label-independent term that the logistic loss is
+minimized by setting to zero in expectation). Thus the data-fit term is
+invariant under projecting every row of $A$ onto $\mathrm{span}(a)$, whereas the
+Frobenius regularizer $\tfrac{\lambda}{2}\|A\|_F^2$ is strictly decreased by
+removing any nonzero orthogonal component. Hence at least one minimizer
+$A^\star$ has all rows in $\mathrm{span}(a)$, i.e.\ row space contained in
+$\mathrm{span}(a)$.
+
+For such an $A^\star$ and any $\delta \in \mathrm{span}(a)^\perp$ we have
+$A^\star \delta = 0$, because each row of $A^\star$ is orthogonal to $\delta$.
+An OOD perturbation confined to $\mathrm{span}(a)^\perp$ therefore produces no
+change in the representation, $z_{\mathrm{OOD}} - z_{\mathrm{ID}} = 0$, and no
+score built on $z$ can separate the two.
+\end{proof}
+
+\begin{remark}
+\Cref{lem:dsc:linear} is the linear shadow of the general phenomenon: the
+$\ell_2$ regularizer (or, in deep networks, the implicit bias of gradient
+descent toward simpler solutions together with weight decay) strips away every
+representation direction that does not reduce the supervised loss. When the
+domain-sensitive directions along which OOD inputs differ are label-irrelevant
+in the single-domain training distribution---precisely the case
+$\delta \in \mathrm{span}(a)^\perp$---those directions are suppressed, and the
+representation becomes blind to the shift. In the multi-dimensional setting this
+manifests as the concentration of variance in $\mathcal{S}_{\mathrm{cls}}$ and
+the tail-energy bound~\eqref{eq:dsc:A1}.
+\end{remark}
+
+\section{Orthogonal-Energy Lemma}
+\label{sec:dsc-proofs:ortho}
+
+Both proofs reduce ambient distances to in-subspace distances at the cost of a
+controlled tail term. The following lemma quantifies that cost.
+
+\begin{lemma}[Orthogonal-energy bound]\label{lem:dsc:ortho-energy}
+For any feature vectors $z, z'$,
+\begin{equation} \bigl|\,\|z - z'\|_2^2 - \|Pz - Pz'\|_2^2\,\bigr| = \|P_\perp(z - z')\|_2^2 \le 2\|P_\perp z\|_2^2 + 2\|P_\perp z'\|_2^2 . \label{eq:dsc:ortho-energy} \end{equation}
+In particular, if both $z$ and $z'$ satisfy the tail-energy
+condition~\eqref{eq:dsc:A1} in expectation with constant $\tau$, then
+\begin{equation} \mathbb{E}\Bigl[\,\bigl|\,\|z - z'\|_2^2 - \|Pz - Pz'\|_2^2\,\bigr|\,\Bigr] \;\le\; 4\tau^2 . \label{eq:dsc:ortho-energy-exp} \end{equation}
+\end{lemma}
+
+\begin{proof}
+Because $P$ and $P_\perp$ are complementary orthogonal projectors, the
+Pythagorean identity gives, for the difference vector $u = z - z'$, the
+decomposition $\|u\|_2^2 = \|Pu\|_2^2 + \|P_\perp u\|_2^2$, where
+$Pu = Pz - Pz'$ by linearity of $P$. Subtracting $\|Pu\|_2^2$ from both sides
+and taking absolute values yields the equality in~\eqref{eq:dsc:ortho-energy}.
+For the inequality, linearity of $P_\perp$ and the parallelogram bound
+$\|p - q\|_2^2 \le 2\|p\|_2^2 + 2\|q\|_2^2$ give
+$\|P_\perp(z - z')\|_2^2 = \|P_\perp z - P_\perp z'\|_2^2 \le 2\|P_\perp z\|_2^2 + 2\|P_\perp z'\|_2^2$.
+Taking expectations and applying~\eqref{eq:dsc:A1} to each term (with constant
+$\tau$ for both ID and OOD features) bounds the right-hand side by
+$2\tau^2 + 2\tau^2 = 4\tau^2$, which is~\eqref{eq:dsc:ortho-energy-exp}.
+\end{proof}
+
+\section{Proof of the Distance-Failure Theorem}
+\label{sec:dsc-proofs:thm}
+
+\begin{proof}[Proof of \Cref{thm:dsc:dist-fail}]
+Write the $k$-nearest-neighbour score for a test point $z$ as
+$S_k(z) = \|z - z_{(k)}\|_2$, where $z_{(k)}$ is the $k$-th closest training
+point in Euclidean distance. For a fixed training set, $S_k$ is $1$-Lipschitz in
+$z$: for any $z, z'$, the triangle inequality gives
+$|S_k(z) - S_k(z')| \le \|z - z'\|_2$, since the same training point $z_{(k)}$
+can be used as a feasible (not necessarily optimal) neighbour for both
+arguments. Hence the Lipschitz constant of the statistic satisfies
+$L_k \le 1$.
+
+\emph{Step~$1$ (projection to the discriminative subspace).}
+By \Cref{lem:dsc:ortho-energy}, replacing the ambient distance $\|z - z'\|_2$ by
+the in-subspace distance $\|Pz - Pz'\|_2$ perturbs the squared score by at most
+$\|P_\perp(z - z')\|_2^2$, whose expectation is bounded by $4\tau^2$ under
+\eqref{eq:dsc:A1} for both ID and OOD inputs. Passing from squared to unsquared
+distances and using $1$-Lipschitzness, the corresponding change in the $L_1$
+statistic of $S_k$ is of the same order, controlled by the tail constant
+$\tau$.
+
+\emph{Step~$2$ (matching inside the class-discriminative subspace).}
+By hypothesis the ID-vs-OOD separation concentrates in the low-variance
+directions $\{v_j : j \in \mathcal{J}\}$ with
+$\lambda_j/\lambda_1 \le \rho \ll 1$. Consequently the residual ID-vs-OOD
+discrepancy that remains \emph{inside} the high-variance part of
+$\mathcal{S}_{\mathrm{cls}}$ is small; write
+$\varepsilon = \mathbb{E}\bigl[\|P z_{\mathrm{ID}} - P z_{\mathrm{OOD}}\|_2\bigr]$
+for this residual. Because the separating directions are down-weighted by the
+anisotropic ID geometry, the projected ID and OOD score distributions are within
+$\varepsilon$ of one another in $W_1$.
+
+\emph{Step~$3$ (Wasserstein bound).}
+Combining the two steps, the distributions of $S_k(z_{\mathrm{ID}})$ and
+$S_k(z_{\mathrm{OOD}})$ differ by at most $L_k\,\varepsilon$ from the in-subspace
+matching of Step~$2$, plus the null-space perturbation of Step~$1$, which
+contributes $4 L_k \tau^2$ via the expected orthogonal-energy
+bound~\eqref{eq:dsc:ortho-energy-exp}. Since the $W_1$ distance is bounded by the
+expected absolute difference of the (coupled) score values, we obtain
+\begin{equation} W_1\!\bigl(S_{\mathrm{KNN}}(z_{\mathrm{ID}}),\; S_{\mathrm{KNN}}(z_{\mathrm{OOD}})\bigr) \;\le\; L_k\,\varepsilon + 4 L_k\,\tau^2 , \label{eq:dsc:knn-fail} \end{equation}
+with $L_k \le 1$, which is the claimed bound.
+\end{proof}
+
+\paragraph{On the constants.}
+The Lipschitz constant $L_k \le 1$ is exactly the $1$-Lipschitzness of the
+$k$-NN distance established at the start of the proof. The coefficient $4$
+multiplying $\tau^2$ is inherited verbatim from the expected orthogonal-energy
+bound~\eqref{eq:dsc:ortho-energy-exp} of \Cref{lem:dsc:ortho-energy}. The bound
+is informative precisely in the DSC regime: when $\varepsilon \approx 0$ (OOD
+data projects onto $\mathcal{S}_{\mathrm{cls}}$ almost identically to ID) and
+$\tau^2 \ll 1$ (strong tail suppression), the right-hand side
+of~\eqref{eq:dsc:knn-fail} collapses to $\approx 4\tau^2$, so the ID and OOD
+score distributions are nearly indistinguishable and distance-based detection
+fails. Conversely, when the features are isotropic the tail constant grows
+($\tau \approx \sqrt{d}$) and the bound becomes vacuous, exactly the regime in
+which distance scores should and do succeed.
+
+\paragraph{Mahalanobis distance also fails.}
+The same argument disposes of the shrinkage-regularized Mahalanobis score
+$M_c(z) = (z - \mu_c)^\top (\Sigma_c + \lambda I)^{-1}(z - \mu_c)$, which is
+sometimes believed to recover the suppressed directions by up-weighting
+low-variance coordinates. Decomposing $z - \mu_c$ into its $P$ and $P_\perp$
+parts, the contribution from $\mathcal{S}_{\mathrm{cls}}^\perp$ is bounded above
+by $(1/\lambda)\|P_\perp(z - \mu_c)\|_2^2$, which is $O(\tau^2/\lambda)$ under
+\eqref{eq:dsc:A1}. The shrinkage term $\lambda I$ caps the amplification of the
+null space, so when~\eqref{eq:dsc:A1} holds for both ID and OOD inputs the
+Mahalanobis score---and any post-hoc distance score operating on the same
+low-rank features, including ZCA whitening, which is algebraically equivalent to
+Mahalanobis with the global covariance estimate---cannot leverage the
+discriminative tail. This is a statement about the whole class of distance-based
+scores acting on a collapsed representation, not a claim that no scoring rule
+whatsoever could recover the signal.
+
+\section{Proof of the MSP/Energy Insensitivity Proposition}
+\label{sec:dsc-proofs:prop}
+
+We first record that the logit-based scores are Lipschitz in the logits. Let the
+logits be $\ell(x) = W z(x) + b$, and recall the energy score
+$S_{\mathrm{Energy}}(\ell) = -T \log \sum_c \exp(\ell_c / T)$, taken with unit
+temperature $T = 1$.
+
+\begin{proof}[Proof of \Cref{prop:dsc:msp-insens}]
+\emph{Lipschitzness of the score.}
+The gradient of the energy score is
+$\nabla_\ell S_{\mathrm{Energy}} = -\,\mathrm{softmax}(\ell)$, so
+$\|\nabla_\ell S_{\mathrm{Energy}}\|_2 = \|\mathrm{softmax}(\ell)\|_2 \le \|\mathrm{softmax}(\ell)\|_1 = 1$,
+and thus $S_{\mathrm{Energy}}$ is $1$-Lipschitz in $\ell$; that is,
+$L_S \le 1$ for the energy score. For the maximum-softmax-probability score, the
+softmax Jacobian $\mathrm{diag}(p) - p p^\top$ has operator norm at most $2$,
+giving $L_S \le 2$ for MSP.
+
+\emph{Decomposition of the logit shift.}
+The logit difference between an OOD and an ID input is
+$\ell(x_{\mathrm{OOD}}) - \ell(x_{\mathrm{ID}}) = W\bigl(z_{\mathrm{OOD}} - z_{\mathrm{ID}}\bigr)$,
+and decomposing the feature shift as
+$z_{\mathrm{OOD}} - z_{\mathrm{ID}} = P(z_{\mathrm{OOD}} - z_{\mathrm{ID}}) + P_\perp(z_{\mathrm{OOD}} - z_{\mathrm{ID}})$
+splits it into an in-subspace part $W P(z_{\mathrm{OOD}} - z_{\mathrm{ID}})$ and
+a null-space part $W P_\perp(z_{\mathrm{OOD}} - z_{\mathrm{ID}})$.
+
+\emph{Bounding the two parts.}
+By the dominant-subspace--matching hypothesis, the in-subspace shift is small:
+$\|P(z_{\mathrm{OOD}} - z_{\mathrm{ID}})\|_2 \le \varepsilon$, so the first term
+satisfies
+$\|W P(z_{\mathrm{OOD}} - z_{\mathrm{ID}})\|_2 \le \|W\|_{\mathrm{op}}\,\varepsilon$.
+By head insensitivity $\|W P_\perp\|_{\mathrm{op}} \le \eta$ together with the
+tail-energy condition~\eqref{eq:dsc:A1} applied to both ID and OOD features, the
+second term satisfies
+$\|W P_\perp(z_{\mathrm{OOD}} - z_{\mathrm{ID}})\|_2 \le \eta\,(\|P_\perp z_{\mathrm{OOD}}\|_2 + \|P_\perp z_{\mathrm{ID}}\|_2) \le \eta\,(\tau_{\mathrm{OOD}} + \tau) = O(\eta\tau)$
+in expectation.
+
+\emph{Composition.}
+Composing the score's Lipschitz bound with the logit-shift bound and using that
+the $W_1$ distance is dominated by the expected absolute score difference under
+a coupling, we obtain
+\begin{equation} W_1\!\bigl(S(\ell(x_{\mathrm{ID}})),\; S(\ell(x_{\mathrm{OOD}}))\bigr) \;\le\; \|W\|_{\mathrm{op}}\,\varepsilon + L_S\,\eta\tau , \label{eq:dsc:logit-fail} \end{equation}
+for $S \in \{S_{\mathrm{Energy}}, S_{\mathrm{MSP}}\}$, with $L_S \le 1$ for the
+energy score and $L_S \le 2$ for MSP. This is the claimed bound.
+\end{proof}
+
+\paragraph{On the constants.}
+Every constant in~\eqref{eq:dsc:logit-fail} is directly measurable from the
+trained model. The factor $\|W\|_{\mathrm{op}}$ is the largest singular value of
+the classifier head, which is $O(1)$ under standard weight decay; the Lipschitz
+constants $L_S$ are intrinsic to the score function ($L_S \le 1$ for energy,
+$L_S \le 2$ for MSP); and the head insensitivity
+$\eta = \|W P_\perp\|_{\mathrm{op}}$ is the spectral norm of $W$ restricted to
+$\mathcal{S}_{\mathrm{cls}}^\perp$, which approaches zero as neural-collapse
+alignment concentrates the row space of $W$ in $\mathcal{S}_{\mathrm{cls}}$. As
+with the distance-failure theorem, the bound is informative exactly in the DSC
+regime $\varepsilon \ll 1$, $\tau \ll 1$, and becomes vacuous when the features
+are isotropic or the OOD inputs differ strongly inside the class subspace---the
+regimes in which logit-based scores should succeed.

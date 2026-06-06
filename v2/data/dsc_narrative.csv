@@ -1,0 +1,22 @@
+# source_commit: placeholder
+# generated: 2026-06-06T00:00:00Z
+# generator: hand-transcribed from sources/eccv2026_domain_feature_collapse/results_macros.tex. ONLY the narrative constants that are NOT cells of another CSV. Table-cell duplicates -> use \result{dsc_main_nearood|farood|dsc_geometry}{...}; improvement deltas -> use \resdelta on those cells. See outlines/05_domain_sensitivity_collapse.md §2a for the full macro->source map.
+# Render notes: *_fpr / *_capture are percentages -> render with literal \%; counts (den, _num, _count, reff_low/high) -> call with [0]; rho/deltas -> [1] or [2]. Split "N/40" -> \result{}{*_num}[0]/\result{}{splits_den}[0].
+# key_schema: name
+# default_precision: 2
+name,value
+single_domain_extreme_shift_fpr,50
+dsc_rho_k_low,0.80
+dsc_rho_k_high,0.95
+dsc_reff_low,4
+dsc_reff_high,6
+dsc_top_pc_count,64
+dsc_top_pc_var_capture,88
+dsc_ood_gt_id_ce_num,38
+dsc_ood_gt_id_tgt_num,39
+dsc_reff_increase_num,39
+dsc_splits_den,40
+acc_delta_rock_pp,7.7
+acc_delta_food_pp,4.8
+acc_delta_yoga_pp,-4.1
+acc_max_deg_other_pp,0.01

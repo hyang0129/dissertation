@@ -1,0 +1,15 @@
+# source_commit: placeholder
+# generated: 2026-06-06T00:00:00Z
+# generator: hand-transcribed from sources/eccv2026_domain_feature_collapse/generated_dual_metric_nearood_tabular.tex (OpenOOD generate_paper_tables.ipynb). Near-OOD FPR@95/AUROC (%), averaged across single-domain benchmarks. SupCon '-' cells left blank.
+# key_schema: scorer
+# default_precision: 2
+scorer,dino_fpr95,dino_auroc,tgdino_fpr95,tgdino_auroc,resnet_fpr95,resnet_auroc,tgresnet_fpr95,tgresnet_auroc,supcon_fpr95,supcon_auroc
+ebo,70.66,72.56,65.29,75.79,73.92,72.88,67.48,76.98,,
+mds,68.30,72.69,64.17,73.97,70.12,72.35,59.07,77.57,80.76,60.15
+msp,73.00,71.42,66.20,74.06,73.01,73.02,66.72,76.62,,
+knn,66.94,72.64,65.99,72.32,70.28,72.18,68.39,72.93,64.68,72.68
+nci,73.38,70.47,68.41,72.83,76.48,70.44,71.26,74.84,,
+react,72.41,72.65,65.58,75.79,72.99,71.84,71.46,74.45,,
+scale,71.25,72.81,69.04,74.83,74.71,72.70,69.51,76.76,,
+vim,64.10,75.26,59.07,76.61,70.12,73.70,60.68,78.03,,
+mds_teacher_only,81.21,62.31,81.21,62.31,81.21,62.31,81.21,62.31,,

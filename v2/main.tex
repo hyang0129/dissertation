@@ -73,6 +73,11 @@
 \input{macros}
 \IfFileExists{generated/values.tex}{\input{generated/values}}{}
 
+% --- Cross-references (\Cref/\cref) ------------------------------------------
+% Loaded last (after amsthm theorem definitions) per cleveref's requirements,
+% so \Cref picks up the Theorem/Proposition/Lemma counters defined above.
+\usepackage{cleveref}
+
 \begin{document}
 
 %*******************************************

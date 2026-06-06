@@ -120,6 +120,17 @@ WHITELIST: list[str] = [
     # --- Repository / version structure paths sometimes appearing inline ---
     "v1",
     "v2",
+    # --- Dataset / architecture / metric proper nouns (digit is part of a
+    #     name, not a quantity; recur across results chapters). Added for Ch.4. ---
+    "CIFAR10",      # also covers CIFAR100 (substring) within the ±60 context
+    "CIFAR100",
+    "ResNet50",
+    "ResNet-50",
+    "CC3M",
+    "Food 101",
+    "BMW M3",
+    "FPR95",        # metric label in tables/captions
+    "FPR@95",
     # NOTE: This whitelist intentionally starts small. Add a literal string
     # here (and document it in README.md) when a legitimate digit in prose
     # cannot be expressed via a \result{}/\cite{}/\ref{} macro.

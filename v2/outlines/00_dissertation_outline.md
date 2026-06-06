@@ -114,7 +114,25 @@ impossibility results.
 ### Chapter 4 — Label Blindness in Unlabeled OOD Detection ✅ carry-over (strongest chapter)
 - **Source:** [v1 §4](../../v1/Sample_Thesis_main.tex); paper source at
   [sources/iclr2025_label_blindness/](../sources/iclr2025_label_blindness) (ICLR 2025 camera-ready)
-- **Status:** Complete, peer-reviewed (ICLR 2025). Port with light edits.
+- **Status:** Complete, peer-reviewed (ICLR 2025). Faithful port (see Port approach).
+- **Port approach (decided 2026-06-05): faithful port, not a copy-paste.** The
+  argument/framing is unchanged (unlike Ch.5/6), so lift the prose — but v2's rules
+  force a fixed transform set a paste would skip. Decisions: **faithful** (≈paper
+  length, not expanded); **base = v1 §4** (already dissertation-formatted, RW
+  dropped, proofs in App.A); **numbers transcribed from the ICLR camera-ready**
+  (no CSV ships with the source). Transform checklist:
+  1. 🔴 **Number gate** — extract the results grid (see *Numbers/figures* below) →
+     `data/label_blindness_results.csv` (provenance header: "transcribed from ICLR
+     2025 camera-ready Table 1"), re-express each cell via
+     `\resultPM{label_blindness_results}{…}`. *Gating item — v1 hard-codes
+     `70.8±0.3` etc.; this is the bulk of the work.*
+  2. **Dedup §4.2 Preliminaries vs Ch.2** — Ch.2 now owns OOD/unlabeled/SSL/
+     sufficiency defs; back-ref, don't redefine (primitives-only).
+  3. **De-compress** — strip ICLR `\vspace{-2mm}`, `\textcolor{black}{}` rebuttal
+     diff markers, two-column, and the "Impact Statement".
+  4. **Reconcile** citations → gated `references.bib`; macros → `math_commands.tex`.
+  5. **Figures** — GradCAM/examples via `figures_src/` or copy-with-provenance.
+  (Already correct in v1: tight RW with §3.x back-refs; proofs in App.A.)
 - **Sections:** 4.1 Introduction · 4.2 Preliminaries (labeled/unlabeled OOD;
   self-/unsupervised learning) · 4.3 Guaranteed OOD Failure → **Label Blindness
   Theorem** · 4.4 Benchmarking → **Adjacent OOD** (vs near/far OOD) · 4.5
@@ -152,22 +170,18 @@ impossibility results.
   (class-suppressed DINOv2 teacher residual) that restores domain-sensitive
   geometry with **no inference overhead**; (3) validation on 8 single-domain
   benchmarks (double-digit FPR@95 reductions for MDS/ViM/kNN).
-- **Sections (from the paper):** Introduction · Related Work · Domain-Sensitivity
-  Collapse (anisotropic geometry & distance failure; DSC induced by single-domain
-  supervised training; empirical validation) · Method (class-suppressed teacher
-  residuals; Teacher-Guided Training) · Experiments (8 benchmarks; TGT across
-  scorers; why DINOv2 improves less; ablations) · Conclusion.
-- **Numbers/figures:** the paper already uses `results_macros.tex` +
-  `generated_*.tex/.csv` — port those CSVs into `data/` with provenance headers,
-  re-express via `\result{}`; figures (effective-rank vs FPR@95, etc.) →
-  `figures_src/`.
+- **Full plan:** [05_domain_sensitivity_collapse.md](05_domain_sensitivity_collapse.md)
+  — port plan: section map, number-gate inventory (50 macros + ~10 tables → CSVs),
+  cite-key remap table, proofs→App.B. **Port decisions (2026-06-06):** rewrite from
+  the paper (not v1); **lean** supplementary (App.B = proofs only); **core** table
+  set (dual-metric near+far, geometry/rank, EuroSAT λ); DSC defined here, not Ch.2.
+- **Sections:** 5.1 Introduction · 5.2 Related Work (tightened, back-refs Ch.3) ·
+  5.3 Domain-Sensitivity Collapse (defines DSC; geometry table) · 5.4 Method (TGT) ·
+  5.5 Experiments (core tables) · 5.6 Conclusion. Proofs → **Appendix B**
+  (`app:dsc-proofs`): Thm 1 (distance failure) + Prop 1 (MSP/Energy insensitivity).
 - **Related Work scope** (see [03_literature_review.md](03_literature_review.md) §4):
-  single-domain OOD + the distance/logit scorers DSC degrades (MDS/kNN/ViM/MSP/
-  Energy), neural collapse as the diagnosis's neighbor (§3.2 back-ref), the
-  teacher-distillation lineage TGT builds on (CRD-style, DINOv2 teacher). Defer
-  broad OOD → §3.3, geometry → §3.2.
-- **Proofs → Appendix B** (changed; see below): Theorem 1 (distance failure under
-  variance–discriminability mismatch) and Proposition 1 (MSP/Energy insensitivity).
+  single-domain OOD + distance/logit scorers DSC degrades, neural collapse (§3.2
+  back-ref), teacher-distillation lineage. Detail in [05_domain_sensitivity_collapse.md](05_domain_sensitivity_collapse.md) §1–3.
 
 ### Chapter 6 — Information-Theoretic Hallucination Detection ⬜ blank (source located, not yet drafted)
 - **Source:** paper *"Detecting Hallucinations via Mutual Information Analysis of

@@ -1,6 +1,274 @@
-% chapters/04_label_blindness.tex — stub.
-% Integrates the ICLR 2025 paper "Can We Ignore Labels in OOD Detection?".
+% chapters/04_label_blindness.tex
+% Faithful port of v1 Ch.4 (ICLR 2025 "Can We Ignore Labels in OOD Detection?").
+% Transforms applied (see outlines/00_dissertation_outline.md, Ch.4 Port approach):
+%   - Number gate: results table cells -> \resultPM{label_blindness_results}{...}
+%     (data/label_blindness_results.csv; transcribed from camera-ready Table 1).
+%   - Ch.2 dedup: definitional content back-refs Chapter~\ref{ch:background} at the
+%     chapter level. Sufficiency / minimal-sufficient-statistic definitions are kept
+%     inline for now and marked TODO(ch2-dedup) — fold into Ch.2 §2.6-2.7 once that
+%     chapter is drafted (Ch.2 is currently a stub, so no def-level labels to cite).
+%   - Proofs: \ref{app:...} point to Appendix A (appendices/A_proofs.tex), which is
+%     still a stub; these refs resolve once App.A is ported.
+%   - Figure: figures/gradcam_example_faces.png (baked, copied from source; see
+%     figures/README.md).
+
 \chapter{Label Blindness in Unlabeled OOD Detection}
 \label{ch:label-blindness}
 
-TODO: label blindness theorem, Adjacent OOD benchmark, experiments.
+\textit{This chapter is based on work published at ICLR 2025: ``Can We Ignore Labels in Out-of-Distribution Detection?'' by Hong Yang, Qi Yu, and Travis Desell.}
+
+\section{Introduction}
+
+Safety-critical applications of deep neural networks have recently become an important area of investigation in the domain of artificial intelligence, ranging from autonomous driving \citep{ramanagopal2018failing} to biometric authentication \citep{wang2021deep} to medical diagnosis \citep{bakator2018deep}. In the setting of safety-critical systems, it is no longer possible to rely on the closed-world assumption \citep{krizhevsky2012imagenet}, where test data is drawn i.i.d. from the same distribution as the training data, known as the in-distribution (ID). These models will be deployed in an open-world scenario \citep{drummond2006open}, where test samples can be out-of-distribution (OOD) and therefore should be handled with caution. OOD detection seeks to identify inputs containing a label that was never present in the training distribution. The motivation for OOD detection is simple: we do not want safety-critical systems to act on an invalid prediction, where the predicted label cannot be correct because the label was never present in training.
+
+There is significant interest in unlabeled OOD detection due to various factors. A method that does not rely on labels can save significant costs in labeling data, as proposed by \citet{sehwag2021ssd}. It is also possible to skip training on the in distribution data if such a model is generalizable, as proposed by \citet{wang2023clipn}. Self supervised and unlabeled learning methods can also scale to much larger datasets and it is important for these models to be robust to OOD data. Recent work in unlabeled OOD detection methods, including \citet{sehwag2021ssd, tack2020csi, liu2023unsupervised, guille2024cadet, wang2023clipn}, promise to improve safety using only unlabeled data. These methods can achieve even greater performance than a simple supervised baseline \citep{hendrycks2016baseline}, suggesting that one could replace supervised training with self-supervised learning (SSL) for a safety critical OOD detection task. This family of SSL OOD methods differ from traditional supervised OOD methods, including \citet{fort2021exploring}, by the use of only unlabeled data. The importance of labels is an active area of research in OOD detection \citep{du2024does, du2024and}.
+
+When we view SSL from an information-theoretic perspective, the selection of features depends solely on the SSL objective and not on the labels. This, however, provides no guarantee that any features relevant for label prediction will be retained. Figure \ref{fig:grad} provides an example of how SSL features can be less effective for identifying a label. Our theory importantly shows that, when the label-relevant features are independent of the features relevant for the SSL algorithm's successful operation, OOD detection is guaranteed to fail due to what we call `label blindness' and that this label blindness occurs regardless of how one selects the ID dataset from the population of all data. Our experiments also suggest that Zero Shot OOD methods \citep{wang2023clipn, esmaeilpour2022zero} may also suffer from this issue. We show that unsupervised OOD detection methods behave in the same way as SSL in the context of information theory.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/gradcam_example_faces.png}
+    \caption{An example failure case by visualizing the heatmaps of the gradient of a unlabeled SimCLR trained ResNet \citep{chen2020simple} using the GradCAM method \citep{selvaraju2017grad}. The OOD detection task is to detect OOD facial expressions. In this case, the OOD detection method fails as justified by our theoretical work, where the representations do not exhibit a strong gradient in regions commonly associated with facial expressions (i.e., eyebrows, mouth, etc.).}
+    \label{fig:grad}
+\end{figure}
+
+However, one can unintentionally avoid label blindness problem via the selection of the OOD dataset when constructing OOD benchmarks. Existing methods generally consider ID and OOD data from different datasets, e.g., \citet{fort2021exploring}, \citet{sehwag2021ssd}, and \citet{hendrycks2019using}. In these benchmarks, there is no significant overlap between the ID and OOD input data, allowing OOD detection algorithms to succeed on features independent of the label. To address this issue and to test for label blindness, we introduce the Adjacent OOD detection task to evaluate the performance on OOD detection algorithms when there is significant overlap between the OOD input data and ID input data. We also prove that it is impossible to guarantee that a real world system will never encounter OOD input data that significantly overlaps ID input data.
+
+This work aims to answer the following question: \emph{can we ignore labels when engaging in OOD detection?} Through numerous experiments and theoretical proofs, we show that it is not safe to ignore labels when performing OOD detection. This is contrary to the increasing recent efforts that propose new self supervised, unsupervised, and other unlabeled OOD detection methods. This work's key contributions include:
+\begin{itemize}
+\item \textbf{The Label Blindness Theorem.} We theoretically prove that any SSL or Unsupervised Learning algorithm will fail when its information required for the surrogate task is independent of the information required for predicting labels. Through this proof, we conclude that there cannot be a generally applicable SSL or Unsupervised learning OOD detection algorithm as there will always exist independent labels due to the no free generalization theorem.
+
+\item \textbf{Adjacent OOD detection benchmarks.} We introduce the concept of bootstrapping without replacement of the ID labels to create the Adjacent OOD detection task. To the authors' knowledge, this OOD detection task is novel to and absent from research in OOD detection. This task evaluates OOD detection when there is significant overlap in OOD data and ID. We also theoretically prove that overlapping OOD and ID data is possible in every real world dataset.
+
+\item \textbf{Impact on existing and future OOD methods.} We demonstrate that existing SSL and Unsupervised Learning OOD methods fail under the conditions suggested by our theory and that existing benchmarks do not capture such failures. We also evaluate zero shot OOD detection methods, which fail in a similar manner to SSL and Unsupervised Learning OOD methods. We make recommendations on the development and testing of future OOD methods.
+\end{itemize}
+
+\section{Preliminaries}
+\label{sec:lb-preliminaries}
+
+\subsection{Labeled and Unlabeled Out-of-Distribution Detection}
+
+The general OOD detection task --- identifying a semantic shift in the data, and the maximum-softmax-probability (MSP) baseline used to score it --- is defined in Chapter~\ref{ch:background}. Here we recall only the framing this chapter's theory depends on. OOD detection determines when no predicted label could match the true label $\vy \notin \sY_{in}$, where $\sY_{in}$ represents the set of in-distribution training labels, expressed through the probability $P(\vy \notin \sY_{in} \mid \vx)$; one baseline estimate is $1 - \texttt{MSP}(\vx)$.
+
+We are only concerned with labels that can be generated using only $\vx$, via a function $f$ which depends solely on $\vx$ and no other information. $f$ may represent human labelers that generate $\vy$. If we consider $\sY_{all}$ as the set of all possible labels that can be generated from $f(\vx \in \sX_{all})$, a subset of $\sX_{all}$ considered as $\sX_{training}$ may not contain all labels in $\sY_{all}$. For real world datasets, it is possible that $\sY_{in} \subsetneq \sY_{all}$.
+
+We can also approach the problem of OOD detection without the use of labels. One can train a model on ID data using a surrogate task for the purposes of computing a metric. For example, \citet{sehwag2021ssd} trains a resnet with SimCLR and computes the Mahalanobis distance between the training representations and the test sample representations to compute the OOD score. Alternatively, one could utilize a pretrained model with broad knowledge to compute a metric to use as the OOD score, such as in \citet{wang2023clipn}.
+
+\subsection{Self-Supervised and Unsupervised Learning}
+
+This section covers representation learning and its implications for SSL and unsupervised learning. If there is no mutual information between two random variables, neither can be used to reduce uncertainty about the other \citep{shannon1948mathematical}. In both self-supervised and unsupervised OOD detection, if there is no mutual information between the intermediate representations and the OOD detection task, the OOD detection system cannot reduce uncertainty with respect to the OOD detection task using the intermediate representations.
+
+Representation learning can be formulated as finding a distribution $p(\rvz|\rvx)$ that maps the observations from $\vx \in \sX$ to $\vz \in \sZ$, while capturing relevant information for some primary task. When $\rvy$ represents some primary task, we consider only $\rvz$ that is sufficiently discriminative for accomplishing the task $\rvy$. For simplicity, we consider $\rvy$ as a classification label, but $\rvy$ can represent any objective or task. \citet{federici2020learning} show that this sufficiency is met when the information relevant for predicting $\rvy$ is unchanged when encoding $\rvx \rightarrow \rvz$.
+
+% TODO(ch2-dedup): the Sufficiency and Minimal Sufficient Statistic definitions
+% below are Ch.2 primitives (outline §2.7). Once Ch.2 is drafted, replace these
+% two definition blocks with back-refs to their Ch.2 labels and keep only the
+% chapter-specific usage. Kept inline for now so this chapter compiles standalone.
+\begin{definition}
+    Sufficiency: A representation $\rvz \text { of } \rvx$ is sufficient for $\rvy$ if and only if $I(\rvx ; \rvy \mid \rvz)=0 $.
+    \label{def:lb-suff}
+\end{definition}
+
+Since there exists the sufficient statistic $\rvx=\rvz$, we must consider the minimal sufficient statistic which conveys only relevant information for predicting $\rvy$. An SSL algorithm seeks to learn the minimal sufficient statistic via the information bottleneck framework \citep{shwartz2023compress}.
+
+\begin{definition}
+Minimal Sufficient Statistic. A sufficient statistic $\rvz$ is minimal if, for any other sufficient statistic $\rvs$, there exists a function $f$ such that $\rvz = f(\rvs)$.
+\label{def:lb-minsuff}
+\end{definition}
+
+Information bottleneck optimization can be expressed as the minimization of the representation's complexity via $I(\rvx;\rvz)$ and maximizing its utility $I(\rvz;\rvy)$. This results in the information theoretic loss function below, where $\beta$ is a trade-off between complexity and utility \citep{shwartz2023compress}. In practice, learning $\rvz$ without $\rvy$ requires a surrogate task $\rvy_{s}$, e.g., \citet{chen2020simple}, with the loss defined as:
+\begin{align}
+\mathcal{L}=I(\rvx ; \rvz)-\beta I(\rvz ;\rvy).
+\end{align}
+It should be noted that the primary task $\rvy$ may be equal to the SSL task $\rvy_{s}$. In such a case, compression towards the minimal sufficient statistic still occurs. This is important because unsupervised methods for deep neural networks (DNNs) will use a surrogate task $\rvy_{u}$ to train the DNN's weights. Thus, if we assign the primary task for an unsupervised learning method to be equal to its surrogate task, it will behave identically to SSL from the perspective of information theory.
+
+When $\rvx$ has higher information content than $\rvy$, there exists information in $\rvx$ that is not relevant for predicting $\rvy$. This can be better understood by dividing $I(\rvx;\rvz)$ into two terms \citep{federici2020learning} as follows:
+\begin{align}
+I(\rvx ; \rvz)=\underbrace{I(\rvx ;\rvz \mid \rvy)}_{\text {superfluous information }}+\underbrace{I(\rvz ; \rvy)}_{\text {predictive information }}. \label{superfluous}
+\end{align}
+
+However, superfluous information is not affected by the labels of primary task, only by $\rvx$ and $\rvy_{s}$. Using information theory, we can show that any SSL OOD detection algorithm will fail when the surrogate task $\rvy_{s}$ is independent of the labels in the in-distribution dataset. This applies to unsupervised OOD detection algorithms that also use a surrogate task.
+
+\section{Guaranteed OOD Detection Failure}
+
+This section introduces the concept of \textbf{Label Blindness}, with one key supporting theorem and one key supporting lemma. Note that $R_{\rvx}$ represents the support of random variable $\rvx$ such that $R_{\rvx} = \{\vx \in \R : P(\vx) > 0\}$. For clarity, we refer to cases where $I(\rvx_1; \rvx_2) = 0$ as \textbf{Strict Label Blindness} and discuss \textbf{Approximate Label Blindness} $I(\rvx_1; \rvx_2) \approx 0$ later in this section.
+
+\subsection{Label Blindness Theorem (Strict Label Blindness)}
+
+We identify a guarantee of OOD detection failure for any information bottleneck-based optimization process if the unlabeled learning objective is independent from labels used to determine the ID set, described by Corollary \ref{mainbodyfailood}. This corollary is derived from two concepts: strict label blindness in the minimal sufficient statistic and the independence of filtered distributions. We first consider the minimal sufficient statistic and how it leads to strict label blindness; see Theorem \ref{mainbodygenloss}.
+
+\begin{theorem}[Strict Label Blindness in the Minimal Sufficient Statistic]
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a surrogate task such that $H(\rvy_1|\rvx_1) = 0$. Let $\rvz$ be any sufficient representation of $\rvx$ for $\rvy_1$ that satisfies the sufficiency definition \ref{def:lb-suff} and minimizes the loss function $\mathcal{L} = I(\rvx_1 \rvx_2; \rvz) - \beta I(\rvz;\rvy_1)$. The possible $\rvz$ that minimizes $\mathcal{L}$ and is sufficient must meet the condition $I(\rvx_2; \rvz) = 0$.
+    \label{mainbodygenloss}
+\end{theorem}
+
+\textit{Proof:} See Appendix \ref{app:genloss} for the complete proof.
+
+Intuitively, the minimal sufficient representation cannot encode any information independent of the surrogate learning objective, otherwise it would not be minimal. This means that the representation will be blind to any label built upon the independent information.
+
+However, Theorem \ref{mainbodygenloss} is not sufficient to guarantee OOD failure. This is because the selection of the ID training set could change the learned representation $\rvz$, possibly improving OOD detection performance by increasing mutual information, $I(\rvx_2;\rvz) > 0$. We formally disprove this possibility through Lemma \ref{mainbodyfilter}.
+
+\begin{lemma}[Independence of Filtered Distributions]
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. For $\rvx_2'$ where $R_{\vx_2'} \subset R_{\vx_2}$, there exists no $\rvx_2'$ such that $H(\rvx_1|\rvx_2') < H(\rvx_1)$.
+    \label{mainbodyfilter}
+\end{lemma}
+
+\textit{Proof:} See Appendix \ref{app:filter} for the complete proof.
+
+Lemma \ref{mainbodyfilter} states that filtering on a label generated on one of two independent variables cannot provide information about the other. This applies to the selection of ID data from the population, if the selection criteria is independent of the learning objective. This means that the strict label blindness properties predicted by Theorem \ref{mainbodygenloss} will apply to ID training data. These two concepts bring us to our main result -- strict label blindness in filtered distributions; see Corollary \ref{mainbodyfailood}.
+
+\begin{corollary}[Strict Label Blindness in Filtered Distributions]
+    Let $\rvx$ come from a distribution. $\rvx$ is composed of two independent variables $\rvx_1$ and $\rvx_2$. Let $\rvy_1$ be a surrogate task such generated by $\vy_1 = f_1(\vx_1)$ $H(\rvy_1|\rvx_1) = 0$. Let $\rvy_2$ be a label such that $H(\rvy_2|\rvx_2) = 0$ and $\vy_2 = f_2(\vx_2)$. Let $\sY_{in}$ be as subset of labels $\sY_{in} \subset R_{\rvy_2}$. Let $\rvx'$ be a subset of $\rvx$ where $R_{\rvx'} = R_{\rvx} \cap \{\vx \in \R: f_2(\vx_2) \in \sY_{in} \}$ such that $\rvx'$ is composed of independent variables $\rvx_1'$ and $\rvx_2'$ and $\vy_1' = f_1(\vx_1')$. The sufficient representation $\rvz$ learned by minimizing $\mathcal{L} = I(\rvx_1' \rvx_2'; \rvz) - \beta I(\rvz;\rvy_1')$ must have $I(\rvx_2;\rvz) = 0$ and $I(\rvy_2;\rvz) = 0$.
+    \label{mainbodyfailood}
+\end{corollary}
+
+\textit{Proof:} See Appendix \ref{app:failood} for the complete proof.
+
+This means that, when we select the ID training data, if the selection criteria and labels are independent of the surrogate learning objective, then we can guarantee failure in OOD detection due to the absence of any information in the learned representation $\rvz$. For simplicity, we refer to this concept, supported by Corollary \ref{mainbodyfailood}, as the problem of \textbf{Strict Label Blindness}.
+
+In summary, when the surrogate learning task can be achieved without learning about features relevant for the label, it will not learn any features relevant for the label. If the SSL or unsupervised learning method fails to learn any label-relevant features, then any OOD detection algorithm built from those representations cannot differentiate between the labels selected as ID and those not selected as ID. This guarantees failure in OOD detection because no label information passes through the information bottleneck.
+
+\subsection{Implications of Strict Label Blindness in Real World Situations}
+
+We can utilize Fano Inequality to extend our understanding of strict label blindness to consider situations where the variables are not fully independent. The lower bound for prediction error is defined by the entropy of the target label $\rvy$ less the mutual information between the input $\rvx$ and target label, as shown in Theorem \ref{fano}. Under strict label blindness, when $I(\rvx;\rvy) = 0$, the lower bound for error is at its maximum. When $I(\rvx;\rvy) \approx 0$, the lower bound for error is large enough to be unreliable. We refer to this condition as \textbf{Approximate Label Blindness} and we conduct experiments to evaluate this condition. Unless specified as strict, label blindness refers to the approximate case.
+
+\begin{theorem}[Fano's Inequality]
+Let $\rvy$ be a discrete random variable representing the true label with $\mathcal{Y}$ possible values and cardinality of $|\mathcal{Y}|$ and $\rvx$ be a random variable used to predict $\rvy$. Let $e$ be the occurrence of an error such that $\rvy \neq \hat{\rvy}$ where $\hat{\rvy} = f(\rvx)$. Let $H_b$ represent the binary entropy function such that $H_b(e)=-P(e) \log P(e)-(1-P(e)) \log (1-P(e))$. The lower bound for $P(e)$ increases with lower $I(\rvx;\rvy)$.
+\begin{align} H_b(e) + P(e) \log(| \mathcal{Y} |-1) \geq H(\rvy) - I(\rvx; \rvy). \end{align}
+\label{fano}
+\end{theorem}
+
+\subsection{Theoretical Implications}
+
+Our work applies to deep neural networks (DNNs) trained without labels for the purpose of OOD detection. The key assumption of information bottleneck compression is generally applicable to DNNs \citep{shwartz2017opening}. Regardless of other assumptions, such as the multi-view assumption, an information bottleneck DNN trained without labels will still compress data irrelevant to its loss objective, even if that data is relevant for its intended task. It does not matter what task the training process was originally designed for because the unlabeled training process ultimately generates/adheres to its own learning objective. For any learning objective, there will exist an independent feature unless compression is not possible, as in $I(\rvx;\rvy) = I(\rvx;\rvx)$. If there is compression, then there exists labels for which OOD detection failure is guaranteed.
+
+Our work predicts a guarantee of failure only when we consider the OOD set of all non-ID data. In our own experiments and in work by \citet{sehwag2021ssd, hendrycks2019using, liu2023unsupervised}, purely self-supervised and unsupervised OOD methods can perform well against common benchmark OOD sets. This suggests that the choice of ID set and OOD set pairs can unintentionally hide label blindness failure. Alternatively, we can also construct a test to identify if the OOD detection algorithm suffers from label blindness. To construct such a test, we rely on the insight from Corollary \ref{mainbodyfailood} and the use of a simple statistical method.
+
+\section{Benchmarking for Label Blindness Failure}
+
+\subsection{Bootstrapping and the Adjacent OOD Benchmark}
+
+One logical consequence of Corollary \ref{mainbodyfailood} is that one cannot avoid failure due to label blindness by selecting different labels for one's ID set, so long as the label selection is independent from the learning objective. To test any OOD detection algorithm for label blindness failure, this simply entails selecting different labels for one's ID set. To construct this benchmark, we randomly sample labels to be considered as ID and other labels to be consider OOD. This is similar to bootstrapping, but without replacement. If an OOD detection algorithm is `approximately label blind', its average OOD detection performance across the samples should be poor. We refer to this as the \textbf{Adjacent OOD Detection Benchmark}.
+
+\subsection{Why Adjacent OOD is Safety-Critical to Almost All Real World Systems}
+
+The Adjacent OOD detection benchmark evaluates the performance of OOD detection algorithms when there may be a significant overlap between the ID data and OOD data. This condition applies to all systems where it is impossible to guarantee that there will be no significant overlap in the feature space between ID and OOD data. This is true for almost all real world systems and is theoretically proven below.
+
+\begin{theorem}[Unavoidable Risk of Overlapping OOD Data]
+Let $\rvx$ come from a distribution. Let $f$ be some labeling function to generate labels $\rvy$ such that $\vy = f(\vx)$, where there are at least two unique labels $|R_\rvy| > 1$. Let $\rvx_{in}$ be a random subset of $\rvx$ where $R_{\rvx_{in}} \subsetneq R_\rvx$ and $|R_{\rvx_{in}}| < \infty$. Let $\rvy_{in}$ be labels generated from $\vy_{in} = f(\vx_{in})$. The probability that a randomly selected $\vx$ contains $\vy$ not present in $R_{\rvy_{in}}$ is always greater than $0$.
+\label{mainbodyoverlap}
+\end{theorem}
+
+\textit{Proof:} See Appendix \ref{app:overlaprisk} for the complete proof.
+
+In theory, this risk can be reduced to an acceptable level by adding more data to the training dataset. However, this reduction in risk requires the assumption that the collected data is randomly sampled. This is almost never true for real world datasets and often the opposite is true, where the nature of sampling can significantly increase this risk.
+
+One risk factor present in every real world dataset is the dataset creation date. By creating the dataset at any specific point in time, the dataset cannot be randomly sampled with respect to time because it is impossible to collect data from the future. For example, if one were to create a dataset of diseases today, it would not contain any future diseases. In this example, the probability that the training dataset is incomplete is $100\%$, which guarantees that there will be OOD data that significantly overlaps with ID data. For most real world systems, the only safe assumption is that there may be OOD data that overlaps with ID data and it is necessary to plan accordingly.
+
+The failure predicted by the label blindness theory is easiest to detect in the adjacent OOD situation. Where there is a likelihood of adjacent data, Theorem \ref{mainbodyfailood} predicts OOD detection failure. Where there is no adjacent data, features independent of the label can still be used to distinguish between ID data and non adjacent OOD data, as shown in various experiments in this paper and others \citep{sehwag2021ssd, hendrycks2019using, liu2023unsupervised}.
+
+\subsection{Comparing Adjacent, Near, and Far OOD Benchmarks}
+
+Many unlabeled OOD methods generally perform quite well on far and near OOD tasks. Far OOD is often defined by ID and OOD sets with different semantic labels and styles \citep{fang2022out}. One such far OOD benchmark is MNIST as ID data and CIFAR10 as OOD data. Near OOD contains ID and OOD sets with similar semantic labels and styles \citep{fang2022out}. These tasks tend to be more difficult for existing OOD detection methods than far OOD detection tasks. One such near OOD benchmark is CIFAR10 as ID and CIFAR100 as OOD. However, the overlap in the near OOD detection benchmarks is significantly less than the adjacent OOD detection benchmark, which evaluates the maximum possible feature overlap. For example, an Adjacent OOD benchmark on the ICML Facial Expressions dataset may contain the same face with different expressions, resulting in significant feature overlap. These existing benchmarks do not provide sufficient safety guarantees in applications where there may be significant overlap between ID and OOD data.
+
+\subsection{Implications for OOD from Unlabeled Data}
+
+While methods that utilize only unlabeled data, such as \citet{sehwag2021ssd, liu2023unsupervised, guille2024cadet}, show promising results on both near and far OOD tasks, their performance in the adjacent OOD detection tasks depends on the mutual information between the learned representation and the ID labels. Our theoretical work suggests that such methods will perform poorly, if the surrogate task is independent of the labels.
+
+The adjacent OOD detection benchmark can also evaluate the performance of zero shot OOD detection methods. While our theoretical work does not extend to pretraining due to the use of labels, it is also still important to consider the performance when OOD data overlaps ID data.
+
+\section{Experimental Results}
+
+We conduct the following experiments to verify the existence of label blindness in unlabeled OOD detection methods. All hyperparameters and configurations were the best performing from their respective original paper implementations, unless noted otherwise. Experiments are repeated $3$ times.
+
+\subsection{Experimental Setup}
+
+\paragraph{Supervised Baseline.}
+We use Maximum Softmax Probability (MSP) \citep{hendrycks2016baseline} as our baseline supervised method for comparison. We augment the training data using random rotation, horizontal flip, random crop, gray scale, and color jitter. Images are resized to $64\times64$. We train using stochastic gradient descent with momentum and a cosine annealing learning schedule. We train for $10$ warm up epochs followed by $150$ regular epochs, selecting the weights with the highest validation accuracy. We use a standard ResNet50 architecture.
+
+\paragraph{Self-supervised Baselines.}
+We use two SSL methods to evaluate how representations are learned, SimCLR \citep{chen2020simple} and Rotation Loss (RotLoss) \citep{hendrycks2019using}. Images are resized to $64\times64$ for both cases. For SimCLR, we augment the training data using random rotation, horizontal flip, random crop, gray scale, and color jitter. For Rotation Loss, we use only random crop and horizontal flip. We train using stochastic gradient descent with momentum (and a cosine annealing learning schedule) and employ a standard ResNet50 architecture and train for $10$ warm up epochs followed by $500$ regular epochs, selecting the weights with the best-learned representations. We use a KNN classifier to determine the best representations during validation at the end of each epoch.
+
+To evaluate OOD performance, we use two methods to generate the OOD score of each sample, SSD \citep{sehwag2021ssd} and KNN, similar to \citet{sun2022out}. SSD considers the OOD score as the Mahalanobis distance of the sample from the center of all in-distribution training data samples. The KNN method considers the OOD score as the Euclidean distance from the $N$th nearest neighbor of the test sample to all in-distribution training samples. Both methods are distance based OOD detection and are commonly used with representation learning. We use the same representation mentioned in the previous paragraph.
+
+\paragraph{Unsupervised Baseline.}
+To consider how an unsupervised OOD detection method functions, we evaluate the diffusion impainting OOD detection method proposed by \citet{liu2023unsupervised} using code provided in their paper's linked repository. We utilize the training configuration that generated the paper's main results, which involved an alternating checkerboard mask $8 \times 8$, an LPIPS distance metric to calculate the OOD score, and $10$ reconstructions per image. We modify only the input image size to be $64\times64$ for all datasets and run additional experiments to evaluate performance on their alternative MSE distance metric. This method is representative of other generative methods, such as \citet{xiao2020likelihood}.
+
+\paragraph{Zero-shot Baseline.}
+To consider how well zero shot learning algorithms perform, we evaluate the CLIPN model presented by \citet{wang2023clipn}. We utilize their pretrained weights provided in their paper's repository and perform zero shot OOD detection on our adjacent OOD detection benchmark. We evaluate CLIPNs performance using $3$ of their paper's algorithms, Maximum Softmax Probability, Compete to Win (CTW), and Agree to Differ (ATD).
+
+\subsection{Adjacent OOD Datasets}
+
+To create the Adjacent OOD detection task, we randomly split $25$\% of all classes into the OOD set and retain $75$\% as the ID set. We also repeat our experiments three times with different seeds to account for different splits of the ID and OOD set. Only ICML Facial expressions has a major class imbalance for one of its seven classes.
+
+The ICML Facial Expressions dataset \citep{icmlface} contains seven facial expressions split across $28,709$ faces in the train set and $7,178$ in the test set. The expressions include anger, disgust, fear, happiness, sadness, surprise, and neutral. Self-supervised algorithms may not learn relevant features for distinguishing expressions and instead learn features relevant for distinguishing faces.
+
+The Stanford Cars dataset \citep{KrauseStarkDengFei-Fei_3DRR2013} contains $16,185$ images taken from $196$ classes of cars. The data is split into $8,144$ training images and $8,041$ testing images, with each class being split roughly $50$-$50$. Classes are typically very fine-grained, at the level of Make, Model, Year, e.g., 2012 Tesla Model S or 2012 BMW M3 coupe. This creates a particularly challenging Adjacent OOD task because of the reliance on more subtle features to differentiate cars.
+
+The Food 101 dataset by \citet{bossard14} consists of $101$ food categories and $101,000$ images. There are $250$ manually reviewed test images and $750$ training images for each class. Note that training images were not cleaned to the same standard as the test images and will contain some mislabeled samples. We believe that this should not significantly detract from the Adjacent OOD nature of the dataset.
+
+\subsection{Experimental Results}
+
+Experimental results for Adjacent OOD are presented in Table \ref{tab:results}. It is apparent that the baseline supervised method performs better than most unlabeled methods on the Adjacent OOD detection task. In cases where the unlabeled methods exhibits performance as good as random guessing, it is likely that the learned representation contains little information about the semantic label. This is contrary to the reported performance improvements presented in unlabeled OOD papers \citep{sehwag2021ssd, hendrycks2019using, liu2023unsupervised}, as our experimental results suggest unlabeled OOD is significantly worse than a simple MSP baseline.
+
+It is important to note that the zero shot CLIPN method performs well when the label text's usage in pretraining is similar to the label text's usage in the ID data. In the case of the Cars dataset, the pretraining dataset CC3M \citep{sharma2018conceptual} contains many images captioned with the make and model of various cars, resulting in good performance. The Food dataset also sees similar label usage in the pretraining set. However, the Faces dataset's labels are not aligned. For example, there are multiple images associated with the emotion angry that do not contain a human face, such as an image of a angry fist. When there is little or no mutual information between the pretraining data and the ID labels, zero shot methods will perform poorly in OOD detection tasks.
+
+\begin{table}[h]
+\caption{Results from experiments across various datasets and methods. Unlabeled methods perform poorly in adjacent OOD detection. CLIPN performance is due to labels present in the pretraining dataset. Higher AUROC and lower FPR is better. All values are AUROC / FPR95 (\%), mean $\pm$ std over $3$ seeds.}
+\vspace{2mm}
+\centering
+\begin{tabular}{l|ll|ll|ll}
+\toprule
+                & Faces    &          & Cars     &           & Food     &          \\ \hline
+Method          & AUROC    & FPR95    & AUROC    & FPR95     & AUROC    & FPR95    \\ \midrule
+Supervised MSP  & \resultPM{label_blindness_results}{faces:supervised_msp:auroc_mean,faces:supervised_msp:auroc_std} & \resultPM{label_blindness_results}{faces:supervised_msp:fpr95_mean,faces:supervised_msp:fpr95_std} & \resultPM{label_blindness_results}{cars:supervised_msp:auroc_mean,cars:supervised_msp:auroc_std} & \resultPM{label_blindness_results}{cars:supervised_msp:fpr95_mean,cars:supervised_msp:fpr95_std} & \resultPM{label_blindness_results}{food:supervised_msp:auroc_mean,food:supervised_msp:auroc_std} & \resultPM{label_blindness_results}{food:supervised_msp:fpr95_mean,food:supervised_msp:fpr95_std} \\ \midrule
+SimCLR KNN      & \resultPM{label_blindness_results}{faces:simclr_knn:auroc_mean,faces:simclr_knn:auroc_std} & \resultPM{label_blindness_results}{faces:simclr_knn:fpr95_mean,faces:simclr_knn:fpr95_std} & \resultPM{label_blindness_results}{cars:simclr_knn:auroc_mean,cars:simclr_knn:auroc_std} & \resultPM{label_blindness_results}{cars:simclr_knn:fpr95_mean,cars:simclr_knn:fpr95_std} & \resultPM{label_blindness_results}{food:simclr_knn:auroc_mean,food:simclr_knn:auroc_std} & \resultPM{label_blindness_results}{food:simclr_knn:fpr95_mean,food:simclr_knn:fpr95_std} \\
+SimCLR SSD      & \resultPM{label_blindness_results}{faces:simclr_ssd:auroc_mean,faces:simclr_ssd:auroc_std} & \resultPM{label_blindness_results}{faces:simclr_ssd:fpr95_mean,faces:simclr_ssd:fpr95_std} & \resultPM{label_blindness_results}{cars:simclr_ssd:auroc_mean,cars:simclr_ssd:auroc_std} & \resultPM{label_blindness_results}{cars:simclr_ssd:fpr95_mean,cars:simclr_ssd:fpr95_std} & \resultPM{label_blindness_results}{food:simclr_ssd:auroc_mean,food:simclr_ssd:auroc_std} & \resultPM{label_blindness_results}{food:simclr_ssd:fpr95_mean,food:simclr_ssd:fpr95_std} \\
+RotLoss KNN     & \resultPM{label_blindness_results}{faces:rotloss_knn:auroc_mean,faces:rotloss_knn:auroc_std} & \resultPM{label_blindness_results}{faces:rotloss_knn:fpr95_mean,faces:rotloss_knn:fpr95_std} & \resultPM{label_blindness_results}{cars:rotloss_knn:auroc_mean,cars:rotloss_knn:auroc_std} & \resultPM{label_blindness_results}{cars:rotloss_knn:fpr95_mean,cars:rotloss_knn:fpr95_std} & \resultPM{label_blindness_results}{food:rotloss_knn:auroc_mean,food:rotloss_knn:auroc_std} & \resultPM{label_blindness_results}{food:rotloss_knn:fpr95_mean,food:rotloss_knn:fpr95_std} \\
+RotLoss SSD     & \resultPM{label_blindness_results}{faces:rotloss_ssd:auroc_mean,faces:rotloss_ssd:auroc_std} & \resultPM{label_blindness_results}{faces:rotloss_ssd:fpr95_mean,faces:rotloss_ssd:fpr95_std} & \resultPM{label_blindness_results}{cars:rotloss_ssd:auroc_mean,cars:rotloss_ssd:auroc_std} & \resultPM{label_blindness_results}{cars:rotloss_ssd:fpr95_mean,cars:rotloss_ssd:fpr95_std} & \resultPM{label_blindness_results}{food:rotloss_ssd:auroc_mean,food:rotloss_ssd:auroc_std} & \resultPM{label_blindness_results}{food:rotloss_ssd:fpr95_mean,food:rotloss_ssd:fpr95_std} \\ \midrule
+Diffusion LPIPS & \resultPM{label_blindness_results}{faces:diffusion_lpips:auroc_mean,faces:diffusion_lpips:auroc_std} & \resultPM{label_blindness_results}{faces:diffusion_lpips:fpr95_mean,faces:diffusion_lpips:fpr95_std} & \resultPM{label_blindness_results}{cars:diffusion_lpips:auroc_mean,cars:diffusion_lpips:auroc_std} & \resultPM{label_blindness_results}{cars:diffusion_lpips:fpr95_mean,cars:diffusion_lpips:fpr95_std} & \resultPM{label_blindness_results}{food:diffusion_lpips:auroc_mean,food:diffusion_lpips:auroc_std} & \resultPM{label_blindness_results}{food:diffusion_lpips:fpr95_mean,food:diffusion_lpips:fpr95_std} \\
+Diffusion MSE   & \resultPM{label_blindness_results}{faces:diffusion_mse:auroc_mean,faces:diffusion_mse:auroc_std} & \resultPM{label_blindness_results}{faces:diffusion_mse:fpr95_mean,faces:diffusion_mse:fpr95_std} & \resultPM{label_blindness_results}{cars:diffusion_mse:auroc_mean,cars:diffusion_mse:auroc_std} & \resultPM{label_blindness_results}{cars:diffusion_mse:fpr95_mean,cars:diffusion_mse:fpr95_std} & \resultPM{label_blindness_results}{food:diffusion_mse:auroc_mean,food:diffusion_mse:auroc_std} & \resultPM{label_blindness_results}{food:diffusion_mse:fpr95_mean,food:diffusion_mse:fpr95_std} \\ \midrule
+CLIPN CTW       & \resultPM{label_blindness_results}{faces:clipn_ctw:auroc_mean,faces:clipn_ctw:auroc_std} & \resultPM{label_blindness_results}{faces:clipn_ctw:fpr95_mean,faces:clipn_ctw:fpr95_std} & \resultPM{label_blindness_results}{cars:clipn_ctw:auroc_mean,cars:clipn_ctw:auroc_std} & \resultPM{label_blindness_results}{cars:clipn_ctw:fpr95_mean,cars:clipn_ctw:fpr95_std} & \resultPM{label_blindness_results}{food:clipn_ctw:auroc_mean,food:clipn_ctw:auroc_std} & \resultPM{label_blindness_results}{food:clipn_ctw:fpr95_mean,food:clipn_ctw:fpr95_std} \\
+CLIPN ATD       & \resultPM{label_blindness_results}{faces:clipn_atd:auroc_mean,faces:clipn_atd:auroc_std} & \resultPM{label_blindness_results}{faces:clipn_atd:fpr95_mean,faces:clipn_atd:fpr95_std} & \resultPM{label_blindness_results}{cars:clipn_atd:auroc_mean,cars:clipn_atd:auroc_std} & \resultPM{label_blindness_results}{cars:clipn_atd:fpr95_mean,cars:clipn_atd:fpr95_std} & \resultPM{label_blindness_results}{food:clipn_atd:auroc_mean,food:clipn_atd:auroc_std} & \resultPM{label_blindness_results}{food:clipn_atd:fpr95_mean,food:clipn_atd:fpr95_std} \\
+CLIPN MSP       & \resultPM{label_blindness_results}{faces:clipn_msp:auroc_mean,faces:clipn_msp:auroc_std} & \resultPM{label_blindness_results}{faces:clipn_msp:fpr95_mean,faces:clipn_msp:fpr95_std} & \resultPM{label_blindness_results}{cars:clipn_msp:auroc_mean,cars:clipn_msp:auroc_std} & \resultPM{label_blindness_results}{cars:clipn_msp:fpr95_mean,cars:clipn_msp:fpr95_std} & \resultPM{label_blindness_results}{food:clipn_msp:auroc_mean,food:clipn_msp:auroc_std} & \resultPM{label_blindness_results}{food:clipn_msp:fpr95_mean,food:clipn_msp:fpr95_std} \\ \bottomrule
+\end{tabular}
+\label{tab:results}
+\end{table}
+
+We observe decent OOD performance on the unlabeled SimCLR compared to the labeled supervised MSP for CIFAR10 and CIFAR100 datasets. This is likely because the SimCLR algorithm is better at learning the relevant features in these datasets and that the classes are more visually dissimilar, resulting in less overlap of OOD and ID data. We also show strong results for far OOD performance for SimCLR based OOD detection, which confirms findings in papers that test unlabeled OOD methods against a far OOD detection benchmark \citep{sehwag2021ssd, tack2020csi, liu2023unsupervised, guille2024cadet, wang2023clipn}.
+
+\section{Discussion}
+
+\subsection{Impact of Label Blindness on Future Research}
+
+A consequence of the label blindness theorem is that there cannot exist a single unlabeled OOD detection algorithm for all unlabeled data. However, unlabeled learning methods, such as SimCLR, are vital for improving OOD detection. The model of \citet{sun2022out} learns representations using a supervised version of SimCLR, similar to \citet{khosla2020supervised}. The combination of a multi-view information bottleneck with supervised classes produces a more robust representation of the in-distribution data than using only a supervised loss. Recent work by \citet{du2024does} provides a strong theoretical basis for why unlabeled data can improve OOD detection performance.
+
+The Adjacent OOD detection benchmark addresses a critical safety gap in existing OOD detection research. Current benchmarks often use datasets with minimal feature overlap between ID and OOD data, which can mask the label blindness problem. In real-world applications, especially safety-critical ones, it is essential to evaluate OOD detection methods under conditions where ID and OOD data may have significant feature overlap.
+
+Our findings suggest that practitioners should be cautious when deploying unlabeled OOD detection methods in scenarios where the training data may not capture all relevant semantic variations. The theoretical guarantees provided by our label blindness analysis indicate that such methods may fail catastrophically when encountering OOD data that shares features with ID data but differs in the semantic labels.
+
+\subsection{Recommendations for Future OOD Detection Research}
+
+Based on our theoretical and empirical findings, we recommend several directions for future research:
+
+\begin{itemize}
+\item \textbf{Hybrid approaches}: Combining supervised and self-supervised learning objectives may help mitigate label blindness by ensuring that label-relevant features are preserved during representation learning.
+
+\item \textbf{Adjacent OOD evaluation}: All OOD detection methods should be evaluated on Adjacent OOD benchmarks to assess their robustness to scenarios with high feature overlap between ID and OOD data.
+
+\item \textbf{Information-theoretic analysis}: Future unlabeled OOD detection methods should include theoretical analysis of the mutual information between their learning objectives and the target labels to identify potential label blindness issues.
+
+\item \textbf{Domain-aware methods}: Developing methods that can explicitly model and account for domain-specific features may help address some of the limitations identified in our work.
+\end{itemize}
+
+\section{Conclusion}
+
+In this work we provide an answer to the question, can we ignore labels for OOD detection? Our theoretical work shows that the answer is no, unless the unlabeled method happens to capture the relevant features and does not need to work for different sets of labels. Due to the lack of existing benchmarks that capture the theoretically expected failure, we introduce a novel type of OOD task, Adjacent OOD detection. This task addresses the critical safety gap caused by significant overlap of ID and OOD data. We show that the Adjacent OOD task accurately captures the failure in unlabeled OOD detection that is hypothesized by our theory.
+
+The label blindness theorem demonstrates that when the surrogate learning task used in self-supervised or unsupervised learning is independent of the features relevant for label prediction, OOD detection is guaranteed to fail. This fundamental limitation cannot be overcome by simply selecting different ID datasets, as the independence property is preserved under filtering operations.
+
+Our experimental results confirm the theoretical predictions, showing that unlabeled OOD detection methods perform poorly on Adjacent OOD benchmarks where there is significant feature overlap between ID and OOD data. In contrast, these same methods often perform well on traditional far OOD benchmarks, highlighting the importance of comprehensive evaluation.
+
+The Adjacent OOD detection benchmark introduced in this work provides a crucial tool for evaluating the robustness of OOD detection methods in realistic scenarios. This benchmark addresses a previously ignored safety gap in OOD detection research and should be adopted as a standard evaluation protocol for future work.
+
+We hope our work will help support more robust research into OOD detection and improve the safety of AI applications. The theoretical framework and empirical findings presented here provide important guidance for developing more reliable OOD detection methods that can handle the complexities of real-world deployment scenarios.

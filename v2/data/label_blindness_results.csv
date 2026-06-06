@@ -1,0 +1,36 @@
+# source_commit: placeholder
+# generated: 2026-06-05T00:00:00Z
+# generator: hand-transcribed from ICLR 2025 camera-ready (sources/iclr2025_label_blindness/paper.tex, Table tab:results). Adjacent-OOD AUROC/FPR95, mean±std over 3 seeds. Values in percentage points.
+# key_schema: dataset:method
+# default_precision: 1
+dataset,method,auroc_mean,auroc_std,fpr95_mean,fpr95_std
+faces,supervised_msp,70.8,0.3,88.2,0.2
+faces,simclr_knn,52.0,4.2,95.0,1.3
+faces,simclr_ssd,55.0,4.5,95.1,2.0
+faces,rotloss_knn,46.1,2.5,95.8,0.4
+faces,rotloss_ssd,46.6,3.0,95.7,0.5
+faces,diffusion_lpips,54.7,4.6,94.2,3.7
+faces,diffusion_mse,55.3,2.2,94.2,1.4
+faces,clipn_ctw,47.0,1.4,97.3,0.3
+faces,clipn_atd,44.2,1.4,97.5,0.2
+faces,clipn_msp,58.7,4.4,95.9,1.4
+cars,supervised_msp,69.2,0.9,88.8,0.8
+cars,simclr_knn,52.5,0.4,94.0,0.5
+cars,simclr_ssd,52.7,0.7,93.7,1.1
+cars,rotloss_knn,51.1,0.6,94.8,0.7
+cars,rotloss_ssd,50.7,1.9,95.0,1.2
+cars,diffusion_lpips,53.8,1.8,93.9,1.2
+cars,diffusion_mse,51.6,1.6,94.4,0.5
+cars,clipn_ctw,65.0,5.1,69.4,9.4
+cars,clipn_atd,81.1,4.3,56.6,10.4
+cars,clipn_msp,76.5,1.4,75.4,0.6
+food,supervised_msp,78.8,1.2,81.1,1.6
+food,simclr_knn,61.1,2.8,91.6,1.6
+food,simclr_ssd,64.4,0.8,89.3,0.5
+food,rotloss_knn,49.7,3.8,94.9,0.9
+food,rotloss_ssd,50.7,3.6,94.9,0.9
+food,diffusion_lpips,52.9,2.2,94.4,0.6
+food,diffusion_mse,52.5,3.4,94.2,0.6
+food,clipn_ctw,70.9,2.9,69.1,7.0
+food,clipn_atd,84.9,0.2,53.9,4.5
+food,clipn_msp,80.5,1.6,74.0,1.4

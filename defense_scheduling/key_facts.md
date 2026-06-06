@@ -31,12 +31,18 @@
 > as a record of the invite.
 
 ### ⚠️ Still to confirm / fill
-- **Defense Chair** — RIT (policy **D120**) requires a separate **defense chair** who
-  is **NOT counted as a committee member**. Named on its own line of the "Dissertation
-  Defense Committee Member and Defense Chair List" form. Not yet identified — ask
-  Travis / the PhD office who will serve. (`cjg9411@rit.edu` was CC'd on the proposal
-  announcement — possibly the proposal-stage chair; verify.)
-- **Mode of delivery** — In Person / Zoom / Hybrid (required on the form). TBD.
+- **Defense Chair** — RIT (policy **D120**) requires a separate **outside chair** for
+  the closed-door final exam. Per D120 the chair **must**: hold an earned Ph.D.; be a
+  **tenured RIT faculty member NOT affiliated with the GCCIS PhD program**; and is
+  **NOT** a committee member or the advisor. **Appointment process:** the **RIT
+  Graduate School dean appoints** the chair via a **formal request from the PhD
+  Program Director (Dr. Shi)** — so you don't pick unilaterally. In practice you/Travis
+  may *suggest* an eligible name, then Dr. Shi makes the formal request. The agreed name
+  goes on the committee/chair list form (which Dr. Shi approves). Not yet identified.
+  (`cjg9411@rit.edu` was CC'd on the proposal announcement — possibly the proposal-stage
+  chair; verify.)
+- **Mode of delivery** — **In Person** (decided). ⇒ room reservation required:
+  notify Ruth & Siyuan **≥ 3 weeks before** (by **July 17, 2026**).
 
 > **Committee composition policy:** min. 4 faculty incl. advisor; a *majority* must be
 > CIS PhD faculty. Hong's 4 internal members satisfy this; external member optional.

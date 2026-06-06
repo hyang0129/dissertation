@@ -14,8 +14,8 @@ See [scheduling_steps_and_deadlines.md](scheduling_steps_and_deadlines.md) for s
 ## 0. Lock the basics
 - [x] **Defense date chosen: Fri, Aug 7, 2026**
 - [ ] Confirm all 4 committee members available **Aug 7** — Desell, Ororbia, KhudaBukhsh, Yu
-- [ ] Identify and confirm a neutral **defense chair** (not yet named)
-- [ ] Decide **mode**: Zoom / in-person / hybrid (affects room-reservation step)
+- [ ] **Defense chair**: ask Dr. Shi (cc Travis) to formally request an outside chair from the Grad School dean — must be a *tenured RIT faculty member outside the GCCIS PhD program* w/ earned PhD, not a committee member/advisor (RIT D120)
+- [x] **Mode: In Person** ⇒ room reservation required (see step 3)
 - [ ] Reply to Siyuan's open thread "Scheduling Dissertation Defense" (2026-06-05) to confirm the process
 - [ ] Confirm with Ruth whether defending requires applying for graduation too, and the fall-enrollment question
 
@@ -26,11 +26,11 @@ See [scheduling_steps_and_deadlines.md](scheduling_steps_and_deadlines.md) for s
 ## 2. By Fri, July 10, 2026 (4 weeks before)
 - [ ] Send the **dissertation manuscript** to all committee members **and** the GCCIS PhD Director
 
-## 3. By Fri, July 17, 2026 (3 weeks before — if in-person/hybrid)
-- [ ] Notify Ruth & Siyuan of date/time to **reserve a room**
+## 3. By Fri, July 17, 2026 (3 weeks before — REQUIRED, in person)
+- [ ] Notify Ruth & Siyuan of date/time to **reserve a room** (defense is in person)
 
 ## 4. By Fri, July 17–24, 2026 (2–3 weeks before)
-- [ ] Submit **title, abstract, and Zoom link** (Zoom for hybrid/remote)
+- [ ] Submit **title and abstract** for the announcement (no Zoom link needed — in person)
 - [ ] Submit **publication list** to the PhD Director (cc Ruth & Siyuan), **highlighting the milestone publication**
 
 ## 5. Graduation application (separate track)

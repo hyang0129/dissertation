@@ -16,7 +16,7 @@ originals are binary). Extracted 2026-06-06.
 Fields to fill in:
 - Student Name (as it should appear in the announcement and dissertation)
 - Intended Dissertation Defense Date → **Aug 7, 2026**
-- Mode of Delivery (In Person / Zoom / Hybrid) → **TBD**
+- Mode of Delivery (In Person / Zoom / Hybrid) → **In Person**
 - Advisor(s) Name → Travis Desell
 - Committee Member Names (1, 2, 3 …) — *email & affiliation required for any external member*
   → Ororbia, KhudaBukhsh, Yu (+ Desell as advisor)

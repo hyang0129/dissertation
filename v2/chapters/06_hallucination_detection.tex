@@ -1,7 +1,695 @@
-% chapters/06_hallucination_detection.tex — BLANK, pending source paper.
-% The MI-Hallucination paper will be provided; do NOT port v1 §6 (a proposal,
-% not results). See ../outlines/00_dissertation_outline.md (Chapter 6).
+% chapters/06_hallucination_detection.tex
+% Ported from the HalluLens MI-hallucination source paper
+% (../sources/hallulens_mi_hallucination/). Method-led reorder per
+% ../outlines/06_hallucination_detection.md: Method + information-theoretic
+% argument is promoted ahead of Results. Numbers gated via \result -> data/hallu_*.csv.
+% Verb is locked to "matches-or-outperforms (in the mean)"; the two NQ losses are
+% reported, not hidden. Proofs live in Appendix C (\Cref{app:mi-hallucination-proofs}).
 \chapter{Information-Theoretic Hallucination Detection}
 \label{ch:hallucination-detection}
 
-TODO: awaiting MI-Hallucination source paper. Intentionally left blank.
+% ===================== 6.1 Introduction =====================
+\section{Introduction}
+\label{sec:hd:intro}
+
+A large language model that fabricates a confident but false answer has failed in
+a way that is invisible at its output: the surface form of a hallucination is
+indistinguishable from that of a correct generation. Detecting hallucination from
+a model's own internal state has therefore become a central reliability problem,
+and a now-substantial literature trains probes on a model's intermediate
+activations to flag likely fabrications. This chapter is the third and final
+reliability setting of the dissertation, and the one in which the
+representation-structure spine appears in its most direct form: where
+\Cref{ch:label-blindness} proved \emph{when} a representation cannot support
+detection and \Cref{ch:domain-sensitivity-collapse} \emph{restored} a collapsed
+representation, here we \emph{detect} the shift directly from the representation
+the model leaves behind, and we do so under the information-theoretic lens.
+
+The dominant practice in this literature is to engineer a probe---to search over
+architectures, layers, and pooling schemes for whatever reads the activation
+tensor best. We take the opposite route and ask whether a detector can be
+\emph{derived} from a first principle. The principle is information-theoretic.
+Because a transformer's residual stream is deterministic and additive, the mutual
+information between the activations at any two layers is positive by construction;
+a contrastive objective that treats two layers of a single forward pass as two
+views of the same generation is therefore well-posed, in the precise sense that
+the signal it tries to extract provably exists. The supervised, one-class form of
+that objective targets the slice of the cross-layer information that distinguishes
+truthful from hallucinated generations. What makes the argument non-vacuous is not
+a further theorem but the simplest possible empirical fact: the loss is trainable.
+Because an InfoNCE objective cannot descend when the underlying mutual information
+is zero, the descent of our loss \emph{is} the empirical content of the
+feasibility claim---the existence of the learned probe is the proof that the
+signal is there to be read.
+
+The detector this yields, which we call \emph{Contrastive+Recon}, is a one-class
+supervised contrastive probe over layer-pair views of a frozen model, trained
+together with an auxiliary logprob-reconstruction objective and read at inference
+by a simple distance-to-truthful-bank scorer (\Cref{sec:hd:method}). Evaluated
+across two open-weights models and five short-answer benchmarks, it
+matches-or-outperforms, in the mean, the strongest engineered probe in the
+literature, ACT-ViT---winning some cells cleanly, losing on Natural Questions, and
+tying the rest within the seed-to-seed noise band (\Cref{sec:hd:results}). We do
+not present this parity as a leaderboard result, and the chapter does not claim to
+beat the state of the art. Parity is instead the evidence we want: a detector
+built from a first principle, with no architecture search, lands in the same
+performance band as one engineered against the benchmark, which is what one would
+expect if the principle is the right account of where the signal lives and not
+what one would expect if it were wrong. The framework also makes a falsifiable
+prediction---that supervising both classes symmetrically should fail when the
+hallucinated class has no coherent structure---and the prediction is confirmed by
+a sizeable, reproducible drop in detection performance (\Cref{sec:hd:ablations}).
+A self-validating method is the more coherent fit for the dissertation's spine
+than a benchmark-topping one would be.
+
+The contributions of this chapter are therefore:
+\begin{itemize}
+  \item A \emph{feasibility argument} for activation-based hallucination detection
+  grounded in mutual information: cross-layer mutual information is positive by
+  construction, an InfoNCE objective on layer-pair views lower-bounds it, and the
+  trainability of that objective is itself the empirical proof that the
+  label-relevant signal survives the representation
+  (\Cref{subsec:hd:argument}; proofs in \Cref{app:mi-hallucination-proofs}).
+  \item \emph{Contrastive+Recon}, a one-class supervised contrastive detector over
+  layer-pair views of a frozen language model with an auxiliary logprob-
+  reconstruction channel, whose asymmetric construction we show bounds a
+  label-conditioned mutual information on the truthful class
+  (\Cref{prop:hd:supcon-mi}).
+  \item An empirical evaluation establishing \emph{parity} with the strongest
+  engineered probe across two models and five datasets, reported honestly
+  including the Natural Questions shortfall (\Cref{sec:hd:results}), together with
+  a \emph{confirmed theoretical prediction}---the failure of symmetric supervision
+  (\Cref{sec:hd:ablations})---and evidence that the learned axis transfers across
+  datasets (\Cref{sec:hd:transfer}).
+\end{itemize}
+
+The chapter proceeds from the method and its information-theoretic argument
+(\Cref{sec:hd:method}), through the experimental setup (\Cref{sec:hd:setup}), the
+headline results and the compute-matched comparison
+(\Cref{sec:hd:results,sec:hd:compute}), the ablations and signal attribution
+(\Cref{sec:hd:ablations}), and cross-dataset transfer (\Cref{sec:hd:transfer}), to
+its limitations (\Cref{sec:hd:limitations}).
+
+% ===================== 6.2 Related Work =====================
+\section{Related Work}
+\label{sec:hd:related}
+
+The broad landscape of hallucination---its definitions, its taxonomies, and the
+full evaluation apparatus---is surveyed in \Cref{ch:literature-review}, and the
+information-theoretic and contrastive primitives this chapter rests on (mutual
+information, the InfoNCE bound, and supervised contrast) are introduced in
+\Cref{ch:background}. Rather than re-survey that ground, this section positions
+the detector of \Cref{sec:hd:method} against the direct comparators it is
+measured against in \Cref{sec:hd:results}, and against the contrastive-distillation
+precedent it extends. We group the comparators by what they read: an output-space
+scalar, a single forward pass of activations, or several sampled generations.
+
+\paragraph{Output-space scalar detectors.}
+The cheapest signals discard the model's internal state entirely and score a
+generation from its output distribution alone. \citet{kadavath2022language}
+establish that language models are partially calibrated---token log-probability,
+predictive entropy over the next-token distribution, and an explicit
+self-evaluation $P(\mathrm{true})$ each carry usable signal about whether a
+generation is correct. We treat these as a legitimate floor rather than a
+strawman: they set the lower-compute end of the compute-matched axis of
+\Cref{sec:hd:compute}, and any detector that reads the residual stream must
+justify the extra access against them.
+
+\paragraph{Activation-space probes.}
+The methods architecturally closest to ours read the residual stream from a
+single forward pass and learn a head over it. The single-layer linear probe
+descends from \citet{alain2017understanding}, who froze a network and trained a
+linear classifier on each layer; \citet{belinkov2019analysis} frame this lineage
+as a diagnostic methodology that asks \emph{what} a layer encodes rather than how
+best to extract a behaviour. SAPLMA~\citep{azaria2023internal} replaces the linear
+read-out with a fixed multilayer-perceptron head on a single layer's hidden state,
+and LLMsKnow~\citep{orgad2024llmsknow} reads internal states to anticipate the
+model's own errors. The strongest learned competitor in this family is
+ACT-ViT~\citep{barshalom2025actvit}, which treats the full layer-by-token-by-hidden
+activation tensor as an image and runs a supervised vision-transformer classifier
+over it. ACT-ViT consumes the same multi-layer residual-stream signal we do, so
+the comparison in \Cref{sec:hd:results} is one of \emph{how} the multi-layer
+structure is exploited---a supervised classifier over a pooled tensor against the
+contrastive layer-pair construction of \Cref{sec:hd:method}---not of access. Two
+contemporaneous internal-state probes, ICR Probe~\citep{zhang2025icr}, which
+summarises each layer with a divergence scalar and runs a multilayer perceptron
+over the concatenation, and CLAP~\citep{suresh2025clap}, which applies cross-layer
+attention under a binary cross-entropy objective, occupy the same access regime;
+neither uses a contrastive layer-pair objective, and we cite them as adjacent work
+rather than reproduce them. That activations should carry this signal at all is
+grounded causally: \citet{li2023iti} show that shifting activations along
+truth-correlated directions changes output truthfulness, \citet{marks2024geometry}
+that true and false statements separate near-linearly in late layers, and
+\citet{belinkov2019analysis} more broadly that intermediate layers carry
+recoverable structure---evidence that motivates reading from the mid-to-late band
+of \Cref{sec:hd:setup}.
+
+\paragraph{Sampling-based detectors.}
+A third family trades compute for signal by resampling the model. Semantic
+entropy~\citep{farquhar2024detecting} draws several generations, clusters them by
+bidirectional entailment, and scores the entropy over clusters; SelfCheckGPT
+\citep{manakul2023selfcheckgpt} scores the consistency of the original answer
+against the additional samples. Its probe form, SEP~\citep{kossen2024semantic},
+recovers much of this signal at single-pass cost by regressing the
+semantic-entropy score from one forward pass's activations, and is therefore the
+nearest direct competitor on the compute axis. Because these methods read several
+forward passes, their comparison with the detector studied here is one of compute,
+the matched evaluation deferred to \Cref{sec:hd:compute}.
+
+\paragraph{Contrastive distillation as the extended precedent.}
+The detector of \Cref{sec:hd:method} borrows the InfoNCE objective
+\citep{oord2018representation}, its supervised specialization
+\citep{khosla2020supervised}, and the augmentation-view recipe of SimCLR
+\citep{chen2020simclr}, all developed in \Cref{ch:background}. The precedent it
+most directly extends is contrastive distillation: CRD~\citep{tian2020crd} and its
+language-model form CoDIR~\citep{sun2020codir} contrast the \emph{same} layer
+across a teacher and a student network, while CDS~\citep{zhang2022cds} applies
+InfoNCE to augmented views \emph{within} a single layer. Our construction is
+distinct from both. The positive views are different \emph{layers} of one
+un-augmented forward pass through a single frozen language model---neither a
+cross-network pairing at matched depth nor a within-layer augmentation. To our
+knowledge, no prior work uses layer-pair views of a frozen language model as a
+one-class contrastive signal; this is the load-bearing novelty, and it is the view
+\emph{definition}, not the use of more than one layer, that distinguishes the
+method from the activation-space probes above.
+
+% ===================== 6.3 Method (DRAFTED — the conceptual core) =====================
+\section{Method}
+\label{sec:hd:method}
+
+This chapter's claim is that a hallucination detector can be \emph{derived} from
+an information-theoretic first principle rather than engineered, and that the
+detector's reaching the same performance band as the strongest learned probe is
+itself evidence the principle is sound. The argument is deliberately modest in
+what it guarantees. It does not promise that a contrastive probe beats every
+alternative; it establishes that a contrastive objective on cross-layer views of
+a frozen language model is \emph{well-posed}---that the signal it tries to extract
+provably exists---and then lets the trainability of the resulting loss stand as
+the empirical proof that the construction is non-vacuous. We first fix the
+detection task and notation (\Cref{subsec:hd:setup}), then give the feasibility
+argument grounded in mutual information (\Cref{subsec:hd:argument}), and finally
+specify the concrete detector the argument motivates (\Cref{subsec:hd:detector}).
+
+\subsection{Problem Setup and Notation}
+\label{subsec:hd:setup}
+
+We study single-pass white-box hallucination detection. Given a frozen language
+model $M$, a prompt $x$, and $M$'s greedy generation $y$, the task is to produce
+a scalar score $s(x,y) \in \mathbb{R}$ such that higher scores indicate
+hallucinated generations. The label $y_{\mathrm{label}} \in \{0,1\}$ is
+operational: $y_{\mathrm{label}} = 1$ when the benchmark's gold-reference
+evaluator marks the generation incorrect, and $y_{\mathrm{label}} = 0$
+otherwise. We adopt the operational labelling of~\citet{barshalom2025actvit} and
+decline to commit to the intrinsic-versus-extrinsic taxonomy
+of~\citet{ji2022survey} and~\citet{bang2025hallulens}; the taxonomic placement of
+this regime is orthogonal to the architectural argument below, and we return to
+it in \Cref{sec:hd:limitations}.
+
+The access regime is read-only: the detector sees $M$'s intermediate
+residual-stream activations from the \emph{same} forward pass that generated
+$y$. There is no retrieval, no external verifier, and no resampling---those
+define the comparison classes of \Cref{sec:hd:setup}. Write
+$h_\ell(x,y) \in \mathbb{R}^{T_y \times d}$ for the full response-token
+hidden-state sequence at layer $\ell$ of $M$'s residual stream while reading
+$(x,y)$, with $L$ total layers, $T_y$ response tokens, and hidden dimension
+$d = 4096$ for both supported models. We extract from a mid-to-late residual-
+stream band $[\ell_{\mathrm{lo}}, \ell_{\mathrm{hi}}]$, motivated below by the
+evidence that truth-relevant structure concentrates there~\citep{li2023iti,marks2024geometry}.
+Two facts about $h_\ell$ are load-bearing. First, $h_\ell$ is \emph{deterministic}
+given $(x,y)$: the forward pass is a fixed function of its inputs. Second,
+$h_\ell$ is a \emph{sequence over response tokens}, not a single vector---the
+method consumes the entire per-token activation trajectory $t = 1,\ldots,T_y$ at
+each layer, not the last-token activation alone. The label $y_{\mathrm{label}}$,
+by contrast, may carry evaluator noise, a point we carry forward to
+\Cref{sec:hd:limitations}.
+
+Because the method reads activations from a single forward pass, its comparison
+with multi-sample methods such as semantic entropy and SelfCheckGPT is one of
+\emph{compute}, not of \emph{signal access}: those methods resample $M$ several
+times, whereas the detectors studied here, and the strongest learned baselines
+they are measured against, all read one forward pass. We make this explicit here
+so the compute-matched comparison of \Cref{sec:hd:compute} reads naturally rather
+than cold.
+
+\subsection{Why a Learned Cross-Layer Compression Can Carry the Signal}
+\label{subsec:hd:argument}
+
+The cleanest argument for why this could work is not a geometric story about
+where truth lives in activation space; it is a feasibility argument grounded in
+mutual information. We can write down a well-posed contrastive objective on
+layer-pair views because the cross-layer mutual information is positive by
+construction, and the empirical fact that the loss is trainable on our data is
+itself the proof that the argument is not vacuous. The argument has three coupled
+claims and one punchline.
+
+\paragraph{Claim 1: cross-layer mutual information is positive by construction.}
+For any two layers $\ell_a < \ell_b$ in $M$'s residual stream and a fixed
+response, the activation sequence $h_{\ell_b}$ is a deterministic function of
+$h_{\ell_a}$ together with the intervening residual blocks, with the residual
+connections explicitly carrying earlier-layer information forward. The
+data-processing chain of \Cref{lem:hd:dpi} then gives
+$I(h_{\ell_a}; h_{\ell_b}) > 0$ for any input distribution that varies
+non-trivially across $h_{\ell_a}$. The mutual information here is between
+\emph{sequence-valued} objects---full per-token activation tensors at two
+layers---which makes the architectural argument stronger, not weaker: there are
+more shared channels, not fewer. A sharper form is available. Under the same
+downward-determinism assumption, \Cref{cor:hd:coinfo} collapses the three-way
+interaction information to
+$I(h_{\ell_a}; h_{\ell_b}; y) = I(h_{\ell_b}; y) > 0$, so the cross-layer shared
+information also overlaps the response variable $y$: the joint is non-orthogonal
+to what the model generated. One caveat is essential and we state it plainly.
+This is an architectural statement about the response $y$, not the label
+$y_{\mathrm{label}}$; since a single layer's $h_\ell$ is a lossy compression of
+$(x,y)$, \Cref{cor:hd:coinfo} \emph{upper}-bounds the label-relevant interaction
+information but does not lower-bound it. Whether the label-relevant features
+survive that compression is an empirical question, owned by Claim~2 and the
+trainability punchline.
+
+\paragraph{Claim 2: supervised InfoNCE bounds a label-conditioned mutual information.}
+The loss family we use is InfoNCE, whose standard variational form
+(\Cref{lem:hd:infonce}, following~\citet{oord2018representation} and the
+tightness analysis of~\citet{poole2019variational}) lower-bounds the mutual
+information between two views. We run its supervised
+specialization~\citep{khosla2020supervised} with one critical asymmetry: the
+hallucinated class is excluded from mutual-positive grouping (the
+\texttt{ignore\_label} scheme detailed in \Cref{subsec:hd:detector}). Under this
+asymmetry the optimized bound becomes \emph{one-sided}---a bound on the mutual
+information between the learned features and the truthful class
+($y_{\mathrm{label}} = 0$)---because the loss pulls truthful-class features into a
+coherent cluster while hallucinated-class features are required only to be
+view-consistent with themselves. We make this precise in
+\Cref{prop:hd:supcon-mi}; the alignment-uniformity decomposition
+of~\citet{wang2021understanding} gives a complementary geometric reading of what
+the loss optimizes.
+
+\begin{proposition}[Asymmetric supervised contrast bounds truthful-class mutual information]\label{prop:hd:supcon-mi}
+Let $Z = f_\theta(h)$ be the learned feature and consider the supervised
+contrastive objective under the asymmetric \texttt{ignore\_label} scheme of
+\Cref{subsec:hd:detector}: truthful anchors take other truthful samples and their
+own other-layer views as positives, while hallucinated anchors take only their
+own other-layer views as positives and treat all other samples---including other
+hallucinated samples---as negatives. Then the optimized objective lower-bounds
+$I\bigl(Z; \mathbb{1}[y_{\mathrm{label}} = 0]\bigr)$ together with an
+instance-level view-consistency term, and contributes \emph{no} bound on
+$I\bigl(Z; \mathbb{1}[y_{\mathrm{label}} = 1]\bigr)$. The bound is one-sided: it
+constrains the truthful class only. The proof is given in
+\Cref{app:mi-hallucination-proofs}.
+\end{proposition}
+
+\paragraph{Claim 3: the supervised objective selects the label-relevant slice.}
+Claim~1 establishes that the joint $(h_{\ell_a}, h_{\ell_b})$ carries shared
+information; most of it---the prompt's surface form, the topic, the
+token-position structure---is irrelevant to whether $y$ is hallucinated. The
+supervised contrastive objective of Claim~2 selects the label-relevant slice of
+that shared information by making the truthful-class views collapse to a coherent
+cluster while leaving hallucinated views to repel everything. This is the
+structural reason supervised contrast on layer pairs is a sensible extractor: not
+a guarantee of empirical superiority, but a guarantee that the construction
+targets the right slice of the joint.
+
+\paragraph{The punchline: feasibility is established by trainability.}
+Everything in Claims~1--3 would be vacuous if $I(h_{\ell_a}; h_{\ell_b})$ were
+zero, or if the label-relevant subspace were empty. The cleanest empirical
+confirmation that neither holds is the simplest one: our loss descends. The
+contrastive loss bounds $I(z_a; z_b)$ for the compressed embeddings
+$z = f_\theta(h)$, and the data-processing inequality (\Cref{lem:hd:dpi}) gives
+$I(z_a; z_b) \le I(h_{\ell_a}; h_{\ell_b})$, so any positive mutual information
+observed at the embedding level is direct evidence of positive mutual information
+at the activation level---the inequality runs in our favour. By
+\Cref{lem:hd:infonce}, if $I(\mathrm{view}_a; \mathrm{view}_b) = 0$ then no
+InfoNCE variant can descend below $\log K$, the value attained by uniform
+negatives. The fact that the training loss drops below that floor and the
+embeddings cluster meaningfully is the operational proof that the cross-layer
+mutual information we are extracting is positive and that the supervised slice we
+isolate is non-empty. The existence of the learned probe is therefore the
+empirical content of the feasibility argument, not merely consistent with it.
+
+\paragraph{What the argument does not claim.}
+Three honest negatives bound the argument's reach, and one positive prediction
+sharpens it. It does not claim the contrastive subspace beats every other
+extractor---that is the empirical question \Cref{sec:hd:results} answers. It does
+not claim cross-layer views are uniquely good relative to, say, same-layer
+dropout views or augmented-input views; the layer-pair sensitivity sweep of
+\Cref{sec:hd:ablations} is what speaks to which pairs carry the signal, and the
+choice of different layers as views is part principled (the residual-stream
+evidence of \Cref{subsec:hd:setup}) and part empirical bet, which we say
+plainly. And it does not predict the \emph{magnitude} of any accuracy gain, which
+is set by the data, not the bound. What it does predict is a specific failure
+mode: \Cref{cor:hd:symcon} states that supervising both classes symmetrically,
+when the hallucinated class lacks coherent latent structure, injects gradient
+noise negatively correlated with the truthful-class signal. The symmetric-scheme
+ablation of \Cref{sec:hd:ablations} confirms this, with an AUROC drop of roughly
+ten points. The theory makes a falsifiable prediction, and the ablation confirms
+it---the strongest empirical-of-theory moment in the chapter.
+
+\subsection{The Detector: Supervised Contrast over Layer Pairs with Logprob Reconstruction}
+\label{subsec:hd:detector}
+
+The feasibility argument turns into four concrete artifacts: the activations we
+extract, the network that compresses them, the loss that pulls the
+label-relevant signal out, and the scorer that turns a learned embedding into a
+hallucination score.
+
+\paragraph{Activation extraction.}
+From each $(x,y)$ we extract
+$\{ h_\ell(x,y) \in \mathbb{R}^{T_y \times d} : \ell \in [\ell_{\mathrm{lo}}, \ell_{\mathrm{hi}}] \}$,
+the full per-token response activation sequence at every layer in the
+mid-to-late band. No last-token reduction is applied at extraction time; the
+entire trajectory is retained per layer and per generation, and cached once per
+model, dataset, and split so that training across seeds reuses cached tensors
+without re-extraction. Keeping the full response sequence is load-bearing: it
+gives the compressor a sequence to pool over and gives the reconstruction target
+a per-token logprob signal to regress against.
+
+\paragraph{The compression network.}
+A shared progressive compressor $f_\theta$ maps each layer's per-token activation
+sequence to a single embedding. The sequence $(T_y, d)$ passes through an input
+normalization and dropout, a sinusoidal positional encoding, and a stack of
+transformer-encoder blocks that halve the hidden width at each step
+($4096 \to 2048 \to 1024 \to 512$); a mean-pool over the response-token
+dimension and a linear projection yield $z \in \mathbb{R}^{512}$ per generation
+and layer. One structural fact matters for the argument: the compressor is
+\emph{shared} across layers---one $f_\theta$, not per-layer heads---so the layer
+pair is the only source of view asymmetry. The full architectural specification
+(block count, dimension schedule, dropout) is deferred to the public
+implementation. We note in advance of \Cref{sec:hd:results} that at matched
+parameter count the method reaches or exceeds a single-layer multilayer-
+perceptron probe, which rules out raw capacity as the explanation for its
+performance.
+
+\paragraph{View construction.}
+Each training example yields two views by sampling a layer pair
+$(\ell_a, \ell_b)$ from the cached band: each view is one layer's full activation
+tensor passed through $f_\theta$ to a $512$-dimensional embedding. The two views
+of a generation are therefore two compressed vectors, each summarizing the full
+per-token activation sequence at one layer of $M$. This is the structural
+novelty: the positive views are \emph{different layers of the same un-augmented
+forward pass}, not data augmentations and not different networks.
+
+\paragraph{The supervised contrastive loss with asymmetric labelling.}
+The core objective is supervised contrastive~\citep{khosla2020supervised} with
+one deliberate asymmetry. For a truthful anchor ($y_{\mathrm{label}} = 0$), all
+other truthful samples in the batch are positives and all hallucinated samples
+are negatives. For a hallucinated anchor ($y_{\mathrm{label}} = 1$), the
+positives are \emph{only} the anchor's own other-layer views; everything else in
+the batch---including other hallucinated samples---is a negative. The reason for
+this is not that hallucinations form no coherent class; the ablations of
+\Cref{sec:hd:ablations} show that either class can serve as the one-class anchor
+nearly as well. The correct reading is that labelling \emph{both} classes
+simultaneously forces a second coherent cluster the data does not support. The
+symmetric scheme's gradient includes a term pulling hallucinated embeddings
+toward one another, and when the hallucinated class lacks coherent latent
+structure that term is noise that actively fights the truthful-class gradient
+(\Cref{cor:hd:symcon}). The asymmetry is therefore a structural choice---one-class
+representation learning with the labelled class as the inlier anchor---and not an
+arbitrary implementation preference. Structurally, the loss is a
+representation-learning form of one-class anomaly detection on truthful samples,
+with cross-layer view-consistency supplying a second source of supervision for
+both classes; this is exactly what makes the truthful-class mutual-information
+specialization of \Cref{prop:hd:supcon-mi} the correct theoretical lens.
+
+\paragraph{Logprob-reconstruction auxiliary loss.}
+From the compressed feature $z = f_\theta(h_\ell) \in \mathbb{R}^{512}$, a small
+decoder $g_\phi$ (a two-layer perceptron, $512 \to 256 \to 64$) predicts a
+fixed-length proxy for the per-token logprob sequence of $y$ under $M$:
+\begin{equation} \mathcal{L}_{\mathrm{recon}} = \big\| g_\phi(z) - \mathrm{resample}\big( (\log p_M(y_t \mid y_{<t}, x))_{t=1}^{T_y},\ R \big) \big\|_2^2, \label{eq:hd:recon} \end{equation}
+where the variable-length logprob sequence is linearly interpolated to the fixed
+length $R = 64$ that the decoder outputs. A variance-suppression guard zeroes
+this term on batches whose logprob target has near-constant variance, preventing
+the decoder from spending capacity on degenerate sequences. The rationale for the
+target is causal: when $M$ is about to fabricate, its next-token distribution
+typically broadens and the top-token probability drops, so per-token logprobs are
+coupled to the hallucination event. The reconstruction loss thus applies
+regression-style supervision that retains features predictive of a
+label-correlated signal, complementary to the classification-style supervision
+the contrastive loss provides. It is not the same as a semantic-entropy
+probe~\citep{kossen2024semantic}, which regresses a single scalar per
+generation: here the target is a length-$R$ per-token logprob sequence decoded
+from a representation that already aggregates the full activation tensor.
+
+\paragraph{Total objective and inference.}
+The total loss combines the two channels,
+\begin{equation} \mathcal{L}_{\mathrm{total}} = \mathcal{L}_{\mathrm{SupCon\text{-}asym}} + \lambda\, \mathcal{L}_{\mathrm{recon}}, \label{eq:hd:total} \end{equation}
+with the weight $\lambda$ and the contrastive temperature fixed early and left
+untuned, so the channel-attribution study of \Cref{sec:hd:ablations}---not a
+weight sweep---is the meaningful sensitivity analysis. At inference the trained
+$f_\theta$ embeds a held-out $(x,y)$ and scores it by its distance to the
+training-set truthful-class embedding bank; a $k$-nearest-neighbour distance is
+the headline scorer, with cosine-to-centroid and Mahalanobis distances reported
+as alternatives in \Cref{sec:hd:ablations}. All three are inference-only post-hoc
+scorers on the same learned $f_\theta$ and require no retraining. Because two
+distinct supervision channels are present, the chapter owes an attribution of the
+gain to one, the other, or both; \Cref{sec:hd:ablations} pays this off with the
+$2 \times 2$ ablation the method's design anticipates.
+
+% ===================== 6.4 Experimental Setup =====================
+\section{Experimental Setup}
+\label{sec:hd:setup}
+
+This section fixes the evaluation grid: the models whose residual streams the detectors read, the short-answer benchmarks on which hallucinations are scored, the comparison methods grouped by the signal they consume, the per-cell training protocol, and the single metric the main text reports. The detection task, the operational label $y_{\mathrm{label}}$, and the read-only single-forward-pass access regime were fixed in \Cref{sec:hd:method} and are not restated here; this section enumerates what we ran.
+
+\paragraph{Models.}
+We evaluate on two $8$B-scale open-weights instruction-tuned models drawn from distinct training pipelines: Llama-3.1-8B-Instruct~\citep{grattafiori2024llama3} and Qwen3-8B~\citep{yang2025qwen3}. Both are transformer decoders with hidden dimension $d = 4096$, matching the $d$ assumed throughout \Cref{sec:hd:method}. Qwen3-8B is run in its non-thinking mode (single-pass, no chain-of-thought) for parity with Llama. We use two distinct lineages rather than one so that the parity claim of \Cref{sec:hd:results} cannot be read as an artifact of a single training recipe; we do not scale to larger or closed models, a scoping choice we revisit in \Cref{sec:hd:limitations}.
+
+\paragraph{Datasets.}
+The detectors are evaluated on five open-domain, short-answer question-answering benchmarks. HotpotQA~\citep{yang2018hotpotqa} supplies multi-hop factoid questions over Wikipedia passages, used in the closed-book distractor setting. Natural Questions~\citep{kwiatkowski2019natural} contributes open-domain questions mined from real search queries, restricted to short-answer items. PopQA~\citep{mallen2023popqa} is an entity-popularity-stratified factoid set that emphasises long-tail entities, where a retrieval-free model is more prone to fabricate. SciQ~\citep{welbl2017sciq} provides crowd-authored science multiple-choice questions with the correct option as the gold target. SearchQA~\citep{dunn2017searchqa} contributes Jeopardy!-style questions, which we take strictly closed-book with the accompanying search snippets discarded. Consistent with the operational labelling of \Cref{sec:hd:method}, a generation is treated as hallucinated when the gold-reference evaluator marks it incorrect, applied uniformly across all five benchmarks. We do not tabulate per-dataset sizes or hallucination rates here.
+
+\paragraph{Baselines.}
+We compare against twelve methods spanning three families, each consuming a different signal and grouped here by the compute it draws. The first family is output-space scalar scorers read from the same greedy generation pass: sequence log-probability (LogProb), token entropy, and the prompt-based P(true) self-evaluation~\citep{kadavath2022language}. The second family is activation-space probes that read a single forward pass: a single-layer linear probe~\citep{alain2017understanding}, the SAPLMA multilayer-perceptron head~\citep{azaria2023internal}, the layer-and-token-sweeping LLMsKnow probe~\citep{orgad2024llmsknow}, and ACT-ViT~\citep{barshalom2025actvit}, the strongest learned competitor and the one architecturally closest to the detector of \Cref{subsec:hd:detector}. The third family is sampling-based: length-normalised and semantic-entropy variants~\citep{farquhar2024detecting,kossen2024semantic} together with SelfCheckGPT in its NLI and $n$-gram forms~\citep{manakul2023selfcheckgpt}. The compute axis separates the families cleanly: the scalar and activation-probe methods, like Contrastive+Recon, read one forward pass, whereas the sampling methods resample $M$ several times ($K = 10$). This partition is the structural prerequisite for the compute-matched comparison of \Cref{sec:hd:compute}.
+
+\paragraph{Training.}
+Each trained probe is fit per $(\text{model}, \text{dataset})$ cell on that dataset's training split only, over $5$ random seeds, with mean $\pm$ standard deviation reported across them; no probe is trained on more than one dataset, and the held-out test split is fixed across methods and seeds within a cell. Cross-dataset training is never used here---transfer to unseen datasets is evaluated separately in \Cref{sec:hd:transfer} by applying a source-trained checkpoint to a target test split with no retraining. We give no hyperparameters inline and instead forward the reader to the public implementation for the full training recipe.
+
+\paragraph{Metric.}
+AUROC, computed against the operational hallucination label and reported as the mean $\pm$ standard deviation over $5$ seeds, is the only metric carried in the main text, for both the headline table of \Cref{sec:hd:results} and the transfer matrix of \Cref{sec:hd:transfer}. Complementary metrics (AUPRC, expected calibration error, and FPR@95) are relegated to the supplementary material and not reported here.
+
+% ===================== 6.5 Results =====================
+\section{Results}
+\label{sec:hd:results}
+
+The headline evidence is the AUROC grid of \Cref{tab:hd:headline-llama,tab:hd:headline-qwen}: the twelve methods of \Cref{sec:hd:setup}, grouped by the signal each reads, against the five short-answer benchmarks, one table per model. Each learned row reports the mean $\pm$ standard deviation over $5$ seeds; the deterministic output-space and sampling rows are single-valued. The tables are read directly below; the interpretive ``why'' for each cell is forwarded to \Cref{sec:hd:ablations}.
+
+\begin{table}[t]
+\caption{Hallucination-detection AUROC on \textbf{Llama-3.1-8B-Instruct}, twelve methods $\times$ five datasets. Learned rows (activation-space single-pass) report mean $\pm$ standard deviation over $5$ seeds; output-space scalar and $K=10$ sampling rows are deterministic single values. Methods are grouped by the signal they read, with a horizontal rule between groups; Contrastive+Recon (ours) is the last activation-space row. Within each dataset column a cell is bolded only when its mean exceeds the second-highest mean by more than the larger of the two cells' standard deviations; columns with no such separation are left unbolded.}
+\vspace{2mm}
+\centering
+\small
+\begin{tabular}{l|ccccc}
+\toprule
+Method & HotpotQA & NQ & PopQA & SciQ & SearchQA \\
+\midrule
+LogProb         & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:logprob_baseline:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:logprob_baseline:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:logprob_baseline:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:logprob_baseline:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:logprob_baseline:auroc_mean} \\
+Token Entropy   & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:token_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:token_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:token_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:token_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:token_entropy:auroc_mean} \\
+P(true)         & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:p_true:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:p_true:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:p_true:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:p_true:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:p_true:auroc_mean} \\
+\midrule
+Linear Probe    & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:linear_probe:auroc_mean,Llama-3.1-8B-Instruct:hotpotqa:linear_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:linear_probe:auroc_mean,Llama-3.1-8B-Instruct:nq:linear_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:popqa:linear_probe:auroc_mean,Llama-3.1-8B-Instruct:popqa:linear_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:sciq:linear_probe:auroc_mean,Llama-3.1-8B-Instruct:sciq:linear_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:linear_probe:auroc_mean,Llama-3.1-8B-Instruct:searchqa:linear_probe:auroc_std} \\
+SAPLMA          & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:saplma:auroc_mean,Llama-3.1-8B-Instruct:hotpotqa:saplma:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:saplma:auroc_mean,Llama-3.1-8B-Instruct:nq:saplma:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:popqa:saplma:auroc_mean,Llama-3.1-8B-Instruct:popqa:saplma:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:sciq:saplma:auroc_mean,Llama-3.1-8B-Instruct:sciq:saplma:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:saplma:auroc_mean,Llama-3.1-8B-Instruct:searchqa:saplma:auroc_std} \\
+LLMsKnow        & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:llmsknow_probe:auroc_mean,Llama-3.1-8B-Instruct:hotpotqa:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:llmsknow_probe:auroc_mean,Llama-3.1-8B-Instruct:nq:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:popqa:llmsknow_probe:auroc_mean,Llama-3.1-8B-Instruct:popqa:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:sciq:llmsknow_probe:auroc_mean,Llama-3.1-8B-Instruct:sciq:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:llmsknow_probe:auroc_mean,Llama-3.1-8B-Instruct:searchqa:llmsknow_probe:auroc_std} \\
+ACT-ViT         & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:act_vit:auroc_mean,Llama-3.1-8B-Instruct:hotpotqa:act_vit:auroc_std} & \textbf{\resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:act_vit:auroc_mean,Llama-3.1-8B-Instruct:nq:act_vit:auroc_std}} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean,Llama-3.1-8B-Instruct:popqa:act_vit:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:sciq:act_vit:auroc_mean,Llama-3.1-8B-Instruct:sciq:act_vit:auroc_std} & \textbf{\resultPM{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:act_vit:auroc_mean,Llama-3.1-8B-Instruct:searchqa:act_vit:auroc_std}} \\
+Contrastive+Recon (ours) & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:hotpotqa:contrastive_logprob_recon:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_std} & \textbf{\resultPM{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_std}} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:sciq:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:sciq:contrastive_logprob_recon:auroc_std} & \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:searchqa:contrastive_logprob_recon:auroc_std} \\
+\midrule
+SE (length-norm.)   & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:se_length_normalized:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:se_length_normalized:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:se_length_normalized:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:se_length_normalized:auroc_mean} \\
+SE (semantic)       & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:se_semantic_entropy:auroc_mean} \\
+SelfCheck (NLI)     & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:selfcheck_nli:auroc_mean} \\
+SelfCheck ($n$-gram) & \result{hallu_headline}{Llama-3.1-8B-Instruct:hotpotqa:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:nq:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:popqa:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:sciq:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Llama-3.1-8B-Instruct:searchqa:selfcheck_ngram:auroc_mean} \\
+\bottomrule
+\end{tabular}
+\label{tab:hd:headline-llama}
+\end{table}
+
+\begin{table}[t]
+\caption{Hallucination-detection AUROC on \textbf{Qwen3-8B}, twelve methods $\times$ five datasets. Reporting unit and grouping match \Cref{tab:hd:headline-llama}: learned rows are mean $\pm$ standard deviation over $5$ seeds, output-space scalar and $K=10$ sampling rows are deterministic single values, and a cell is bolded only when its mean exceeds the second-highest in its dataset column by more than the larger of the two cells' standard deviations.}
+\vspace{2mm}
+\centering
+\small
+\begin{tabular}{l|ccccc}
+\toprule
+Method & HotpotQA & NQ & PopQA & SciQ & SearchQA \\
+\midrule
+LogProb         & \result{hallu_headline}{Qwen3-8B:hotpotqa:logprob_baseline:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:logprob_baseline:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:logprob_baseline:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:logprob_baseline:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:logprob_baseline:auroc_mean} \\
+Token Entropy   & \result{hallu_headline}{Qwen3-8B:hotpotqa:token_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:token_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:token_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:token_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:token_entropy:auroc_mean} \\
+P(true)         & \result{hallu_headline}{Qwen3-8B:hotpotqa:p_true:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:p_true:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:p_true:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:p_true:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:p_true:auroc_mean} \\
+\midrule
+Linear Probe    & \resultPM{hallu_headline}{Qwen3-8B:hotpotqa:linear_probe:auroc_mean,Qwen3-8B:hotpotqa:linear_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:nq:linear_probe:auroc_mean,Qwen3-8B:nq:linear_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:popqa:linear_probe:auroc_mean,Qwen3-8B:popqa:linear_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:sciq:linear_probe:auroc_mean,Qwen3-8B:sciq:linear_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:searchqa:linear_probe:auroc_mean,Qwen3-8B:searchqa:linear_probe:auroc_std} \\
+SAPLMA          & \resultPM{hallu_headline}{Qwen3-8B:hotpotqa:saplma:auroc_mean,Qwen3-8B:hotpotqa:saplma:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:nq:saplma:auroc_mean,Qwen3-8B:nq:saplma:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:popqa:saplma:auroc_mean,Qwen3-8B:popqa:saplma:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:sciq:saplma:auroc_mean,Qwen3-8B:sciq:saplma:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:searchqa:saplma:auroc_mean,Qwen3-8B:searchqa:saplma:auroc_std} \\
+LLMsKnow        & \resultPM{hallu_headline}{Qwen3-8B:hotpotqa:llmsknow_probe:auroc_mean,Qwen3-8B:hotpotqa:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:nq:llmsknow_probe:auroc_mean,Qwen3-8B:nq:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:popqa:llmsknow_probe:auroc_mean,Qwen3-8B:popqa:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:sciq:llmsknow_probe:auroc_mean,Qwen3-8B:sciq:llmsknow_probe:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:searchqa:llmsknow_probe:auroc_mean,Qwen3-8B:searchqa:llmsknow_probe:auroc_std} \\
+ACT-ViT         & \textbf{\resultPM{hallu_headline}{Qwen3-8B:hotpotqa:act_vit:auroc_mean,Qwen3-8B:hotpotqa:act_vit:auroc_std}} & \resultPM{hallu_headline}{Qwen3-8B:nq:act_vit:auroc_mean,Qwen3-8B:nq:act_vit:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:popqa:act_vit:auroc_mean,Qwen3-8B:popqa:act_vit:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:sciq:act_vit:auroc_mean,Qwen3-8B:sciq:act_vit:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:searchqa:act_vit:auroc_mean,Qwen3-8B:searchqa:act_vit:auroc_std} \\
+Contrastive+Recon (ours) & \resultPM{hallu_headline}{Qwen3-8B:hotpotqa:contrastive_logprob_recon:auroc_mean,Qwen3-8B:hotpotqa:contrastive_logprob_recon:auroc_std} & \resultPM{hallu_headline}{Qwen3-8B:nq:contrastive_logprob_recon:auroc_mean,Qwen3-8B:nq:contrastive_logprob_recon:auroc_std} & \textbf{\resultPM{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean,Qwen3-8B:popqa:contrastive_logprob_recon:auroc_std}} & \textbf{\resultPM{hallu_headline}{Qwen3-8B:sciq:contrastive_logprob_recon:auroc_mean,Qwen3-8B:sciq:contrastive_logprob_recon:auroc_std}} & \resultPM{hallu_headline}{Qwen3-8B:searchqa:contrastive_logprob_recon:auroc_mean,Qwen3-8B:searchqa:contrastive_logprob_recon:auroc_std} \\
+\midrule
+SE (length-norm.)   & \result{hallu_headline}{Qwen3-8B:hotpotqa:se_length_normalized:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:se_length_normalized:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:se_length_normalized:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:se_length_normalized:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:se_length_normalized:auroc_mean} \\
+SE (semantic)       & \result{hallu_headline}{Qwen3-8B:hotpotqa:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:se_semantic_entropy:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:se_semantic_entropy:auroc_mean} \\
+SelfCheck (NLI)     & \result{hallu_headline}{Qwen3-8B:hotpotqa:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:selfcheck_nli:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:selfcheck_nli:auroc_mean} \\
+SelfCheck ($n$-gram) & \result{hallu_headline}{Qwen3-8B:hotpotqa:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Qwen3-8B:nq:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Qwen3-8B:popqa:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Qwen3-8B:sciq:selfcheck_ngram:auroc_mean} & \result{hallu_headline}{Qwen3-8B:searchqa:selfcheck_ngram:auroc_mean} \\
+\bottomrule
+\end{tabular}
+\label{tab:hd:headline-qwen}
+\end{table}
+
+The clearest pattern in the grid is between families rather than within one: the activation-space single-pass methods clear the $K=10$ sampling family by a wide margin on every cell. On Llama PopQA, for instance, Contrastive+Recon exceeds semantic entropy~\citep{farquhar2024detecting} by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_semantic_entropy:auroc_mean}$ AUROC, a gap that dwarfs every within-cluster difference and recurs across both models and all five datasets. Within the activation-space cluster, our detector matches-or-outperforms (in the mean) the strongest learned probe, ACT-ViT~\citep{barshalom2025actvit}: the two are within a one-standard-deviation band on most cells, and where they separate, our method posts clear wins---a mean above the runner-up by more than both standard deviations---at PopQA on both models (Llama $+\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean}$, Qwen $+\resdelta{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:act_vit:auroc_mean}$ over ACT-ViT) and at SciQ on Qwen ($+\resdelta{hallu_headline}{Qwen3-8B:sciq:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:sciq:act_vit:auroc_mean}$). The honest counterweight is NQ, where ACT-ViT leads on both models: on Llama the shortfall is firm, \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_std} against ACT-ViT's \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:act_vit:auroc_mean,Llama-3.1-8B-Instruct:nq:act_vit:auroc_std} (a separation wider than either standard deviation), and on Qwen our \resultPM{hallu_headline}{Qwen3-8B:nq:contrastive_logprob_recon:auroc_mean,Qwen3-8B:nq:contrastive_logprob_recon:auroc_std} trails ACT-ViT's \resultPM{hallu_headline}{Qwen3-8B:nq:act_vit:auroc_mean,Qwen3-8B:nq:act_vit:auroc_std} in the mean, here inside the wide one-seed-variance band; we take the NQ shortfall as a genuine weakness and return to it in \Cref{sec:hd:limitations}. The remaining cells---HotpotQA and SearchQA on both models, SciQ on Llama---tie within a one-standard-deviation band, neither method separating cleanly. The picture is therefore parity by design: a detector derived from the feasibility argument of \Cref{sec:hd:method} sits in the same performance band as the strongest engineered probe, winning some cells, losing NQ, and tying the rest, with the interpretive account of which cells go which way deferred to \Cref{sec:hd:ablations}.
+
+\Cref{fig:hd:headline} renders the same per-cell comparison graphically, with our detector placed beside ACT-ViT in every group.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{generated/figures/hd_headline.pdf}
+  \caption[Headline hallucination-detection AUROC]{Headline detection AUROC across five datasets for two backbones (Llama-3.1-8B, solid; Qwen3-8B, hatched). Our Contrastive+Recon detector is shown beside ACT-ViT, the strongest learned competitor, with a linear probe and the $K=10$ SelfCheckGPT-NLI sampling baseline for reference; error bars are seed-to-seed std over five seeds. Our detector \emph{matches or, in the mean, edges} ACT-ViT on most cells while operating at a single forward pass. The two Natural-Questions cells are losses to ACT-ViT (Llama $0.7547$ vs.\ $0.7679$; Qwen3-8B $0.8237$ vs.\ $0.8419$) and are shown without emphasis; a delta is printed only where the gap exceeds the larger of the two methods' std (a decisive cell). We claim parity, not state-of-the-art.}
+  \label{fig:hd:headline}
+\end{figure}
+
+% ===================== 6.6 Compute-Matched Comparison =====================
+\section{Compute-Matched Comparison}
+\label{sec:hd:compute}
+
+The family separation in \Cref{tab:hd:headline-llama,tab:hd:headline-qwen} is also a compute separation, and reading it that way sharpens what the activation regime buys. Contrastive+Recon and every activation-space baseline score from a single forward pass ($\text{forward-pass count}=1$), whereas the semantic-entropy and SelfCheckGPT~\citep{kossen2024semantic,manakul2023selfcheckgpt} methods resample the model $K=10$ times. At that ten-to-one compute disadvantage to the sampling family, the single-pass reading wins decisively: on Llama PopQA our detector exceeds length-normalized semantic entropy by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean}$ AUROC and SelfCheckGPT-NLI by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:selfcheck_nli:auroc_mean}$, and even on Qwen PopQA---the cell where the sampling family is strongest, with SelfCheckGPT-NLI reaching $\result{hallu_headline}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean}$---the single-pass score still leads by $\resdelta{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean}$ at one-tenth the generation cost. The crucial caveat must be stated without softening: this is a property of the activation-reading \emph{class}, not of our method in particular. ACT-ViT is also single-pass activation-space, and reads the same residual stream at the same $\text{forward-pass count}=1$, so it inherits the identical compute advantage over sampling---ACT-ViT beats length-normalized semantic entropy on Llama PopQA by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean}$ at the same cost. The compute efficiency is thus a reason to prefer the activation-reading class over $K=10$ sampling, not a differentiator of Contrastive+Recon against its real competitor; the contribution of this chapter rests on the feasibility argument of \Cref{sec:hd:method} and the parity of \Cref{sec:hd:results}, and the chapter does not lean on compute efficiency to carry it.
+
+\Cref{fig:hd:compute} plots detection AUROC against inference budget, separating the single-pass probes from the $K=10$ sampling family.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{generated/figures/hd_compute_matched.pdf}
+  \caption[Compute-matched detection AUROC vs.\ forward passes]{Detection AUROC against inference budget (forward passes $K$, log scale) per dataset; Llama-3.1-8B (circles) and Qwen3-8B (squares). Single-pass probes ($K{=}1$, blue), including our Contrastive+Recon detector and ACT-ViT, sit a full order of magnitude to the left of the $K{=}10$ sampling baselines (semantic entropy, SelfCheck-NLI; red). Our method reaches AUROC comparable to the $K{=}10$ sampling cluster at roughly one-tenth the compute, and tracks ACT-ViT within the same $K{=}1$ column. The figure is a compute argument: ACT-ViT shares our budget and our style, so no method is implied to stand alone at low cost.}
+  \label{fig:hd:compute}
+\end{figure}
+
+% ===================== 6.7 Ablations / Signal Attribution =====================
+\section{Ablations and Signal Attribution}
+\label{sec:hd:ablations}
+
+The detector of \Cref{sec:hd:method} joins two supervision channels over a shared
+compressor---an asymmetric one-class supervised contrastive loss on layer-pair
+views, and a logprob-reconstruction auxiliary---and reads the result with a
+distance scorer. This section asks what carries the signal. We lead with the one
+question the theory makes falsifiable, because it is the strongest evidence that
+the feasibility argument is the right account and not merely a consistent one,
+and then frame the channel-attribution structure the method's design anticipates.
+
+\paragraph{The confirmed prediction: symmetric supervision fails.}
+The asymmetric construction of \Cref{subsec:hd:detector}---labelling only the
+truthful class as a mutual-positive cluster and leaving hallucinated anchors to be
+view-consistent with themselves---is not an arbitrary implementation choice. The
+analysis of \Cref{cor:hd:symcon} predicts that the symmetric alternative, which
+relabels the hallucinated side as a second mutual-positive cluster, must
+\emph{degrade} detection whenever the hallucinated class lacks coherent latent
+structure, because the hallucinated-anchor gradient then becomes noise negatively
+correlated with the truthful-cluster signal. This is a prediction made before the
+measurement, and it is confirmed: replacing the asymmetric scheme with symmetric
+supervision drops AUROC by roughly ten points on both models, far outside the
+seed-to-seed band of \Cref{sec:hd:results}. A wrong account of \emph{why} the loss
+is well-posed would not have forecast a specific, large, reproducible failure of a
+natural variant; that it did is the chapter's clearest instance of theory
+predicting experiment rather than rationalising it. The direction of the one-class
+anchor, by contrast, is a secondary choice: anchoring on the hallucinated rather
+than the truthful side performs comparably, so the load-bearing decision is that
+\emph{one} class is left as the unlabelled outlier, not which one.
+
+\paragraph{Signal attribution across the two channels.}
+The two supervision channels invite a $2\times 2$ attribution: present or absent
+contrastive structure, crossed with present or absent logprob reconstruction. The
+cell with neither is the single-layer supervised multilayer-perceptron probe
+(SAPLMA) of \Cref{sec:hd:setup}; the full method is the cell with both; the two
+single-channel cells isolate each contribution. We frame this matrix here as the
+structure the design anticipates, but we do not resolve its cells numerically in
+this chapter: an exhaustive per-cell attribution---and the matched-parameter and
+scorer sweeps below---belongs to the experimental record accompanying the method
+rather than to the dissertation's argument, and we flag the per-channel
+decomposition as the natural next measurement rather than claim it here.
+
+\paragraph{Supervised structure, not capacity or augmentation.}
+Two controls bound what the result can be attributed to. A label-free variant of
+the same architecture---cross-layer contrast with no asymmetric labels, the
+direct analogue of an unsupervised SimCLR recipe applied to layer pairs---lands
+near chance, which shows that the hallucination axis is not surfaced by
+cross-layer contrast alone: the supervision, not merely the layer-pair view
+construction, is what selects the label-relevant slice. And because the compressor
+reaches its performance at a parameter count no larger than the single-layer
+multilayer-perceptron probe it is measured against (\Cref{subsec:hd:detector}),
+raw capacity is not the explanation either. What carries the signal is the
+\emph{supervised, one-class} structure the feasibility argument prescribes.
+
+\paragraph{Scorer choice.}
+The headline inference scorer is a nearest-neighbour distance to the truthful-class
+embedding bank; cosine distance to the truthful centroid and a Mahalanobis
+distance under the pooled covariance are alternatives on the same frozen
+representation and yield comparable rankings. The scorer is thus an empirical
+convenience applied post-hoc to a fixed embedding, not a load-bearing part of the
+method.
+
+% ===================== 6.8 Domain Transfer =====================
+\section{Domain Transfer}
+\label{sec:hd:transfer}
+
+The headline grid of \Cref{sec:hd:results} trains and evaluates each probe within a single dataset. That measures how well the learned hallucination axis fits one source, not whether it is the same axis across sources. This section asks the transfer question directly: when a probe is moved to an unseen target dataset with no retraining, does the axis it learned still separate hallucinations, or was it specific to the source's surface form? The question matters for the chapter's thesis, because an information-theoretic detector that targets cross-layer coherence (\Cref{subsec:hd:detector}) ought to ride on a property of the residual stream rather than on the question format, and so ought to transfer at least as far as a probe engineered on source-specific features.
+
+\paragraph{Setup.}
+Each probe is trained on exactly one of the five source datasets and then evaluated, with no retraining and no target-side adaptation, on the other four datasets as targets. We report, for each (model, method, source) triple, the AUROC averaged over those $4$ held-out targets, each target cell itself a mean over $5$ seeds. This is a zero-shot transfer setup in the probe-on-activations sense: no labelled target data, no unsupervised target adaptation, and no target-side recalibration is applied. We compare the four learned activation-space methods of \Cref{sec:hd:setup}---ACT-ViT~\citep{barshalom2025actvit}, the LLMsKnow probe~\citep{orgad2024llmsknow}, SAPLMA~\citep{azaria2023internal}, and Contrastive+Recon---across both models; the output-space scalar and sampling baselines are excluded because they train no transferable probe.
+
+\begin{table}[t]
+  \centering
+  \caption{Per-source domain transfer. Each cell is the mean AUROC ($\pm$ standard deviation over $5$ seeds) of a probe trained on the column's source dataset and evaluated, with no retraining, on the four other datasets as held-out targets. Methods are rows (ours last); the two models occupy separate column-blocks. Within a column we bold Contrastive+Recon when it leads the strongest baseline in that column by more than the larger of the two cells' standard deviations; under this rule ours leads cleanly on PopQA for both models, and the remaining columns are statistical ties or source-specific baseline leads. The strongest baseline changes by column. The two NQ columns are the weakest for ours and are discussed in \Cref{sec:hd:limitations}.}
+  \label{tab:hd:transfer}
+  \begin{tabular}{l|ccccc}
+    \toprule
+    Method & HotpotQA & NQ & PopQA & SciQ & SearchQA \\
+    \midrule
+    \multicolumn{6}{l}{\textit{Llama-3.1-8B-Instruct}} \\
+    ACT-ViT  & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:act_vit:hotpotqa:auroc_mean,Llama-3.1-8B-Instruct:act_vit:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:act_vit:nq:auroc_mean,Llama-3.1-8B-Instruct:act_vit:nq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:act_vit:popqa:auroc_mean,Llama-3.1-8B-Instruct:act_vit:popqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:act_vit:sciq:auroc_mean,Llama-3.1-8B-Instruct:act_vit:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:act_vit:searchqa:auroc_mean,Llama-3.1-8B-Instruct:act_vit:searchqa:auroc_std} \\
+    LLMsKnow & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:llmsknow_probe:hotpotqa:auroc_mean,Llama-3.1-8B-Instruct:llmsknow_probe:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:llmsknow_probe:nq:auroc_mean,Llama-3.1-8B-Instruct:llmsknow_probe:nq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:llmsknow_probe:popqa:auroc_mean,Llama-3.1-8B-Instruct:llmsknow_probe:popqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:llmsknow_probe:sciq:auroc_mean,Llama-3.1-8B-Instruct:llmsknow_probe:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:llmsknow_probe:searchqa:auroc_mean,Llama-3.1-8B-Instruct:llmsknow_probe:searchqa:auroc_std} \\
+    SAPLMA   & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:saplma:hotpotqa:auroc_mean,Llama-3.1-8B-Instruct:saplma:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:saplma:nq:auroc_mean,Llama-3.1-8B-Instruct:saplma:nq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:saplma:popqa:auroc_mean,Llama-3.1-8B-Instruct:saplma:popqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:saplma:sciq:auroc_mean,Llama-3.1-8B-Instruct:saplma:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:saplma:searchqa:auroc_mean,Llama-3.1-8B-Instruct:saplma:searchqa:auroc_std} \\
+    Contrastive+Recon & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:hotpotqa:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:nq:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:nq:auroc_std} & \textbf{\resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:popqa:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:popqa:auroc_std}} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:sciq:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:searchqa:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:searchqa:auroc_std} \\
+    \midrule
+    \multicolumn{6}{l}{\textit{Qwen3-8B}} \\
+    ACT-ViT  & \resultPM{hallu_transfer_per_source}{Qwen3-8B:act_vit:hotpotqa:auroc_mean,Qwen3-8B:act_vit:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:act_vit:nq:auroc_mean,Qwen3-8B:act_vit:nq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:act_vit:popqa:auroc_mean,Qwen3-8B:act_vit:popqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:act_vit:sciq:auroc_mean,Qwen3-8B:act_vit:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:act_vit:searchqa:auroc_mean,Qwen3-8B:act_vit:searchqa:auroc_std} \\
+    LLMsKnow & \resultPM{hallu_transfer_per_source}{Qwen3-8B:llmsknow_probe:hotpotqa:auroc_mean,Qwen3-8B:llmsknow_probe:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:llmsknow_probe:nq:auroc_mean,Qwen3-8B:llmsknow_probe:nq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:llmsknow_probe:popqa:auroc_mean,Qwen3-8B:llmsknow_probe:popqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:llmsknow_probe:sciq:auroc_mean,Qwen3-8B:llmsknow_probe:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:llmsknow_probe:searchqa:auroc_mean,Qwen3-8B:llmsknow_probe:searchqa:auroc_std} \\
+    SAPLMA   & \resultPM{hallu_transfer_per_source}{Qwen3-8B:saplma:hotpotqa:auroc_mean,Qwen3-8B:saplma:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:saplma:nq:auroc_mean,Qwen3-8B:saplma:nq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:saplma:popqa:auroc_mean,Qwen3-8B:saplma:popqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:saplma:sciq:auroc_mean,Qwen3-8B:saplma:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:saplma:searchqa:auroc_mean,Qwen3-8B:saplma:searchqa:auroc_std} \\
+    Contrastive+Recon & \resultPM{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:hotpotqa:auroc_mean,Qwen3-8B:contrastive_logprob_recon:hotpotqa:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:nq:auroc_mean,Qwen3-8B:contrastive_logprob_recon:nq:auroc_std} & \textbf{\resultPM{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:popqa:auroc_mean,Qwen3-8B:contrastive_logprob_recon:popqa:auroc_std}} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:sciq:auroc_mean,Qwen3-8B:contrastive_logprob_recon:sciq:auroc_std} & \resultPM{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:searchqa:auroc_mean,Qwen3-8B:contrastive_logprob_recon:searchqa:auroc_std} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\Cref{tab:hd:transfer} reports the per-source transfer grid. Reading it honestly: of the $10$ (model, source) cells, Contrastive+Recon matches-or-outperforms (in the mean) the strongest baseline in three---both PopQA columns and SciQ on Qwen3-8B---and under the strict bolding rule (a lead exceeding the larger of the two standard deviations) it leads cleanly on the two PopQA columns, where the margins are the largest in the table at $\resdelta{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:popqa:auroc_mean}{Llama-3.1-8B-Instruct:llmsknow_probe:popqa:auroc_mean}$ over LLMsKnow on Llama-3.1-8B-Instruct and $\resdelta{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:popqa:auroc_mean}{Qwen3-8B:saplma:popqa:auroc_mean}$ over SAPLMA on Qwen3-8B. PopQA is the clean win because its long-tail-entity questions are exactly where a coherence-based axis should transfer and a format-specific probe should not. The strongest baseline is not a fixed method: it is ACT-ViT in most columns but LLMsKnow on Llama-3.1-8B-Instruct PopQA and SAPLMA on Qwen3-8B PopQA, so the per-source leads are not won against one consistently weak competitor. The remaining columns are statistical ties or source-specific baseline leads, with NQ the weakest source for ours on both models---a shortfall we do not hide and carry forward to \Cref{sec:hd:limitations}.
+
+\paragraph{Aggregate in-domain versus out-of-domain.}
+The per-source view corroborates in aggregate. Averaging over the $5$ in-domain (source-equals-target) cells and the $20$ out-of-domain (off-diagonal) cells, every method drops from in-domain to out-of-domain---transfer is not free for anyone. Contrastive+Recon falls from \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_std} in-domain to \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_std} out-of-domain on Llama-3.1-8B-Instruct, a drop of $\resdelta{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_mean}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean}$, and from \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_std} to \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_std} on Qwen3-8B, a drop of $\resdelta{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_mean}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean}$; the comparable ACT-ViT drops are $\resdelta{hallu_transfer_summary}{Llama-3.1-8B-Instruct:act_vit:in_domain:auroc_mean}{Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_mean}$ and $\resdelta{hallu_transfer_summary}{Qwen3-8B:act_vit:in_domain:auroc_mean}{Qwen3-8B:act_vit:out_of_domain:auroc_mean}$. Where ours sits is the relevant fact: on the out-of-domain aggregate Contrastive+Recon is at or above every baseline on both models---\resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_std} against ACT-ViT's \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_std} on Llama-3.1-8B-Instruct and \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_std} against ACT-ViT's \resultPM{hallu_transfer_summary}{Qwen3-8B:act_vit:out_of_domain:auroc_mean,Qwen3-8B:act_vit:out_of_domain:auroc_std} on Qwen3-8B---so the parity established in \Cref{sec:hd:results} holds under transfer in the mean, with the per-source margins concentrated on PopQA rather than spread uniformly.
+
+\Cref{fig:hd:transfer} summarises the in-domain versus out-of-domain comparison across detectors.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{generated/figures/hd_transfer.pdf}
+  \caption[Cross-dataset transfer of the detection axis]{In-domain vs.\ out-of-domain (cross-dataset transfer) detection AUROC per detector, for Llama-3.1-8B (left) and Qwen3-8B (right). Out-of-domain trains on one source dataset and evaluates on the four held-out targets, averaged; error bars are seed-to-seed std. The learned axis transfers: out-of-domain AUROC stays well above the chance line (dashed, $0.5$) for the activation-space detectors. Under transfer our Contrastive+Recon detector is statistically tied with ACT-ViT (out-of-domain deltas $+0.0005$ for Llama and $+0.0015$ for Qwen3-8B, both inside the seed-std band, hence labelled ``tie''); we claim parity under transfer, not a transfer win.}
+  \label{fig:hd:transfer}
+\end{figure}
+
+% ===================== 6.9 Limitations =====================
+\section{Limitations}
+\label{sec:hd:limitations}
+
+The chapter's central claim is deliberately bounded, and several limitations
+delimit it further. The result is \emph{parity}, not dominance: Contrastive+Recon
+sits in the same performance band as the strongest engineered probe rather than
+above it, and the contribution is the information-theoretic principle and its
+self-validation, not a benchmark win. The most concrete cost of that honesty is
+Natural Questions, where the detector trails ACT-ViT on both models---firmly on
+Llama-3.1-8B-Instruct---and where the learned axis also transfers least well
+(\Cref{sec:hd:results,sec:hd:transfer}); we have no account of the NQ shortfall
+beyond noting that it is the one benchmark on which the principle and the
+engineered probe come apart, and explaining it is open work.
+
+Several further limits are worth stating plainly. The operational label is
+produced by an automatic gold-reference evaluator, so a fraction of what we score
+as hallucination is evaluator artefact rather than model error; the AUROC ceiling
+is correspondingly noisy, and this noise is heaviest exactly where gold answers
+are least clean. We decline to place the detection regime within the
+intrinsic-versus-extrinsic hallucination taxonomy, treating that placement as
+orthogonal to the architectural argument; a reader who wants the taxonomy resolved
+will not find it here. The evaluation spans two open-weights models at the
+eight-billion-parameter scale and five short-answer question-answering benchmarks;
+we do not test larger or closed models, long-form generation, or multilingual
+settings, and the single-pass white-box access the method requires is unavailable
+for API-only models. The channel attribution of \Cref{sec:hd:ablations} is left as
+a framework rather than resolved numerically, so which of the two supervision
+channels carries how much of the signal is not settled here. Finally, the main
+text reports AUROC alone; complementary metrics (AUPRC, expected calibration
+error, and FPR@95) and the contemporaneous probes we cite but do not reproduce,
+such as ICR Probe, are relegated to supplementary material and to related work
+respectively.

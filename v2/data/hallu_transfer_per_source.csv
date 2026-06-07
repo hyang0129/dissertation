@@ -1,0 +1,46 @@
+# source_commit: placeholder
+# generated: 2026-06-06T00:00:00Z
+# generator: ported from sources/hallulens_mi_hallucination/data/transfer_per_source.csv (upstream HalluLens commit a2484b1, scripts/aggregate_transfer.py). Per-source cross-dataset transfer AUROC (train on one source, mean over 4 held-out targets), 5 seeds.
+# key_schema: model:method:source
+# default_precision: 3
+model,method,source,auroc_mean,auroc_std,n_seeds,n_target_cells
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,hotpotqa,0.7407,0.0014,5,4
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,nq,0.615,0.014,5,4
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,popqa,0.6515,0.0031,5,4
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,sciq,0.6916,0.0069,5,4
+Llama-3.1-8B-Instruct,contrastive_logprob_recon,searchqa,0.7182,0.0028,5,4
+Llama-3.1-8B-Instruct,act_vit,hotpotqa,0.7436,0.0094,5,4
+Llama-3.1-8B-Instruct,act_vit,nq,0.689,0.0074,5,4
+Llama-3.1-8B-Instruct,act_vit,popqa,0.5544,0.0129,5,4
+Llama-3.1-8B-Instruct,act_vit,sciq,0.7045,0.0066,5,4
+Llama-3.1-8B-Instruct,act_vit,searchqa,0.7229,0.0099,5,4
+Llama-3.1-8B-Instruct,llmsknow_probe,hotpotqa,0.6743,0.0087,5,4
+Llama-3.1-8B-Instruct,llmsknow_probe,nq,0.6311,0.035,5,4
+Llama-3.1-8B-Instruct,llmsknow_probe,popqa,0.561,0.0086,5,4
+Llama-3.1-8B-Instruct,llmsknow_probe,sciq,0.6116,0.0063,5,4
+Llama-3.1-8B-Instruct,llmsknow_probe,searchqa,0.6495,0.0051,5,4
+Llama-3.1-8B-Instruct,saplma,hotpotqa,0.571,0.0028,5,4
+Llama-3.1-8B-Instruct,saplma,nq,0.5512,0.0056,5,4
+Llama-3.1-8B-Instruct,saplma,popqa,0.5341,0.0027,5,4
+Llama-3.1-8B-Instruct,saplma,sciq,0.5363,0.005,5,4
+Llama-3.1-8B-Instruct,saplma,searchqa,0.5679,0.0027,5,4
+Qwen3-8B,contrastive_logprob_recon,hotpotqa,0.7738,0.0037,5,4
+Qwen3-8B,contrastive_logprob_recon,nq,0.7147,0.0274,5,4
+Qwen3-8B,contrastive_logprob_recon,popqa,0.6818,0.0053,5,4
+Qwen3-8B,contrastive_logprob_recon,sciq,0.7109,0.0036,5,4
+Qwen3-8B,contrastive_logprob_recon,searchqa,0.7355,0.0035,5,4
+Qwen3-8B,act_vit,hotpotqa,0.7939,0.0057,4,4
+Qwen3-8B,act_vit,nq,0.734,0.0097,5,4
+Qwen3-8B,act_vit,popqa,0.6044,0.0084,5,4
+Qwen3-8B,act_vit,sciq,0.7032,0.0082,5,4
+Qwen3-8B,act_vit,searchqa,0.7649,0.0046,5,4
+Qwen3-8B,llmsknow_probe,hotpotqa,0.6856,0.0136,5,4
+Qwen3-8B,llmsknow_probe,nq,0.579,0.0263,5,4
+Qwen3-8B,llmsknow_probe,popqa,0.5725,0.0138,5,4
+Qwen3-8B,llmsknow_probe,sciq,0.6352,0.016,5,4
+Qwen3-8B,llmsknow_probe,searchqa,0.6896,0.0386,5,4
+Qwen3-8B,saplma,hotpotqa,0.6345,0.0041,5,4
+Qwen3-8B,saplma,nq,0.5914,0.0025,5,4
+Qwen3-8B,saplma,popqa,0.6052,0.0025,5,4
+Qwen3-8B,saplma,sciq,0.5844,0.0054,5,4
+Qwen3-8B,saplma,searchqa,0.6503,0.0061,5,4

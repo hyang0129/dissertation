@@ -183,7 +183,11 @@ impossibility results.
   single-domain OOD + distance/logit scorers DSC degrades, neural collapse (§3.2
   back-ref), teacher-distillation lineage. Detail in [05_domain_sensitivity_collapse.md](05_domain_sensitivity_collapse.md) §1–3.
 
-### Chapter 6 — Information-Theoretic Hallucination Detection ⬜ blank (source located, not yet drafted)
+### Chapter 6 — Information-Theoretic Hallucination Detection ⬜ blank (source located, port plan written, not yet drafted)
+- **Full plan:** [06_hallucination_detection.md](06_hallucination_detection.md) —
+  section map (method-first reorder), number-gate inventory (`hallu_`-namespaced
+  CSVs; `baseline_comparison.csv` flagged stale), cite reconciliation (21 direct +
+  5 remaps + **7 to gate**), proofs→App.C (renumber A.*→C.*), phased drafting order.
 - **Source:** paper *"Detecting Hallucinations via Mutual Information Analysis of
   Intermediate Layer Activations"* (repo `hyang0129/HalluLens`, `paper/`). Copied
   to `sources/hallulens_mi_hallucination/`. Do **not** port v1 §6 (that was a

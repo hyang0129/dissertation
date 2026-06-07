@@ -1,0 +1,271 @@
+% appendices/C_mi_proofs.tex
+% Information-theoretic proofs for Chapter 6 (MI hallucination detection).
+% Ported from the HalluLens source paper's Appendix A ("Theorems to be added"):
+% ../sources/hallulens_mi_hallucination/03_method.md (Theorems section).
+% The source's A.* labels are RENUMBERED to this appendix to avoid colliding
+% with Appendix A (Label Blindness): the source's Lemma A.2 / Lemma A.3 /
+% Proposition A.1 / Corollary A.1.1 / Corollary A.2.1 become the lemmas,
+% proposition, and corollaries of this appendix. The Proposition STATEMENT lives
+% in the chapter body (\Cref{prop:hd:supcon-mi}); this appendix supplies its
+% proof, the two supporting lemmas, and the two corollaries.
+%
+% NOTE on the number gate (make lint): lint.py strips math line-by-line and does
+% not recognize multi-line display environments, so every display equation here
+% is kept on a single physical line inside a stripped environment.
+\chapter{Information-Theoretic Proofs for Hallucination Detection}
+\label{app:mi-hallucination-proofs}
+
+This appendix supplies the formal counterparts of the feasibility argument made
+in the chapter on information-theoretic hallucination detection
+(\Cref{sec:hd:method}). The load-bearing result is
+\Cref{prop:hd:supcon-mi}, whose statement appears in the chapter body and whose
+proof is given here; it rests on two standard lemmas---a data-processing chain
+(\Cref{lem:hd:dpi}) and the InfoNCE variational lower bound
+(\Cref{lem:hd:infonce})---which we restate in the notation of the chapter so the
+proposition has named results to compose. We also record two corollaries: one
+strengthening the cross-layer information claim to the response variable
+(\Cref{cor:hd:coinfo}), and one that turns the proposition's asymmetry into a
+falsifiable prediction about symmetric supervised contrastive learning
+(\Cref{cor:hd:symcon}), confirmed empirically in \Cref{sec:hd:ablations}.
+
+Throughout we use the notation of \Cref{sec:hd:method}. The frozen language model
+$M$ has $L$ residual-stream layers; for an input--generation pair $(x,y)$ we
+write $h_\ell = h_\ell(x,y) \in \mathbb{R}^{T_y \times d}$ for the full
+per-token activation sequence at layer $\ell$, and $z_\ell = f_\theta(h_\ell)$
+for its compressed embedding. A \emph{view} of a generation is the embedding of
+one layer drawn from the extraction band; two views of the same generation are
+$z_a = f_\theta(h_{\ell_a})$ and $z_b = f_\theta(h_{\ell_b})$ for a sampled layer
+pair $\ell_a < \ell_b$. The operational label is
+$y_{\mathrm{label}} \in \{0,1\}$, with $y_{\mathrm{label}}=0$ for a truthful
+generation and $y_{\mathrm{label}}=1$ for a hallucinated one.
+
+\section{Data-Processing Chain for the Residual Stream}
+\label{sec:hd-proofs:dpi}
+
+The residual stream is deterministic and additive: each layer's activation is
+its predecessor plus the output of the intervening block. This gives both the
+positivity of cross-layer mutual information that the feasibility argument starts
+from, and the direction of the data-processing inequality that lets a positive
+mutual information measured at the \emph{embedding} level certify a positive
+mutual information at the \emph{activation} level.
+
+\begin{lemma}[Cross-layer data-processing chain]\label{lem:hd:dpi}
+Fix a prompt and let $\ell_a < \ell_b$ index two residual-stream layers of $M$.
+\emph{(i)~Forward direction.} Because $h_{\ell_b}$ is a deterministic function of
+$h_{\ell_a}$ and the intervening residual blocks, with the residual connections
+carrying $h_{\ell_a}$ forward additively, the Markov-free determinism gives
+$I(h_{\ell_a}; h_{\ell_b}) = H(h_{\ell_b}) > 0$ for any input distribution under
+which $h_{\ell_b}$ is non-degenerate. \emph{(ii)~Backward direction.} For any
+(possibly stochastic) encoder $f_\theta$ applied layerwise, the embeddings
+$z_a = f_\theta(h_{\ell_a})$ and $z_b = f_\theta(h_{\ell_b})$ satisfy
+\begin{equation} I(z_a; z_b) \;\le\; I(h_{\ell_a}; h_{\ell_b}). \label{eq:hd:dpi} \end{equation}
+\end{lemma}
+
+\begin{proof}
+\emph{(i)} Determinism of the forward pass gives
+$H(h_{\ell_b} \mid h_{\ell_a}) = 0$, so
+$I(h_{\ell_a}; h_{\ell_b}) = H(h_{\ell_b}) - H(h_{\ell_b}\mid h_{\ell_a}) = H(h_{\ell_b})$,
+which is strictly positive whenever $h_{\ell_b}$ is not almost surely constant.
+\emph{(ii)} The variables form the Markov chain
+$z_a \leftarrow h_{\ell_a} \rightarrow h_{\ell_b} \rightarrow z_b$, since $z_a$
+depends on $(h_{\ell_a},h_{\ell_b})$ only through $h_{\ell_a}$ and $z_b$ only
+through $h_{\ell_b}$. The data-processing inequality applied to this chain yields
+$I(z_a; z_b) \le I(h_{\ell_a}; h_{\ell_b})$.
+\end{proof}
+
+\begin{remark}
+The two directions play complementary roles in the chapter. Part~(i) supplies the
+\emph{architectural} guarantee that the joint $(h_{\ell_a},h_{\ell_b})$ carries
+shared information at all. Part~(ii) is what makes trainability evidential: a
+positive mutual information observed between the learned embeddings is a lower
+bound witness for the activation-level quantity, never an artifact of the
+encoder---the inequality~\eqref{eq:hd:dpi} runs in the favourable direction.
+\end{remark}
+
+\section{InfoNCE Variational Lower Bound}
+\label{sec:hd-proofs:infonce}
+
+\begin{lemma}[InfoNCE lower bound on mutual information]\label{lem:hd:infonce}
+Let $(\mathrm{view}_a, \mathrm{view}_b)$ be paired views with $K-1$ independent
+negatives, and let $\mathcal{L}_{\mathrm{NCE}}$ be the InfoNCE loss evaluated
+with a critic over those $K$ candidates. Then
+\begin{equation} \mathcal{L}_{\mathrm{NCE}} \;\ge\; \log K - I(\mathrm{view}_a; \mathrm{view}_b), \qquad\text{equivalently}\qquad I(\mathrm{view}_a; \mathrm{view}_b) \;\ge\; \log K - \mathcal{L}_{\mathrm{NCE}}. \label{eq:hd:infonce} \end{equation}
+In particular, if $I(\mathrm{view}_a;\mathrm{view}_b) = 0$ then
+$\mathcal{L}_{\mathrm{NCE}} \ge \log K$, attained by uniform negatives.
+\end{lemma}
+
+\begin{proof}
+This is the standard contrastive lower bound of~\citet{oord2018representation};
+we use the tightened analysis of~\citet{poole2019variational}. Writing the
+InfoNCE objective as the expected log-softmax of the critic over one positive and
+$K-1$ negatives, Jensen's inequality on the partition function bounds the
+expected score gap by $I(\mathrm{view}_a;\mathrm{view}_b) - \log K$ from above,
+which rearranges to~\eqref{eq:hd:infonce}. The $\log K$ floor follows because the
+optimal critic under zero mutual information cannot distinguish the positive from
+the $K-1$ negatives, so every candidate receives equal posterior mass $1/K$ and
+the loss equals $\log K$.
+\end{proof}
+
+The contrapositive of the floor is the chapter's feasibility punchline: a loss
+that descends below $\log K$ certifies $I(\mathrm{view}_a;\mathrm{view}_b) > 0$,
+and by \Cref{lem:hd:dpi}(ii) this transfers to the activation level. The
+existence of a trainable probe is therefore the empirical content of the
+feasibility claim, not merely consistent with it.
+
+\section{Cross-Layer/Response Co-Information}
+\label{sec:hd-proofs:coinfo}
+
+\Cref{lem:hd:dpi}(i) states only that the cross-layer joint carries shared
+information. The following corollary ties that shared information to the response
+variable $y$ as well, so the joint is non-orthogonal to what the model generated.
+
+\begin{corollary}[Cross-layer/response co-information under downward determinism]\label{cor:hd:coinfo}
+Suppose $h_{\ell_b}$ is a deterministic function of $h_{\ell_a}$ given the prompt
+(residual-stream determinism). Then the three-way interaction information
+satisfies
+\begin{equation} I(h_{\ell_a}; h_{\ell_b}; y) \;:=\; I(h_{\ell_a}; h_{\ell_b}) - I(h_{\ell_a}; h_{\ell_b} \mid y) \;=\; I(h_{\ell_b}; y), \label{eq:hd:coinfo} \end{equation}
+which is strictly positive whenever $h_{\ell_b}$ is a non-constant function of
+$y$.
+\end{corollary}
+
+\begin{proof}
+Downward determinism gives
+$H(h_{\ell_b}\mid h_{\ell_a}) = H(h_{\ell_b}\mid h_{\ell_a}, y) = 0$, hence
+$I(h_{\ell_a}; h_{\ell_b}) = H(h_{\ell_b})$ and
+$I(h_{\ell_a}; h_{\ell_b}\mid y) = H(h_{\ell_b}\mid y)$. Substituting both into
+the definition of the interaction information gives
+$I(h_{\ell_a}; h_{\ell_b}; y) = H(h_{\ell_b}) - H(h_{\ell_b}\mid y) = I(h_{\ell_b}; y)$,
+which is positive precisely when $h_{\ell_b}$ depends non-trivially on $y$.
+\end{proof}
+
+\begin{remark}[Surviving caveat]
+Under the operational definition
+$y_{\mathrm{label}} = g_{\mathrm{eval}}(x,y)$---deterministic in $(x,y)$ for a
+fixed evaluator---\Cref{cor:hd:coinfo} bounds $I(h_{\ell_a};h_{\ell_b};y)$ in
+terms of the \emph{response} variable $y$, and thereby gives only an
+\emph{upper} bound on $I(h_{\ell_a};h_{\ell_b};y_{\mathrm{label}})$, not a lower
+bound. Whether the label-relevant features survive the lossy compression that a
+single layer applies to $(x,y)$ is an empirical question, settled by the
+trainability punchline rather than by this corollary.
+\end{remark}
+
+\section{Asymmetric Supervised Contrastive Bound}
+\label{sec:hd-proofs:supcon}
+
+We now prove the proposition stated in the chapter body
+(\Cref{prop:hd:supcon-mi}): the asymmetric \texttt{ignore\_label} scheme makes
+the optimized contrastive bound \emph{one-sided}, bounding the mutual information
+between the learned features and the truthful class only, while the
+hallucinated-anchor term reverts to instance-level view consistency. The proof
+turns on a decomposition of the loss by anchor class.
+
+Let $Z = f_\theta(h)$ denote the learned feature and recall the asymmetric
+scheme: for a truthful anchor ($y_{\mathrm{label}}=0$) the positives are the
+other truthful samples in the batch together with the anchor's own other-layer
+views, and all hallucinated samples are negatives; for a hallucinated anchor
+($y_{\mathrm{label}}=1$) the positives are \emph{only} the anchor's own
+other-layer views, and everything else in the batch---including other
+hallucinated samples---is a negative.
+
+\begin{proof}[Proof of \Cref{prop:hd:supcon-mi}]
+\emph{Step~$1$ (decomposition by anchor class).}
+Because each anchor contributes an independent additive term to the supervised
+contrastive objective, the total loss splits along the anchor label,
+\begin{equation} \mathcal{L}_{\mathrm{SupCon\text{-}asym}} \;=\; \mathcal{L}_{\mathrm{truth}} + \mathcal{L}_{\mathrm{hall}}, \label{eq:hd:loss-split} \end{equation}
+where $\mathcal{L}_{\mathrm{truth}}$ collects the truthful anchors (positives:
+other truthful samples and own other-layer views) and
+$\mathcal{L}_{\mathrm{hall}}$ collects the hallucinated anchors (positives: own
+other-layer views only).
+
+\emph{Step~$2$ (truthful anchors bound a class-conditioned mutual information).}
+On the truthful subset, grouping the positives by the label
+$\mathbb{1}[y_{\mathrm{label}}=0]$ is exactly the supervised-contrastive
+specialization of~\citet{khosla2020supervised}: the InfoNCE numerator's
+instance-level similarity is replaced by a class-averaged similarity over the
+truthful cluster. Composing this class grouping with \Cref{lem:hd:infonce} and
+the data-processing chain on the class variable tightens the truthful-anchor term
+into a lower bound on the mutual information between the features and the truthful
+indicator,
+\begin{equation} -\,\mathcal{L}_{\mathrm{truth}} \;\le\; I\bigl(Z; \mathbb{1}[y_{\mathrm{label}}=0]\bigr) - \log K + c, \label{eq:hd:truth-bound} \end{equation}
+with $c$ the constant absorbing the class-averaging normalization. The features
+are pushed to distinguish ``in the truthful cluster'' from ``everything else.''
+
+\emph{Step~$3$ (hallucinated anchors revert to instance-level InfoNCE).}
+For a hallucinated anchor the positive set is its own other-layer views only, so
+no class grouping occurs: the numerator stays instance-level and
+\Cref{lem:hd:infonce} bounds $\mathcal{L}_{\mathrm{hall}}$ by the mutual
+information between paired views of an individual hallucinated generation---view
+consistency---and contributes \emph{no} term in
+$I(Z; \mathbb{1}[y_{\mathrm{label}}=1])$, because the hallucinated samples are
+never grouped as mutual positives.
+
+\emph{Step~$4$ (sum).}
+Adding the two terms via~\eqref{eq:hd:loss-split}, the optimized objective lower
+bounds $I(Z; \mathbb{1}[y_{\mathrm{label}}=0])$ from Step~$2$ plus an
+instance-level view-consistency term from Step~$3$, with no class-mutual-
+information term on the hallucinated side. The bound is therefore one-sided: it
+constrains the truthful class only. This is the claim.
+\end{proof}
+
+\begin{remark}[What the proposition does not establish]
+Three honest negatives accompany the bound. First, it is not claimed tight; the
+looseness of InfoNCE bounds is analyzed by~\citet{poole2019variational}. Second,
+it does not imply sufficiency for hallucination detection---that the truthful
+cluster is separable from hallucinations---which is settled empirically by the
+trainability punchline of \Cref{sec:hd:method}. Third, the role of the
+hallucinated-anchor term as a regularizer that prevents collapse of the
+hallucinated features is an empirical observation, not a consequence of the
+bound.
+\end{remark}
+
+\section{Symmetric Supervised Contrast Is Contraindicated}
+\label{sec:hd-proofs:symcon}
+
+The asymmetry in \Cref{prop:hd:supcon-mi} is not an arbitrary implementation
+choice. The following corollary shows that the symmetric scheme---labelling both
+classes as mutual-positive clusters---injects a gradient that actively opposes
+the truthful-cluster signal when the hallucinated class lacks coherent latent
+structure, and predicts the empirical degradation reported in
+\Cref{sec:hd:ablations}.
+
+\begin{corollary}[Symmetric SupCon contraindication]\label{cor:hd:symcon}
+Suppose the hallucinated positive set under \emph{symmetric} supervised contrast
+has near-uniform pairwise similarity, i.e. its intra-class InfoNCE numerator
+terms are within $o(1)$ of the inter-class terms. Then the expected
+hallucinated-class gradient approaches zero in magnitude but retains a residual
+component directed \emph{away} from the truthful cluster, because the InfoNCE
+denominator for hallucinated anchors includes the truthful negatives. The net
+effect is a gradient contribution negatively correlated with the truthful-anchor
+gradient, with magnitude bounded by the hallucinated-class loss mass times the
+class-imbalance ratio. Consequently the symmetric scheme does not reduce to the
+asymmetric scheme of \Cref{prop:hd:supcon-mi} under any choice of temperature or
+loss weight: the two differ in the construction of the hallucinated positive set,
+not by a scale factor.
+\end{corollary}
+
+\begin{proof}
+Reusing the decomposition~\eqref{eq:hd:loss-split}, the only change under the
+symmetric scheme is that hallucinated anchors acquire the other hallucinated
+samples as positives. Write the hallucinated-anchor gradient as the difference of
+a numerator pull toward the hallucinated positives and a denominator push away
+from all negatives. Under the near-uniform-similarity hypothesis the numerator
+pull averages to a vector of vanishing magnitude (all hallucinated pairwise
+similarities coincide to first order, so the softmax-weighted positive mean
+cancels against the anchor). The denominator term does not vanish: it retains the
+truthful negatives, producing a residual component pointing away from the
+truthful cluster. Projected onto the truthful-anchor gradient
+of~\eqref{eq:hd:truth-bound}, this residual has negative expected inner product,
+and its norm is controlled by the hallucinated-class loss mass scaled by the
+ratio of hallucinated to truthful batch counts. Since the construction of the
+hallucinated positive set---not a multiplicative constant---is what changes, no
+temperature or weight rescaling recovers the asymmetric objective.
+\end{proof}
+
+\begin{remark}[Confirmed prediction]
+\Cref{cor:hd:symcon} makes a falsifiable prediction: relabelling the hallucinated
+side as a mutual-positive cluster should \emph{degrade} detection rather than
+leave it unchanged. The Variant~$4$ ablation of \Cref{sec:hd:ablations}, which
+supervises both classes symmetrically, confirms it---an AUROC drop of roughly ten
+points relative to the one-class asymmetric scheme, on both supported models.
+Theory predicted the failure mode; the ablation observed it.
+\end{remark}

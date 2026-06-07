@@ -139,6 +139,12 @@ WHITELIST: list[str] = [
     "P1",               # DSC prediction labels (description list + prose refs)
     "P2",
     "P3",
+    # --- Ch.6 (MI hallucination) enumerated-claim labels ---
+    "Claim",            # "Claim 1/2/3", "Claim~2", "Claims~1--3" in §6.3 argument
+    "Variant",          # "Variant 4" ablation labels (§6.7)
+    # --- Ch.6 LLM model proper nouns (digit is part of the name) ---
+    "Llama-3.1-8B-Instruct",
+    "Qwen3-8B",
     # NOTE: This whitelist intentionally starts small. Add a literal string
     # here (and document it in README.md) when a legitimate digit in prose
     # cannot be expressed via a \result{}/\cite{}/\ref{} macro.

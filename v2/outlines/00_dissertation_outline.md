@@ -76,10 +76,18 @@ impossibility results.
 ## Chapter structure
 
 ### Chapter 1 — Introduction ✅ carry-over ✏️
-- **Source:** [v1/Introduction.tex](../../v1/Introduction.tex), [v1 §1](../../v1/Sample_Thesis_main.tex)
+- **Source:** [v1/Introduction.tex](../../v1/Introduction.tex) (filler — real intro
+  is inline at [v1 §1](../../v1/Sample_Thesis_main.tex#L95-L161)).
+- **Full plan:** [01_introduction.md](01_introduction.md) — **thesis-first (Option
+  B) + vignette**, enumerated contributions with `\Cref` pointers, NEW spine
+  schematic figure (decided 2026-06-08): section map, framing locks, v1
+  de-proposalize/currency checklist, bookend discipline with Ch.7. Rebuild, not a
+  port (v1 §1 is proposal-voiced, stale science, info-theory-only umbrella, wrong
+  document map).
 - **Purpose:** Motivate the reliability problem (OOD + hallucination), state the
   representation-structure spine (information theory and geometry as its two
-  lenses), enumerate contributions, map the document.
+  lenses), enumerate contributions, map the document. Bookend to Ch.7 — Ch.1
+  *promises and maps* the arc Ch.7 *reflects and synthesizes*.
 - **Sections:**
   - 1.1 Problem Statement and Motivation
   - 1.2 Research Objectives and Contributions

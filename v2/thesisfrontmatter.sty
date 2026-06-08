@@ -63,6 +63,11 @@
 \newcommand{\prevdegreeA}[1]{\gdef \@prevdegreeA{#1}}
 \newcommand{\prevdegreeB}[1]{\gdef \@prevdegreeB{#1}}
 \newcommand{\prevdegreeC}[1]{\gdef \@prevdegreeC{#1}}
+% Default the previous-degree slots to empty so the title-page conditionals below
+% can test them with \ifx ...\@empty even when a slot is never set by the author.
+\gdef\@prevdegreeA{}
+\gdef\@prevdegreeB{}
+\gdef\@prevdegreeC{}
 \newcommand{\degreedate}[1]{\gdef \@degreedate{#1}}
 \newcommand{\advisor}[1]{\gdef \@advisor{#1}}
 \newcommand{\externalchair}[1]{\gdef \@externalchair{#1}}
@@ -163,21 +168,10 @@
         \vspace{0.8cm}
         \@degreeauthor \\
         \vspace{1cm}
-        \ifx \@prevdegreeA \@empty
-        		%% Only write previous degree B if it exists
-        		\@prevdegreeA \\
-	\else
-		\PackageWarning{thesisfrontmatter}
-		{prevdegreeA is not defined}
-	\fi	
-        \ifx \@prevdegreeB \@empty
-        		%% Only write previous degree B if it exists
-        		\prevdegreeB 
-	\fi
-        \ifx \@prevdegreeB \@empty
-        		%% Only write previous degree C if it exists
-        		\@prevdegreeC
-        \fi
+        %% Write each previous degree only if its slot is non-empty.
+        \ifx \@prevdegreeA \@empty\else \@prevdegreeA \\ \fi
+        \ifx \@prevdegreeB \@empty\else \@prevdegreeB \\ \fi
+        \ifx \@prevdegreeC \@empty\else \@prevdegreeC \\ \fi
         \vspace{1cm}
         A \kind ~submitted in partial fulfillment of the \\
         requirements for the degree of\\{\bf \kindspelledout \\

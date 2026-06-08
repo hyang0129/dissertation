@@ -20,7 +20,7 @@ and reserves two chapters for source papers that are still pending.
 | Ch.6 MI Hallucination | ✅ drafted (figures + App.C 06-06/07) |
 | Ch.7 Conclusion | ✅ drafted 2026-06-08 (synthesis-led) |
 | Appendices A / B / C | ✅ all done |
-| Front matter | CoverPage ✅, Publications ✅, Abstract ✅ (2026-06-08); Acks/Dedication ⬜ |
+| Front matter | CoverPage ✅ (committee/director/degrees/date filled 2026-06-08; **external D120 chair TODO**), Publications ✅, Abstract ✅; Acks/Dedication ⬜ |
 
 Build health: 146 pp · full `make paper` clean (number-gate/lint + check_refs +
 build_numbers + figures + latexmk all exit 0) · 0 undefined refs · 0 unresolved

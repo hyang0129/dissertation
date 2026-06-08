@@ -8,6 +8,26 @@ This is the plan for what the **final, defendable** dissertation should contain.
 It carries over the completed v1 material, drops the proposal-only scaffolding,
 and reserves two chapters for source papers that are still pending.
 
+## Drafting status (2026-06-07)
+
+| Part | State |
+|---|---|
+| Ch.1 Introduction | ⬜ stub |
+| Ch.2 Background & Definitions | ✅ drafted 2026-06-07 |
+| Ch.3 Literature Review | ✅ drafted 2026-06-07 |
+| Ch.4 Label Blindness | ✅ drafted (App.A proofs ported 06-07) |
+| Ch.5 DSC / TGT | ✅ drafted 2026-06-06 |
+| Ch.6 MI Hallucination | ✅ drafted (figures + App.C 06-06/07) |
+| Ch.7 Conclusion | ⬜ stub |
+| Appendices A / B / C | ✅ all done |
+| Front matter | CoverPage ✅, Publications ✅; Abstract/Acks/Dedication ⬜ |
+
+Build health: 133 pp · number-gate + lint + check_refs clean · latexmk exit 0 · 0
+undefined refs · 0 unresolved `\result` keys. **Remaining critical path:** Ch.1 →
+Ch.7 + front matter (no new results, only framing). Open dedup: Ch.4 still inlines
+the sufficiency/MSS definitions (`TODO(ch2-dedup)`) — now back-referenceable to
+`\Cref{def:bg:mss}` in Ch.2.
+
 ## Status legend
 
 | Mark | Meaning |
@@ -71,7 +91,7 @@ impossibility results.
   abstract, and Ch.6 results prose must all use this same verb (per the source's
   cross-section consistency rule).
 
-### Chapter 2 — Background and Definitions ✅ carry-over ✏️ (substantial revise — see 2026-06-05 note)
+### Chapter 2 — Background and Definitions ✅ **drafted 2026-06-07** (was carry-over ✏️ substantial revise — see 2026-06-05 note)
 - **Source:** [v1 §2](../../v1/Sample_Thesis_main.tex#L163-L473) (content is inline
   in the main file; `v1/Background.tex` is a stub).
 - **Full plan:** [02_background.md](02_background.md) — per-section primitive
@@ -93,7 +113,7 @@ impossibility results.
   the usage-literature. Ch.2 ends on the two lenses in Ch.3's opening order
   (§2.6/2.7→§3.1, §2.8→§3.2). Detail in [02_background.md](02_background.md) §1.
 
-### Chapter 3 — Literature Review ✅ carry-over ✏️
+### Chapter 3 — Literature Review ✅ **drafted 2026-06-07** (was carry-over ✏️)
 - **Source:** [v1 §3](../../v1/Sample_Thesis_main.tex)
 - **Full plan:** [03_literature_review.md](03_literature_review.md) — RW
   architecture (division of labor with per-chapter RW), organizing principle, and
@@ -147,7 +167,7 @@ impossibility results.
   unlabeled/SSL-OOD baselines tested (SimCLR-KNN/SSD, RotLoss, diffusion, CLIPN) +
   near/far/**adjacent**-OOD benchmarking. Defer sufficiency/MI → §3.1, SSL → §3.2.
 
-### Chapter 5 — Domain-Sensitivity Collapse and Teacher-Guided Training for Single-Domain OOD Detection ⬜ blank (source located, not yet drafted)
+### Chapter 5 — Domain-Sensitivity Collapse and Teacher-Guided Training for Single-Domain OOD Detection ✅ **drafted 2026-06-06**
 - **Title decided (2026-06-03):** adopt the paper's **DSC / TGT** naming (was
   "Domain Feature Collapse"). Label remains `ch:domain-sensitivity-collapse`.
 - **Source:** ECCV 2026 paper *"Beyond the Class Subspace: Teacher-Guided
@@ -183,7 +203,7 @@ impossibility results.
   single-domain OOD + distance/logit scorers DSC degrades, neural collapse (§3.2
   back-ref), teacher-distillation lineage. Detail in [05_domain_sensitivity_collapse.md](05_domain_sensitivity_collapse.md) §1–3.
 
-### Chapter 6 — Information-Theoretic Hallucination Detection ⬜ blank (source located, port plan written, not yet drafted)
+### Chapter 6 — Information-Theoretic Hallucination Detection ✅ **drafted (2026-06-06/07; figures + Ch.4 proofs added 06-07)**
 - **Full plan:** [06_hallucination_detection.md](06_hallucination_detection.md) —
   section map (method-first reorder), number-gate inventory (`hallu_`-namespaced
   CSVs; `baseline_comparison.csv` flagged stale), cite reconciliation (21 direct +
@@ -257,13 +277,18 @@ impossibility results.
 
 ### Chapter 7 — Conclusion ✅ carry-over ✏️ (was v1 Ch.8)
 - **Source:** [v1 §8](../../v1/Sample_Thesis_main.tex)
+- **Full plan:** [07_conclusion.md](07_conclusion.md) — **Option B, synthesis-led**
+  (decided 2026-06-08): section map, framing locks, v1 de-proposalize checklist,
+  voice-check grep list. Rebuild, not a port (v1 §8 is proposal-voiced and describes
+  superseded science — DFC/domain-filtering).
 - **Purpose:** Synthesise the three pillars under the representation-structure
   spine (info theory + geometry as its two lenses); state limitations and genuine
-  future work.
-- **Sections:** 7.1 Summary of Contributions *(drop "Proposed")* · 7.2 Broader
-  Implications (AI safety, information theory & representation geometry in ML,
-  evaluation) · 7.3 Future
-  Directions · 7.4 Concluding Remarks
+  future work. The synthesis subsection (§7.1.2) is the chapter's reason to exist —
+  argue the three papers are *one* thesis.
+- **Sections:** 7.1 Summary of Contributions *(drop "Proposed"; + §7.1.2 synthesis)*
+  · 7.2 Broader Implications (AI safety, information theory & representation geometry
+  in ML, evaluation) · 7.3 **Limitations** *(standalone — decided 2026-06-08)* · 7.4
+  Future Directions · 7.5 Concluding Remarks
 - **Revise:** delete v1's "Research Timeline and Feasibility" and "Expected
   Outcomes / Success Metrics" sections — proposal artefacts.
 
@@ -276,16 +301,16 @@ impossibility results.
   sufficiency; strict label blindness in the minimal sufficient statistic;
   independence of filtered distributions; guaranteed OOD failure; unavoidable
   risk of overlapping OOD.
-- **Appendix B — Geometric Proofs for Domain-Sensitivity Collapse** ⬜ blank
-  (source located). **Changed from v1.** v1/AppendixB held information-bottleneck
+- **Appendix B — Geometric Proofs for Domain-Sensitivity Collapse** ✅ **done**.
+  **Changed from v1.** v1/AppendixB held information-bottleneck
   / mutual-information proofs for the old "domain feature collapse" — those do
   **not** carry over. The ECCV theory is *geometric*: port from
   `sources/eccv2026_domain_feature_collapse/supplementary.tex` (§Extended
   Proofs) — a linear-model illustration, **Theorem 1** (distance failure under
   variance–discriminability mismatch), and **Proposition 1** (MSP/Energy
   insensitivity). Label: `app:dsc-proofs`.
-- **Appendix C — Information-Theoretic Proofs for Hallucination Detection** ⬜
-  blank (source located). New in v2 (Ch.6 has no v1 counterpart). Port from
+- **Appendix C — Information-Theoretic Proofs for Hallucination Detection** ✅
+  **done**. New in v2 (Ch.6 has no v1 counterpart). Ported from
   `sources/hallulens_mi_hallucination/` Appendix A: **Proposition C.1** (asymmetric
   SupCon bounds label-conditioned MI on the inlier/truthful class), **Corollary
   C.1.1** (symmetric SupCon contraindicated when one class lacks coherent latent
@@ -424,8 +449,10 @@ the Ch.2 entry above for the full section map.
   per pillar absent from the bib, with two **must-adds** (INSIDE/EigenScore for
   Ch.6; NECO for Ch.5 — each the closest published neighbor to our own method).
   **Follow-up:** ✅ both must-adds added via the gate (commit `12fa28c`, bib
-  190→192: `chen2024inside`, `BenAmmar2024neco`). 🔜 add the rest when §3.3/§3.4 are
-  drafted. *Also surfaced:* ✅ **confirmed public 2026-06-05** — arXiv:2603.11269
+  190→192: `chen2024inside`, `BenAmmar2024neco`). ✅ **rest added 2026-06-07 with
+  Ch.3** (bib 199→206; `du2024haloscope`, `chuang2024lookback`, `su2024mind`,
+  `liu2024fdbd`, `park2023nnguide`, `liu2023gen`, `ma2025semantic` — all
+  web-verified; SCALE was already present as `xuscaling`, no dup added). *Also surfaced:* ✅ **confirmed public 2026-06-05** — arXiv:2603.11269
   (submitted 2026-03-11) is the Ch.5 paper exactly (title, authors Yang/Kar/Yu/
   Desell/Ororbia, DSC+TGT abstract all match). The "paper under review — keep
   private until public" rationale is now moot *for the preprint content*. Open for

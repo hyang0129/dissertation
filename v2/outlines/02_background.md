@@ -7,8 +7,12 @@ the prose rationale + the 2026-06-05 reframe) and
 is the *spec sheet*: per-section, what definitions go in, where they come from, and
 which chapter consumes them.
 
-**Status:** ✏️ substantial revise (not a clean port). Blocks 1 carry over from
-v1 §2 with edits; Block 2 is where the new work is (§2.8 new; DPI + InfoNCE added).
+**Status:** ✅ **drafted 2026-06-07** (`chapters/02_background.tex`, 8 sections,
+11 numbered definitions/methods; builds clean). Blocks 1 ported from v1 §2 with
+edits (DFC definition deleted → DSC forward-pointer); Block 2 is the new work
+(§2.8 representation geometry; DPI added to §2.6; InfoNCE + SupCon/SimCLR to §2.7).
+Labels are `bg:`-namespaced (`def:bg:ood`, `def:bg:mss`, `def:bg:ib`,
+`def:bg:dpi`, `method:bg:infonce`, `def:bg:anisotropy`, `def:bg:neuralcollapse`, …).
 
 ---
 

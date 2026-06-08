@@ -54,6 +54,15 @@ gap a committee flags immediately. Add the ➕ set when §3.3/§3.4 are drafted;
 ◦ set only if space allows. All proposed bibkeys above are **placeholders** —
 confirm the exact key style, full author list, and identifier at add time.
 
+> **✅ FULLY RESOLVED 2026-06-07** (with the Ch.3 draft). The ➕ and ◦ sets were
+> all web-verified and added through the gate (bib 199→206):
+> `du2024haloscope` (NeurIPS 2024, 2409.17504), `chuang2024lookback` (EMNLP 2024,
+> 2407.07071), `su2024mind` (ACL Findings 2024, 2403.06448), `liu2024fdbd`
+> (ICML 2024, 2312.11536), `park2023nnguide` (**ICCV 2023** — corrected from the
+> NeurIPS guess above, 2309.14888), `liu2023gen` (CVPR 2023), `ma2025semantic`
+> (arXiv 2508.14496). **SCALE was already present as `xuscaling`** — cited in Ch.3,
+> no duplicate added. All seven are now cited in Ch.3 (§3.3/§3.4); build is clean.
+
 ## Side observation (not part of the sweep)
 A search hit lists the Ch.5 ECCV paper at **arXiv:2603.11269** ("Beyond the Class
 Subspace: Teacher-Guided Training…"). If that posting is live, the paper may now be

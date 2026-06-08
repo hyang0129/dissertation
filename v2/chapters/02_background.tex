@@ -1,5 +1,381 @@
-% chapters/02_background.tex — stub. Fill from ../v1/Background.tex.
+% chapters/02_background.tex
+% Drafted 2026-06-07. Shared formal vocabulary, per outlines/02_background.md.
+% Two boundaries: (i) primitives-only — named phenomena/methods are defined where
+% contributed (Label-Blindness=Ch.4, DSC/TGT=Ch.5, layer-pair probe=Ch.6), so v1's
+% "Domain Feature Collapse" definition is deleted here and replaced by a DSC
+% forward-pointer; (ii) Ch.2 DEFINES the primitive, Ch.3 surveys its use. Sections
+% run tasks (2.1-2.5, ported from v1 §2) then the two lenses (2.6-2.8) in the order
+% Ch.3 opens with them. Notation follows math_commands.tex; geometry matches Ch.5,
+% the InfoNCE/DPI primitives match Appendix C. Citations are sparse by design.
 \chapter{Background and Definitions}
 \label{ch:background}
 
-TODO: background and literature review.
+This chapter fixes the shared vocabulary the rest of the dissertation reuses.
+It lives inside two boundaries. First, it holds only \emph{primitives}---notions
+used by more than one later chapter; each named phenomenon or method is defined
+where it is contributed, so the Label-Blindness theorem
+(\Cref{ch:label-blindness}), Domain-Sensitivity Collapse and Teacher-Guided
+Training (\Cref{ch:domain-sensitivity-collapse}), and the one-class layer-pair
+probe (\Cref{ch:hallucination-detection}) are developed in their own chapters, not
+here. Second, this chapter \emph{defines} each primitive, whereas
+\Cref{ch:literature-review} surveys how the field has used it; the handoff is one
+beat per primitive---Background defines, the literature review situates, the
+results chapters deploy. The chapter is organized accordingly: \Cref{sec:bg:ood}
+through \Cref{sec:bg:llm} fix the settings and tasks, and
+\Cref{sec:bg:infotheory,sec:bg:ib,sec:bg:geometry} introduce the two analytic
+lenses---information theory and representation geometry---in the order
+\Cref{ch:literature-review} takes them up. Citations here are confined to
+foundational attributions; the surrounding literature is deferred to
+\Cref{ch:literature-review}.
+
+\section{Out-of-Distribution Detection}
+\label{sec:bg:ood}
+
+Out-of-distribution (OOD) detection is the task of recognizing when an input falls
+outside the scope of a model's training distribution. Supervised models predict
+well within the distribution of their training data but are prone to confident,
+wrong predictions on novel inputs---a failure with serious consequences in
+high-stakes settings such as healthcare, autonomous driving, and security. The
+task targets a \emph{semantic shift}~\citep{yang2021generalized}: the case in which
+no in-distribution label can match the true label, $\rvy \notin \sY_{\text{in}}$,
+where $\sY_{\text{in}}$ is the set of in-distribution training labels. Equivalently,
+a detector estimates the probability $P(\rvy \notin \sY_{\text{in}} \mid \rvx)$ that
+a sample lies outside the known semantic space.
+
+\begin{definition}[Out-of-Distribution Detection]
+Given an input $\rvx$ and a set of in-distribution labels $\sY_{\text{in}}$, OOD
+detection is the task of identifying whether the true label $\rvy$ lies outside the
+in-distribution set, $\rvy \notin \sY_{\text{in}}$, equivalently estimating
+$P(\rvy \notin \sY_{\text{in}} \mid \rvx)$.
+\label{def:bg:ood}
+\end{definition}
+
+The canonical baseline reads a confidence signal directly off a trained
+classifier's output distribution.
+
+\begin{method}[Maximum Softmax Probability (MSP)]
+Given an input $\rvx$, the MSP method~\citep{hendrycks2016baseline} estimates the
+probability of being out-of-distribution as $1 - \mathrm{MSP}(\rvx)$, where
+$\mathrm{MSP}(\rvx) = \max_{y \in \sY_{\text{in}}} P(y \mid \rvx)$.
+\label{method:bg:msp}
+\end{method}
+
+We restrict attention to labels generable from $\rvx$ alone, through a labelling
+function $f_{\rvy}$ that depends only on $\rvx$. Writing $\sY_{\text{all}}$ for the
+labels producible over the full input space, a training subset need not realise all
+of them, so in general $\sY_{\text{in}} \subsetneq \sY_{\text{all}}$. Two
+distinctions recur. Methodologically, OOD detectors are either
+\emph{training-agnostic}, applying to an existing classifier without altering its
+training (as MSP does), or \emph{training-aware}, modifying architecture, loss, or
+augmentation to improve detection. Conceptually, OOD detection targets
+\emph{epistemic} uncertainty---the model's uncertainty from limited
+knowledge---rather than the \emph{aleatoric} uncertainty intrinsic to noisy data.
+This task is the setting for \Cref{ch:label-blindness,ch:domain-sensitivity-collapse}.
+
+\section{Anomaly Detection}
+\label{sec:bg:anomaly}
+
+Anomaly detection is adjacent to OOD detection and the two are often conflated, but
+they differ in scope, training assumptions, and evaluation. Anomaly detection
+identifies individual points that deviate from the expected pattern \emph{within} a
+single distribution---rare events, noise, or fraud in the same domain as the
+training data. OOD detection instead flags inputs from a \emph{different}
+distribution altogether. The training assumption differs accordingly: anomaly
+detection is typically a \emph{one-class} problem, with access only to normal data
+at training time and no examples of the anomalies it must later reject, whereas OOD
+detection usually operates over several supervised in-distribution classes. The
+one-class framing recurs in this dissertation---in the unlabeled detectors of
+\Cref{ch:label-blindness} and in the one-class contrastive probe of
+\Cref{ch:hallucination-detection}, which treats faithful generations as the single
+modelled class.
+
+\section{Unlabeled Out-of-Distribution Detection}
+\label{sec:bg:unlabeled}
+
+Most OOD detectors are trained on labelled in-distribution data and repurpose a
+supervised classifier's outputs---softmax confidence or logits---as the detection
+signal. Not all do. We call a detector \emph{unlabeled} when its training uses only
+the inputs and never the labels.
+
+\begin{definition}[Unlabeled OOD Detection]
+Let the in-distribution dataset be $\sD_{\text{in}} = \{(\rvx_i, \rvy_i)\}_{i=1}^{N}$.
+An OOD detector is \emph{unlabeled} if its training uses only the inputs
+$\{\rvx_i\}$, producing a detection function
+$f_{\text{OOD}} \gets \mathrm{Train}(\{\rvx_i\}_{i=1}^{N})$ with no dependence on the
+labels $\{\rvy_i\}$.
+\label{def:bg:unlabeled}
+\end{definition}
+
+Unlabeled detectors typically rest on unsupervised objectives---density estimation,
+reconstruction error, or self-supervised representations---and a pretrained model
+used without fine-tuning is itself a form of unlabeled detection, since it never
+trains on the in-distribution labels. Such methods are attractive where labels are
+expensive or where detection should be decoupled from any one classification task.
+Crucially, they still solve the same problem as labelled detection---estimating
+$P(f_{\rvy}(\rvx) \notin \sY_{\text{in}})$---and the limits of that decoupling are
+the subject of \Cref{ch:label-blindness}.
+
+\section{Dataset Domain and the Single-Domain Setting}
+\label{sec:bg:domain}
+
+A dataset is drawn from a \emph{domain}: the environment, sensor, or generating
+conditions under which it was collected. Formally, a domain labelling function
+$f_{\rvd}$ assigns a domain label to each input, $\rvd = f_{\rvd}(\rvx)$. This
+dissertation is concerned with the case in which all training classes share one
+domain $\rvd_1$, so that $f_{\rvd}(\rvx) = \rvd_1$ for every in-distribution
+$\rvx$; an input with $f_{\rvd}(\rvx) \neq \rvd_1$ can then be taken to lie outside
+the in-distribution label set. Because every in-distribution class shares the
+domain, we separate the features of $\rvx$ into \emph{domain features}
+$\rvx_{\rvd}$, the minimal subset sufficient to infer the domain, and \emph{class
+features} $\rvx_{\rvy}$, the minimal subset sufficient to infer the class. Within
+the training set we take these to be independent, $I(\rvx_{\rvd} : \rvx_{\rvy}) = 0$,
+though the independence need not hold over the full input space, where domain cues
+can carry class information. Domains are hierarchical (cats $\subset$ mammals
+$\subset$ animals), and at the top of the hierarchy the set of nontrivial domain
+features is empty.
+
+\begin{definition}[Single-Domain Dataset]
+A dataset is \emph{single-domain} if there exists a nontrivial set of domain
+features $\rvx_{\rvd}$ that are independent of the class features,
+$I(\rvx_{\rvd} : \rvx_{\rvy}) = 0$, and non-vanishing in size,
+$|\{\rvx_{\rvd}\}| \gg 0$. This distinguishes single-domain datasets from
+multi-domain ones, where class diversity collapses the independent domain features
+to approximately nothing, $|\{\rvx_{\rvd}\}| \approx 0$. In a single-domain
+dataset, domain features capture global properties shared across all samples (the
+imaging modality, the capture conditions) while class features capture the
+discriminative properties used for labelling.
+\label{def:bg:singledomain}
+\end{definition}
+
+Supervised training on a single-domain dataset induces a geometric failure mode in
+the learned representation: because domain features carry no label signal, the
+objective provides no gradient to preserve them, and the representation concentrates
+its variance in the class-discriminative subspace, discarding the
+domain-distinguishing directions an OOD shift would inhabit. That phenomenon,
+\emph{Domain-Sensitivity Collapse}, and its consequences for distance-based
+detection are the contribution of \Cref{ch:domain-sensitivity-collapse} and are not
+treated as background primitives here; the geometric vocabulary needed to state it
+is given in \Cref{sec:bg:geometry}.
+
+\section{Large Language Models and Hallucination}
+\label{sec:bg:llm}
+
+The language-domain chapter operates on autoregressive language models and the
+intermediate activations they expose.
+
+\begin{definition}[Large Language Model]
+A \emph{large language model} (LLM) is a parameterized distribution over token
+sequences, $f_{\vtheta} : \mathcal{X}^{*} \to [0,1]$, where $\mathcal{X}$ is a
+finite vocabulary and $\mathcal{X}^{*}$ the set of finite sequences over it. The
+model factorizes the probability of a sequence $\vx = (x_1, \dots, x_T)$
+autoregressively as
+$\Pr_{\vtheta}(\vx) = \prod_{t=1}^{T} \Pr_{\vtheta}(x_t \mid x_{<t})$, with
+$x_{<t} = (x_1, \dots, x_{t-1})$, and is parameterized by a deep network---typically
+a Transformer---trained to minimize the next-token cross-entropy
+$\E_{\vx \sim \mathcal{D}}[-\sum_{t} \log \Pr_{\vtheta}(x_t \mid x_{<t})]$ over a
+corpus $\mathcal{D}$.
+\label{def:bg:llm}
+\end{definition}
+
+The qualifier ``large'' reflects parameter counts in the billions and corpora of
+hundreds of billions of tokens; at that scale, models exhibit in-context learning
+and rich internal representations.
+
+\begin{definition}[Hallucination]
+Let $\vx$ be a prompt and $\vy$ a continuation sampled from
+$\Pr_{\vtheta}(\cdot \mid \vx)$. A \emph{hallucination} occurs when $\vy$ contains
+content not grounded in verifiable fact, contextually entailed information, or
+available sources, relative to a reference world model $\mathcal{W}$: there exists a
+span $\vy' \subseteq \vy$ that contradicts $\mathcal{W}$ or asserts unverifiable
+content as fact.
+\label{def:bg:hallucination}
+\end{definition}
+
+We distinguish \emph{extrinsic} hallucination---content that contradicts an external
+knowledge base $\mathcal{W}$, the failure mode this dissertation
+targets---from \emph{intrinsic} hallucination, which violates internal consistency
+with the prompt or earlier tokens. Note that grounding is relative to $\mathcal{W}$:
+a factually outdated answer is wrong, not hallucinated, when $\mathcal{W}$ itself is
+stale.
+
+\paragraph{The residual stream.}
+Detecting hallucination from a model's internals requires naming the object that
+\Cref{ch:hallucination-detection} reads. A Transformer maintains, for each token
+position, a sequence of intermediate activations $h_1, \dots, h_L$ across its $L$
+layers---the \emph{residual stream}---with each $h_\ell \in \R^{d}$ the
+$d$-dimensional hidden state written by layer $\ell$. These activations are
+computed in a single forward pass and require no resampling, and they are the raw
+material an internal-state detector scores. The detector of
+\Cref{ch:hallucination-detection} learns from \emph{pairs} of such layer
+activations; the information-theoretic justification for why a pair of layers
+should share label-relevant information is built from the primitives of the next
+two sections.
+
+\section{Information Theory}
+\label{sec:bg:infotheory}
+
+Information theory~\citep{shannon1948mathematical} quantifies uncertainty and the
+dependence between random variables, and supplies the first of the dissertation's
+two lenses: a formal measure of what a representation retains about a target.
+
+\begin{definition}[Entropy and Conditional Entropy]
+The \emph{entropy} $H(\rvx)$ of a random variable $\rvx$ with distribution
+$p(\vx)$ is its expected uncertainty. The \emph{conditional entropy}
+$H(\rvy \mid \rvx)$ is the uncertainty remaining in $\rvy$ once $\rvx$ is known.
+They satisfy the chain rule $H(\rvx, \rvy) = H(\rvx) + H(\rvy \mid \rvx)$.
+\label{def:bg:entropy}
+\end{definition}
+
+\begin{definition}[Mutual Information]
+The \emph{mutual information} $I(\rvx; \rvy)$ is the information shared between
+$\rvx$ and $\rvy$---the reduction in uncertainty about one given the other.
+Equivalently it is the divergence of the joint from the product of marginals,
+$I(\rvx; \rvy) = D_{\mathrm{KL}}(p(\vx, \vy) \,\|\, p(\vx)p(\vy))$, where
+$D_{\mathrm{KL}}$ is the Kullback--Leibler divergence. Mutual information is
+non-negative, $I(\rvx; \rvy) \ge 0$, with equality if and only if $\rvx$ and
+$\rvy$ are independent, and it obeys the chain rule
+$I(\rvx; \rvy) = I(\rvx; \rvz) + I(\rvy; \rvz \mid \rvx)$ relative to a mediating
+variable $\rvz$.
+\label{def:bg:mi}
+\end{definition}
+
+One consequence is load-bearing for the language-domain chapter: information cannot
+be created by processing a variable.
+
+\begin{definition}[Data Processing Inequality]
+If three random variables form a Markov chain $\rvx \rightarrow \rvy \rightarrow \rvz$
+(so $\rvz$ depends on $\rvx$ only through $\rvy$), then
+$I(\rvx; \rvz) \le I(\rvx; \rvy)$: no transformation of $\rvy$ can increase its
+information about $\rvx$.
+\label{def:bg:dpi}
+\end{definition}
+
+The data processing inequality is what makes cross-layer mutual information
+analysable in \Cref{ch:hallucination-detection}: because later activations are
+deterministic functions of earlier ones, mutual information measured between learned
+embeddings lower-bounds the mutual information between the underlying layer
+activations, so a positive measured value certifies a positive true value
+(\Cref{ch:hallucination-detection}, with the formal statement in
+\Cref{app:mi-hallucination-proofs}).
+
+\section{Information Bottleneck, Sufficiency, and Contrastive Estimation}
+\label{sec:bg:ib}
+
+The information-theoretic lens becomes a tool for representation learning through
+the notions of sufficiency and the information bottleneck, and becomes
+\emph{operational} through the contrastive bound that lets mutual information be
+estimated and optimised.
+
+\begin{definition}[Minimal Sufficient Statistic]
+A statistic $T(\rvx)$ is \emph{sufficient} for $\rvy$ if it retains all the
+information $\rvx$ carries about $\rvy$, i.e.\ $I(\rvx; \rvy \mid T(\rvx)) = 0$. It
+is \emph{minimal} if it is a function of every other sufficient statistic; the
+minimal sufficient statistic is thus the most compact representation that loses no
+information about $\rvy$.
+\label{def:bg:mss}
+\end{definition}
+
+\begin{definition}[Information Bottleneck]
+Given $\rvx$ and a target $\rvy$, the \emph{information bottleneck}~\citep{tishby2000information}
+seeks a representation $\rvz$ of $\rvx$ that maximizes $I(\rvz; \rvy)$ while
+minimizing $I(\rvz; \rvx)$, formalised as
+$\mathcal{L}_{\mathrm{IB}} = I(\rvz; \rvy) - \beta\, I(\rvz; \rvx)$, where $\beta$
+trades retention of label information against compression of the input. Under this
+objective a learned representation is driven toward the minimal sufficient
+statistic of \Cref{def:bg:mss}.
+\label{def:bg:ib}
+\end{definition}
+
+Sufficiency is the engine of \Cref{ch:label-blindness}: when the only signal a
+representation retains is independent of the label-relevant features, the minimal
+sufficient statistic for the surrogate task carries nothing about the class, and
+detection built on it must fail. The same machinery is constructive in the language
+domain, but there mutual information must be \emph{estimated} from samples, which
+the contrastive objective makes possible.
+
+\begin{method}[InfoNCE Lower Bound]
+Let two views $\mathrm{view}_a, \mathrm{view}_b$ be encoded and scored against
+$K - 1$ negatives, and let $\mathcal{L}_{\mathrm{NCE}}$ be the resulting InfoNCE
+loss~\citep{oord2018representation}. It lower-bounds the views' mutual information,
+$I(\mathrm{view}_a; \mathrm{view}_b) \ge \log K - \mathcal{L}_{\mathrm{NCE}}$;
+equivalently, if the views share no information the loss cannot fall below its
+floor, $\mathcal{L}_{\mathrm{NCE}} \ge \log K$.
+\label{method:bg:infonce}
+\end{method}
+
+The InfoNCE bound is the canonical variational estimator of mutual information and
+underlies modern contrastive representation learning, including its self-supervised
+form over augmented views~\citep{chen2020simclr} and its supervised specialization,
+which treats all same-class examples as mutual positives~\citep{khosla2020supervised}.
+\Cref{ch:hallucination-detection} reads the bound in the contrapositive: a
+contrastive loss that \emph{descends} below $\log K$ on a held-out split is itself
+evidence that the target mutual information is positive---a feasibility argument
+whose formal version, with supervised contrast over layer-pair views, is developed
+there and proved in \Cref{app:mi-hallucination-proofs}.
+
+\section{Representation Geometry}
+\label{sec:bg:geometry}
+
+The second lens reads the same retained structure geometrically: as the
+arrangement of learned features in space, and in particular which directions carry
+variance and which are collapsed. Let $z = f_\theta(\rvx) \in \R^{d}$ be the
+$d$-dimensional feature a model assigns to an input over a $C$-class dataset, and
+let $\Sigma$ be its empirical covariance with eigenvalues
+$\lambda_1 \ge \dots \ge \lambda_d$. The covariance decomposes into inter- and
+intra-class parts,
+$\Sigma = \Sigma_{\mathrm{between}} + \Sigma_{\mathrm{within}}$, where
+$\Sigma_{\mathrm{between}}$ has rank at most $C - 1$; a representation that drives
+$\Sigma_{\mathrm{within}} \to 0$ therefore concentrates essentially all variance
+into a $(C-1)$-dimensional subspace.
+
+\begin{definition}[Anisotropy: Participation Ratio and Effective Rank]
+The concentration of a covariance spectrum is measured by the \emph{participation
+ratio} and the \emph{effective rank}:
+$\mathrm{PR}(\Sigma) = (\sum_i \lambda_i)^2 / \sum_i \lambda_i^2$ and
+$r_{\mathrm{eff}}(\Sigma) = \exp(-\sum_i \hat{\lambda}_i \log \hat{\lambda}_i)$,
+where $\hat{\lambda}_i = \lambda_i / \sum_j \lambda_j$. Both report how many
+directions meaningfully carry variance; a representation with $r_{\mathrm{eff}}$
+far below $d$ is strongly anisotropic.
+\label{def:bg:anisotropy}
+\end{definition}
+
+\begin{definition}[Class-Discriminative Subspace]
+The \emph{class-discriminative subspace}
+$\mathcal{S}_{\mathrm{cls}} = \mathrm{span}\{v_1, \dots, v_k\}$ is spanned by the
+top-$k$ eigenvectors of $\Sigma$. With $P$ the orthogonal projector onto
+$\mathcal{S}_{\mathrm{cls}}$ and $P_\perp = I - P$, any feature splits as
+$z = z_\parallel + z_\perp$ with $z_\parallel = Pz$ and $z_\perp = P_\perp z$; the
+complementary directions $z_\perp$ are where a domain shift with little
+in-distribution variance would register.
+\label{def:bg:clssubspace}
+\end{definition}
+
+This geometry determines how detection scores behave. \emph{Distance-based}
+scores---nearest-neighbour distance~\citep{sun2022out} and the Mahalanobis
+score~\citep{lee2018simple}---weight directions by Euclidean coordinate differences,
+so when the spectrum is concentrated they are dominated by the high-variance class
+subspace and are blind to the low-variance directions $z_\perp$ that may carry the
+shift. \emph{Logit-based} scores---maximum softmax probability
+(\Cref{method:bg:msp}) and the energy score~\citep{liu2020energy}---read the same
+geometry through the classifier head. The extreme of this concentration is a named
+geometry.
+
+\begin{definition}[Neural Collapse]
+\emph{Neural collapse}~\citep{Papyan2020nc} is the terminal-phase geometry in which
+within-class variance vanishes, $\Sigma_{\mathrm{within}} \to 0$, the class means
+form the vertices of a $(C-1)$-simplex equiangular tight frame, and the remaining
+$d - (C-1)$ directions carry zero variance. It is optimal for classification and,
+because it maps shift-distinguishing directions into the null space, adverse for
+out-of-distribution detection.
+\label{def:bg:neuralcollapse}
+\end{definition}
+
+Neural collapse is the asymptotic limit; \Cref{ch:domain-sensitivity-collapse}
+characterises the same anisotropy at any stage of training, states when it makes
+distance-based detection fail, and gives a training-time remedy, with the formal
+results in \Cref{app:dsc-proofs}. These geometric primitives, together with the
+information-theoretic ones of \Cref{sec:bg:infotheory,sec:bg:ib}, are the two lenses
+the remainder of the dissertation applies: \Cref{ch:literature-review} surveys their
+use across vision OOD and language hallucination, and
+\Cref{ch:label-blindness,ch:domain-sensitivity-collapse,ch:hallucination-detection}
+deploy them.

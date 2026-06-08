@@ -199,13 +199,14 @@ against them with a back-ref.** Don't let both carry the novelty argument.
 - ✅ **Distillation** elevated to a flagged cross-cutting thread (§3.2).
 - ✅ **Probing** consolidated — introduced in §3.5; §3.2/§3.4 apply with back-ref.
 
-**Still open:**
-- 🔜 **Currency sweep (the one piece of new work).** Bib seeded from v1 + the three
-  source papers, so concurrent 2024–25 SOTA may be thin. Before §3.3/§3.4 freeze,
-  find the 3–5 recent methods per pillar a reviewer would expect and that the bib
-  lacks (hallucination: EigenScore/INSIDE, Lookback Lens, Haloscope, SE follow-ups;
-  OOD: GEN, NNGuide, fDBD, …). Positioning only, not exhaustive. Tracked as a TODO
-  in [00_dissertation_outline.md](00_dissertation_outline.md).
+**Resolved 2026-06-07** (Ch.3 drafted):
+- ✅ **Currency sweep applied.** The ⭐ must-adds (`chen2024inside` INSIDE/EigenScore,
+  `BenAmmar2024neco` NECO) landed 06-04; the ➕/◦ sets landed with the Ch.3 draft
+  (bib 199→206): `du2024haloscope`, `chuang2024lookback`, `su2024mind` (§3.4);
+  `liu2024fdbd`, `park2023nnguide`, `liu2023gen` (§3.3); `ma2025semantic` (§3.4).
+  All web-verified 06-07 (title/authors/venue/arXiv id). SCALE was already present
+  as `xuscaling` — cited, no duplicate added. NNGuide corrected to ICCV 2023.
+- ✅ **§3.3/§3.4 drafted** citing the above; all keys resolve, build clean.
 - Confirm a few unbucketed keys at draft time: `liu2025detecting`,
   `chen2020simple` vs `chen2020simclr` (possible overlap), `guille2024cadet`,
   `ekim2024distribution`, domain-specific OOD apps (`kafunah2023out`/`kim2021wafer`/

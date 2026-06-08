@@ -22,9 +22,10 @@ and reserves two chapters for source papers that are still pending.
 | Appendices A / B / C | ✅ all done |
 | Front matter | CoverPage ✅, Publications ✅; Abstract/Acks/Dedication ⬜ |
 
-Build health: 141 pp · check_refs clean · latexmk exit 0 · 0 undefined refs · 0
-unresolved `\result` keys (lint/number-gate not re-run this session — pandas absent
-in container; Ch.7 adds no numbers/figures). **Remaining critical path:** Ch.1 +
+Build health: 141 pp · full `make paper` clean (number-gate/lint + check_refs +
+build_numbers + figures + latexmk all exit 0) · 0 undefined refs · 0 unresolved
+`\result` keys. Build deps now in repo-local `.venv` (gitignored); run
+`make PYTHON=../.venv/bin/python paper`. **Remaining critical path:** Ch.1 +
 front matter (Abstract/Acks/Dedication) — Ch.7 drafted 2026-06-08. Open dedup: Ch.4 still inlines
 the sufficiency/MSS definitions (`TODO(ch2-dedup)`) — now back-referenceable to
 `\Cref{def:bg:mss}` in Ch.2.

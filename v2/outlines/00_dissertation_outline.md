@@ -434,6 +434,16 @@ Net: Ch.2 ends on the two lenses in the order Ch.3 opens with them, so the
 precursor handoff is one beat — *Ch.2 defines → Ch.3 surveys → Ch.4–6 deploy.* See
 the Ch.2 entry above for the full section map.
 
+### Added 2026-06-08 — prose voice standardized on the Chapter 4 register
+
+A whole-document read found ~3 prose registers stitched together (mannered house
+voice in Ch.1/2/3/7+abstract; plain published voice in Ch.4; dense ports in Ch.5/6),
+so it reads as a stapler, not one author. **Decision:** standardize on the **Ch.4
+plain/direct register** (adopt its virtues, fix its mechanical defects everywhere).
+Full rules + rollout: [style_guide.md](style_guide.md). Orthogonal to the framing
+locks — voice/mechanics, not claims. Heaviest rewrite: Ch.1 + abstract; Ch.4 gets
+mechanical cleanup only.
+
 ## Open questions for you
 
 1. ~~**Keep Ch.2 Background and Ch.3 Literature Review separate**, or merge into one

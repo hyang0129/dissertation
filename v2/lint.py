@@ -63,6 +63,14 @@ _ENV_MATH_RE = re.compile(
     r"\\begin\{(?:equation|equation\*|align|align\*|gather|gather\*|multline|multline\*)\}.*?\\end\{(?:equation|equation\*|align|align\*|gather|gather\*|multline|multline\*)\}",
     re.DOTALL,
 )
+# TikZ pictures hold coordinates and dimensions (e.g. at (5,0), text width=3.3cm),
+# never result numbers — strip the whole environment before digit scanning, the
+# same way math environments are stripped. Spans multiple lines, so masked at the
+# block level in lint_file alongside block math.
+_ENV_TIKZ_RE = re.compile(
+    r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
+    re.DOTALL,
+)
 
 # ---------------------------------------------------------------------------
 # Year pattern — allowed everywhere.
@@ -200,6 +208,8 @@ def lint_file(path: Path) -> list[str]:
     for m in _ENV_MATH_RE.finditer(text_no_comments):
         block_spans.append((m.start(), m.end()))
     for m in _DISPLAY_MATH_RE.finditer(text_no_comments):
+        block_spans.append((m.start(), m.end()))
+    for m in _ENV_TIKZ_RE.finditer(text_no_comments):
         block_spans.append((m.start(), m.end()))
     text_no_comments = _mask_spans(text_no_comments, block_spans)
 

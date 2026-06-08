@@ -12,7 +12,7 @@ and reserves two chapters for source papers that are still pending.
 
 | Part | State |
 |---|---|
-| Ch.1 Introduction | ⬜ stub |
+| Ch.1 Introduction | ✅ drafted 2026-06-08 (thesis-first + spine figure) |
 | Ch.2 Background & Definitions | ✅ drafted 2026-06-07 |
 | Ch.3 Literature Review | ✅ drafted 2026-06-07 |
 | Ch.4 Label Blindness | ✅ drafted (App.A proofs ported 06-07) |
@@ -22,11 +22,13 @@ and reserves two chapters for source papers that are still pending.
 | Appendices A / B / C | ✅ all done |
 | Front matter | CoverPage ✅, Publications ✅; Abstract/Acks/Dedication ⬜ |
 
-Build health: 141 pp · full `make paper` clean (number-gate/lint + check_refs +
+Build health: 146 pp · full `make paper` clean (number-gate/lint + check_refs +
 build_numbers + figures + latexmk all exit 0) · 0 undefined refs · 0 unresolved
-`\result` keys. Build deps now in repo-local `.venv` (gitignored); run
-`make PYTHON=../.venv/bin/python paper`. **Remaining critical path:** Ch.1 +
-front matter (Abstract/Acks/Dedication) — Ch.7 drafted 2026-06-08. Open dedup: Ch.4 still inlines
+`\result` keys. Build deps in repo-local `.venv` (gitignored); run
+`make PYTHON=../.venv/bin/python paper`. **Remaining critical path:** front matter
+(Abstract/Acks/Dedication) — Ch.1 + Ch.7 drafted 2026-06-08. *Known cosmetic:* Ch.5's
+long title overflows its running-header (≈210pt overfull on Ch.5 pages) — pre-existing,
+fix via a short `\chapter[...]` optional title. Open dedup: Ch.4 still inlines
 the sufficiency/MSS definitions (`TODO(ch2-dedup)`) — now back-referenceable to
 `\Cref{def:bg:mss}` in Ch.2.
 

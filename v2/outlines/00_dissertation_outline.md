@@ -18,13 +18,14 @@ and reserves two chapters for source papers that are still pending.
 | Ch.4 Label Blindness | ✅ drafted (App.A proofs ported 06-07) |
 | Ch.5 DSC / TGT | ✅ drafted 2026-06-06 |
 | Ch.6 MI Hallucination | ✅ drafted (figures + App.C 06-06/07) |
-| Ch.7 Conclusion | ⬜ stub |
+| Ch.7 Conclusion | ✅ drafted 2026-06-08 (synthesis-led) |
 | Appendices A / B / C | ✅ all done |
 | Front matter | CoverPage ✅, Publications ✅; Abstract/Acks/Dedication ⬜ |
 
-Build health: 133 pp · number-gate + lint + check_refs clean · latexmk exit 0 · 0
-undefined refs · 0 unresolved `\result` keys. **Remaining critical path:** Ch.1 →
-Ch.7 + front matter (no new results, only framing). Open dedup: Ch.4 still inlines
+Build health: 141 pp · check_refs clean · latexmk exit 0 · 0 undefined refs · 0
+unresolved `\result` keys (lint/number-gate not re-run this session — pandas absent
+in container; Ch.7 adds no numbers/figures). **Remaining critical path:** Ch.1 +
+front matter (Abstract/Acks/Dedication) — Ch.7 drafted 2026-06-08. Open dedup: Ch.4 still inlines
 the sufficiency/MSS definitions (`TODO(ch2-dedup)`) — now back-referenceable to
 `\Cref{def:bg:mss}` in Ch.2.
 

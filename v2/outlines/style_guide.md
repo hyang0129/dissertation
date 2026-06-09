@@ -72,7 +72,40 @@ Break long periodic sentences (claim suspended behind two or three dashes/clause
 into two plain sentences. The house voice favors one elaborate sentence; the target
 favors two clear ones.
 
-### 2.6 Keep
+### 2.6 The zoom-out trap: concrete subjects in significance/closing sentences
+This is the single-word counterpart to §2.3, and the rule it polices is the one the
+guide most often missed. The plain register works because Ch.4's subjects are real
+things (a dataset, a probe, a distance). It *fails* in field-level "significance" and
+closing sentences ("More broadly, …", "This work matters …", chapter bridges), where
+the slot has no concrete referent. The template still demands a subject, so it fills
+with stacked abstractions joined by weak relational verbs, and to vary the rationed
+framing vocabulary (§2.4) it reaches for a connotative **near-miss noun** — a word
+chosen for what it *connotes*, landing one ontological category off from what it
+*denotes* (catachresis). Naming an intellectual object ("a principled account") with a
+**behavior word** ("a habit", "a posture", "an instinct") is the signature tell. A
+second tell is **heavy-NP / dative inversion** ("adds *to AI safety* a habit …"),
+which garden-paths the reader.
+
+**Rule.** In any zoom-out / significance / closing sentence, the grammatical subject
+must be a concrete referent from the work (a study, a result, a benchmark, a detector,
+a theorem). Do not place an abstract noun in dative-inverted position, and do not name
+an intellectual object with a behavior word.
+
+- ✗ "More broadly, the work adds to AI safety a habit that complements benchmarking: a
+  principled account of when reliability is achievable at all."
+- ✓ "More broadly, the work gives AI safety a complement to benchmarking: a principled
+  account of when reliability is achievable at all."
+
+**The fix is structural, not lexical.** Do **not** treat this as a word swap. The
+defect survived three style passes precisely because each pass swapped surface words
+and left the inverted/nominal scaffolding intact — the draft's "a posture that
+complements empirical evaluation" was "rewritten" only into the *worse* "a habit that
+complements benchmarking" (plainer word, further-off category). Re-anchor the sentence
+on a concrete subject; do not hunt for a better metaphor. The defect lives in the
+imitations (Ch.1/7 summaries), never in the Ch.4 exemplar, whose subjects are concrete
+by construction.
+
+### 2.7 Keep
 First-person plural for contributions; defining a term then using it; tight
 paragraph topic sentences; the existing `\Cref` cross-reference discipline.
 
@@ -161,6 +194,16 @@ one inconsistent Ch.4 heading ("Self-supervised" → "Self-Supervised") aligned 
 house Title Case (§3.2 heading note added). `make paper` exit 0 (147 pp), lint OK,
 diff prose-only.
 
+A root-cause review of one "alien"-reading sentence (the §1.5 significance closer,
+"…adds to AI safety a habit…") found a §2.3 blind spot: the guide policed multi-word
+signature metaphors but not single-word catachresis or dative inversion in zoom-out
+sentences. Traced the sentence's git lineage and found the defect *survived* the
+de-manner and full-rewrite passes (draft "a posture that complements empirical
+evaluation" → rewrite "a habit that complements benchmarking": surface swapped,
+scaffolding kept, category error worsened). Added §2.6 (concrete subjects in
+significance/closing sentences; fix is structural not lexical) and a partial lint note
+in §5.
+
 ## 5. Optional enforcement (lint)
 
 The mechanical half (§3) is auto-checkable and fits the repo's gate culture
@@ -169,4 +212,8 @@ mid-sentence capitalized common nouns from §3.2, banned phrases from §3.3, and
 **British spellings from §3.2a** (a fixed `-ise→-ize`/`-our→-or`/etc. wordlist,
 excluding the same-in-both words). Spelling is the highest-value addition — it drifts
 back in every newly-authored paragraph and is unambiguous to check. Voice (§2) stays a
-human judgment. Add only if you want the mechanical rules enforced on every build.
+human judgment, with one cheap partial exception: the §2.6 behavior-word tell is
+greppable — flag "habit/posture/instinct/reflex/muscle" within ~10 words of an
+intellectual-object noun ("account/argument/framework/principle") as a *warning*, not
+a gate. The dative-inversion half of §2.6 is not auto-checkable and stays human.
+Add only if you want the mechanical rules enforced on every build.

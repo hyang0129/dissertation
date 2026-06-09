@@ -1,37 +1,35 @@
 % frontmatter/Abstract.tex — dissertation abstract.
-% Rebuild from the spine framing (NOT a port of v1's proposal-voiced abstract).
-% Framing locks: representation-structure thesis, BOTH lenses; arc failure ->
-% recovery -> detection; "guaranteed failure" Ch.4-only; Ch.5 diagnostic+recovery;
-% Ch.6 = parity / "matches-or-outperforms (in the mean)", never "beats"/"superior".
-% Verb/claim agreement with §1.2 and §6 is mandatory. No hard-coded numbers.
+% Plain Ch.4 register per outlines/style_guide.md. Framing locks: representation-
+% structure thesis, BOTH lenses; arc failure -> recovery -> detection; "guaranteed
+% failure" Ch.4-only; Ch.5 diagnostic+recovery; Ch.6 = parity / "matches or, in the
+% mean, outperforms", never "beats"/"superior". Verb/claim agreement with §1.2 and §6.
 \begin{abstract}
 Machine learning systems deployed in the open world must recognize when an input,
 or an output, falls outside what they can be trusted to handle. Out-of-distribution
-(OOD) detection and the detection of hallucination in large language models are
-usually studied apart, but this dissertation argues that they are two faces of one
-question and are governed by one condition: detection is possible exactly when the
-learned representation preserves the structure that distinguishes the shift. Where
-that structure is absent from the representation, no scoring rule can recover it;
-where training has suppressed it, it can be restored; and where the representation
-retains it, a principled detector can read it out.
+(OOD) detection and hallucination detection in large language models are usually
+studied apart. This dissertation argues that one condition governs both: detection
+is possible exactly when the learned representation preserves the structure that
+distinguishes the shift. When the representation does not contain that structure, no
+scoring rule can recover it. When training has suppressed it, it can be restored.
+When the representation keeps it, a detector can read it out.
 
-We examine this condition through two interchangeable lenses---information theory,
-which measures preserved structure as mutual information, and representation
-geometry, which measures it as structure in feature space---across three studies
-that trace a single arc from failure to recovery to detection. First, we prove that
-unlabeled OOD detection is guaranteed to fail when the self- or unsupervised
-objective is independent of the label-relevant features, and we introduce the
-Adjacent OOD benchmark, which constructs the feature-overlap regime that exposes
-this failure. Second, we identify domain-sensitivity collapse, the geometric
-mechanism by which single-domain supervised training suppresses the directions along
-which a shift would register, and we present Teacher-Guided Training, which restores
+We study this condition with two tools. Information theory measures preserved
+structure as mutual information, and representation geometry measures it as structure
+in feature space; the two describe the same quantity. Three studies apply them along
+one arc, from failure to recovery to detection. First, we prove that unlabeled OOD
+detection is guaranteed to fail when the self- or unsupervised objective is
+independent of the label-relevant features, and we introduce the Adjacent OOD
+benchmark, which builds the feature-overlap regime that exposes this failure.
+Second, we identify domain-sensitivity collapse, the geometric mechanism by which
+single-domain supervised training suppresses the directions along which a shift
+would register, and we present Teacher-Guided Training, which restores
 domain-sensitive geometry with no inference-time overhead. Third, we derive a
 hallucination detector from an information-theoretic feasibility argument and show
-that it matches or, in the mean, outperforms the strongest engineered probe---a
-parity that is itself evidence the underlying principle is correct.
+that it matches or, in the mean, outperforms the strongest engineered probe.
+Reaching that parity is itself evidence that the underlying principle is correct.
 
-The central contribution is the unifying representation-structure framework and the
-demonstration that principled methods reach the frontier of detectability: the
-dissertation establishes when detection is possible, and that such methods attain
-it, rather than claiming optimality.
+The main contribution is the unifying representation-structure framework, together
+with the demonstration that principled methods reach the limit of what is
+detectable. The dissertation shows when detection is possible and that such methods
+attain it, rather than claiming they are optimal.
 \end{abstract}

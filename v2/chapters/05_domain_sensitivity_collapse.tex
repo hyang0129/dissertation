@@ -3,6 +3,9 @@
 % Assembled from .ch5_frag/s51..s56 (Phase B). Numbers gated via \result -> data/dsc_*.csv.
 \chapter{Domain-Sensitivity Collapse and Teacher-Guided Training for Single-Domain OOD Detection}
 \label{ch:domain-sensitivity-collapse}
+% Short running head: the full title overflows the page header by ~210pt. The
+% full title is kept in the ToC; only the running head is shortened.
+\chaptermark{Domain-Sensitivity Collapse and TGT}
 
 % ===================== s51 =====================
 \section{Introduction}
@@ -273,6 +276,7 @@ Per dataset, the logit-based scorers (EBO, MSP, SCALE) can worsen on specific be
   \centering
   \caption{Out-of-domain OOD detection averaged over the eight single-domain benchmarks, reported as FPR@95~/~AUROC (\%). Lower FPR@95 and higher AUROC are better. Bold columns are the Teacher-Guided variants; their structural improvement over the corresponding non-TG backbone is the central claim. SupCon columns are reported only for the distance-based scorers (MDS, kNN). The MDS Teacher Only row is a reference upper bound and is independent of the student backbone.}
   \label{tab:dsc:farood}
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{l cc cc cc cc cc}
     \toprule
      & \multicolumn{2}{c}{DinoV2} & \multicolumn{2}{c}{\textbf{TG DinoV2}} & \multicolumn{2}{c}{ResNet50} & \multicolumn{2}{c}{\textbf{TG ResNet50}} & \multicolumn{2}{c}{SupCon} \\
@@ -292,7 +296,8 @@ Per dataset, the logit-based scorers (EBO, MSP, SCALE) can worsen on specific be
     \multicolumn{1}{l}{MDS Teacher Only} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} \\
     \multicolumn{1}{l}{\quad (reference)} & \multicolumn{10}{c}{\result{dsc_main_farood}{mds_teacher_only:dino_fpr95}~/~\result{dsc_main_farood}{mds_teacher_only:dino_auroc}} \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}%
+  }
 \end{table}
 
 \paragraph{In-domain OOD.}
@@ -302,6 +307,7 @@ Per dataset, the logit-based scorers (EBO, MSP, SCALE) can worsen on specific be
   \centering
   \caption{In-domain OOD detection averaged over the eight single-domain benchmarks, reported as FPR@95~/~AUROC (\%). Lower FPR@95 and higher AUROC are better. Bold columns are the Teacher-Guided variants. SupCon columns are reported only for the distance-based scorers (MDS, kNN). The MDS Teacher Only row is a reference and is independent of the student backbone.}
   \label{tab:dsc:nearood}
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{l cc cc cc cc cc}
     \toprule
      & \multicolumn{2}{c}{DinoV2} & \multicolumn{2}{c}{\textbf{TG DinoV2}} & \multicolumn{2}{c}{ResNet50} & \multicolumn{2}{c}{\textbf{TG ResNet50}} & \multicolumn{2}{c}{SupCon} \\
@@ -321,7 +327,8 @@ Per dataset, the logit-based scorers (EBO, MSP, SCALE) can worsen on specific be
     \multicolumn{1}{l}{MDS Teacher Only} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} \\
     \multicolumn{1}{l}{\quad (reference)} & \multicolumn{10}{c}{\result{dsc_main_nearood}{mds_teacher_only:dino_fpr95}~/~\result{dsc_main_nearood}{mds_teacher_only:dino_auroc}} \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}%
+  }
 \end{table}
 
 \paragraph{Absolute in-domain performance remains high.}

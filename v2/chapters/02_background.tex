@@ -59,9 +59,9 @@ The canonical baseline reads a confidence signal directly off a trained
 classifier's output distribution.
 
 \begin{method}[Maximum Softmax Probability (MSP)]
-Given an input $\rvx$, the MSP method~\citep{hendrycks2016baseline} estimates the
-probability of being out-of-distribution as $1 - \mathrm{MSP}(\rvx)$, where
-$\mathrm{MSP}(\rvx) = \max_{y \in \sY_{\text{in}}} P(y \mid \rvx)$.
+Given an input $\rvx$, the MSP method estimates the probability of being
+out-of-distribution as $1 - \mathrm{MSP}(\rvx)$, where
+$\mathrm{MSP}(\rvx) = \max_{y \in \sY_{\text{in}}} P(y \mid \rvx)$~\citep{hendrycks2016baseline}.
 \label{method:bg:msp}
 \end{method}
 
@@ -347,9 +347,9 @@ far below $d$ is strongly anisotropic.
 \end{definition}
 
 \begin{definition}[Class-Discriminative Subspace]
-The \emph{class-discriminative subspace}
-$\mathcal{S}_{\mathrm{cls}} = \mathrm{span}\{v_1, \dots, v_k\}$ is spanned by the
-top-$k$ eigenvectors of $\Sigma$. With $P$ the orthogonal projector onto
+The \emph{class-discriminative subspace}, written $\mathcal{S}_{\mathrm{cls}}$, is
+spanned by the top-$k$ eigenvectors of $\Sigma$, so that
+$\mathcal{S}_{\mathrm{cls}} = \mathrm{span}\{v_1, \dots, v_k\}$. With $P$ the orthogonal projector onto
 $\mathcal{S}_{\mathrm{cls}}$ and $P_\perp = I - P$, any feature splits as
 $z = z_\parallel + z_\perp$ with $z_\parallel = Pz$ and $z_\perp = P_\perp z$; the
 complementary directions $z_\perp$ are where a domain shift with little

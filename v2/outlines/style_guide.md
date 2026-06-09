@@ -52,6 +52,15 @@ Keep at most one instance of each across the whole document; replace the rest.
 - ✓ "a detector derived from this principle reaches the same accuracy as the best
   engineered probe, which supports the principle."
 
+**Exception — the thesis refrain.** One sentence is allowed to recur verbatim as a
+bookend: *"When the representation keeps it, a detector can read it out."* It states
+the third case of the spine and appears in exactly three places — the abstract, the
+Ch.1 thesis statement, and the Ch.7 thesis statement — and nowhere else. This is a
+deliberate device, not a metaphor leak. The *incidental* uses of "read it out" in
+running prose were reworded (to "extract"/"detect"); treat any fourth occurrence as a
+leak. *(Resolved 2026-06-09: "read it out" = 3 bookend uses + 0 incidental;
+"is itself evidence" reduced to 1, in the abstract.)*
+
 ### 2.4 Ration the abstract framing vocabulary
 Current counts: "structure" 81×, "lens/lenses" 61×, "preserve" 36×,
 "exactly/precisely when" 5×. Some repetition is the thesis and stays. But within a
@@ -78,12 +87,33 @@ Always hyphenate when used: `self-supervised`, `in-distribution`, `out-of-distri
 — both in Ch.4.)*
 
 ### 3.2 Capitalization
-Lowercase common nouns mid-sentence: `unsupervised learning`, `self-supervised
-learning`, `zero-shot`, `supervised baseline`. Reserve initial caps for proper nouns
-and **defined dissertation terms**: Label Blindness Theorem, Adjacent OOD,
-Domain-Sensitivity Collapse (DSC), Teacher-Guided Training (TGT), Contrastive+Recon.
-*(Current violations, all Ch.4: "Unsupervised Learning" ×4, "Zero Shot" ×1, "Self
-supervised" ×1.)*
+Lowercase common nouns **mid-sentence in running prose**: `unsupervised learning`,
+`self-supervised learning`, `zero-shot`, `supervised baseline`. Reserve initial caps
+for proper nouns and **defined dissertation terms**: Label Blindness Theorem, Adjacent
+OOD, Domain-Sensitivity Collapse (DSC), Teacher-Guided Training (TGT), Contrastive+Recon.
+*(The Ch.4 mid-sentence violations — "Unsupervised Learning" ×4, "Zero Shot",
+"Self supervised" — were fixed in the 2026-06 passes.)*
+
+**Headings are exempt — they use Title Case.** The document-wide house convention for
+`\section`/`\subsection`/`\paragraph` titles is Title Case ("Out-of-Distribution
+Detection", "Teacher-Guided Training", "Self-Supervised Baselines"). Do **not**
+lowercase headings to satisfy the rule above; that rule governs running prose only.
+The only heading defect to watch is *internal* inconsistency — e.g. a hyphenated
+compound capitalized as "Self-supervised" in one heading and "Self-Supervised" in
+another. Capitalize every significant element of a hyphenated compound ("Self-Supervised",
+"Single-Domain"); keep short function words lowercase ("of", "and", "for").
+
+### 3.2a Spelling — American English (canonical)
+The dissertation is American English (RIT; the Ch.4 ICLR exemplar and the abstract are
+American). Use `-ize`/`-ization`/`-yze` and American forms throughout; do not import
+British `-ise`/`-isation`/`-yse` or `-our`/`-re`/`-lled` spellings.
+- ✓ `optimize`, `characterize`, `generalization`, `analyze`, `labeled`, `modeling`,
+  `behavior`, `color`, `favor`, `center`, `gray`/`grayscale`, `catalog`
+- ✗ `optimise`, `characterise`, `generalisation`, `analyse`, `labelled`, `modelling`,
+  `behaviour`, `colour`, `favour`, `centre`, `grey`/`greyscale`, `catalogue`
+*(Resolved 2026-06-09: ~50 British forms, concentrated in Ch.3/Ch.5, converted. Note
+words spelled the same in both dialects — "characteristics", the plural noun
+"analyses" — and do not over-correct them.)* This is auto-checkable; see §5.
 
 ### 3.3 Banned filler / vague connectives
 Replace with the specific content or cut: "due to various factors", "it is important
@@ -122,10 +152,21 @@ not run.
 Order followed: guide → mechanical pass (Ch.4) → per-chapter passes (one commit each).
 `make paper` was re-run after each; no `\result`, number, citation, or `\Cref` changed.
 
+**Follow-up 2026-06-09.** A review found two residual mechanical items the earlier
+passes missed: (a) a British/American spelling split (~50 British forms in Ch.3/5,
+American everywhere else) and (b) signature metaphors over the §2.3 cap. Fixed:
+spelling standardized to American (§3.2a added), incidental "read it out"/"is itself
+evidence" reworded with the thesis refrain preserved (§2.3 exception added), and the
+one inconsistent Ch.4 heading ("Self-supervised" → "Self-Supervised") aligned to the
+house Title Case (§3.2 heading note added). `make paper` exit 0 (147 pp), lint OK,
+diff prose-only.
+
 ## 5. Optional enforcement (lint)
 
 The mechanical half (§3) is auto-checkable and fits the repo's gate culture
 (bib/number gates). A `lint.py` extension could flag: unhyphenated forms from §3.1,
-mid-sentence capitalized common nouns from §3.2, and banned phrases from §3.3. Voice
-(§2) stays a human judgment. Add only if you want the mechanical rules enforced on
-every build.
+mid-sentence capitalized common nouns from §3.2, banned phrases from §3.3, and
+**British spellings from §3.2a** (a fixed `-ise→-ize`/`-our→-or`/etc. wordlist,
+excluding the same-in-both words). Spelling is the highest-value addition — it drifts
+back in every newly-authored paragraph and is unambiguous to check. Voice (§2) stays a
+human judgment. Add only if you want the mechanical rules enforced on every build.

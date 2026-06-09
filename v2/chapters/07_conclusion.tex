@@ -114,7 +114,7 @@ sits just inside that boundary: the structure was available in the data, but
 training \emph{destroyed} it, and we show both why this happens and how to put it
 back. \Cref{ch:hallucination-detection} works where the structure is
 \emph{retained}: the model keeps the distinction in its intermediate activations,
-and the task is to read it out. The three cases are structure absent, suppressed,
+and the task is to extract it. The three cases are structure absent, suppressed,
 and retained, and the detectability of the shift tracks how much structure survives.
 
 The two lenses are what let the same question be asked in such different settings.
@@ -288,7 +288,7 @@ governs reliability across settings as different as unlabeled out-of-distributio
 detection, single-domain detection, and large language model hallucination, and that
 information theory and geometry are two ways of asking whether that condition holds.
 Along one arc from failure to recovery to detection, we proved where the structure
-cannot be present, restored it where training had removed it, and read it out where
+cannot be present, restored it where training had removed it, and detected it where
 the model kept it. The methods are not the last word, and the conditions that draw
 the limit are idealizations of a messier reality. But the limit is real, and it is
 the same in every case. A model that is to be trusted beyond its training must

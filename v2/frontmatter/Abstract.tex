@@ -4,6 +4,10 @@
 % failure" Ch.4-only; Ch.5 diagnostic+recovery; Ch.6 = parity / "matches or, in the
 % mean, outperforms", never "beats"/"superior". Verb/claim agreement with §1.2 and §6.
 \begin{abstract}
+% Tighten body leading slightly so the abstract fits on one page (the global
+% \linespread{1.25} pushed the final sentence onto a second page). Scoped to this
+% environment's group, so it does not affect any other page.
+\linespread{1.12}\selectfont
 Machine learning systems deployed in the open world must recognize when an input,
 or an output, falls outside what they can be trusted to handle. Out-of-distribution
 (OOD) detection and hallucination detection in large language models are usually

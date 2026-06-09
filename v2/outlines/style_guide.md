@@ -109,6 +109,57 @@ by construction.
 First-person plural for contributions; defining a term then using it; tight
 paragraph topic sentences; the existing `\Cref` cross-reference discipline.
 
+### 2.8 Register: write as an academic, not as a logician
+The default voice is an experienced researcher explaining the work — claims, reasons,
+and concrete referents, the way Ch.4's introduction reads. Switch into the formal
+register (the grammar of quantifiers, biconditionals, and bounds) **only** where the
+content is genuinely theory, math, or logic: inside `definition` / `theorem` /
+`lemma` / `proof` / `remark` environments, and in the one or two sentences that state
+a precise mathematical condition. In running prose — abstract, motivation,
+significance, related work, chapter bridges — the formal register reads as a lecture
+transcript, and its idioms actively misfire.
+
+The worked example is **"just when."** A logician writes "P just when Q" for the
+biconditional "P iff Q." In ordinary prose "just when" is read *temporally* ("just
+when I thought it was over"), so "detection succeeds just when the representation has
+kept the structure" garden-paths into "at the moment the representation keeps it." The
+fix is not a better logic idiom; it is to leave the logic register entirely and make a
+plain claim, letting the theorem carry the biconditional.
+
+- ✗ "Detection succeeds **just when** the model's learned representation has preserved
+  **whatever** distinguishes the shift." *(logician's iff + loose quantifier; the live
+  defect in the abstract and §3 lit-review opener as of 2026-06-09)*
+- ✓ "A shift is detectable **only when** the representation has kept the structure that
+  distinguishes it." *(plain necessary-condition claim; the three cases that follow
+  carry the sufficiency, so the prose never needs the iff)*
+- ✗ "There **exists** a regime in which no scorer **admits** a solution, and the bound
+  **holds** for all such objectives." *(quantifier grammar + "admits" + "holds" in
+  prose)*
+- ✓ "In one regime no scorer can work, and that is true of every objective of this
+  kind."
+
+**Idioms to keep out of running prose** (they belong inside the formal environments,
+not in the argument around them): "just when" / "just in case", "iff" / "if and only
+if", "necessary and sufficient", "for all" / "there exists", "let \(X\) be",
+"suppose", "note that" / "observe that", "such that" (use "so that" / "where"),
+"holds", "vacuous" / "non-vacuous", "admits", "satisfies", "the quantity", "by
+construction" (outside a proof), "modulo" / "up to", "trivially" / "WLOG" / "almost
+surely", and "hence" / "thus" as the hinge of a deductive chain. State the precise
+version once, in the theorem; paraphrase it in prose without importing the symbols'
+grammar.
+
+**The boundary — this does not dumb down the theory.** Definitions, theorem
+statements, and proofs keep their full formal register; that is exactly where "if and
+only if", "let", and "for all" are correct. The rule governs only the *prose around*
+the math — the abstract that motivates it, the paragraph that says what a theorem
+means, the significance that says why it matters. Those should sound like a researcher
+talking, not like a proof read aloud.
+
+*(Partly greppable: the idiom list can be flagged as a §5 warning when it occurs in
+prose **outside** a `definition`/`theorem`/`lemma`/`proof` environment. Warning, not
+gate — "holds", "satisfies", and "by construction" have legitimate in-theory uses, so
+a human confirms each hit.)*
+
 ## 3. Mechanical consistency (objective — auto-checkable)
 
 These apply to every chapter, **including Ch.4**, which currently violates several.

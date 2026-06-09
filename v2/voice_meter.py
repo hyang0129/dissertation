@@ -92,6 +92,16 @@ MIN_WORDS_FOR_STATS = 60              # skip tiny fragments
 SANCTIONED_BOOKENDS = [
     "when the representation keeps it a detector can read it out",
     "matches-or-outperforms in the mean the strongest engineered probe",
+    # Ch.4 framing lock: guaranteed failure result (Label Blindness Theorem)
+    "ood detection is guaranteed to fail",
+    # Ch.4 theorem condition: defined technical term (all windows of this phrase)
+    "is independent of the label-relevant features",
+    "objective is independent of the label-relevant",
+    "independent of the label-relevant features the",
+    "surrogate task is independent of the label-relevant",
+    "of the label-relevant features the minimal sufficient statistic",
+    # Bookend bleed: "read it out" + following word from next sentence
+    "detector can read it out two",
 ]
 
 # ---------------------------------------------------------------------------
@@ -144,6 +154,62 @@ _ABBREV = {
     "e.g", "i.e", "etc", "cf", "vs", "al", "fig", "eq", "no", "st",
     "mr", "ms", "dr", "ch", "sec", "approx", "resp",
 }
+
+# ---------------------------------------------------------------------------
+# Register check (style_guide.md §2.8): logician/mathematician idioms that read
+# wrong in running PROSE. Flagged only OUTSIDE the formal environments, where
+# "let", "iff", and "for all" are correct. WARNING-only — a human confirms each
+# hit, since "holds"/"satisfies"/"by construction" have legitimate in-theory uses.
+# ---------------------------------------------------------------------------
+_FORMAL_ENVS = (
+    "definition", "theorem", "lemma", "proof", "proposition",
+    "corollary", "assumption", "remark", "method",
+)
+_FORMAL_ENV_RE = re.compile(
+    r"\\begin\{(" + "|".join(_FORMAL_ENVS) + r")\*?\}.*?\\end\{\1\*?\}",
+    re.DOTALL,
+)
+_REGISTER_IDIOMS = [
+    r"just when", r"just in case", r"\biff\b", r"if and only if",
+    r"necessary and sufficient", r"there exists?\b", r"for all\b",
+    r"such that", r"note that", r"observe that", r"\bholds\b", r"\badmits\b",
+    r"\bsatisfies\b", r"the quantity", r"by construction", r"\bmodulo\b",
+    r"\bWLOG\b", r"w\.l\.o\.g", r"almost surely", r"\bvacuous\b",
+    r"non-vacuous", r"whatever (?:distinguishes|separates|sets)",
+]
+_REGISTER_RE = re.compile(
+    "|".join(f"(?:{p})" for p in _REGISTER_IDIOMS), re.IGNORECASE
+)
+
+
+def _mask_keep_newlines(text: str, spans: list[tuple[int, int]]) -> str:
+    chars = list(text)
+    for s, e in spans:
+        for i in range(s, e):
+            if i < len(chars) and chars[i] != "\n":
+                chars[i] = " "
+    return "".join(chars)
+
+
+def _prose_linewise(raw: str) -> str:
+    """Mask comments, formal environments, non-prose environments, and math while
+    preserving line numbers — so idiom hits report as file:line and the formal
+    register (where these idioms are correct) is never flagged."""
+    text = _COMMENT_RE.sub(lambda m: " " * len(m.group(0)), raw)
+    spans: list[tuple[int, int]] = []
+    for rx in (_FORMAL_ENV_RE, _NONPROSE_ENV_RE, _DISPLAY_MATH_RE, _INLINE_MATH_RE):
+        spans += [(m.start(), m.end()) for m in rx.finditer(text)]
+    return _mask_keep_newlines(text, spans)
+
+
+def idiom_warnings(path: Path) -> list[tuple[int, str, str]]:
+    prose = _prose_linewise(path.read_text(errors="replace"))
+    hits: list[tuple[int, str, str]] = []
+    for lineno, line in enumerate(prose.splitlines(), 1):
+        for m in _REGISTER_RE.finditer(line):
+            ctx = line[max(0, m.start() - 28): m.end() + 28].strip()
+            hits.append((lineno, m.group(0), ctx))
+    return hits
 
 
 def _strip_to_prose(text: str) -> str:
@@ -434,6 +500,20 @@ def report(paper_dir: Path, files: list[Path], gate: bool) -> int:
     else:
         print(f"cross-chapter {NGRAM_N}-grams: none recurring (good).")
 
+    # Register idioms in prose (style_guide.md §2.8) — WARNING ONLY, not gated.
+    print("-" * 78)
+    idiom_total = 0
+    for p in files:
+        hits = idiom_warnings(p)
+        if hits:
+            idiom_total += len(hits)
+            print(f"register idioms in prose — {Path(p).name} "
+                  f"(§2.8; human-confirms, formal envs excluded):")
+            for lineno, idiom, ctx in hits:
+                print(f"    {Path(p).name}:{lineno}: «{idiom}» — …{ctx}…")
+    if idiom_total == 0:
+        print("register idioms in prose: none (good).")
+
     print("-" * 78)
     if failures:
         print(f"voice_meter: {len(failures)} gateable issue(s).")
@@ -455,6 +535,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="Specific .tex files to measure (default: framing set)")
     ap.add_argument("--gate", action="store_true",
                     help="Exit nonzero on a gateable failure")
+    ap.add_argument("--idioms", action="store_true",
+                    help="Report only the §2.8 register-idiom-in-prose warnings")
     args = ap.parse_args(argv)
     paper_dir = Path(args.paper_dir)
 
@@ -474,6 +556,16 @@ def main(argv: list[str] | None = None) -> int:
     files = [f for f in files if f.exists()]
     if not files:
         print("voice_meter: no files to measure", file=sys.stderr)
+        return 0
+
+    if args.idioms:
+        total = 0
+        for p in files:
+            for lineno, idiom, ctx in idiom_warnings(p):
+                total += 1
+                print(f"{p}:{lineno}: «{idiom}» — …{ctx}…")
+        print(f"voice_meter: {total} register-idiom warning(s) in prose "
+              f"(§2.8; human-confirms).")
         return 0
 
     return report(paper_dir, files, gate=args.gate)

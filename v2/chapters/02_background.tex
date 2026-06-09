@@ -11,20 +11,19 @@
 \label{ch:background}
 
 This chapter fixes the shared vocabulary the rest of the dissertation reuses.
-It lives inside two boundaries. First, it holds only \emph{primitives}---notions
-used by more than one later chapter; each named phenomenon or method is defined
+It stays inside two boundaries. First, it holds only \emph{primitives}, the notions
+used by more than one later chapter. Each named phenomenon or method is defined
 where it is contributed, so the Label-Blindness theorem
 (\Cref{ch:label-blindness}), Domain-Sensitivity Collapse and Teacher-Guided
 Training (\Cref{ch:domain-sensitivity-collapse}), and the one-class layer-pair
 probe (\Cref{ch:hallucination-detection}) are developed in their own chapters, not
-here. Second, this chapter \emph{defines} each primitive, whereas
-\Cref{ch:literature-review} surveys how the field has used it; the handoff is one
-beat per primitive---Background defines, the literature review situates, the
-results chapters deploy. The chapter is organized accordingly: \Cref{sec:bg:ood}
-through \Cref{sec:bg:llm} fix the settings and tasks, and
-\Cref{sec:bg:infotheory,sec:bg:ib,sec:bg:geometry} introduce the two analytic
-lenses---information theory and representation geometry---in the order
-\Cref{ch:literature-review} takes them up. Citations here are confined to
+here. Second, this chapter \emph{defines} each primitive, while
+\Cref{ch:literature-review} surveys how the field has used it. Background defines,
+the literature review situates, and the results chapters deploy. The chapter follows
+that plan. \Cref{sec:bg:ood} through \Cref{sec:bg:llm} fix the settings and tasks,
+and \Cref{sec:bg:infotheory,sec:bg:ib,sec:bg:geometry} introduce the two lenses,
+information theory and representation geometry, in the order
+\Cref{ch:literature-review} takes them up. Citations here are limited to
 foundational attributions; the surrounding literature is deferred to
 \Cref{ch:literature-review}.
 
@@ -34,7 +33,7 @@ foundational attributions; the surrounding literature is deferred to
 Out-of-distribution (OOD) detection is the task of recognizing when an input falls
 outside the scope of a model's training distribution. Supervised models predict
 well within the distribution of their training data but are prone to confident,
-wrong predictions on novel inputs---a failure with serious consequences in
+wrong predictions on novel inputs. Such failures have serious consequences in
 high-stakes settings such as healthcare, autonomous driving, and security. The
 task targets a \emph{semantic shift}~\citep{yang2021generalized}: the case in which
 no in-distribution label can match the true label, $\rvy \notin \sY_{\text{in}}$,
@@ -68,8 +67,8 @@ distinctions recur. Methodologically, OOD detectors are either
 \emph{training-agnostic}, applying to an existing classifier without altering its
 training (as MSP does), or \emph{training-aware}, modifying architecture, loss, or
 augmentation to improve detection. Conceptually, OOD detection targets
-\emph{epistemic} uncertainty---the model's uncertainty from limited
-knowledge---rather than the \emph{aleatoric} uncertainty intrinsic to noisy data.
+\emph{epistemic} uncertainty, the model's uncertainty from limited knowledge,
+rather than the \emph{aleatoric} uncertainty intrinsic to noisy data.
 This task is the setting for \Cref{ch:label-blindness,ch:domain-sensitivity-collapse}.
 
 \section{Anomaly Detection}
@@ -78,13 +77,13 @@ This task is the setting for \Cref{ch:label-blindness,ch:domain-sensitivity-coll
 Anomaly detection is adjacent to OOD detection and the two are often conflated, but
 they differ in scope, training assumptions, and evaluation. Anomaly detection
 identifies individual points that deviate from the expected pattern \emph{within} a
-single distribution---rare events, noise, or fraud in the same domain as the
+single distribution: rare events, noise, or fraud in the same domain as the
 training data. OOD detection instead flags inputs from a \emph{different}
 distribution altogether. The training assumption differs accordingly: anomaly
 detection is typically a \emph{one-class} problem, with access only to normal data
 at training time and no examples of the anomalies it must later reject, whereas OOD
 detection usually operates over several supervised in-distribution classes. The
-one-class framing recurs in this dissertation---in the unlabeled detectors of
+one-class framing recurs in this dissertation, in the unlabeled detectors of
 \Cref{ch:label-blindness} and in the one-class contrastive probe of
 \Cref{ch:hallucination-detection}, which treats faithful generations as the single
 modelled class.
@@ -93,7 +92,7 @@ modelled class.
 \label{sec:bg:unlabeled}
 
 Most OOD detectors are trained on labelled in-distribution data and repurpose a
-supervised classifier's outputs---softmax confidence or logits---as the detection
+supervised classifier's outputs, softmax confidence or logits, as the detection
 signal. Not all do. We call a detector \emph{unlabeled} when its training uses only
 the inputs and never the labels.
 
@@ -106,13 +105,13 @@ labels $\{\rvy_i\}$.
 \label{def:bg:unlabeled}
 \end{definition}
 
-Unlabeled detectors typically rest on unsupervised objectives---density estimation,
-reconstruction error, or self-supervised representations---and a pretrained model
-used without fine-tuning is itself a form of unlabeled detection, since it never
-trains on the in-distribution labels. Such methods are attractive where labels are
-expensive or where detection should be decoupled from any one classification task.
-Crucially, they still solve the same problem as labelled detection---estimating
-$P(f_{\rvy}(\rvx) \notin \sY_{\text{in}})$---and the limits of that decoupling are
+Unlabeled detectors typically rest on unsupervised objectives such as density
+estimation, reconstruction error, or self-supervised representations. A pretrained
+model used without fine-tuning is itself a form of unlabeled detection, since it
+never trains on the in-distribution labels. Such methods are attractive where labels
+are expensive or where detection should be decoupled from any one classification
+task. They still solve the same problem as labelled detection, estimating
+$P(f_{\rvy}(\rvx) \notin \sY_{\text{in}})$, and the limits of that decoupling are
 the subject of \Cref{ch:label-blindness}.
 
 \section{Dataset Domain and the Single-Domain Setting}
@@ -170,8 +169,8 @@ finite vocabulary and $\mathcal{X}^{*}$ the set of finite sequences over it. The
 model factorizes the probability of a sequence $\vx = (x_1, \dots, x_T)$
 autoregressively as
 $\Pr_{\vtheta}(\vx) = \prod_{t=1}^{T} \Pr_{\vtheta}(x_t \mid x_{<t})$, with
-$x_{<t} = (x_1, \dots, x_{t-1})$, and is parameterized by a deep network---typically
-a Transformer---trained to minimize the next-token cross-entropy
+$x_{<t} = (x_1, \dots, x_{t-1})$, and is parameterized by a deep network, typically
+a Transformer, trained to minimize the next-token cross-entropy
 $\E_{\vx \sim \mathcal{D}}[-\sum_{t} \log \Pr_{\vtheta}(x_t \mid x_{<t})]$ over a
 corpus $\mathcal{D}$.
 \label{def:bg:llm}
@@ -191,10 +190,10 @@ content as fact.
 \label{def:bg:hallucination}
 \end{definition}
 
-We distinguish \emph{extrinsic} hallucination---content that contradicts an external
-knowledge base $\mathcal{W}$, the failure mode this dissertation
-targets---from \emph{intrinsic} hallucination, which violates internal consistency
-with the prompt or earlier tokens. Note that grounding is relative to $\mathcal{W}$:
+We distinguish two kinds. \emph{Extrinsic} hallucination contradicts an external
+knowledge base $\mathcal{W}$, and is the failure mode this dissertation targets.
+\emph{Intrinsic} hallucination violates internal consistency with the prompt or
+earlier tokens. Note that grounding is relative to $\mathcal{W}$:
 a factually outdated answer is wrong, not hallucinated, when $\mathcal{W}$ itself is
 stale.
 
@@ -202,14 +201,14 @@ stale.
 Detecting hallucination from a model's internals requires naming the object that
 \Cref{ch:hallucination-detection} reads. A Transformer maintains, for each token
 position, a sequence of intermediate activations $h_1, \dots, h_L$ across its $L$
-layers---the \emph{residual stream}---with each $h_\ell \in \R^{d}$ the
+layers, the \emph{residual stream}, with each $h_\ell \in \R^{d}$ the
 $d$-dimensional hidden state written by layer $\ell$. These activations are
 computed in a single forward pass and require no resampling, and they are the raw
 material an internal-state detector scores. The detector of
 \Cref{ch:hallucination-detection} learns from \emph{pairs} of such layer
-activations; the information-theoretic justification for why a pair of layers
-should share label-relevant information is built from the primitives of the next
-two sections.
+activations. The information-theoretic justification for why a pair of layers should
+share label-relevant information is built from the primitives of the next two
+sections.
 
 \section{Information Theory}
 \label{sec:bg:infotheory}
@@ -228,7 +227,7 @@ They satisfy the chain rule $H(\rvx, \rvy) = H(\rvx) + H(\rvy \mid \rvx)$.
 
 \begin{definition}[Mutual Information]
 The \emph{mutual information} $I(\rvx; \rvy)$ is the information shared between
-$\rvx$ and $\rvy$---the reduction in uncertainty about one given the other.
+$\rvx$ and $\rvy$, the reduction in uncertainty about one given the other.
 Equivalently it is the divergence of the joint from the product of marginals,
 $I(\rvx; \rvy) = D_{\mathrm{KL}}(p(\vx, \vy) \,\|\, p(\vx)p(\vy))$, where
 $D_{\mathrm{KL}}$ is the Kullback--Leibler divergence. Mutual information is
@@ -239,8 +238,8 @@ variable $\rvz$.
 \label{def:bg:mi}
 \end{definition}
 
-One consequence is load-bearing for the language-domain chapter: information cannot
-be created by processing a variable.
+One consequence matters for the language-domain chapter: information cannot be
+created by processing a variable.
 
 \begin{definition}[Data Processing Inequality]
 If three random variables form a Markov chain $\rvx \rightarrow \rvy \rightarrow \rvz$
@@ -261,10 +260,10 @@ activations, so a positive measured value certifies a positive true value
 \section{Information Bottleneck, Sufficiency, and Contrastive Estimation}
 \label{sec:bg:ib}
 
-The information-theoretic lens becomes a tool for representation learning through
-the notions of sufficiency and the information bottleneck, and becomes
-\emph{operational} through the contrastive bound that lets mutual information be
-estimated and optimised.
+The information-theoretic view becomes a tool for representation learning through
+sufficiency and the information bottleneck, and it becomes \emph{operational}
+through the contrastive bound that lets mutual information be estimated and
+optimised.
 
 \begin{definition}[Minimal Sufficient Statistic]
 A statistic $T(\rvx)$ is \emph{sufficient} for $\rvy$ if it retains all the
@@ -286,7 +285,7 @@ statistic of \Cref{def:bg:mss}.
 \label{def:bg:ib}
 \end{definition}
 
-Sufficiency is the engine of \Cref{ch:label-blindness}: when the only signal a
+Sufficiency drives the result of \Cref{ch:label-blindness}: when the only signal a
 representation retains is independent of the label-relevant features, the minimal
 sufficient statistic for the surrogate task carries nothing about the class, and
 detection built on it must fail. The same machinery is constructive in the language
@@ -309,9 +308,9 @@ form over augmented views~\citep{chen2020simclr} and its supervised specializati
 which treats all same-class examples as mutual positives~\citep{khosla2020supervised}.
 \Cref{ch:hallucination-detection} reads the bound in the contrapositive: a
 contrastive loss that \emph{descends} below $\log K$ on a held-out split is itself
-evidence that the target mutual information is positive---a feasibility argument
-whose formal version, with supervised contrast over layer-pair views, is developed
-there and proved in \Cref{app:mi-hallucination-proofs}.
+evidence that the target mutual information is positive. This is a feasibility
+argument, whose formal version, with supervised contrast over layer-pair views, is
+developed there and proved in \Cref{app:mi-hallucination-proofs}.
 
 \section{Representation Geometry}
 \label{sec:bg:geometry}
@@ -350,15 +349,14 @@ in-distribution variance would register.
 \label{def:bg:clssubspace}
 \end{definition}
 
-This geometry determines how detection scores behave. \emph{Distance-based}
-scores---nearest-neighbour distance~\citep{sun2022out} and the Mahalanobis
-score~\citep{lee2018simple}---weight directions by Euclidean coordinate differences,
+This geometry determines how detection scores behave. \emph{Distance-based} scores,
+nearest-neighbour distance~\citep{sun2022out} and the Mahalanobis
+score~\citep{lee2018simple}, weight directions by Euclidean coordinate differences,
 so when the spectrum is concentrated they are dominated by the high-variance class
-subspace and are blind to the low-variance directions $z_\perp$ that may carry the
-shift. \emph{Logit-based} scores---maximum softmax probability
-(\Cref{method:bg:msp}) and the energy score~\citep{liu2020energy}---read the same
-geometry through the classifier head. The extreme of this concentration is a named
-geometry.
+subspace and blind to the low-variance directions $z_\perp$ that may carry the
+shift. \emph{Logit-based} scores, maximum softmax probability (\Cref{method:bg:msp})
+and the energy score~\citep{liu2020energy}, read the same geometry through the
+classifier head. The extreme of this concentration is a named geometry.
 
 \begin{definition}[Neural Collapse]
 \emph{Neural collapse}~\citep{Papyan2020nc} is the terminal-phase geometry in which

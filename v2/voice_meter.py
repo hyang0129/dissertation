@@ -82,10 +82,16 @@ PARALLEL_PARAGRAPH_RUN_CAP = 2         # consecutive \paragraph w/ same opener
 NGRAM_N = 6                            # cross-chapter repetition window
 MIN_WORDS_FOR_STATS = 60              # skip tiny fragments
 
-# The ONE sanctioned cross-chapter bookend (style_guide.md §2.3 exception).
-# Normalized (lowercased, punctuation-stripped) so it matches the n-gram form.
+# Cross-chapter phrases that recur BY DESIGN and must not be flagged. Normalized
+# (lowercased, punctuation-stripped) so they match the n-gram form. A 6-gram is
+# exempted when it is a substring of any entry here.
+#   1. the thesis bookend (style_guide.md §2.3 exception);
+#   2. the Ch.6 parity verb, which the framing locks fix verbatim
+#      ("matches-or-outperforms, in the mean" / "strongest engineered probe",
+#      never "beats"/"SOTA") — see 00_dissertation_outline.md.
 SANCTIONED_BOOKENDS = [
     "when the representation keeps it a detector can read it out",
+    "matches-or-outperforms in the mean the strongest engineered probe",
 ]
 
 # ---------------------------------------------------------------------------

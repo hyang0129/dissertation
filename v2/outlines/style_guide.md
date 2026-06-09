@@ -281,7 +281,30 @@ For each framing piece (abstract, Ch.1/2/3/7), section by section:
 5. **Gate before a human reads it.** `make voice` (or `python voice_meter.py --gate`)
    must show the section's tricolon rate under the cap and add **no** new
    cross-chapter 6-gram. Regenerate until it passes.
-6. **One human read-aloud pass** for local stake and unevenness (§6.3). This is the
+6. **The meter-guided 2nd pass (do this for EVERY chapter, not just the pilot).**
+   The bulk regenerate of step 3 will not clear all the recited n-grams in one shot
+   — splicing and paraphrase shift the overlaps around. So after it, run the meter
+   against the *other* framing files and work the residual list it prints. This pass
+   is **targeted edits, not a re-regenerate**: each remaining phrase is one or two
+   words from clearing. **Triage every residual into one of three buckets:**
+   * **Genuine recitation** → fix in place. A reused sentence, appositive, scope
+     statement ("…shows when detection is possible and that principled methods reach
+     that limit"), or method description ("we build a one-class contrastive probe
+     over cross-layer activation pairs"). Change the framing, not the meaning; note
+     that the matching span often sits *before* your first edit, so re-measure and
+     repeat until it clears.
+   * **Defined technical term** → leave it. The theorem vocabulary ("independent of
+     the label-relevant features", "minimal sufficient statistic") is *supposed* to
+     recur (§1). Do not contort prose to dodge a defined term.
+   * **Framing-lock-mandated** → whitelist it, do not rewrite. Phrases the locks fix
+     verbatim (the Ch.6 parity verb "matches-or-outperforms, in the mean … strongest
+     engineered probe") recur by design. Add them to `SANCTIONED_BOOKENDS` in
+     `voice_meter.py`, exactly as the thesis bookend already is, so the meter stops
+     flagging them. Two are whitelisted as of 2026-06-09.
+   Iterate steps 5–6 until the only cross-chapter repeats left are the second and
+   third buckets. (Ch.7 pilot, 2026-06-09: tricolons 4.88→1.58/1k; cross-chapter
+   repeats 23→4, the 4 being windows of the one term "label-relevant features".)
+7. **One human read-aloud pass** for local stake and unevenness (§6.3). This is the
    only step that is not automatable.
 
 ### 6.3 The irreducible residual (do not try to automate this)

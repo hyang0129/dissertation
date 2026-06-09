@@ -38,7 +38,7 @@ mutual information, originate with \citet{shannon1948mathematical} and are
 developed in the standard reference of \citet{cover1999elements}; Fano's
 inequality~\citep{robert1952fano} ties them directly to the achievable error of a
 predictor, and the infomax principle~\citep{linsker1988self} first proposed
-maximising transmitted information as an objective for learned representations.
+maximizing transmitted information as an objective for learned representations.
 This section reviews how these tools have been \emph{used} to understand learning;
 \Cref{ch:background} owns their definitions and is assumed here.
 
@@ -63,15 +63,15 @@ bottleneck to the multi-view setting that underlies contrastive learning.
 Because mutual information is intractable for high-dimensional learned features, a
 literature on variational bounds underpins its use as a training
 signal~\citep{poole2019variational}. MINE~\citep{belghazi2018mutual} estimates it
-with a neural critic; Deep InfoMax~\citep{hjelm2019learning} maximises a bound
+with a neural critic; Deep InfoMax~\citep{hjelm2019learning} maximizes a bound
 between local and global features; and the InfoNCE
 objective~\citep{oord2018representation} provides the lower bound that the
-contrastive methods of \Cref{sec:lit:representation} optimise. This dissertation
+contrastive methods of \Cref{sec:lit:representation} optimize. This dissertation
 relies on that connection directly, since a trainable InfoNCE loss that descends
-below its floor is itself evidence that the target mutual information is positive.
+below its floor demonstrates that the target mutual information is positive.
 Complementary to estimation, an information-theoretic account of
-generalisation~\citep{xu2017information}, building on classical PAC
-bounds~\citep{mcallester1999pac}, bounds generalisation error by the information a
+generalization~\citep{xu2017information}, building on classical PAC
+bounds~\citep{mcallester1999pac}, bounds generalization error by the information a
 learned hypothesis retains about its training sample.
 
 Information theory gives the formal language for what a representation preserves
@@ -95,18 +95,18 @@ and MoCo~\citep{he2020momentum}, and to non-contrastive and masked alternatives
 such as DINO~\citep{Caron2021dino}, masked autoencoding~\citep{he2022masked}, and
 SimSiam~\citep{chen2021exploring}. The supervised contrastive
 loss~\citep{khosla2020supervised} carries the same view-alignment machinery into
-the labelled setting, and the paradigm transfers to language through sentence
+the labeled setting, and the paradigm transfers to language through sentence
 embeddings~\citep{gao2021simcse}; large-scale self-supervised vision
 features~\citep{oquab2023dinov2} now serve as general-purpose backbones. This
 lineage descends from a long history of unsupervised representation
 learning, principal and independent component analysis and factor
 models~\citep{pearson1901liii,hyvarinen2000independent,tipping1999probabilistic,bartholomew1987latent}
 and autoencoders~\citep{hinton2006reducing,vincent2008extracting,baldi2012autoencoders}. We
-keep it here only as context, since generative latent-variable modelling is
+keep it here only as context, since generative latent-variable modeling is
 orthogonal to this dissertation's thesis.
 
 \paragraph{The geometry of learned features.}
-A second body of work characterises the \emph{shape} of learned representations.
+A second body of work characterizes the \emph{shape} of learned representations.
 Neural collapse~\citep{Papyan2020nc} identifies the equiangular-tight-frame
 geometry to which classifier features converge in the terminal phase of training,
 shown to be the global optimum of the cross-entropy
@@ -159,7 +159,7 @@ The dominant paradigm attaches a scoring function to a trained classifier. The
 logit- and softmax-family scorers begin with maximum softmax
 probability~\citep{hendrycks2016baseline} and extend through input
 preprocessing~\citep{liang2017enhancing}, the energy score~\citep{liu2020energy},
-and the generalised-entropy score~\citep{liu2023gen}; activation
+and the generalized-entropy score~\citep{liu2023gen}; activation
 shaping~\citep{sun2021react,xuscaling} and logit
 sparsification~\citep{Sun2022dice} refine them, and large-label-space variants
 extend the family to many classes~\citep{huang2021mos}. The distance- or
@@ -174,7 +174,7 @@ when the training data is single-domain, a failure of the representation, not of
 the scorer.
 
 \paragraph{Benchmarks and problem framing.}
-The task has been consolidated under the generalised-OOD
+The task has been consolidated under the generalized-OOD
 taxonomy~\citep{yang2021generalized} and the OpenOOD
 benchmarks~\citep{yang2022openood,zhang2023openood}, which standardise the near-
 versus far-OOD distinction; the broader open-set framing predates deep
@@ -183,7 +183,7 @@ learning~\citep{drummond2006open}. \Cref{ch:label-blindness} adds the
 
 \paragraph{Unlabeled, self-supervised, and zero-shot detection.}
 A growing literature detects OOD inputs without OOD labels, the setting
-\Cref{ch:label-blindness} analyses. Self-supervised auxiliary tasks improve
+\Cref{ch:label-blindness} analyzes. Self-supervised auxiliary tasks improve
 robustness and OOD sensitivity~\citep{hendrycks2019using,mohseni2020self},
 contrasting shifted instances sharpens the score~\citep{tack2020csi}, and
 likelihood-based detectors operate fully unsupervised~\citep{xiao2020likelihood};
@@ -204,7 +204,7 @@ geometric account and the one \Cref{ch:domain-sensitivity-collapse} positions
 against most directly. Naive fine-tuning of pretrained features distorts the
 geometry that supplies strong OOD baselines~\citep{Kumar2022lp}, contrastive
 training can partially preserve it~\citep{Winkens2020contrastive}, and the problem
-is acute in specialised single domains such as medical
+is acute in specialized single domains such as medical
 imaging~\citep{Berger2021medood,zhou2022rethinking}. Orthogonal to the scorer
 question, ensemble and Bayesian
 methods~\citep{lakshminarayanan2017simple,daxberger2019bayesian,pmlr-v235-xu24ae}
@@ -236,7 +236,7 @@ checkers~\citep{peng2023check,chern2023factool}. These supply the operational
 labels detectors are scored against.
 
 \paragraph{Sampling- and consistency-based detection.}
-One family detects hallucination from output behaviour by resampling the model.
+One family detects hallucination from output behavior by resampling the model.
 SelfCheckGPT~\citep{manakul2023selfcheckgpt} scores the consistency of repeated
 generations; semantic entropy~\citep{farquhar2024detecting} clusters samples by
 meaning before measuring uncertainty, and its probe form~\citep{kossen2024semantic}

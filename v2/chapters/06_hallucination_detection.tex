@@ -121,7 +121,7 @@ single forward pass and learn a head over it. The single-layer linear probe
 descends from \citet{alain2017understanding}, who froze a network and trained a
 linear classifier on each layer; \citet{belinkov2019analysis} frame this lineage
 as a diagnostic methodology that asks \emph{what} a layer encodes rather than how
-best to extract a behaviour. SAPLMA~\citep{azaria2023internal} replaces the linear
+best to extract a behavior. SAPLMA~\citep{azaria2023internal} replaces the linear
 read-out with a fixed multilayer-perceptron head on a single layer's hidden state,
 and LLMsKnow~\citep{orgad2024llmsknow} reads internal states to anticipate the
 model's own errors. The strongest learned competitor in this family is
@@ -315,7 +315,7 @@ contrastive loss bounds $I(z_a; z_b)$ for the compressed embeddings
 $z = f_\theta(h)$, and the data-processing inequality (\Cref{lem:hd:dpi}) gives
 $I(z_a; z_b) \le I(h_{\ell_a}; h_{\ell_b})$, so any positive mutual information
 observed at the embedding level is direct evidence of positive mutual information
-at the activation level, the inequality runs in our favour. By
+at the activation level, the inequality runs in our favor. By
 \Cref{lem:hd:infonce}, if $I(\mathrm{view}_a; \mathrm{view}_b) = 0$ then no
 InfoNCE variant can descend below $\log K$, the value attained by uniform
 negatives. The fact that the training loss drops below that floor and the
@@ -401,7 +401,7 @@ symmetric scheme's gradient includes a term pulling hallucinated embeddings
 toward one another, and when the hallucinated class lacks coherent latent
 structure that term is noise that actively fights the truthful-class gradient
 (\Cref{cor:hd:symcon}). The asymmetry is therefore a structural choice, one-class
-representation learning with the labelled class as the inlier anchor, and not an
+representation learning with the labeled class as the inlier anchor, and not an
 arbitrary implementation preference. Structurally, the loss is a
 representation-learning form of one-class anomaly detection on truthful samples,
 with cross-layer view-consistency supplying a second source of supervision for
@@ -455,7 +455,7 @@ We evaluate on two $8$B-scale open-weights instruction-tuned models drawn from d
 The detectors are evaluated on five open-domain, short-answer question-answering benchmarks. HotpotQA~\citep{yang2018hotpotqa} supplies multi-hop factoid questions over Wikipedia passages, used in the closed-book distractor setting. Natural Questions~\citep{kwiatkowski2019natural} contributes open-domain questions mined from real search queries, restricted to short-answer items. PopQA~\citep{mallen2023popqa} is an entity-popularity-stratified factoid set that emphasises long-tail entities, where a retrieval-free model is more prone to fabricate. SciQ~\citep{welbl2017sciq} provides crowd-authored science multiple-choice questions with the correct option as the gold target. SearchQA~\citep{dunn2017searchqa} contributes Jeopardy!-style questions, which we take strictly closed-book with the accompanying search snippets discarded. Consistent with the operational labelling of \Cref{sec:hd:method}, a generation is treated as hallucinated when the gold-reference evaluator marks it incorrect, applied uniformly across all five benchmarks. We do not tabulate per-dataset sizes or hallucination rates here.
 
 \paragraph{Baselines.}
-We compare against twelve methods spanning three families, each consuming a different signal and grouped here by the compute it draws. The first family is output-space scalar scorers read from the same greedy generation pass: sequence log-probability (LogProb), token entropy, and the prompt-based P(true) self-evaluation~\citep{kadavath2022language}. The second family is activation-space probes that read a single forward pass: a single-layer linear probe~\citep{alain2017understanding}, the SAPLMA multilayer-perceptron head~\citep{azaria2023internal}, the layer-and-token-sweeping LLMsKnow probe~\citep{orgad2024llmsknow}, and ACT-ViT~\citep{barshalom2025actvit}, the strongest learned competitor and the one architecturally closest to the detector of \Cref{subsec:hd:detector}. The third family is sampling-based: length-normalised and semantic-entropy variants~\citep{farquhar2024detecting,kossen2024semantic} together with SelfCheckGPT in its NLI and $n$-gram forms~\citep{manakul2023selfcheckgpt}. The compute axis separates the families cleanly: the scalar and activation-probe methods, like Contrastive+Recon, read one forward pass, whereas the sampling methods resample $M$ several times ($K = 10$). This partition is the structural prerequisite for the compute-matched comparison of \Cref{sec:hd:compute}.
+We compare against twelve methods spanning three families, each consuming a different signal and grouped here by the compute it draws. The first family is output-space scalar scorers read from the same greedy generation pass: sequence log-probability (LogProb), token entropy, and the prompt-based P(true) self-evaluation~\citep{kadavath2022language}. The second family is activation-space probes that read a single forward pass: a single-layer linear probe~\citep{alain2017understanding}, the SAPLMA multilayer-perceptron head~\citep{azaria2023internal}, the layer-and-token-sweeping LLMsKnow probe~\citep{orgad2024llmsknow}, and ACT-ViT~\citep{barshalom2025actvit}, the strongest learned competitor and the one architecturally closest to the detector of \Cref{subsec:hd:detector}. The third family is sampling-based: length-normalized and semantic-entropy variants~\citep{farquhar2024detecting,kossen2024semantic} together with SelfCheckGPT in its NLI and $n$-gram forms~\citep{manakul2023selfcheckgpt}. The compute axis separates the families cleanly: the scalar and activation-probe methods, like Contrastive+Recon, read one forward pass, whereas the sampling methods resample $M$ several times ($K = 10$). This partition is the structural prerequisite for the compute-matched comparison of \Cref{sec:hd:compute}.
 
 \paragraph{Training.}
 Each trained probe is fit per $(\text{model}, \text{dataset})$ cell on that dataset's training split only, over $5$ random seeds, with mean $\pm$ standard deviation reported across them; no probe is trained on more than one dataset, and the held-out test split is fixed across methods and seeds within a cell. Cross-dataset training is never used here, transfer to unseen datasets is evaluated separately in \Cref{sec:hd:transfer} by applying a source-trained checkpoint to a target test split with no retraining. We give no hyperparameters inline and instead forward the reader to the public implementation for the full training recipe.
@@ -580,7 +580,7 @@ natural variant; that it did is the chapter's clearest instance of theory
 predicting experiment rather than rationalising it. The direction of the one-class
 anchor, by contrast, is a secondary choice: anchoring on the hallucinated rather
 than the truthful side performs comparably, so the load-bearing decision is that
-\emph{one} class is left as the unlabelled outlier, not which one.
+\emph{one} class is left as the unlabeled outlier, not which one.
 
 \paragraph{Signal attribution across the two channels.}
 The two supervision channels invite a $2\times 2$ attribution: present or absent
@@ -621,7 +621,7 @@ method.
 The headline grid of \Cref{sec:hd:results} trains and evaluates each probe within a single dataset. That measures how well the learned hallucination axis fits one source, not whether it is the same axis across sources. This section asks the transfer question directly: when a probe is moved to an unseen target dataset with no retraining, does the axis it learned still separate hallucinations, or was it specific to the source's surface form? The question matters for the chapter's thesis, because an information-theoretic detector that targets cross-layer coherence (\Cref{subsec:hd:detector}) ought to ride on a property of the residual stream rather than on the question format, and so ought to transfer at least as far as a probe engineered on source-specific features.
 
 \paragraph{Setup.}
-Each probe is trained on exactly one of the five source datasets and then evaluated, with no retraining and no target-side adaptation, on the other four datasets as targets. We report, for each (model, method, source) triple, the AUROC averaged over those $4$ held-out targets, each target cell itself a mean over $5$ seeds. This is a zero-shot transfer setup in the probe-on-activations sense: no labelled target data, no unsupervised target adaptation, and no target-side recalibration is applied. We compare the four learned activation-space methods of \Cref{sec:hd:setup}, ACT-ViT~\citep{barshalom2025actvit}, the LLMsKnow probe~\citep{orgad2024llmsknow}, SAPLMA~\citep{azaria2023internal}, and Contrastive+Recon, across both models; the output-space scalar and sampling baselines are excluded because they train no transferable probe.
+Each probe is trained on exactly one of the five source datasets and then evaluated, with no retraining and no target-side adaptation, on the other four datasets as targets. We report, for each (model, method, source) triple, the AUROC averaged over those $4$ held-out targets, each target cell itself a mean over $5$ seeds. This is a zero-shot transfer setup in the probe-on-activations sense: no labeled target data, no unsupervised target adaptation, and no target-side recalibration is applied. We compare the four learned activation-space methods of \Cref{sec:hd:setup}, ACT-ViT~\citep{barshalom2025actvit}, the LLMsKnow probe~\citep{orgad2024llmsknow}, SAPLMA~\citep{azaria2023internal}, and Contrastive+Recon, across both models; the output-space scalar and sampling baselines are excluded because they train no transferable probe.
 
 \begin{table}[t]
   \centering
@@ -656,7 +656,7 @@ The per-source view corroborates in aggregate. Averaging over the $5$ in-domain 
 \begin{figure}[t]
   \centering
   \includegraphics[width=\textwidth]{generated/figures/hd_transfer.pdf}
-  \caption[Cross-dataset transfer of the detection axis]{In-domain vs.\ out-of-domain (cross-dataset transfer) detection AUROC per detector, for Llama-3.1-8B (left) and Qwen3-8B (right). Out-of-domain trains on one source dataset and evaluates on the four held-out targets, averaged; error bars are seed-to-seed std. The learned axis transfers: out-of-domain AUROC stays well above the chance line (dashed, $0.5$) for the activation-space detectors. Under transfer our Contrastive+Recon detector is statistically tied with ACT-ViT (out-of-domain deltas $+0.0005$ for Llama and $+0.0015$ for Qwen3-8B, both inside the seed-std band, hence labelled ``tie''); we claim parity under transfer, not a transfer win.}
+  \caption[Cross-dataset transfer of the detection axis]{In-domain vs.\ out-of-domain (cross-dataset transfer) detection AUROC per detector, for Llama-3.1-8B (left) and Qwen3-8B (right). Out-of-domain trains on one source dataset and evaluates on the four held-out targets, averaged; error bars are seed-to-seed std. The learned axis transfers: out-of-domain AUROC stays well above the chance line (dashed, $0.5$) for the activation-space detectors. Under transfer our Contrastive+Recon detector is statistically tied with ACT-ViT (out-of-domain deltas $+0.0005$ for Llama and $+0.0015$ for Qwen3-8B, both inside the seed-std band, hence labeled ``tie''); we claim parity under transfer, not a transfer win.}
   \label{fig:hd:transfer}
 \end{figure}
 

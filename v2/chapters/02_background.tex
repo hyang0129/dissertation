@@ -91,7 +91,7 @@ modelled class.
 \section{Unlabeled Out-of-Distribution Detection}
 \label{sec:bg:unlabeled}
 
-Most OOD detectors are trained on labelled in-distribution data and repurpose a
+Most OOD detectors are trained on labeled in-distribution data and repurpose a
 supervised classifier's outputs, softmax confidence or logits, as the detection
 signal. Not all do. We call a detector \emph{unlabeled} when its training uses only
 the inputs and never the labels.
@@ -110,7 +110,7 @@ estimation, reconstruction error, or self-supervised representations. A pretrain
 model used without fine-tuning is itself a form of unlabeled detection, since it
 never trains on the in-distribution labels. Such methods are attractive where labels
 are expensive or where detection should be decoupled from any one classification
-task. They still solve the same problem as labelled detection, estimating
+task. They still solve the same problem as labeled detection, estimating
 $P(f_{\rvy}(\rvx) \notin \sY_{\text{in}})$, and the limits of that decoupling are
 the subject of \Cref{ch:label-blindness}.
 
@@ -263,7 +263,7 @@ activations, so a positive measured value certifies a positive true value
 The information-theoretic view becomes a tool for representation learning through
 sufficiency and the information bottleneck, and it becomes \emph{operational}
 through the contrastive bound that lets mutual information be estimated and
-optimised.
+optimized.
 
 \begin{definition}[Minimal Sufficient Statistic]
 A statistic $T(\rvx)$ is \emph{sufficient} for $\rvy$ if it retains all the
@@ -369,7 +369,7 @@ out-of-distribution detection.
 \end{definition}
 
 Neural collapse is the asymptotic limit; \Cref{ch:domain-sensitivity-collapse}
-characterises the same anisotropy at any stage of training, states when it makes
+characterizes the same anisotropy at any stage of training, states when it makes
 distance-based detection fail, and gives a training-time remedy, with the formal
 results in \Cref{app:dsc-proofs}. These geometric primitives, together with the
 information-theoretic ones of \Cref{sec:bg:infotheory,sec:bg:ib}, are the two lenses

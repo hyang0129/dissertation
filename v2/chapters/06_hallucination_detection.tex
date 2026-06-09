@@ -25,7 +25,7 @@ detection and \Cref{ch:domain-sensitivity-collapse} \emph{restored} a collapsed
 representation, here we \emph{detect} the shift directly from the representation
 the model leaves behind, and we do so under the information-theoretic lens.
 
-The dominant practice in this literature is to engineer a probe---to search over
+The dominant practice in this literature is to engineer a probe, to search over
 architectures, layers, and pooling schemes for whatever reads the activation
 tensor best. We take the opposite route and ask whether a detector can be
 \emph{derived} from a first principle. The principle is information-theoretic.
@@ -39,7 +39,7 @@ truthful from hallucinated generations. What makes the argument non-vacuous is n
 a further theorem but the simplest possible empirical fact: the loss is trainable.
 Because an InfoNCE objective cannot descend when the underlying mutual information
 is zero, the descent of our loss \emph{is} the empirical content of the
-feasibility claim---the existence of the learned probe is the proof that the
+feasibility claim, the existence of the learned probe is the proof that the
 signal is there to be read.
 
 The detector this yields, which we call \emph{Contrastive+Recon}, is a one-class
@@ -48,7 +48,7 @@ together with an auxiliary logprob-reconstruction objective and read at inferenc
 by a simple distance-to-truthful-bank scorer (\Cref{sec:hd:method}). Evaluated
 across two open-weights models and five short-answer benchmarks, it
 matches-or-outperforms, in the mean, the strongest engineered probe in the
-literature, ACT-ViT---winning some cells cleanly, losing on Natural Questions, and
+literature, ACT-ViT, winning some cells cleanly, losing on Natural Questions, and
 tying the rest within the seed-to-seed noise band (\Cref{sec:hd:results}). We do
 not present this parity as a leaderboard result, and the chapter does not claim to
 beat the state of the art. Parity is instead the evidence we want: a detector
@@ -56,8 +56,8 @@ built from a first principle, with no architecture search, lands in the same
 performance band as one engineered against the benchmark, which is what one would
 expect if the principle is the right account of where the signal lives and not
 what one would expect if it were wrong. The framework also makes a falsifiable
-prediction---that supervising both classes symmetrically should fail when the
-hallucinated class has no coherent structure---and the prediction is confirmed by
+prediction, that supervising both classes symmetrically should fail when the
+hallucinated class has no coherent structure, and the prediction is confirmed by
 a sizeable, reproducible drop in detection performance (\Cref{sec:hd:ablations}).
 A self-validating method is the more coherent fit for the dissertation's spine
 than a benchmark-topping one would be.
@@ -78,8 +78,8 @@ The contributions of this chapter are therefore:
   \item An empirical evaluation establishing \emph{parity} with the strongest
   engineered probe across two models and five datasets, reported honestly
   including the Natural Questions shortfall (\Cref{sec:hd:results}), together with
-  a \emph{confirmed theoretical prediction}---the failure of symmetric supervision
-  (\Cref{sec:hd:ablations})---and evidence that the learned axis transfers across
+  a \emph{confirmed theoretical prediction}, the failure of symmetric supervision
+  (\Cref{sec:hd:ablations}), and evidence that the learned axis transfers across
   datasets (\Cref{sec:hd:transfer}).
 \end{itemize}
 
@@ -94,8 +94,8 @@ its limitations (\Cref{sec:hd:limitations}).
 \section{Related Work}
 \label{sec:hd:related}
 
-The broad landscape of hallucination---its definitions, its taxonomies, and the
-full evaluation apparatus---is surveyed in \Cref{ch:literature-review}, and the
+The broad landscape of hallucination, its definitions, its taxonomies, and the
+full evaluation apparatus, is surveyed in \Cref{ch:literature-review}, and the
 information-theoretic and contrastive primitives this chapter rests on (mutual
 information, the InfoNCE bound, and supervised contrast) are introduced in
 \Cref{ch:background}. Rather than re-survey that ground, this section positions
@@ -107,7 +107,7 @@ scalar, a single forward pass of activations, or several sampled generations.
 \paragraph{Output-space scalar detectors.}
 The cheapest signals discard the model's internal state entirely and score a
 generation from its output distribution alone. \citet{kadavath2022language}
-establish that language models are partially calibrated---token log-probability,
+establish that language models are partially calibrated, token log-probability,
 predictive entropy over the next-token distribution, and an explicit
 self-evaluation $P(\mathrm{true})$ each carry usable signal about whether a
 generation is correct. We treat these as a legitimate floor rather than a
@@ -129,8 +129,8 @@ ACT-ViT~\citep{barshalom2025actvit}, which treats the full layer-by-token-by-hid
 activation tensor as an image and runs a supervised vision-transformer classifier
 over it. ACT-ViT consumes the same multi-layer residual-stream signal we do, so
 the comparison in \Cref{sec:hd:results} is one of \emph{how} the multi-layer
-structure is exploited---a supervised classifier over a pooled tensor against the
-contrastive layer-pair construction of \Cref{sec:hd:method}---not of access. Two
+structure is exploited, a supervised classifier over a pooled tensor against the
+contrastive layer-pair construction of \Cref{sec:hd:method}, not of access. Two
 contemporaneous internal-state probes, ICR Probe~\citep{zhang2025icr}, which
 summarises each layer with a divergence scalar and runs a multilayer perceptron
 over the concatenation, and CLAP~\citep{suresh2025clap}, which applies cross-layer
@@ -141,7 +141,7 @@ grounded causally: \citet{li2023iti} show that shifting activations along
 truth-correlated directions changes output truthfulness, \citet{marks2024geometry}
 that true and false statements separate near-linearly in late layers, and
 \citet{belinkov2019analysis} more broadly that intermediate layers carry
-recoverable structure---evidence that motivates reading from the mid-to-late band
+recoverable structure, evidence that motivates reading from the mid-to-late band
 of \Cref{sec:hd:setup}.
 
 \paragraph{Sampling-based detectors.}
@@ -166,7 +166,7 @@ language-model form CoDIR~\citep{sun2020codir} contrast the \emph{same} layer
 across a teacher and a student network, while CDS~\citep{zhang2022cds} applies
 InfoNCE to augmented views \emph{within} a single layer. Our construction is
 distinct from both. The positive views are different \emph{layers} of one
-un-augmented forward pass through a single frozen language model---neither a
+un-augmented forward pass through a single frozen language model, neither a
 cross-network pairing at matched depth nor a within-layer augmentation. To our
 knowledge, no prior work uses layer-pair views of a frozen language model as a
 one-class contrastive signal; this is the load-bearing novelty, and it is the view
@@ -183,8 +183,8 @@ detector's reaching the same performance band as the strongest learned probe is
 itself evidence the principle is sound. The argument is deliberately modest in
 what it guarantees. It does not promise that a contrastive probe beats every
 alternative; it establishes that a contrastive objective on cross-layer views of
-a frozen language model is \emph{well-posed}---that the signal it tries to extract
-provably exists---and then lets the trainability of the resulting loss stand as
+a frozen language model is \emph{well-posed}, that the signal it tries to extract
+provably exists, and then lets the trainability of the resulting loss stand as
 the empirical proof that the construction is non-vacuous. We first fix the
 detection task and notation (\Cref{subsec:hd:setup}), then give the feasibility
 argument grounded in mutual information (\Cref{subsec:hd:argument}), and finally
@@ -207,7 +207,7 @@ it in \Cref{sec:hd:limitations}.
 
 The access regime is read-only: the detector sees $M$'s intermediate
 residual-stream activations from the \emph{same} forward pass that generated
-$y$. There is no retrieval, no external verifier, and no resampling---those
+$y$. There is no retrieval, no external verifier, and no resampling, those
 define the comparison classes of \Cref{sec:hd:setup}. Write
 $h_\ell(x,y) \in \mathbb{R}^{T_y \times d}$ for the full response-token
 hidden-state sequence at layer $\ell$ of $M$'s residual stream while reading
@@ -217,7 +217,7 @@ stream band $[\ell_{\mathrm{lo}}, \ell_{\mathrm{hi}}]$, motivated below by the
 evidence that truth-relevant structure concentrates there~\citep{li2023iti,marks2024geometry}.
 Two facts about $h_\ell$ are load-bearing. First, $h_\ell$ is \emph{deterministic}
 given $(x,y)$: the forward pass is a fixed function of its inputs. Second,
-$h_\ell$ is a \emph{sequence over response tokens}, not a single vector---the
+$h_\ell$ is a \emph{sequence over response tokens}, not a single vector, the
 method consumes the entire per-token activation trajectory $t = 1,\ldots,T_y$ at
 each layer, not the last-token activation alone. The label $y_{\mathrm{label}}$,
 by contrast, may carry evaluator noise, a point we carry forward to
@@ -250,8 +250,8 @@ connections explicitly carrying earlier-layer information forward. The
 data-processing chain of \Cref{lem:hd:dpi} then gives
 $I(h_{\ell_a}; h_{\ell_b}) > 0$ for any input distribution that varies
 non-trivially across $h_{\ell_a}$. The mutual information here is between
-\emph{sequence-valued} objects---full per-token activation tensors at two
-layers---which makes the architectural argument stronger, not weaker: there are
+\emph{sequence-valued} objects, full per-token activation tensors at two
+layers, which makes the architectural argument stronger, not weaker: there are
 more shared channels, not fewer. A sharper form is available. Under the same
 downward-determinism assumption, \Cref{cor:hd:coinfo} collapses the three-way
 interaction information to
@@ -273,9 +273,9 @@ information between two views. We run its supervised
 specialization~\citep{khosla2020supervised} with one critical asymmetry: the
 hallucinated class is excluded from mutual-positive grouping (the
 \texttt{ignore\_label} scheme detailed in \Cref{subsec:hd:detector}). Under this
-asymmetry the optimized bound becomes \emph{one-sided}---a bound on the mutual
+asymmetry the optimized bound becomes \emph{one-sided}, a bound on the mutual
 information between the learned features and the truthful class
-($y_{\mathrm{label}} = 0$)---because the loss pulls truthful-class features into a
+($y_{\mathrm{label}} = 0$), because the loss pulls truthful-class features into a
 coherent cluster while hallucinated-class features are required only to be
 view-consistent with themselves. We make this precise in
 \Cref{prop:hd:supcon-mi}; the alignment-uniformity decomposition
@@ -287,8 +287,8 @@ Let $Z = f_\theta(h)$ be the learned feature and consider the supervised
 contrastive objective under the asymmetric \texttt{ignore\_label} scheme of
 \Cref{subsec:hd:detector}: truthful anchors take other truthful samples and their
 own other-layer views as positives, while hallucinated anchors take only their
-own other-layer views as positives and treat all other samples---including other
-hallucinated samples---as negatives. Then the optimized objective lower-bounds
+own other-layer views as positives and treat all other samples, including other
+hallucinated samples, as negatives. Then the optimized objective lower-bounds
 $I\bigl(Z; \mathbb{1}[y_{\mathrm{label}} = 0]\bigr)$ together with an
 instance-level view-consistency term, and contributes \emph{no} bound on
 $I\bigl(Z; \mathbb{1}[y_{\mathrm{label}} = 1]\bigr)$. The bound is one-sided: it
@@ -298,8 +298,8 @@ constrains the truthful class only. The proof is given in
 
 \paragraph{Claim 3: the supervised objective selects the label-relevant slice.}
 Claim~1 establishes that the joint $(h_{\ell_a}, h_{\ell_b})$ carries shared
-information; most of it---the prompt's surface form, the topic, the
-token-position structure---is irrelevant to whether $y$ is hallucinated. The
+information; most of it, the prompt's surface form, the topic, the
+token-position structure, is irrelevant to whether $y$ is hallucinated. The
 supervised contrastive objective of Claim~2 selects the label-relevant slice of
 that shared information by making the truthful-class views collapse to a coherent
 cluster while leaving hallucinated views to repel everything. This is the
@@ -315,7 +315,7 @@ contrastive loss bounds $I(z_a; z_b)$ for the compressed embeddings
 $z = f_\theta(h)$, and the data-processing inequality (\Cref{lem:hd:dpi}) gives
 $I(z_a; z_b) \le I(h_{\ell_a}; h_{\ell_b})$, so any positive mutual information
 observed at the embedding level is direct evidence of positive mutual information
-at the activation level---the inequality runs in our favour. By
+at the activation level, the inequality runs in our favour. By
 \Cref{lem:hd:infonce}, if $I(\mathrm{view}_a; \mathrm{view}_b) = 0$ then no
 InfoNCE variant can descend below $\log K$, the value attained by uniform
 negatives. The fact that the training loss drops below that floor and the
@@ -327,7 +327,7 @@ empirical content of the feasibility argument, not merely consistent with it.
 \paragraph{What the argument does not claim.}
 Three honest negatives bound the argument's reach, and one positive prediction
 sharpens it. It does not claim the contrastive subspace beats every other
-extractor---that is the empirical question \Cref{sec:hd:results} answers. It does
+extractor, that is the empirical question \Cref{sec:hd:results} answers. It does
 not claim cross-layer views are uniquely good relative to, say, same-layer
 dropout views or augmented-input views; the layer-pair sensitivity sweep of
 \Cref{sec:hd:ablations} is what speaks to which pairs carry the signal, and the
@@ -340,7 +340,7 @@ when the hallucinated class lacks coherent latent structure, injects gradient
 noise negatively correlated with the truthful-class signal. The symmetric-scheme
 ablation of \Cref{sec:hd:ablations} confirms this, with an AUROC drop of roughly
 ten points. The theory makes a falsifiable prediction, and the ablation confirms
-it---the strongest empirical-of-theory moment in the chapter.
+it, the strongest empirical-of-theory moment in the chapter.
 
 \subsection{The Detector: Supervised Contrast over Layer Pairs with Logprob Reconstruction}
 \label{subsec:hd:detector}
@@ -369,7 +369,7 @@ transformer-encoder blocks that halve the hidden width at each step
 ($4096 \to 2048 \to 1024 \to 512$); a mean-pool over the response-token
 dimension and a linear projection yield $z \in \mathbb{R}^{512}$ per generation
 and layer. One structural fact matters for the argument: the compressor is
-\emph{shared} across layers---one $f_\theta$, not per-layer heads---so the layer
+\emph{shared} across layers, one $f_\theta$, not per-layer heads, so the layer
 pair is the only source of view asymmetry. The full architectural specification
 (block count, dimension schedule, dropout) is deferred to the public
 implementation. We note in advance of \Cref{sec:hd:results} that at matched
@@ -392,7 +392,7 @@ one deliberate asymmetry. For a truthful anchor ($y_{\mathrm{label}} = 0$), all
 other truthful samples in the batch are positives and all hallucinated samples
 are negatives. For a hallucinated anchor ($y_{\mathrm{label}} = 1$), the
 positives are \emph{only} the anchor's own other-layer views; everything else in
-the batch---including other hallucinated samples---is a negative. The reason for
+the batch, including other hallucinated samples, is a negative. The reason for
 this is not that hallucinations form no coherent class; the ablations of
 \Cref{sec:hd:ablations} show that either class can serve as the one-class anchor
 nearly as well. The correct reading is that labelling \emph{both} classes
@@ -400,8 +400,8 @@ simultaneously forces a second coherent cluster the data does not support. The
 symmetric scheme's gradient includes a term pulling hallucinated embeddings
 toward one another, and when the hallucinated class lacks coherent latent
 structure that term is noise that actively fights the truthful-class gradient
-(\Cref{cor:hd:symcon}). The asymmetry is therefore a structural choice---one-class
-representation learning with the labelled class as the inlier anchor---and not an
+(\Cref{cor:hd:symcon}). The asymmetry is therefore a structural choice, one-class
+representation learning with the labelled class as the inlier anchor, and not an
 arbitrary implementation preference. Structurally, the loss is a
 representation-learning form of one-class anomaly detection on truthful samples,
 with cross-layer view-consistency supplying a second source of supervision for
@@ -431,8 +431,8 @@ from a representation that already aggregates the full activation tensor.
 The total loss combines the two channels,
 \begin{equation} \mathcal{L}_{\mathrm{total}} = \mathcal{L}_{\mathrm{SupCon\text{-}asym}} + \lambda\, \mathcal{L}_{\mathrm{recon}}, \label{eq:hd:total} \end{equation}
 with the weight $\lambda$ and the contrastive temperature fixed early and left
-untuned, so the channel-attribution study of \Cref{sec:hd:ablations}---not a
-weight sweep---is the meaningful sensitivity analysis. At inference the trained
+untuned, so the channel-attribution study of \Cref{sec:hd:ablations}, not a
+weight sweep, is the meaningful sensitivity analysis. At inference the trained
 $f_\theta$ embeds a held-out $(x,y)$ and scores it by its distance to the
 training-set truthful-class embedding bank; a $k$-nearest-neighbour distance is
 the headline scorer, with cosine-to-centroid and Mahalanobis distances reported
@@ -458,7 +458,7 @@ The detectors are evaluated on five open-domain, short-answer question-answering
 We compare against twelve methods spanning three families, each consuming a different signal and grouped here by the compute it draws. The first family is output-space scalar scorers read from the same greedy generation pass: sequence log-probability (LogProb), token entropy, and the prompt-based P(true) self-evaluation~\citep{kadavath2022language}. The second family is activation-space probes that read a single forward pass: a single-layer linear probe~\citep{alain2017understanding}, the SAPLMA multilayer-perceptron head~\citep{azaria2023internal}, the layer-and-token-sweeping LLMsKnow probe~\citep{orgad2024llmsknow}, and ACT-ViT~\citep{barshalom2025actvit}, the strongest learned competitor and the one architecturally closest to the detector of \Cref{subsec:hd:detector}. The third family is sampling-based: length-normalised and semantic-entropy variants~\citep{farquhar2024detecting,kossen2024semantic} together with SelfCheckGPT in its NLI and $n$-gram forms~\citep{manakul2023selfcheckgpt}. The compute axis separates the families cleanly: the scalar and activation-probe methods, like Contrastive+Recon, read one forward pass, whereas the sampling methods resample $M$ several times ($K = 10$). This partition is the structural prerequisite for the compute-matched comparison of \Cref{sec:hd:compute}.
 
 \paragraph{Training.}
-Each trained probe is fit per $(\text{model}, \text{dataset})$ cell on that dataset's training split only, over $5$ random seeds, with mean $\pm$ standard deviation reported across them; no probe is trained on more than one dataset, and the held-out test split is fixed across methods and seeds within a cell. Cross-dataset training is never used here---transfer to unseen datasets is evaluated separately in \Cref{sec:hd:transfer} by applying a source-trained checkpoint to a target test split with no retraining. We give no hyperparameters inline and instead forward the reader to the public implementation for the full training recipe.
+Each trained probe is fit per $(\text{model}, \text{dataset})$ cell on that dataset's training split only, over $5$ random seeds, with mean $\pm$ standard deviation reported across them; no probe is trained on more than one dataset, and the held-out test split is fixed across methods and seeds within a cell. Cross-dataset training is never used here, transfer to unseen datasets is evaluated separately in \Cref{sec:hd:transfer} by applying a source-trained checkpoint to a target test split with no retraining. We give no hyperparameters inline and instead forward the reader to the public implementation for the full training recipe.
 
 \paragraph{Metric.}
 AUROC, computed against the operational hallucination label and reported as the mean $\pm$ standard deviation over $5$ seeds, is the only metric carried in the main text, for both the headline table of \Cref{sec:hd:results} and the transfer matrix of \Cref{sec:hd:transfer}. Complementary metrics (AUPRC, expected calibration error, and FPR@95) are relegated to the supplementary material and not reported here.
@@ -525,7 +525,7 @@ SelfCheck ($n$-gram) & \result{hallu_headline}{Qwen3-8B:hotpotqa:selfcheck_ngram
 \label{tab:hd:headline-qwen}
 \end{table}
 
-The clearest pattern in the grid is between families rather than within one: the activation-space single-pass methods clear the $K=10$ sampling family by a wide margin on every cell. On Llama PopQA, for instance, Contrastive+Recon exceeds semantic entropy~\citep{farquhar2024detecting} by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_semantic_entropy:auroc_mean}$ AUROC, a gap that dwarfs every within-cluster difference and recurs across both models and all five datasets. Within the activation-space cluster, our detector matches-or-outperforms (in the mean) the strongest learned probe, ACT-ViT~\citep{barshalom2025actvit}: the two are within a one-standard-deviation band on most cells, and where they separate, our method posts clear wins---a mean above the runner-up by more than both standard deviations---at PopQA on both models (Llama $+\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean}$, Qwen $+\resdelta{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:act_vit:auroc_mean}$ over ACT-ViT) and at SciQ on Qwen ($+\resdelta{hallu_headline}{Qwen3-8B:sciq:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:sciq:act_vit:auroc_mean}$). The honest counterweight is NQ, where ACT-ViT leads on both models: on Llama the shortfall is firm, \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_std} against ACT-ViT's \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:act_vit:auroc_mean,Llama-3.1-8B-Instruct:nq:act_vit:auroc_std} (a separation wider than either standard deviation), and on Qwen our \resultPM{hallu_headline}{Qwen3-8B:nq:contrastive_logprob_recon:auroc_mean,Qwen3-8B:nq:contrastive_logprob_recon:auroc_std} trails ACT-ViT's \resultPM{hallu_headline}{Qwen3-8B:nq:act_vit:auroc_mean,Qwen3-8B:nq:act_vit:auroc_std} in the mean, here inside the wide one-seed-variance band; we take the NQ shortfall as a genuine weakness and return to it in \Cref{sec:hd:limitations}. The remaining cells---HotpotQA and SearchQA on both models, SciQ on Llama---tie within a one-standard-deviation band, neither method separating cleanly. The picture is therefore parity by design: a detector derived from the feasibility argument of \Cref{sec:hd:method} sits in the same performance band as the strongest engineered probe, winning some cells, losing NQ, and tying the rest, with the interpretive account of which cells go which way deferred to \Cref{sec:hd:ablations}.
+The clearest pattern in the grid is between families rather than within one: the activation-space single-pass methods clear the $K=10$ sampling family by a wide margin on every cell. On Llama PopQA, for instance, Contrastive+Recon exceeds semantic entropy~\citep{farquhar2024detecting} by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_semantic_entropy:auroc_mean}$ AUROC, a gap that dwarfs every within-cluster difference and recurs across both models and all five datasets. Within the activation-space cluster, our detector matches-or-outperforms (in the mean) the strongest learned probe, ACT-ViT~\citep{barshalom2025actvit}: the two are within a one-standard-deviation band on most cells, and where they separate, our method posts clear wins, a mean above the runner-up by more than both standard deviations, at PopQA on both models (Llama $+\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean}$, Qwen $+\resdelta{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:act_vit:auroc_mean}$ over ACT-ViT) and at SciQ on Qwen ($+\resdelta{hallu_headline}{Qwen3-8B:sciq:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:sciq:act_vit:auroc_mean}$). The honest counterweight is NQ, where ACT-ViT leads on both models: on Llama the shortfall is firm, \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_mean,Llama-3.1-8B-Instruct:nq:contrastive_logprob_recon:auroc_std} against ACT-ViT's \resultPM{hallu_headline}{Llama-3.1-8B-Instruct:nq:act_vit:auroc_mean,Llama-3.1-8B-Instruct:nq:act_vit:auroc_std} (a separation wider than either standard deviation), and on Qwen our \resultPM{hallu_headline}{Qwen3-8B:nq:contrastive_logprob_recon:auroc_mean,Qwen3-8B:nq:contrastive_logprob_recon:auroc_std} trails ACT-ViT's \resultPM{hallu_headline}{Qwen3-8B:nq:act_vit:auroc_mean,Qwen3-8B:nq:act_vit:auroc_std} in the mean, here inside the wide one-seed-variance band; we take the NQ shortfall as a genuine weakness and return to it in \Cref{sec:hd:limitations}. The remaining cells, HotpotQA and SearchQA on both models, SciQ on Llama, tie within a one-standard-deviation band, neither method separating cleanly. The picture is therefore parity by design: a detector derived from the feasibility argument of \Cref{sec:hd:method} sits in the same performance band as the strongest engineered probe, winning some cells, losing NQ, and tying the rest, with the interpretive account of which cells go which way deferred to \Cref{sec:hd:ablations}.
 
 \Cref{fig:hd:headline} renders the same per-cell comparison graphically, with our detector placed beside ACT-ViT in every group.
 
@@ -540,7 +540,7 @@ The clearest pattern in the grid is between families rather than within one: the
 \section{Compute-Matched Comparison}
 \label{sec:hd:compute}
 
-The family separation in \Cref{tab:hd:headline-llama,tab:hd:headline-qwen} is also a compute separation, and reading it that way sharpens what the activation regime buys. Contrastive+Recon and every activation-space baseline score from a single forward pass ($\text{forward-pass count}=1$), whereas the semantic-entropy and SelfCheckGPT~\citep{kossen2024semantic,manakul2023selfcheckgpt} methods resample the model $K=10$ times. At that ten-to-one compute disadvantage to the sampling family, the single-pass reading wins decisively: on Llama PopQA our detector exceeds length-normalized semantic entropy by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean}$ AUROC and SelfCheckGPT-NLI by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:selfcheck_nli:auroc_mean}$, and even on Qwen PopQA---the cell where the sampling family is strongest, with SelfCheckGPT-NLI reaching $\result{hallu_headline}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean}$---the single-pass score still leads by $\resdelta{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean}$ at one-tenth the generation cost. The crucial caveat must be stated without softening: this is a property of the activation-reading \emph{class}, not of our method in particular. ACT-ViT is also single-pass activation-space, and reads the same residual stream at the same $\text{forward-pass count}=1$, so it inherits the identical compute advantage over sampling---ACT-ViT beats length-normalized semantic entropy on Llama PopQA by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean}$ at the same cost. The compute efficiency is thus a reason to prefer the activation-reading class over $K=10$ sampling, not a differentiator of Contrastive+Recon against its real competitor; the contribution of this chapter rests on the feasibility argument of \Cref{sec:hd:method} and the parity of \Cref{sec:hd:results}, and the chapter does not lean on compute efficiency to carry it.
+The family separation in \Cref{tab:hd:headline-llama,tab:hd:headline-qwen} is also a compute separation, and reading it that way sharpens what the activation regime buys. Contrastive+Recon and every activation-space baseline score from a single forward pass ($\text{forward-pass count}=1$), whereas the semantic-entropy and SelfCheckGPT~\citep{kossen2024semantic,manakul2023selfcheckgpt} methods resample the model $K=10$ times. At that ten-to-one compute disadvantage to the sampling family, the single-pass reading wins decisively: on Llama PopQA our detector exceeds length-normalized semantic entropy by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean}$ AUROC and SelfCheckGPT-NLI by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:selfcheck_nli:auroc_mean}$, and even on Qwen PopQA, the cell where the sampling family is strongest, with SelfCheckGPT-NLI reaching $\result{hallu_headline}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean}$, the single-pass score still leads by $\resdelta{hallu_headline}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:selfcheck_nli:auroc_mean}$ at one-tenth the generation cost. The crucial caveat must be stated without softening: this is a property of the activation-reading \emph{class}, not of our method in particular. ACT-ViT is also single-pass activation-space, and reads the same residual stream at the same $\text{forward-pass count}=1$, so it inherits the identical compute advantage over sampling, ACT-ViT beats length-normalized semantic entropy on Llama PopQA by $\resdelta{hallu_headline}{Llama-3.1-8B-Instruct:popqa:act_vit:auroc_mean}{Llama-3.1-8B-Instruct:popqa:se_length_normalized:auroc_mean}$ at the same cost. The compute efficiency is thus a reason to prefer the activation-reading class over $K=10$ sampling, not a differentiator of Contrastive+Recon against its real competitor; the contribution of this chapter rests on the feasibility argument of \Cref{sec:hd:method} and the parity of \Cref{sec:hd:results}, and the chapter does not lean on compute efficiency to carry it.
 
 \Cref{fig:hd:compute} plots detection AUROC against inference budget, separating the single-pass probes from the $K=10$ sampling family.
 
@@ -556,17 +556,17 @@ The family separation in \Cref{tab:hd:headline-llama,tab:hd:headline-qwen} is al
 \label{sec:hd:ablations}
 
 The detector of \Cref{sec:hd:method} joins two supervision channels over a shared
-compressor---an asymmetric one-class supervised contrastive loss on layer-pair
-views, and a logprob-reconstruction auxiliary---and reads the result with a
+compressor, an asymmetric one-class supervised contrastive loss on layer-pair
+views, and a logprob-reconstruction auxiliary, and reads the result with a
 distance scorer. This section asks what carries the signal. We lead with the one
 question the theory makes falsifiable, because it is the strongest evidence that
 the feasibility argument is the right account and not merely a consistent one,
 and then frame the channel-attribution structure the method's design anticipates.
 
 \paragraph{The confirmed prediction: symmetric supervision fails.}
-The asymmetric construction of \Cref{subsec:hd:detector}---labelling only the
+The asymmetric construction of \Cref{subsec:hd:detector}, labelling only the
 truthful class as a mutual-positive cluster and leaving hallucinated anchors to be
-view-consistent with themselves---is not an arbitrary implementation choice. The
+view-consistent with themselves, is not an arbitrary implementation choice. The
 analysis of \Cref{cor:hd:symcon} predicts that the symmetric alternative, which
 relabels the hallucinated side as a second mutual-positive cluster, must
 \emph{degrade} detection whenever the hallucinated class lacks coherent latent
@@ -589,15 +589,15 @@ cell with neither is the single-layer supervised multilayer-perceptron probe
 (SAPLMA) of \Cref{sec:hd:setup}; the full method is the cell with both; the two
 single-channel cells isolate each contribution. We frame this matrix here as the
 structure the design anticipates, but we do not resolve its cells numerically in
-this chapter: an exhaustive per-cell attribution---and the matched-parameter and
-scorer sweeps below---belongs to the experimental record accompanying the method
+this chapter: an exhaustive per-cell attribution, and the matched-parameter and
+scorer sweeps below, belongs to the experimental record accompanying the method
 rather than to the dissertation's argument, and we flag the per-channel
 decomposition as the natural next measurement rather than claim it here.
 
 \paragraph{Supervised structure, not capacity or augmentation.}
 Two controls bound what the result can be attributed to. A label-free variant of
-the same architecture---cross-layer contrast with no asymmetric labels, the
-direct analogue of an unsupervised SimCLR recipe applied to layer pairs---lands
+the same architecture, cross-layer contrast with no asymmetric labels, the
+direct analogue of an unsupervised SimCLR recipe applied to layer pairs, lands
 near chance, which shows that the hallucination axis is not surfaced by
 cross-layer contrast alone: the supervision, not merely the layer-pair view
 construction, is what selects the label-relevant slice. And because the compressor
@@ -621,7 +621,7 @@ method.
 The headline grid of \Cref{sec:hd:results} trains and evaluates each probe within a single dataset. That measures how well the learned hallucination axis fits one source, not whether it is the same axis across sources. This section asks the transfer question directly: when a probe is moved to an unseen target dataset with no retraining, does the axis it learned still separate hallucinations, or was it specific to the source's surface form? The question matters for the chapter's thesis, because an information-theoretic detector that targets cross-layer coherence (\Cref{subsec:hd:detector}) ought to ride on a property of the residual stream rather than on the question format, and so ought to transfer at least as far as a probe engineered on source-specific features.
 
 \paragraph{Setup.}
-Each probe is trained on exactly one of the five source datasets and then evaluated, with no retraining and no target-side adaptation, on the other four datasets as targets. We report, for each (model, method, source) triple, the AUROC averaged over those $4$ held-out targets, each target cell itself a mean over $5$ seeds. This is a zero-shot transfer setup in the probe-on-activations sense: no labelled target data, no unsupervised target adaptation, and no target-side recalibration is applied. We compare the four learned activation-space methods of \Cref{sec:hd:setup}---ACT-ViT~\citep{barshalom2025actvit}, the LLMsKnow probe~\citep{orgad2024llmsknow}, SAPLMA~\citep{azaria2023internal}, and Contrastive+Recon---across both models; the output-space scalar and sampling baselines are excluded because they train no transferable probe.
+Each probe is trained on exactly one of the five source datasets and then evaluated, with no retraining and no target-side adaptation, on the other four datasets as targets. We report, for each (model, method, source) triple, the AUROC averaged over those $4$ held-out targets, each target cell itself a mean over $5$ seeds. This is a zero-shot transfer setup in the probe-on-activations sense: no labelled target data, no unsupervised target adaptation, and no target-side recalibration is applied. We compare the four learned activation-space methods of \Cref{sec:hd:setup}, ACT-ViT~\citep{barshalom2025actvit}, the LLMsKnow probe~\citep{orgad2024llmsknow}, SAPLMA~\citep{azaria2023internal}, and Contrastive+Recon, across both models; the output-space scalar and sampling baselines are excluded because they train no transferable probe.
 
 \begin{table}[t]
   \centering
@@ -646,10 +646,10 @@ Each probe is trained on exactly one of the five source datasets and then evalua
   \end{tabular}
 \end{table}
 
-\Cref{tab:hd:transfer} reports the per-source transfer grid. Reading it honestly: of the $10$ (model, source) cells, Contrastive+Recon matches-or-outperforms (in the mean) the strongest baseline in three---both PopQA columns and SciQ on Qwen3-8B---and under the strict bolding rule (a lead exceeding the larger of the two standard deviations) it leads cleanly on the two PopQA columns, where the margins are the largest in the table at $\resdelta{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:popqa:auroc_mean}{Llama-3.1-8B-Instruct:llmsknow_probe:popqa:auroc_mean}$ over LLMsKnow on Llama-3.1-8B-Instruct and $\resdelta{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:popqa:auroc_mean}{Qwen3-8B:saplma:popqa:auroc_mean}$ over SAPLMA on Qwen3-8B. PopQA is the clean win because its long-tail-entity questions are exactly where a coherence-based axis should transfer and a format-specific probe should not. The strongest baseline is not a fixed method: it is ACT-ViT in most columns but LLMsKnow on Llama-3.1-8B-Instruct PopQA and SAPLMA on Qwen3-8B PopQA, so the per-source leads are not won against one consistently weak competitor. The remaining columns are statistical ties or source-specific baseline leads, with NQ the weakest source for ours on both models---a shortfall we do not hide and carry forward to \Cref{sec:hd:limitations}.
+\Cref{tab:hd:transfer} reports the per-source transfer grid. Reading it honestly: of the $10$ (model, source) cells, Contrastive+Recon matches-or-outperforms (in the mean) the strongest baseline in three, both PopQA columns and SciQ on Qwen3-8B, and under the strict bolding rule (a lead exceeding the larger of the two standard deviations) it leads cleanly on the two PopQA columns, where the margins are the largest in the table at $\resdelta{hallu_transfer_per_source}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:popqa:auroc_mean}{Llama-3.1-8B-Instruct:llmsknow_probe:popqa:auroc_mean}$ over LLMsKnow on Llama-3.1-8B-Instruct and $\resdelta{hallu_transfer_per_source}{Qwen3-8B:contrastive_logprob_recon:popqa:auroc_mean}{Qwen3-8B:saplma:popqa:auroc_mean}$ over SAPLMA on Qwen3-8B. PopQA is the clean win because its long-tail-entity questions are exactly where a coherence-based axis should transfer and a format-specific probe should not. The strongest baseline is not a fixed method: it is ACT-ViT in most columns but LLMsKnow on Llama-3.1-8B-Instruct PopQA and SAPLMA on Qwen3-8B PopQA, so the per-source leads are not won against one consistently weak competitor. The remaining columns are statistical ties or source-specific baseline leads, with NQ the weakest source for ours on both models, a shortfall we do not hide and carry forward to \Cref{sec:hd:limitations}.
 
 \paragraph{Aggregate in-domain versus out-of-domain.}
-The per-source view corroborates in aggregate. Averaging over the $5$ in-domain (source-equals-target) cells and the $20$ out-of-domain (off-diagonal) cells, every method drops from in-domain to out-of-domain---transfer is not free for anyone. Contrastive+Recon falls from \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_std} in-domain to \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_std} out-of-domain on Llama-3.1-8B-Instruct, a drop of $\resdelta{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_mean}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean}$, and from \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_std} to \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_std} on Qwen3-8B, a drop of $\resdelta{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_mean}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean}$; the comparable ACT-ViT drops are $\resdelta{hallu_transfer_summary}{Llama-3.1-8B-Instruct:act_vit:in_domain:auroc_mean}{Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_mean}$ and $\resdelta{hallu_transfer_summary}{Qwen3-8B:act_vit:in_domain:auroc_mean}{Qwen3-8B:act_vit:out_of_domain:auroc_mean}$. Where ours sits is the relevant fact: on the out-of-domain aggregate Contrastive+Recon is at or above every baseline on both models---\resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_std} against ACT-ViT's \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_std} on Llama-3.1-8B-Instruct and \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_std} against ACT-ViT's \resultPM{hallu_transfer_summary}{Qwen3-8B:act_vit:out_of_domain:auroc_mean,Qwen3-8B:act_vit:out_of_domain:auroc_std} on Qwen3-8B---so the parity established in \Cref{sec:hd:results} holds under transfer in the mean, with the per-source margins concentrated on PopQA rather than spread uniformly.
+The per-source view corroborates in aggregate. Averaging over the $5$ in-domain (source-equals-target) cells and the $20$ out-of-domain (off-diagonal) cells, every method drops from in-domain to out-of-domain, transfer is not free for anyone. Contrastive+Recon falls from \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_std} in-domain to \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_std} out-of-domain on Llama-3.1-8B-Instruct, a drop of $\resdelta{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:in_domain:auroc_mean}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean}$, and from \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_std} to \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_std} on Qwen3-8B, a drop of $\resdelta{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:in_domain:auroc_mean}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean}$; the comparable ACT-ViT drops are $\resdelta{hallu_transfer_summary}{Llama-3.1-8B-Instruct:act_vit:in_domain:auroc_mean}{Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_mean}$ and $\resdelta{hallu_transfer_summary}{Qwen3-8B:act_vit:in_domain:auroc_mean}{Qwen3-8B:act_vit:out_of_domain:auroc_mean}$. Where ours sits is the relevant fact: on the out-of-domain aggregate Contrastive+Recon is at or above every baseline on both models, \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:contrastive_logprob_recon:out_of_domain:auroc_std} against ACT-ViT's \resultPM{hallu_transfer_summary}{Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_mean,Llama-3.1-8B-Instruct:act_vit:out_of_domain:auroc_std} on Llama-3.1-8B-Instruct and \resultPM{hallu_transfer_summary}{Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_mean,Qwen3-8B:contrastive_logprob_recon:out_of_domain:auroc_std} against ACT-ViT's \resultPM{hallu_transfer_summary}{Qwen3-8B:act_vit:out_of_domain:auroc_mean,Qwen3-8B:act_vit:out_of_domain:auroc_std} on Qwen3-8B, so the parity established in \Cref{sec:hd:results} holds under transfer in the mean, with the per-source margins concentrated on PopQA rather than spread uniformly.
 
 \Cref{fig:hd:transfer} summarises the in-domain versus out-of-domain comparison across detectors.
 
@@ -669,8 +669,8 @@ delimit it further. The result is \emph{parity}, not dominance: Contrastive+Reco
 sits in the same performance band as the strongest engineered probe rather than
 above it, and the contribution is the information-theoretic principle and its
 self-validation, not a benchmark win. The most concrete cost of that honesty is
-Natural Questions, where the detector trails ACT-ViT on both models---firmly on
-Llama-3.1-8B-Instruct---and where the learned axis also transfers least well
+Natural Questions, where the detector trails ACT-ViT on both models, firmly on
+Llama-3.1-8B-Instruct, and where the learned axis also transfers least well
 (\Cref{sec:hd:results,sec:hd:transfer}); we have no account of the NQ shortfall
 beyond noting that it is the one benchmark on which the principle and the
 engineered probe come apart, and explaining it is open work.

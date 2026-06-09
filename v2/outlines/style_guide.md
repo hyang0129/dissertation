@@ -204,16 +204,93 @@ scaffolding kept, category error worsened). Added §2.6 (concrete subjects in
 significance/closing sentences; fix is structural not lexical) and a partial lint note
 in §5.
 
-## 5. Optional enforcement (lint)
+## 5. Enforcement (gates): the lint half and the voice meter
 
 The mechanical half (§3) is auto-checkable and fits the repo's gate culture
 (bib/number gates). A `lint.py` extension could flag: unhyphenated forms from §3.1,
 mid-sentence capitalized common nouns from §3.2, banned phrases from §3.3, and
 **British spellings from §3.2a** (a fixed `-ise→-ize`/`-our→-or`/etc. wordlist,
 excluding the same-in-both words). Spelling is the highest-value addition — it drifts
-back in every newly-authored paragraph and is unambiguous to check. Voice (§2) stays a
-human judgment, with one cheap partial exception: the §2.6 behavior-word tell is
-greppable — flag "habit/posture/instinct/reflex/muscle" within ~10 words of an
-intellectual-object noun ("account/argument/framework/principle") as a *warning*, not
-a gate. The dative-inversion half of §2.6 is not auto-checkable and stays human.
-Add only if you want the mechanical rules enforced on every build.
+back in every newly-authored paragraph and is unambiguous to check.
+
+The **texture** half is now built: `voice_meter.py` (`make voice`) measures
+sentence-length variance, tricolon density, and **cross-chapter n-gram repetition**
+against the Ch.4 profile (`data/voice_profile_ch4.json`, rebuilt with
+`make voice-profile`). It is warning-only and deliberately kept out of `make paper`
+until the framing chapters pass; run `python voice_meter.py --gate` to fail on a
+gateable issue (flat burstiness, tricolon cap, or a new cross-chapter 6-gram). The
+behavior-word tell of §2.6 (flag "habit/posture/instinct/reflex/muscle" near
+"account/argument/framework/principle") and the dative-inversion half stay human
+judgment. See §6 for how to use the meter inside a rewrite.
+
+## 6. The voice problem is GENERATIVE, not subtractive (read this before a rewrite)
+
+**Decided 2026-06-09.** §§1–5 above are a *detect-and-patch* system: a banned-list
+of surface tells, removed after the fact. That approach plateaued, and §2.6 is the
+autopsy — every patch pass swaps surface words and leaves the sentence scaffolding
+(and the category error) intact, because each pass is itself a generation step that
+re-launders the prose back toward the model's smooth, typical mode. You cannot
+subtract your way to a human voice. The Ch.4 register is a *property of the
+generative process*, so the fix is to **regenerate, not patch.**
+
+### 6.1 What the meter actually found (correct the intuition)
+
+`voice_meter.py` (the VOICE METER, companion to `lint.py`) measures texture against
+the human Ch.4 exemplar. Run on the framing chapters, it overturned the obvious
+hypothesis:
+
+* **Burstiness is NOT the tell here.** Every framing chapter already has *more*
+  sentence-length variance than Ch.4 (cv ≈ 0.48–0.52 vs Ch.4's 0.41). Do not waste
+  effort "adding short and long sentences" — that box is already checked.
+* **The two real, measured tells are:**
+  1. **Cross-chapter verbatim repetition.** The thesis sentence
+     ("…detection is possible exactly when the learned representation preserves the
+     structure that distinguishes the shift") and ~40 other 6-grams are recited
+     near-verbatim across abstract + Ch.1 + Ch.3 + Ch.7. This is the dominant tell.
+  2. **Tricolon density.** Ch.2/3/7 run 3.9–5.4 rule-of-three lists per 1k words;
+     Ch.4 runs 1.0. The relentless "A, B, and C" scaffolding is machine cadence.
+
+So the rewrite target is concrete and measurable: **kill the recited n-grams and
+halve the tricolons**, while leaving the (already good) sentence-length variance
+alone.
+
+### 6.2 The regenerate-not-patch workflow (run this, don't hand-edit)
+
+For each framing piece (abstract, Ch.1/2/3/7), section by section:
+
+1. **Strip the claims to bare bullets.** Extract *what the section must say* as a
+   terse, unphrased bullet list (claim, reason, cross-ref). Discard the existing
+   prose entirely — if you keep it on screen, the regen anchors to its mode. The
+   framing locks ([00_dissertation_outline.md](00_dissertation_outline.md)) and the
+   `\result`/`\cite`/`\Cref` content are invariants and must survive verbatim; the
+   *sentences* are disposable.
+2. **Condition on Ch.4 spans chosen for RHYTHM, not topic.** Paste 3–5 verbatim
+   Ch.4 paragraphs picked for structural diversity (one short punchy one, one long
+   technical one, the soft closer) — explicitly *not* the Ch.4 paragraph nearest in
+   subject. (Length-matched exemplars improve voice fidelity; topic-matched ones
+   hurt it.)
+3. **Generate 3–5 structurally different drafts, then select/splice.** Ask for
+   several drafts that vary their structure, and splice at *paragraph* boundaries
+   (sentence-level splicing produces incoherent Frankenstein prose).
+4. **Enforce the anti-scaffolding constraints in the prompt:** no three-item
+   parallel lists (use one item or an uneven 2/4); no balanced aphoristic closer
+   (end on the plainest statement of the claim — §2.2); do not reuse a sentence,
+   appositive, or example-triple that appears in another chapter; vary the thesis
+   statement asymmetrically across its three homes (different length, order, and
+   which case you lead with) — only the one sanctioned bookend (§2.3) recurs verbatim.
+5. **Gate before a human reads it.** `make voice` (or `python voice_meter.py --gate`)
+   must show the section's tricolon rate under the cap and add **no** new
+   cross-chapter 6-gram. Regenerate until it passes.
+6. **One human read-aloud pass** for local stake and unevenness (§6.3). This is the
+   only step that is not automatable.
+
+### 6.3 The irreducible residual (do not try to automate this)
+
+Ch.4 reads human partly because its author cared unevenly — a longer aside where
+the idea was interesting, a soft real wish at the close, a minor roughness left in.
+A model asked to *simulate* unevenness produces *uniform* unevenness, and
+manufactured imperfection reads as its own artifact. The meter + workflow get ~80–90%
+of the way (the surface tells go, the cadence flattens toward Ch.4); the last 10% is
+a human read-aloud pass, not another rule. Gate the mechanical; reserve judgment for
+voice.
+

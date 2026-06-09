@@ -1,0 +1,10 @@
+{
+  "exemplar": "chapters/04_label_blindness.tex",
+  "mean_len": 20.22,
+  "sd_len": 8.35,
+  "cv": 0.413,
+  "min_len": 4,
+  "max_len": 54,
+  "tricolons_per_1k": 1.01,
+  "note": "Target texture from the human-written Ch.4 exemplar. Burstiness floor = BURSTINESS_CV_FRACTION * cv."
+}

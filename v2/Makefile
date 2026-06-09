@@ -7,6 +7,8 @@
 #   make lint      — BIB GATE (numbers): bare-digit-not-in-citation check on prose
 #   make check-refs— BIB GATE (citations): undefined/duplicate/orphan reference check
 #                    (add ONLINE=1 to also resolve arXiv/DOI titles; needs network)
+#   make voice     — VOICE METER: prose-texture report vs Ch.4 (warning-only)
+#   make voice-profile — (re)build the Ch.4 target profile (data/voice_profile_ch4.json)
 #   make paper     — figures + values + lint + check-refs + latexmk -pdf main.tex
 #   make clean     — remove generated/ and latexmk byproducts
 #
@@ -28,7 +30,7 @@ FIGURE_SCRIPTS := $(wildcard figures_src/*.py)
 # Sentinel file: figures are up to date when this exists
 FIGURES_STAMP  := generated/.figures_stamp
 
-.PHONY: deps check-deps figures values lint check-refs paper clean
+.PHONY: deps check-deps figures values lint check-refs voice voice-profile paper clean
 
 # ONLINE=1 makes check-refs resolve arXiv/DOI titles (needs network)
 CHECKREFS_FLAGS := $(if $(ONLINE),--online,)
@@ -80,6 +82,20 @@ lint:
 # ---------------------------------------------------------------------------
 check-refs:
 	$(PYTHON) check_refs.py --paper-dir $(PAPER_DIR) $(CHECKREFS_FLAGS)
+
+# ---------------------------------------------------------------------------
+# voice: the VOICE METER — prose-texture report (burstiness, tricolons,
+# cross-chapter n-gram repetition) vs the Ch.4 human exemplar. Warning-only by
+# default; deliberately NOT in `paper` until the framing chapters pass. Run
+# `make voice-profile` once to (re)build data/voice_profile_ch4.json, then
+# `make voice` to report, or `$(PYTHON) voice_meter.py --gate` to fail on a
+# gateable issue. See outlines/style_guide.md §6.
+# ---------------------------------------------------------------------------
+voice:
+	$(PYTHON) voice_meter.py --paper-dir $(PAPER_DIR)
+
+voice-profile:
+	$(PYTHON) voice_meter.py --paper-dir $(PAPER_DIR) --profile chapters/04_label_blindness.tex
 
 # ---------------------------------------------------------------------------
 # paper: end-to-end build (requires latexmk)

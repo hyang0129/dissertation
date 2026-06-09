@@ -127,10 +127,9 @@ variance along domain-shift directions, and detection degrades when those direct
 collapse into the class subspace (\Cref{def:bg:clssubspace}). The two descriptions
 are not rivals. The information a representation discards is the same thing as the
 directions it flattens. Reading each study through whichever lens is sharper is what
-reveals the common condition beneath three failures that look unrelated. That one
-condition, read through two lenses, governs unlabeled OOD detection, single-domain
-OOD detection, and LLM hallucination detection alike is the central contribution of
-this work.
+reveals the common condition beneath three failures that look unrelated. The central contribution of this work is that one condition, read through two
+lenses, governs unlabeled OOD detection, single-domain OOD detection, and LLM
+hallucination detection alike.
 
 \section{Broader Implications}
 \label{sec:concl:implications}
@@ -148,15 +147,15 @@ methods can work at all, before asking how well a particular method performs.
 Knowing that a label-independent detector is guaranteed to fail in the overlap
 regime (\Cref{ch:label-blindness}) is itself a safety contribution. It tells a
 practitioner not to trust unlabeled detection where in- and out-of-distribution data
-share features, however well it scored on a non-overlapping benchmark. The same
-posture runs through the other two studies. Diagnosing domain-sensitivity collapse
+share features, however well it scored on a non-overlapping benchmark. The same is true of
+the other two studies. Diagnosing domain-sensitivity collapse
 tells practitioners who deploy narrow-domain models, in medical imaging, remote
 sensing, or industrial inspection, why their distance- and logit-based monitors may
 be quietly insensitive, and it gives them a training-time remedy that costs nothing
 at inference. Locating the hallucination signal in a model's own activations gives
 factuality-critical applications a detection route that needs no sampling overhead.
-In each case the safety value comes from a principled account of the failure mode,
-not from an incremental benchmark gain. A reliability mechanism whose guarantees are
+In each case the safety contribution is a principled account of the failure mode,
+not an incremental benchmark gain. A reliability mechanism whose guarantees are
 understood is more trustworthy than one validated only by the benchmarks it happens
 to have been tested on~\citep{lakshminarayanan2017simple}.
 

@@ -96,16 +96,31 @@ first, citation in parentheses: "Unlabeled methods can match a supervised baseli
 
 ## 4. Rollout plan (effort by chapter)
 
-| Chapter | Pass | Notes |
-|---|---|---|
-| Ch.4 | Mechanical only (§3) | The exemplar; do **not** restyle the argument |
-| Ch.5, Ch.6 | Mechanical + light de-manner | Trim imported em-dashes/flourish; ports are already dense/plainish |
-| Ch.2, Ch.3, Ch.7 | Mechanical + moderate de-manner | Cut ~⅓ em-dashes, de-tic framing vocab |
-| **Ch.1, abstract** | Mechanical + heavy de-manner | Most mannered: cut em-dashes, kill grand closings, vary vocab |
+**✅ DONE 2026-06-08.** All passes executed and pushed; every piece is at 0 em-dashes
+except Ch.4 (1, the exemplar). Each pass was its own commit, built clean
+(`make paper` exit 0, lint + check_refs OK, 0 undefined refs, all `\result` keys
+resolve). Decision recorded: **fresh-authored pieces got full rewrites** (sentence
+architecture re-authored); **ported results chapters got surgical de-manner only**
+(em-dashes converted, prose tied to numbers/proofs left intact).
 
-Order: write this guide → mechanical pass across all chapters (one commit) → per-chapter
-de-manner passes (one commit each, easy to review/revert). Re-run `make paper` after each;
-voice edits must not change any `\result`, number, citation, or `\Cref`.
+| Chapter | Pass run | Commit |
+|---|---|---|
+| Ch.4 | Mechanical only (§3) — hyphenation/caps/filler | `8d6b5a6` |
+| Ch.1 | Full rewrite (deepest) | `ea29491` (after de-manner `37c9c9c`) |
+| Abstract | Full rewrite | `ed6005c` |
+| Ch.7 | Full rewrite | `4d8a2b0` |
+| Ch.2 | Full rewrite (prose; definition bodies untouched) | `70c94f9` |
+| Ch.3 | Full rewrite (prose; dropped "Spine tie." labels) | `563d33f` |
+| Ch.5 | Surgical de-manner (36 em-dashes; 4 splices fixed) | `b0ef0ee` |
+| Ch.6 | Surgical de-manner (63 em-dashes; no splices) | `9103ec5` |
+
+Residual: the ported chapters (Ch.5/6) keep a touch more paper-prose rhythm than the
+fully re-authored ones — by design (their prose is load-bearing for numbers/proofs).
+Bringing them to the full-rewrite standard is a larger, higher-risk pass, deliberately
+not run.
+
+Order followed: guide → mechanical pass (Ch.4) → per-chapter passes (one commit each).
+`make paper` was re-run after each; no `\result`, number, citation, or `\Cref` changed.
 
 ## 5. Optional enforcement (lint)
 

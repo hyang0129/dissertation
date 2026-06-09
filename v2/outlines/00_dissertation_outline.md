@@ -442,7 +442,9 @@ so it reads as a stapler, not one author. **Decision:** standardize on the **Ch.
 plain/direct register** (adopt its virtues, fix its mechanical defects everywhere).
 Full rules + rollout: [style_guide.md](style_guide.md). Orthogonal to the framing
 locks — voice/mechanics, not claims. Heaviest rewrite: Ch.1 + abstract; Ch.4 gets
-mechanical cleanup only.
+mechanical cleanup only. **✅ rollout complete 2026-06-08** — all chapters + abstract
+at 0 em-dashes (Ch.4 = 1, the exemplar); fresh pieces fully rewritten, ports
+surgically de-mannered. Commit table in style_guide.md §4.
 
 ## Open questions for you
 

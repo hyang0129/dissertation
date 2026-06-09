@@ -1,11 +1,14 @@
 % chapters/01_introduction.tex
 % Introduction — thesis-first (Option B) + vignette. Plan: outlines/01_introduction.md.
-% Voice: plain Ch.4 register per outlines/style_guide.md (claim-first, concrete
-% subjects, no triads/aphorisms/meta-flourish). Framing locks (do not violate):
-% spine = representation structure, BOTH lenses; arc = failure -> recovery ->
-% detection; "guaranteed failure" is Ch.4-only; Ch.5 diagnostic not impossibility;
-% Ch.6 verb "matches-or-outperforms (in the mean)" / parity, never "beats" / "SOTA".
-% Bookend to Ch.7. No results numbers (\Cref source chapters instead).
+% Voice: plain Ch.4 register per outlines/style_guide.md. Regenerated 2026-06-09 via
+% the regenerate-not-patch workflow (style_guide.md §6): prose re-authored from a
+% bare-claims skeleton conditioned on Ch.4 rhythm spans, gated with voice_meter.py,
+% and varied asymmetrically against the abstract and Ch.7 so the recited thesis
+% n-grams clear. §1.5 closer re-anchored on a concrete subject per §2.6.
+% Framing locks (do not violate): spine = representation structure, BOTH lenses;
+% arc = failure -> recovery -> detection; "guaranteed failure" is Ch.4-only; Ch.5
+% diagnostic not impossibility; Ch.6 verb "matches-or-outperforms (in the mean)" /
+% parity, never "beats" / "SOTA". Bookend to Ch.7. No results numbers.
 \chapter{Introduction}
 \label{ch:introduction}
 
@@ -19,30 +22,29 @@ produced an output, that lies outside what it can be trusted to handle, and neit
 can tell. What is missing in both cases is not accuracy but \emph{self-knowledge}:
 the ability to recognize the boundary of one's own competence.
 
-This dissertation studies that capability. It looks at two detection problems.
-Out-of-distribution (OOD) detection recognizes inputs unlike the training
-data~\citep{hendrycks2016baseline,huang2020survey}. Hallucination detection
-recognizes generated content that is not supported by
-fact~\citep{li2023halueval,lin2021truthfulqa}. The two are usually treated as
-separate problems with separate methods, but we argue that one condition governs
-both. \textbf{Detection is possible exactly when the learned representation
-preserves the structure that distinguishes the shift.} That structure can be
-missing, weakened, or present, and each case gives a different result. When the
-representation does not contain it, no scoring rule can recover it, and detection
-fails. When training has discarded structure that the data contained, detection
-degrades, but the structure can be restored. When the representation keeps it, a
-detector can read it out.
+This dissertation studies that capability. It takes up two detection problems.
+Out-of-distribution (OOD) detection flags an input unlike the training
+data~\citep{hendrycks2016baseline,huang2020survey}, and hallucination detection
+flags a generation not supported by
+fact~\citep{li2023halueval,lin2021truthfulqa}. The literature treats them as
+separate problems with separate machinery. We argue they turn on the same thing.
+\textbf{A shift is detectable exactly when the model's learned representation still
+holds the structure that distinguishes it.} The model may never have encoded that
+structure, or have encoded it and then lost it, or have kept it. If it was never
+there, a detector is left with no signal and fails outright. If training held the
+structure and then discarded it, detection degrades, but the structure can be put
+back. When the representation keeps it, a detector can read it out.
 
-We study this condition with two tools. Information theory measures what a
-representation preserves as \emph{mutual information}, the amount the features still
-tell us about the distinction we care
-about~\citep{shannon1948mathematical,cover1999elements}. Representation geometry
-measures the same thing as \emph{structure in feature space}: which directions carry
-variance, and which have collapsed. The two tools describe one quantity, and we use
-whichever is clearer for a given problem. Three studies apply them in turn, and the
-studies follow one arc: failure, recovery, detection (\Cref{fig:intro-spine}). The
-rest of this chapter states the problem each study addresses, lists the
-contributions, explains the method that unifies them, and maps the document.
+We read the condition through two lenses. Information theory casts what a
+representation holds as \emph{mutual information}, the amount its features still say
+about the distinction at
+issue~\citep{shannon1948mathematical,cover1999elements}. Representation geometry
+casts the same thing as \emph{structure in feature space}: which directions carry
+variance, and which have flattened out. The two name one quantity, and we reach for
+whichever is sharper on a given problem. Three studies put the condition to work
+along one arc, from failure to recovery to detection (\Cref{fig:intro-spine}). The
+rest of this chapter states the problem each study takes on, lists the
+contributions, sets out the method that ties them together, and maps the document.
 
 \begin{figure}[t]
   \centering
@@ -88,143 +90,147 @@ contributions, explains the method that unifies them, and maps the document.
 \section{Problem Statement and Motivation}
 \label{sec:intro:problem}
 
-A deployed model is reliable only if it can recognize when an input, or an output,
-falls outside what it was trained to handle. Supervised learning optimizes
-prediction within the training distribution. It does not, on its own, teach a model
-where that distribution ends~\citep{hendrycks2016baseline}. In the open world the
-closed-set assumption is routinely violated, so this gap becomes the central
-obstacle to safe deployment. The X-ray model and the fabricating language model from
-the opening are not exotic failures. They are the ordinary behavior of a confident
-model pushed past its training experience.
+A deployed model earns trust only when it can tell that an input, or an output, has
+left the territory it was trained on. Supervised learning tunes prediction inside the
+training distribution. It teaches a model nothing, on its own, about where that
+distribution stops~\citep{hendrycks2016baseline}. Deployment in the open world breaks
+the closed-set assumption as a matter of course, and that gap is the central obstacle
+to safe deployment. The X-ray model and the fabricating language model from the
+opening are not exotic failures. They are what a confident model does once it is
+pushed past its training experience.
 
-We study this gap in three settings. Each setting asks whether the representation
-preserves what distinguishes the shift, and each gives a different answer, because
-the structure is available to a different degree.
+We take up this gap in three settings. Each asks the same question, whether the
+representation still holds what distinguishes the shift, and each answers
+differently, because the structure survives to a different degree.
 
 \paragraph{Unlabeled OOD detection: structure absent.}
-Recent work tries to detect distributional shift without labels, using self- or
-unsupervised objectives that need no annotation. The problem is that when the
-features such an objective learns are independent of the label-relevant features,
-the representation carries no information about the labels, and detection cannot
-succeed. We call this failure mode \emph{label blindness}. The failure is worst
-where safety matters most. When OOD inputs share features with in-distribution data,
-the unlabeled detector is blind in exactly the regime a deployed system will meet.
+A recent line of work tries to flag distributional shift without labels, training on
+self- or unsupervised objectives that need no annotation. The trouble is that when
+such an objective is independent of the label-relevant features, the representation
+encodes none of the label distinction, and no detector built on it can succeed.
+We name this failure mode \emph{label blindness}. It bites hardest exactly where
+safety is at stake: once OOD inputs overlap in-distribution data in feature space, an
+unlabeled detector is blind in the very regime a deployed system runs into.
 
 \paragraph{Single-domain OOD detection: structure suppressed.}
-Many real systems are trained on a single narrow domain: one imaging modality, one
-sensor, one institution's data. In this setting, supervised training pushes the
-representation into a low-rank, class-aligned subspace and suppresses the directions
-along which a domain shift would show up. The information needed to detect the shift
-was in the data, but training discarded it, so distance- and logit-based detectors
-lose sensitivity to the shifts they should catch. Unlike label blindness, this is
-not a fundamental impossibility. It is an \emph{induced} failure, and training can
-be changed to restore what it removed.
+Many real systems train on a single narrow domain, one imaging modality or one
+sensor or one institution's records. Here supervised training compresses the
+representation into a class-aligned, low-rank subspace and erases the directions
+along which a domain shift would register. The signal a detector needs was present in
+the training data and then dropped by the optimizer, leaving distance- and
+logit-based detectors unable to react to shifts they were meant to flag. This is not
+the fundamental impossibility of label blindness. The failure is \emph{induced} by
+how the model was trained, and a change to training can put back what training
+removed.
 
 \paragraph{Hallucination in large language models: structure retained.}
-Large language models often generate fluent text that is not supported by
-fact~\citep{li2023halueval,lin2021truthfulqa}. Most detectors rely on repeated
-sampling or external verification, and the field has had no principled account of
-why a hallucination signal should be present, or where it lives. We show that the
-signal is retained in the model's own intermediate activations, and that an
-information-theoretic argument says it can be extracted directly. Detecting a
-hallucination then becomes a matter of reading the representation rather than
-searching for an engineering trick.
+Large language models routinely produce fluent text with no basis in
+fact~\citep{li2023halueval,lin2021truthfulqa}. Most detectors lean on repeated
+sampling or outside verification, and the field has lacked any principled account of
+why a hallucination signal should exist at all, let alone where to find it. We show
+the signal sits in the model's own intermediate activations, and that an
+information-theoretic argument says it can be pulled out directly. Catching a
+hallucination then comes down to reading the representation, not stumbling onto an
+engineering trick.
 
 \section{Research Objectives and Contributions}
 \label{sec:intro:contributions}
 
-This dissertation makes four contributions, each developed in its own chapter and
-each an instance of the condition above. \Cref{ch:conclusion} draws them together.
+This dissertation makes four contributions. Each is worked out in its own chapter and
+each is one instance of the condition above; \Cref{ch:conclusion} draws them
+together.
 
 \begin{enumerate}
   \item \textbf{A guaranteed-failure result for unlabeled OOD detection
-  (\Cref{ch:label-blindness}).} We prove that when the self- or unsupervised
-  objective is independent of the label-relevant features, the features the model
-  learns carry no information about the label distinction and OOD detection is
-  \emph{guaranteed to fail}. This is the dissertation's one genuine impossibility
-  result. We show that the triggering conditions are unavoidable in realistic
-  deployments, and we introduce the \emph{Adjacent OOD} benchmark, which builds the
-  feature-overlap regime that exposes the failure and that standard near/far
-  benchmarks avoid. Proofs appear in \Cref{app:proofs}.
+  (\Cref{ch:label-blindness}).} We prove that an unlabeled detector cannot work in
+  the worst case once its self- or unsupervised objective is independent of the
+  label-relevant features: the representation the model settles on retains no trace
+  of the label distinction, so OOD detection is \emph{guaranteed to fail}. This is
+  the dissertation's one genuine impossibility result. We show its triggering
+  conditions arise in ordinary deployments, and we build the \emph{Adjacent OOD}
+  benchmark, which constructs the high feature overlap that exposes the failure, the
+  very regime that standard near/far suites sidestep. Proofs appear in
+  \Cref{app:proofs}.
 
   \item \textbf{A diagnosis and a recovery for single-domain OOD detection
   (\Cref{ch:domain-sensitivity-collapse}).} We identify and formalize
-  \emph{domain-sensitivity collapse} (DSC), the geometric mechanism by which
-  single-domain supervised training suppresses domain-shift directions, and we give
-  \emph{diagnostic} bounds (not impossibility guarantees) that predict where
-  distance- and logit-based scorers degrade. We then introduce \emph{Teacher-Guided
-  Training} (TGT), a training-time auxiliary objective that distills a frozen
-  multi-domain teacher to restore domain-sensitive geometry with no inference-time
-  overhead. Proofs appear in \Cref{app:dsc-proofs}.
+  \emph{domain-sensitivity collapse} (DSC): training a supervised model on one domain
+  flattens the very directions that a domain shift would disturb. The account is
+  geometric, and
+  its bounds are \emph{diagnostic} rather than impossibility guarantees, predicting
+  where distance- and logit-based scorers go numb. We then introduce
+  \emph{Teacher-Guided Training} (TGT), a training-time auxiliary objective that
+  distills a frozen multi-domain teacher to restore the lost geometry, at no
+  inference cost. Proofs appear in \Cref{app:dsc-proofs}.
 
   \item \textbf{An information-theoretic hallucination detector
   (\Cref{ch:hallucination-detection}).} We give a feasibility-by-trainability
-  argument: cross-layer mutual information in the residual stream is positive by
-  construction, so a contrastive objective that descends below its information floor
-  is evidence the signal exists. On that principle we build a one-class contrastive
-  probe over cross-layer activation pairs. The detector
+  argument. Cross-layer mutual information in the residual stream is positive by
+  construction, so a contrastive objective that drops below its information floor is
+  itself evidence the signal is there. On that footing we build a one-class
+  contrastive probe over pairs of cross-layer activations. The detector
   \emph{matches-or-outperforms, in the mean,} the strongest engineered probe.
-  Reaching parity with a heavily engineered method supports the principle rather
-  than topping a leaderboard, and a falsifiable prediction of the theory (the
-  failure of symmetric supervision) is confirmed by ablation. Proofs appear in
+  Landing in the same band as a heavily tuned method is what a correct principle
+  predicts, not a leaderboard win, and a falsifiable prediction of the theory, the
+  failure of symmetric supervision, is borne out by ablation. Proofs appear in
   \Cref{app:mi-hallucination-proofs}.
 
-  \item \textbf{A unifying representation-structure framework.} The three studies
-  share one idea: reliability depends on what the representation preserves, and
-  information theory and geometry both measure it. This framework, not any single
-  result, is the dissertation's main contribution.
+  \item \textbf{A unifying representation-structure framework.} One idea runs under
+  all three studies: reliability turns on what the representation preserves, and
+  information theory and geometry are two ways to measure it. This framework, not any
+  one result, is the dissertation's main contribution.
 \end{enumerate}
 
 \section{Methodology and Approach}
 \label{sec:intro:methodology}
 
-Our approach is to ask one question of each problem: \emph{what does the learned
+The method is to put one question to every problem: \emph{what does the learned
 representation preserve?} We treat reliability as a property of the representation
-itself, not of a scoring rule attached to a finished model. What matters is whether
-the representation still carries the structure that distinguishes the shift. Asking
-this one question is what lets us treat three unrelated-looking problems as one.
+itself, not of a score bolted onto a finished model. The thing that matters is
+whether the representation still carries what distinguishes the shift. Holding to
+that one question is what lets three unrelated-looking problems be handled as one.
 
-We measure preserved structure two ways and use whichever is clearer. The first is
-information-theoretic. The signal is the mutual information between the
+We gauge the preserved structure in two ways and take whichever is clearer. The first
+is information-theoretic: the signal is the mutual information between the
 representation and the label-relevant features, and the data-processing inequality
-says when that information can survive a learned
-map~\citep{shannon1948mathematical,cover1999elements,tishby2000information}. This
-view carries the impossibility result of \Cref{ch:label-blindness} and the
-feasibility argument of \Cref{ch:hallucination-detection}. The second is geometric.
-The same structure shows up as variance along particular directions and as the rank
-and orientation of the class and domain-shift subspaces, and its loss shows up as
-collapse. This view carries the diagnosis and recovery of
-\Cref{ch:domain-sensitivity-collapse}. The two describe the same thing: the
-information a representation discards is also the set of directions it flattens.
-\Cref{ch:background} defines the primitives both views need.
+governs whether that information can survive a learned
+map~\citep{shannon1948mathematical,cover1999elements,tishby2000information}. This view
+carries the impossibility result of \Cref{ch:label-blindness} and the feasibility
+argument of \Cref{ch:hallucination-detection}. The second is geometric: the same
+structure appears as variance along particular directions, and as the rank and
+orientation of the class and shift subspaces, and its loss appears as collapse. This
+view carries the diagnosis and recovery of \Cref{ch:domain-sensitivity-collapse}. The
+two views land on one thing, since the information a representation throws away is the
+same as the set of directions it flattens. \Cref{ch:background} defines the
+primitives both need.
 
-Each study combines theory with experiments, and each is careful about what it
-claims. We claim impossibility only where we prove it (\Cref{ch:label-blindness}).
-We present the bounds in \Cref{ch:domain-sensitivity-collapse} as diagnostic, not as
-guarantees. We report the detector in \Cref{ch:hallucination-detection} as reaching
-parity with the strongest baseline, and we show its losses rather than hide them.
-The dissertation shows when detection is possible and that principled methods reach
-that limit. It does not claim they are the best possible.
+Theory and experiment run together in every study, and every study is careful about
+its reach. We assert impossibility only where we prove it
+(\Cref{ch:label-blindness}). We give the bounds of
+\Cref{ch:domain-sensitivity-collapse} as diagnostic, not as guarantees. We report the
+detector of \Cref{ch:hallucination-detection} as reaching parity with the strongest
+baseline, losses shown and not buried. The dissertation pins down the conditions
+under which detection can work, and demonstrates principled methods operating at that
+boundary. It stops short of claiming they are the best possible.
 
 \section{Dissertation Organization}
 \label{sec:intro:organization}
 
-The rest of the dissertation is organized as follows. \Cref{ch:background} defines
-the lens-neutral primitives that the results chapters reuse, covering both the
-information-theoretic and the geometric vocabulary the title promises.
-\Cref{ch:literature-review} places the three studies against prior work, organized
-around the same two lenses so that the review reads as one argument rather than
-three.
+The dissertation is laid out as follows. \Cref{ch:background} fixes the lens-neutral
+primitives the results chapters reuse, supplying both the information-theoretic and
+the geometric vocabulary the title promises. \Cref{ch:literature-review} sets the
+three studies against prior work, organized by the same two lenses so the review
+reads as one argument and not three.
 
-The three results chapters then trace the arc of \Cref{fig:intro-spine}.
+The three results chapters then walk the arc of \Cref{fig:intro-spine}.
 \Cref{ch:label-blindness} proves the label blindness theorem and introduces the
-Adjacent OOD benchmark, establishing the regime in which unlabeled detection cannot
-succeed. \Cref{ch:domain-sensitivity-collapse} diagnoses domain-sensitivity collapse
-in single-domain models and presents Teacher-Guided Training as a recovery.
-\Cref{ch:hallucination-detection} derives and validates the information-theoretic
-hallucination detector. \Cref{ch:conclusion} draws the three together under the
-representation-structure framework, states the dissertation's limitations, and sets
-out future directions. Supporting proofs appear in three appendices, one per results
+Adjacent OOD benchmark, pinning down the regime where unlabeled detection cannot
+work. \Cref{ch:domain-sensitivity-collapse} diagnoses domain-sensitivity collapse in
+single-domain models and offers Teacher-Guided Training as the recovery.
+\Cref{ch:hallucination-detection} derives the information-theoretic hallucination
+detector and tests it. \Cref{ch:conclusion} pulls the three together under the
+representation-structure framework, sets out the dissertation's limitations, and
+names the open directions. Supporting proofs sit in three appendices, one per results
 chapter: \Cref{app:proofs} (label blindness), \Cref{app:dsc-proofs}
 (domain-sensitivity collapse), and \Cref{app:mi-hallucination-proofs} (hallucination
 detection).
@@ -233,22 +239,21 @@ detection).
 \label{sec:intro:significance}
 
 This work matters in two ways, one foundational and one practical. The foundational
-point is that a single condition, whether the representation preserves the
-distinguishing structure, underlies reliability across problems as different as
-unlabeled OOD detection, single-domain OOD detection, and language model
-hallucination, and that information theory and geometry are two descriptions of that
-one condition. Knowing \emph{when} a class of methods can work, before measuring how
-well one method performs, is something benchmarks alone cannot tell you. A
-guaranteed-failure result tells a practitioner what not to trust. A feasibility
-argument tells them where a signal must be.
+claim is that one condition, whether the representation preserves the distinguishing
+structure, sits under reliability across settings as far apart as detecting an
+out-of-distribution image and catching a language model's hallucination, and that
+information theory and geometry are two readings of that one condition. A benchmark
+cannot tell you \emph{whether} a whole class of methods can work; it only scores the
+methods you happen to run. The label blindness theorem tells a practitioner what not
+to trust, and the feasibility argument tells them where a signal has to be.
 
-The practical point is that each study gives concrete guidance for deployment. The
-label blindness result and the Adjacent OOD benchmark caution against unlabeled
-detection in the feature-overlap regimes that safety-critical systems actually face.
-The diagnosis of domain-sensitivity collapse, and its no-overhead remedy, speak
-directly to the narrow-domain models common in medical imaging, remote sensing, and
-industrial inspection. The hallucination detector offers a single-pass way to flag
-unsupported generation where factual accuracy matters. More broadly, the work gives
-AI safety a complement to benchmarking: a principled account of when
-reliability is achievable at all. \Cref{ch:conclusion} returns to this point once
-the evidence is in.
+The practical payoff is that each study yields concrete guidance for deployment. The
+label blindness result and the Adjacent OOD benchmark warn against unlabeled
+detection in the feature-overlap regimes safety-critical systems actually meet. The
+domain-sensitivity collapse diagnosis, and its no-overhead fix, bear directly on the
+narrow-domain models common in medical imaging and remote sensing. The hallucination
+detector gives a single-pass way to flag unsupported
+generation wherever factual accuracy is the point. Read together, the three studies
+hand AI safety a complement to benchmarking: a principled account of when reliability
+is within reach at all. \Cref{ch:conclusion} returns to the point once the evidence
+is in.

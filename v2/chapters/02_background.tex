@@ -1,5 +1,10 @@
 % chapters/02_background.tex
-% Drafted 2026-06-07. Shared formal vocabulary, per outlines/02_background.md.
+% Drafted 2026-06-07. Voice pass 2026-06-09 (style_guide.md §6): PROSE ONLY — the
+% running connective prose between/around the formal environments was re-authored to
+% the Ch.4 register (tricolon density under the cap, cross-chapter recitation cleared)
+% and gated with voice_meter.py. The definition/method/theorem BODIES and all math are
+% load-bearing and were left byte-for-byte; every \cite/\Cref/\label/\emph preserved.
+% Shared formal vocabulary, per outlines/02_background.md.
 % Two boundaries: (i) primitives-only — named phenomena/methods are defined where
 % contributed (Label-Blindness=Ch.4, DSC/TGT=Ch.5, layer-pair probe=Ch.6), so v1's
 % "Domain Feature Collapse" definition is deleted here and replaced by a DSC
@@ -18,10 +23,11 @@ where it is contributed, so the Label-Blindness theorem
 Training (\Cref{ch:domain-sensitivity-collapse}), and the one-class layer-pair
 probe (\Cref{ch:hallucination-detection}) are developed in their own chapters, not
 here. Second, this chapter \emph{defines} each primitive, while
-\Cref{ch:literature-review} surveys how the field has used it. Background defines,
-the literature review situates, and the results chapters deploy. The chapter follows
-that plan. \Cref{sec:bg:ood} through \Cref{sec:bg:llm} fix the settings and tasks,
-and \Cref{sec:bg:infotheory,sec:bg:ib,sec:bg:geometry} introduce the two lenses,
+\Cref{ch:literature-review} surveys how the field has used it. This chapter defines
+the vocabulary; the literature review then situates it and the results chapters
+deploy it. The chapter follows that plan. \Cref{sec:bg:ood} through
+\Cref{sec:bg:llm} fix the settings and tasks, and
+\Cref{sec:bg:infotheory,sec:bg:ib,sec:bg:geometry} introduce the two lenses,
 information theory and representation geometry, in the order
 \Cref{ch:literature-review} takes them up. Citations here are limited to
 foundational attributions; the surrounding literature is deferred to
@@ -33,8 +39,8 @@ foundational attributions; the surrounding literature is deferred to
 Out-of-distribution (OOD) detection is the task of recognizing when an input falls
 outside the scope of a model's training distribution. Supervised models predict
 well within the distribution of their training data but are prone to confident,
-wrong predictions on novel inputs. Such failures have serious consequences in
-high-stakes settings such as healthcare, autonomous driving, and security. The
+wrong predictions on novel inputs. Such failures carry serious consequences in
+high-stakes settings, from healthcare to autonomous driving and security. The
 task targets a \emph{semantic shift}~\citep{yang2021generalized}: the case in which
 no in-distribution label can match the true label, $\rvy \notin \sY_{\text{in}}$,
 where $\sY_{\text{in}}$ is the set of in-distribution training labels. Equivalently,
@@ -75,7 +81,8 @@ This task is the setting for \Cref{ch:label-blindness,ch:domain-sensitivity-coll
 \label{sec:bg:anomaly}
 
 Anomaly detection is adjacent to OOD detection and the two are often conflated, but
-they differ in scope, training assumptions, and evaluation. Anomaly detection
+they differ in scope and training assumptions, and so in how they are evaluated.
+Anomaly detection
 identifies individual points that deviate from the expected pattern \emph{within} a
 single distribution: rare events, noise, or fraud in the same domain as the
 training data. OOD detection instead flags inputs from a \emph{different}
@@ -150,10 +157,10 @@ Supervised training on a single-domain dataset induces a geometric failure mode 
 the learned representation: because domain features carry no label signal, the
 objective provides no gradient to preserve them, and the representation concentrates
 its variance in the class-discriminative subspace, discarding the
-domain-distinguishing directions an OOD shift would inhabit. That phenomenon,
-\emph{Domain-Sensitivity Collapse}, and its consequences for distance-based
-detection are the contribution of \Cref{ch:domain-sensitivity-collapse} and are not
-treated as background primitives here; the geometric vocabulary needed to state it
+domain-distinguishing directions an OOD shift would inhabit. That phenomenon is
+\emph{Domain-Sensitivity Collapse}. It, and what it does to distance-based
+detection, is the contribution of \Cref{ch:domain-sensitivity-collapse} and is not
+treated as a background primitive here; the geometric vocabulary needed to state it
 is given in \Cref{sec:bg:geometry}.
 
 \section{Large Language Models and Hallucination}
@@ -215,7 +222,7 @@ sections.
 
 Information theory~\citep{shannon1948mathematical} quantifies uncertainty and the
 dependence between random variables, and supplies the first of the dissertation's
-two lenses: a formal measure of what a representation retains about a target.
+two lenses: a formal way to measure how much of a target a representation has kept.
 
 \begin{definition}[Entropy and Conditional Entropy]
 The \emph{entropy} $H(\rvx)$ of a random variable $\rvx$ with distribution
@@ -308,16 +315,17 @@ form over augmented views~\citep{chen2020simclr} and its supervised specializati
 which treats all same-class examples as mutual positives~\citep{khosla2020supervised}.
 \Cref{ch:hallucination-detection} reads the bound in the contrapositive: a
 contrastive loss that \emph{descends} below $\log K$ on a held-out split is itself
-evidence that the target mutual information is positive. This is a feasibility
-argument, whose formal version, with supervised contrast over layer-pair views, is
-developed there and proved in \Cref{app:mi-hallucination-proofs}.
+evidence that the mutual information it estimates is strictly above zero. This is a
+feasibility argument, whose formal version, with supervised contrast over layer-pair
+views, is developed there and proved in \Cref{app:mi-hallucination-proofs}.
 
 \section{Representation Geometry}
 \label{sec:bg:geometry}
 
-The second lens reads the same retained structure geometrically: as the
-arrangement of learned features in space, and in particular which directions carry
-variance and which are collapsed. Let $z = f_\theta(\rvx) \in \R^{d}$ be the
+The second lens reads the same retained structure geometrically, as the
+arrangement of learned features in space, and above all in how variance is spread
+across directions and which directions have flattened. Let
+$z = f_\theta(\rvx) \in \R^{d}$ be the
 $d$-dimensional feature a model assigns to an input over a $C$-class dataset, and
 let $\Sigma$ be its empirical covariance with eigenvalues
 $\lambda_1 \ge \dots \ge \lambda_d$. The covariance decomposes into inter- and

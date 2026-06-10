@@ -40,8 +40,7 @@ representation holds as \emph{mutual information}, the amount its features still
 about the distinction at
 issue~\citep{shannon1948mathematical,cover1999elements}. Representation geometry
 casts the same thing as \emph{structure in feature space}: which directions carry
-variance, and which have flattened out. The two name one quantity, and we reach for
-whichever is sharper on a given problem. Three studies put the condition to work
+variance, and which have flattened out. The two name one quantity. Three studies put the condition to work
 along one arc, from failure to recovery to detection (\Cref{fig:intro-spine}). The
 rest of this chapter states the problem each study takes on, lists the
 contributions, sets out the method that ties them together, and maps the document.
@@ -110,13 +109,13 @@ such an objective is independent of the label-relevant features, the representat
 encodes none of the label distinction, and no detector built on it can succeed.
 We name this failure mode \emph{label blindness}. It bites hardest exactly where
 safety is at stake: once OOD inputs overlap in-distribution data in feature space, an
-unlabeled detector is blind in the very regime a deployed system runs into.
+unlabeled detector is blind in the regime a deployed system runs into.
 
 \paragraph{Single-domain OOD detection: structure suppressed.}
 Many real systems train on a single narrow domain, one imaging modality or one
 sensor or one institution's records. Here supervised training compresses the
-representation into a class-aligned, low-rank subspace and erases the directions
-along which a domain shift would register. The signal a detector needs was present in
+representation into a class-aligned, low-rank subspace and erases the domain-shift
+directions. The signal a detector needs was present in
 the training data and then dropped by the optimizer, leaving distance- and
 logit-based detectors unable to react to shifts they were meant to flag. This is not
 the fundamental impossibility of label blindness. The failure is \emph{induced} by
@@ -155,7 +154,7 @@ together.
   \item \textbf{A diagnosis and a recovery for single-domain OOD detection
   (\Cref{ch:domain-sensitivity-collapse}).} We identify and formalize
   \emph{domain-sensitivity collapse} (DSC): training a supervised model on one domain
-  flattens the very directions that a domain shift would disturb. The account is
+  flattens the domain-shift directions. The account is
   geometric, and
   its bounds are \emph{diagnostic} rather than impossibility guarantees, predicting
   where distance- and logit-based scorers go numb. We then introduce
@@ -166,13 +165,13 @@ together.
   \item \textbf{An information-theoretic hallucination detector
   (\Cref{ch:hallucination-detection}).} We give a feasibility-by-trainability
   argument. Cross-layer mutual information in the residual stream is positive by
-  construction, so a contrastive objective that drops below its information floor is
-  itself evidence the signal is there. On that footing we build a one-class
+  construction, so a contrastive objective can drop below its information floor only
+  if the signal is there. On that footing we build a one-class
   contrastive probe over pairs of cross-layer activations. The detector
   \emph{matches-or-outperforms, in the mean,} the strongest engineered probe.
-  Landing in the same band as a heavily tuned method is what a correct principle
-  predicts, not a leaderboard win, and a falsifiable prediction of the theory, the
-  failure of symmetric supervision, is borne out by ablation. Proofs appear in
+  A correct principle predicts exactly this parity, not a leaderboard win. The theory
+  also makes a falsifiable prediction, that symmetric supervision should fail, and an
+  ablation bears it out. Proofs appear in
   \Cref{app:mi-hallucination-proofs}.
 
   \item \textbf{A unifying representation-structure framework.} One idea runs under
@@ -187,8 +186,8 @@ together.
 The method is to put one question to every problem: \emph{what does the learned
 representation preserve?} We treat reliability as a property of the representation
 itself, not of a score bolted onto a finished model. The thing that matters is
-whether the representation still carries what distinguishes the shift. Holding to
-that one question is what lets three unrelated-looking problems be handled as one.
+whether the representation still carries what distinguishes the shift. Keeping to
+that one question is how three unrelated-looking problems become one.
 
 We gauge the preserved structure in two ways and take whichever is clearer. The first
 is information-theoretic: the signal is the mutual information between the

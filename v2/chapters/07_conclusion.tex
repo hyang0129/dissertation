@@ -27,8 +27,8 @@ keeps it, a detector can read it out.
 Two measurements made that condition usable. Mutual information puts a number on
 how much a representation still says about the distinction we need; the geometry of
 the feature space shows the same shortfall as variance that has drained out of the
-directions a shift would move along. We did not choose between them. Each chapter
-used whichever measurement stated its case more plainly, and across the three the
+shift directions. We did not choose between them. Each chapter
+used the measurement that stated its case more plainly, and across the three the
 picture is one of degree, of how much distinguishing structure the representation
 has left. \Cref{ch:label-blindness} works at the floor, where the structure is gone
 and no detector can win. \Cref{ch:domain-sensitivity-collapse} works one step up,
@@ -68,8 +68,8 @@ detector cannot survive.
 (\Cref{ch:domain-sensitivity-collapse}).}
 The second study moves to single-domain models, where the failure is not built in
 but brought on by training. Supervised training on one domain pulls the features
-into a single low-rank subspace aligned with the classes and flattens the directions
-a domain shift would move along, so distance-based and logit-based scorers stop
+into a single low-rank subspace aligned with the classes, leaving the domain-shift
+directions flat, so distance-based and logit-based scorers stop
 reacting to shifts they ought to catch. We call this \emph{domain-sensitivity collapse} (DSC) and
 account for it geometrically, with bounds that say where distance scores
 (\Cref{thm:dsc:dist-fail}) and logit scores (\Cref{prop:dsc:msp-insens}) lose their
@@ -86,8 +86,8 @@ from the representation the model already computes. The argument is constructive
 Because a transformer's residual stream carries information forward deterministically,
 the mutual information between two of its layers is positive, and an InfoNCE
 objective cannot fall below its information floor unless the signal it chases is
-really present. So the bare fact that the probe trains is the evidence that the
-signal exists. On that basis we train a one-class contrastive probe that reads pairs of
+really present. So the bare fact that the probe trains shows the signal exists.
+On that basis we train a one-class contrastive probe that reads pairs of
 cross-layer activations (\Cref{sec:hd:method}). It \emph{matches-or-outperforms, in the
 mean,} the strongest engineered probe (ACT-ViT;~\citealp{barshalom2025actvit}) over
 the models and datasets we ran (\Cref{sec:hd:results}). We do not read this as a
@@ -125,11 +125,11 @@ shift stays detectable only while that quantity is above zero, a point the
 data-processing inequality (\Cref{def:bg:dpi}) pins down in both. Domain-sensitivity
 collapse is stated geometrically: the signal is variance along the domain-shift
 directions, and detection fails once those directions fold into the class subspace
-(\Cref{def:bg:clssubspace}). These are not two findings but one seen twice. Throwing
-away mutual information and flattening a set of directions are the same act in two
-vocabularies. Reaching for the sharper vocabulary in each study is what exposed the
-condition the three share, and that condition, one test posed in either language, is
-what stands behind all three failures the dissertation took apart. It is the central
+(\Cref{def:bg:clssubspace}). These are not two findings but one seen twice: throwing
+away mutual information and flattening a set of directions are the same act. Reaching
+for the sharper vocabulary in each study exposed the
+condition the three share, and that condition, one test posed in either language,
+stands behind all three failures the dissertation took apart. It is the central
 contribution.
 
 \section{Broader Implications}
@@ -175,7 +175,7 @@ about reliability, and part of what the dissertation does is show how far they
 reach. The neural-collapse geometry behind single-domain failure
 (\Cref{def:bg:neuralcollapse}) and the cross-layer information behind hallucination
 detection are the same kind of claim about preserved structure, and seeing them that
-way is what knits the work together.
+way knits the work together.
 
 \subsection{Evaluation and Benchmarking}
 \label{subsec:concl:eval}
@@ -234,7 +234,7 @@ One limitation is common to all three studies and is worth stating once. The
 dissertation charts the limit of what can be detected and shows that principled
 methods reach it. It does not claim those methods are the best available at that
 limit, or that the idealized conditions hold exactly in every deployment. Holding
-that line is what keeps the limitations from eating the contribution: the
+that line keeps the limitations from crowding out the contribution: the
 contribution is the \emph{condition}, and the evidence that it can be met, not a
 claim to optimality.
 

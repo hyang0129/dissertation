@@ -22,18 +22,14 @@ produced an output, that lies outside what it can be trusted to handle, and neit
 can tell. What is missing in both cases is not accuracy but \emph{self-knowledge}:
 the ability to recognize the boundary of one's own competence.
 
-This dissertation studies that capability. It takes up two detection problems.
+This dissertation studies that capability through two detection problems.
 Out-of-distribution (OOD) detection flags an input unlike the training
 data~\citep{hendrycks2016baseline,huang2020survey}, and hallucination detection
 flags a generation not supported by
 fact~\citep{li2023halueval,lin2021truthfulqa}. The literature treats them as
-separate problems with separate machinery. We argue they turn on the same thing.
+separate problems with separate machinery, but we argue they turn on the same thing.
 \textbf{A shift is detectable exactly when the model's learned representation still
-holds the structure that distinguishes it.} The model may never have encoded that
-structure, or have encoded it and then lost it, or have kept it. If it was never
-there, a detector is left with no signal and fails outright. If training held the
-structure and then discarded it, detection degrades, but the structure can be put
-back. When the representation keeps it, a detector can read it out.
+holds the structure that distinguishes it.}
 
 We read the condition through two lenses. Information theory casts what a
 representation holds as \emph{mutual information}, the amount its features still say
@@ -99,25 +95,22 @@ opening are not exotic failures. They are what a confident model does once it is
 pushed past its training experience.
 
 We take up this gap in three settings. Each asks the same question, whether the
-representation still holds what distinguishes the shift, and each answers
+representation still encodes the relevant structure, and each answers
 differently, because the structure survives to a different degree.
 
 \paragraph{Unlabeled OOD detection: structure absent.}
 A recent line of work tries to flag distributional shift without labels, training on
-self- or unsupervised objectives that need no annotation. The trouble is that when
-such an objective is independent of the label-relevant features, the representation
-encodes none of the label distinction, and no detector built on it can succeed.
+self- or unsupervised objectives that need no annotation. When the objective ignores label-relevant features, the representation encodes no label distinction and detection fails.
 We name this failure mode \emph{label blindness}. It bites hardest exactly where
 safety is at stake: once OOD inputs overlap in-distribution data in feature space, an
-unlabeled detector is blind in the regime a deployed system runs into.
+unlabeled detection fails exactly where deployment demands it.
 
 \paragraph{Single-domain OOD detection: structure suppressed.}
 Many real systems train on a single narrow domain, one imaging modality or one
 sensor or one institution's records. Here supervised training compresses the
 representation into a class-aligned, low-rank subspace and erases the domain-shift
-directions. The signal a detector needs was present in
-the training data and then dropped by the optimizer, leaving distance- and
-logit-based detectors unable to react to shifts they were meant to flag. This is not
+directions. Training contained the signal; the optimizer discarded it. Distance- and
+logit-based detectors are then blind to the very shifts they should catch. This is not
 the fundamental impossibility of label blindness. The failure is \emph{induced} by
 how the model was trained, and a change to training can put back what training
 removed.

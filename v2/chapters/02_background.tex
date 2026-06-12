@@ -23,9 +23,7 @@ where it is contributed, so the Label-Blindness theorem
 Training (\Cref{ch:domain-sensitivity-collapse}), and the one-class layer-pair
 probe (\Cref{ch:hallucination-detection}) are developed in their own chapters, not
 here. Second, this chapter \emph{defines} each primitive, while
-\Cref{ch:literature-review} surveys how the field has used it. This chapter defines
-the vocabulary; the literature review then situates it and the results chapters
-deploy it. The chapter follows that plan. \Cref{sec:bg:ood} through
+\Cref{ch:literature-review} surveys how the field has used it. \Cref{sec:bg:ood} through
 \Cref{sec:bg:llm} fix the settings and tasks, and
 \Cref{sec:bg:infotheory,sec:bg:ib,sec:bg:geometry} introduce the two lenses,
 information theory and representation geometry, in the order
@@ -75,13 +73,13 @@ training (as MSP does), or \emph{training-aware}, modifying architecture, loss, 
 augmentation to improve detection. Conceptually, OOD detection targets
 \emph{epistemic} uncertainty, the model's uncertainty from limited knowledge,
 rather than the \emph{aleatoric} uncertainty intrinsic to noisy data.
-This task is the setting for \Cref{ch:label-blindness,ch:domain-sensitivity-collapse}.
+\Cref{ch:label-blindness,ch:domain-sensitivity-collapse} both work in this setting.
 
 \section{Anomaly Detection}
 \label{sec:bg:anomaly}
 
-Anomaly detection is adjacent to OOD detection and the two are often conflated, but
-they differ in scope and training assumptions, and so in how they are evaluated.
+Anomaly detection and OOD detection are often conflated but differ in scope,
+training assumptions, and evaluation.
 Anomaly detection
 identifies individual points that deviate from the expected pattern \emph{within} a
 single distribution: rare events, noise, or fraud in the same domain as the
@@ -127,7 +125,7 @@ the subject of \Cref{ch:label-blindness}.
 A dataset is drawn from a \emph{domain}: the environment, sensor, or generating
 conditions under which it was collected. Formally, a domain labelling function
 $f_{\rvd}$ assigns a domain label to each input, $\rvd = f_{\rvd}(\rvx)$. This
-dissertation is concerned with the case in which all training classes share one
+dissertation studies the case where all training classes share one
 domain $\rvd_1$, so that $f_{\rvd}(\rvx) = \rvd_1$ for every in-distribution
 $\rvx$; an input with $f_{\rvd}(\rvx) \neq \rvd_1$ can then be taken to lie outside
 the in-distribution label set. Because every in-distribution class shares the
@@ -158,9 +156,9 @@ the learned representation: because domain features carry no label signal, the
 objective provides no gradient to preserve them, and the representation concentrates
 its variance in the class-discriminative subspace, discarding the
 domain-distinguishing directions. That phenomenon is
-\emph{Domain-Sensitivity Collapse}. It, and what it does to distance-based
-detection, is the contribution of \Cref{ch:domain-sensitivity-collapse} and is not
-treated as a background primitive here; the geometric vocabulary needed to state it
+\emph{Domain-Sensitivity Collapse}. Domain-Sensitivity Collapse and its effect on distance-based detection form the
+contribution of \Cref{ch:domain-sensitivity-collapse} and are not treated as
+background primitives here; the geometric vocabulary needed to state it
 is given in \Cref{sec:bg:geometry}.
 
 \section{Large Language Models and Hallucination}
@@ -210,8 +208,8 @@ Detecting hallucination from a model's internals requires naming the object that
 position, a sequence of intermediate activations $h_1, \dots, h_L$ across its $L$
 layers, the \emph{residual stream}, with each $h_\ell \in \R^{d}$ the
 $d$-dimensional hidden state written by layer $\ell$. These activations are
-computed in a single forward pass and require no resampling, and they are the raw
-material an internal-state detector scores. The detector of
+computed in a single forward pass, require no resampling, and form the raw material
+an internal-state detector scores. The detector of
 \Cref{ch:hallucination-detection} learns from \emph{pairs} of such layer
 activations. The information-theoretic justification for why a pair of layers should
 share label-relevant information is built from the primitives of the next two
@@ -222,7 +220,7 @@ sections.
 
 Information theory~\citep{shannon1948mathematical} quantifies uncertainty and the
 dependence between random variables, and supplies the first of the dissertation's
-two lenses: a formal way to measure how much of a target a representation has kept.
+two lenses: a formal measure of how much information a representation retains about a target.
 
 \begin{definition}[Entropy and Conditional Entropy]
 The \emph{entropy} $H(\rvx)$ of a random variable $\rvx$ with distribution
@@ -245,8 +243,8 @@ variable $\rvz$.
 \label{def:bg:mi}
 \end{definition}
 
-One consequence matters for the language-domain chapter: information cannot be
-created by processing a variable.
+Information cannot be created by processing a variable---the constraint that makes
+the language-domain analysis tractable.
 
 \begin{definition}[Data Processing Inequality]
 If three random variables form a Markov chain $\rvx \rightarrow \rvy \rightarrow \rvz$
@@ -256,8 +254,8 @@ information about $\rvx$.
 \label{def:bg:dpi}
 \end{definition}
 
-The data processing inequality is what makes cross-layer mutual information
-analysable in \Cref{ch:hallucination-detection}: because later activations are
+The data processing inequality enables cross-layer mutual information analysis in
+\Cref{ch:hallucination-detection}: because later activations are
 deterministic functions of earlier ones, mutual information measured between learned
 embeddings lower-bounds the mutual information between the underlying layer
 activations, so a positive measured value certifies a positive true value
@@ -268,9 +266,8 @@ activations, so a positive measured value certifies a positive true value
 \label{sec:bg:ib}
 
 The information-theoretic view becomes a tool for representation learning through
-sufficiency and the information bottleneck, and it becomes \emph{operational}
-through the contrastive bound that lets mutual information be estimated and
-optimized.
+sufficiency and the information bottleneck, and \emph{operational} through a contrastive bound for estimating and optimizing
+mutual information.
 
 \begin{definition}[Minimal Sufficient Statistic]
 A statistic $T(\rvx)$ is \emph{sufficient} for $\rvy$ if it retains all the
@@ -295,9 +292,8 @@ statistic of \Cref{def:bg:mss}.
 Sufficiency drives the result of \Cref{ch:label-blindness}: when the only signal a
 representation retains is independent of the label-relevant features, the minimal
 sufficient statistic for the surrogate task carries nothing about the class, and
-detection built on it must fail. The same machinery is constructive in the language
-domain, but there mutual information must be \emph{estimated} from samples, which
-the contrastive objective makes possible.
+detection built on it must fail. The same machinery applies in the language domain, but there mutual information must
+be \emph{estimated} from samples; the contrastive objective provides this.
 
 \begin{method}[InfoNCE Lower Bound]
 Let two views $\mathrm{view}_a, \mathrm{view}_b$ be encoded and scored against
@@ -315,9 +311,9 @@ form over augmented views~\citep{chen2020simclr} and its supervised specializati
 which treats all same-class examples as mutual positives~\citep{khosla2020supervised}.
 \Cref{ch:hallucination-detection} reads the bound in the contrapositive: a
 contrastive loss that \emph{descends} below $\log K$ on a held-out split is itself
-evidence that the mutual information it estimates is strictly above zero. This is a
-feasibility argument, whose formal version, with supervised contrast over layer-pair
-views, is developed there and proved in \Cref{app:mi-hallucination-proofs}.
+evidence that the mutual information it estimates is strictly above zero. This feasibility argument is formalized with supervised contrast over layer-pair
+views in \Cref{ch:hallucination-detection} and proved in
+\Cref{app:mi-hallucination-proofs}.
 
 \section{Representation Geometry}
 \label{sec:bg:geometry}
@@ -357,7 +353,7 @@ in-distribution variance would register.
 \label{def:bg:clssubspace}
 \end{definition}
 
-This geometry determines how detection scores behave. \emph{Distance-based} scores,
+This geometry governs detection scores directly. \emph{Distance-based} scores,
 nearest-neighbour distance~\citep{sun2022out} and the Mahalanobis
 score~\citep{lee2018simple}, weight directions by Euclidean coordinate differences,
 so when the spectrum is concentrated they are dominated by the high-variance class
@@ -379,9 +375,8 @@ out-of-distribution detection.
 Neural collapse is the asymptotic limit; \Cref{ch:domain-sensitivity-collapse}
 characterizes the same anisotropy at any stage of training, states when it makes
 distance-based detection fail, and gives a training-time remedy, with the formal
-results in \Cref{app:dsc-proofs}. These geometric primitives, together with the
-information-theoretic ones of \Cref{sec:bg:infotheory,sec:bg:ib}, are the two lenses
-the remainder of the dissertation applies: \Cref{ch:literature-review} surveys their
+results in \Cref{app:dsc-proofs}. The remainder of the dissertation applies these two lenses---geometric and
+information-theoretic: \Cref{ch:literature-review} surveys their
 use across vision OOD and language hallucination, and
 \Cref{ch:label-blindness,ch:domain-sensitivity-collapse,ch:hallucination-detection}
 deploy them.

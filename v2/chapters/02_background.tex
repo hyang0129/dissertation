@@ -78,8 +78,8 @@ rather than the \emph{aleatoric} uncertainty intrinsic to noisy data.
 \section{Anomaly Detection}
 \label{sec:bg:anomaly}
 
-Anomaly detection and OOD detection are often conflated but differ in scope,
-training assumptions, and evaluation.
+Anomaly detection and OOD detection are often conflated but differ along three
+axes: scope, training assumptions, evaluation.
 Anomaly detection
 identifies individual points that deviate from the expected pattern \emph{within} a
 single distribution: rare events, noise, or fraud in the same domain as the
@@ -208,8 +208,8 @@ Detecting hallucination from a model's internals requires naming the object that
 position, a sequence of intermediate activations $h_1, \dots, h_L$ across its $L$
 layers, the \emph{residual stream}, with each $h_\ell \in \R^{d}$ the
 $d$-dimensional hidden state written by layer $\ell$. These activations are
-computed in a single forward pass, require no resampling, and form the raw material
-an internal-state detector scores. The detector of
+computed in a single forward pass and require no resampling. They form the raw
+material an internal-state detector scores. The detector of
 \Cref{ch:hallucination-detection} learns from \emph{pairs} of such layer
 activations. The information-theoretic justification for why a pair of layers should
 share label-relevant information is built from the primitives of the next two

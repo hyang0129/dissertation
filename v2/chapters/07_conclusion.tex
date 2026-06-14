@@ -42,8 +42,8 @@ lists the questions they leave open.
 \label{sec:concl:summary}
 
 The contributions sit along the spine just sketched. We take the three studies one
-at a time and then say what joins them, since the dissertation's main claim is that
-they form a single argument and not three separate ones.
+at a time and then name their common thread, since the dissertation's main claim is
+that they form a single argument and not three separate ones.
 
 \subsection{Contributions by Study}
 \label{subsec:concl:per-pillar}
@@ -53,11 +53,11 @@ detection (\Cref{ch:label-blindness}).}
 The first study asks whether an out-of-distribution detector can be built without
 labels. In the general case it cannot. If the self- or unsupervised surrogate task
 is independent of the label-relevant features, the minimal sufficient statistic the
-model learns holds nothing about the label distinction, and detection against that
+model learns encodes nothing of the label distinction, and detection against that
 distinction is \emph{guaranteed to fail} (\Cref{mainbodyfailood}). This is the one
 place in the dissertation where we prove an impossibility instead of diagnosing a
-difficulty. The result is not that current methods happen to score badly; it is
-that no method resting on a label-independent objective can work in the worst case.
+difficulty. The result is not that current methods happen to score badly, but that no method
+resting on a label-independent objective can work in the worst case.
 The conditions that trigger the failure are not exotic either. They arise in
 ordinary deployments (\Cref{mainbodyoverlap}). To make the failure visible we built
 the \emph{Adjacent OOD} benchmark, which forces the feature overlap that standard
@@ -68,9 +68,9 @@ detector cannot survive.
 (\Cref{ch:domain-sensitivity-collapse}).}
 The second study moves to single-domain models, where the failure is not built in
 but brought on by training. Supervised training on one domain pulls the features
-into a single low-rank subspace aligned with the classes, leaving the domain-shift
-directions flat, so distance-based and logit-based scorers stop
-reacting to shifts they ought to catch. We call this \emph{domain-sensitivity collapse} (DSC) and
+into a single low-rank subspace aligned with the classes and flattens the
+domain-shift directions. Distance- and logit-based scorers then stop reacting to
+shifts they ought to catch. We call this \emph{domain-sensitivity collapse} (DSC) and
 account for it geometrically, with bounds that say where distance scores
 (\Cref{thm:dsc:dist-fail}) and logit scores (\Cref{prop:dsc:msp-insens}) lose their
 grip. The bounds are diagnostic. They predict and explain the failure; unlike the
@@ -103,8 +103,8 @@ structure (\Cref{cor:hd:symcon}), and the ablation breaks down just as it says.
 \label{subsec:concl:synthesis}
 
 Taken separately, the three studies have little in common: a vision benchmark in
-one, a histopathology model in another, a language model at the end. What makes them
-one dissertation is that each puts the same question to its own setting. Has the
+one, a histopathology model in another, a language model at the end. They form one
+dissertation because each puts the same question to its own setting. Has the
 representation kept what tells the shift apart? They differ only in the answer,
 because each sits at a different point on a single arc.
 
@@ -155,8 +155,8 @@ collapse tells the teams who run narrow-domain models, in clinical imaging or re
 sensing or any pipeline built on a single sensor, why a distance- or logit-based
 monitor may be quietly missing shifts, and it hands them a fix that costs nothing
 once the model is live. Locating the hallucination signal inside a model's
-activations gives factuality-critical applications a way to check a generation
-without paying for extra samples. None of these is a benchmark gain. Each is an
+activations lets factuality-critical applications check a generation without paying
+for extra samples. None of these is a benchmark gain. Each is an
 account of how the failure works, and a reliability check whose guarantees we
 understand earns more trust than one backed only by the benchmarks it was lucky
 enough to be tried on~\citep{lakshminarayanan2017simple}.
@@ -187,14 +187,13 @@ benchmarks dodge the overlap regime where label blindness shows up, and so hand 
 reassuring numbers for methods the theory expects to fail in the field. The
 single-domain evaluation behind domain-sensitivity collapse closes a similar gap,
 between lab habit, which leans toward multi-domain data, and deployment, which is
-often narrow. The wider point is that how you evaluate is itself a choice with
-consequences. A benchmark that cannot even express a failure will never flag it, and
+often narrow. How you evaluate is itself a choice with consequences. A benchmark that cannot even express a failure will never flag it, and
 a method is only as trustworthy as the conditions its benchmarks actually reach.
 
 \section{Limitations}
 \label{sec:concl:limitations}
 
-It is worth being clear about how far the claims go and where they stop. The thesis
+How far the claims reach, and where they stop, is worth stating plainly. The thesis
 has two halves. The work marks out \emph{when} detection is possible, and it shows
 that principled methods get to that boundary. It does not show those methods are
 optimal, or that the idealized conditions hold without slack.

@@ -1,307 +1,337 @@
 % chapters/03_literature_review.tex
-% Drafted 2026-06-07. Regenerated 2026-06-09 via the regenerate-not-patch workflow
-% (style_guide.md §6): connective prose re-authored from a bare-claims skeleton
-% conditioned on Ch.4 rhythm spans, with the survey's rule-of-three citation lists
-% broken into uneven groupings to bring tricolon density under the cap; gated with
-% voice_meter.py. Every \cite/\Cref/\emph preserved verbatim.
-% Cross-cutting related work organized around the two lenses (information theory +
-% representation geometry), per outlines/03_literature_review.md.
-% Division of labor: Ch.3 introduces and defines a work for thematic placement;
-% each results chapter's Related Work positions its direct baselines with a §3.x
-% back-reference (no re-survey). No \result numbers appear here (review prose);
-% dataset/benchmark cites live in each chapter's Experimental Setup, not here.
+% Drafted 2026-06-07. Revised 2026-07-21 for reader-facing synthesis and flow.
+% The chapter reviews prior work through two shared perspectives (information
+% theory and representation geometry) before applying them to OOD and
+% hallucination detection. Architecture and probing work is integrated with the
+% representation section so that the methodological substrate precedes both
+% application surveys. Chapter 2 retains formal definitions; Chapters 4--6 retain
+% direct baseline comparisons and contribution-specific novelty arguments.
 \chapter{Literature Review}
 \label{ch:literature-review}
 
-One claim runs through this dissertation across three reliability settings: a
-distributional or factual shift can be detected only when the learned representation
-has kept the features that separate the shift from the training data. Two lenses sharpen
-the claim. Under \emph{information theory}, what a representation keeps about a target
-is measured by its mutual information, and detection remains possible only while that
-measure stays nonzero. Under \emph{representation geometry}, the same retention is the
-layout of features in space: the spread of variance across directions and which of
-them have collapsed. The two lenses measure one object: retained representation
-structure. This chapter tracks that thesis, not three topic surveys stapled together. \Cref{sec:lit:infotheory,sec:lit:representation} lay
-the shared frame, the information-theoretic and geometric vocabularies and the bridge
-between them. \Cref{sec:lit:ood,sec:lit:hallucination} then apply that question twice: once in
-vision OOD detection and once in language hallucination detection.
-\Cref{sec:lit:architectures} covers the substrate, the architectures and foundation
-models whose internals those two sections probe. The boundary with the rest of the
-document is fixed throughout: \Cref{ch:background} owns the formal \emph{definitions} of
-the primitives named here, and each results chapter's related-work section sets its
-direct comparators against the placement fixed in this chapter.
+Detection depends on what a model represents about the distinction of interest.
+Information theory describes the statistical dependence between a representation
+and that distinction, while representation geometry describes how the relevant
+features are organized across directions in feature space. This chapter reviews
+how these perspectives developed in machine learning and how they shape two
+application areas: out-of-distribution (OOD) detection and hallucination detection.
+\Cref{ch:background} defines the formal tools used throughout the dissertation;
+the focus here is how prior work uses them and which questions remain unresolved.
 
 \section{Information Theory in Machine Learning}
 \label{sec:lit:infotheory}
 
-Information theory supplies the formal language for ``what a representation
-preserves.'' Its foundational quantities, entropy and the conditional entropy and
-mutual information built from it, originate with \citet{shannon1948mathematical} and
-are developed in the standard reference of \citet{cover1999elements}; Fano's
-inequality~\citep{robert1952fano} ties them directly to the achievable error of a
-predictor, and the infomax principle~\citep{linsker1988self} first proposed
-maximizing transmitted information as an objective for learned representations.
-This section reviews these tools' \emph{use} in understanding learning;
-\Cref{ch:background} owns their definitions and is assumed here.
+Information theory supplies a formal language for uncertainty and statistical
+dependence. Entropy and mutual information originate with
+\citet{shannon1948mathematical} and are developed in the standard reference of
+\citet{cover1999elements}. Fano's inequality~\citep{robert1952fano} connects these
+quantities to prediction error, while the infomax principle~\citep{linsker1988self}
+proposes maximizing transmitted information as a representation-learning
+objective. Together, these ideas make it possible to ask whether a learned feature
+map retains information about a target, rather than only whether a particular
+predictor succeeds.
 
-\paragraph{The information bottleneck and minimal sufficiency.}
+\paragraph{The Information Bottleneck and Minimal Sufficiency.}
 The information bottleneck~\citep{tishby2000information} frames representation
-learning as a trade-off between compressing the input and preserving information
-about the label, formalising the notion of a \emph{minimal sufficient statistic}
-for a prediction task. Applied to deep networks~\citep{tishby2015deep}, it gave
-rise to the information-plane account of training~\citep{shwartz2017opening}, in
-which layers first fit and then compress; the universality of that compression
-phase was subsequently contested~\citep{saxe2019information}, and the debate
-clarified that compression is architecture- and nonlinearity-dependent rather than
-inevitable. More recent work connects this compression to the geometry of the
-learned features~\citep{shwartz2023compress}, an explicit hinge between the two
-lenses of this review. The variational information bottleneck~\citep{alemi2017deep}
-made the principle trainable at scale, while \citet{achille2018emergence} showed
-that minimality and invariance to nuisances are two faces of the same
-information-theoretic quantity, and \citet{federici2020learning} extended the
-bottleneck to the multi-view setting that underlies contrastive learning.
+learning as a tradeoff between compressing the input and retaining information
+about the target. It thereby connects compression to the minimal sufficient
+statistic defined in \Cref{ch:background}. Its application to deep
+networks~\citep{tishby2015deep} motivated the information-plane account of
+training~\citep{shwartz2017opening}, in which networks first fit the data and then
+compress their internal representations. Subsequent work showed that the observed
+compression phase is not universal and depends on the architecture and its
+nonlinearities~\citep{saxe2019information}.
 
-\paragraph{Estimating mutual information.}
-Because mutual information is intractable for high-dimensional learned features, a
-literature on variational bounds underpins its use as a training
-signal~\citep{poole2019variational}. MINE~\citep{belghazi2018mutual} estimates it
-with a neural critic; Deep InfoMax~\citep{hjelm2019learning} maximizes a bound
-between local and global features; and the InfoNCE
-objective~\citep{oord2018representation} provides the lower bound that the
-contrastive methods of \Cref{sec:lit:representation} optimize. This dissertation
-uses that connection directly: when an InfoNCE loss can be trained below its
-floor, the mutual information it bounds must be strictly positive.
-Complementary to estimation, an information-theoretic account of
-generalization~\citep{xu2017information}, building on classical PAC
-bounds~\citep{mcallester1999pac}, bounds generalization error by the information a
-learned hypothesis retains about its training sample.
+Later work made the bottleneck useful beyond this descriptive debate. The
+variational information bottleneck~\citep{alemi2017deep} provides a tractable
+training objective. Minimality also yields invariance to nuisance
+variables~\citep{achille2018emergence}, and the multi-view information
+bottleneck~\citep{federici2020learning} connects sufficiency to contrastive
+learning. Compression has also been related to changes in feature
+geometry~\citep{shwartz2023compress}, providing an early connection to the
+geometric literature reviewed in \Cref{sec:lit:representation}.
 
-So information theory names, in numbers, the label- and shift-relevant content a
-representation retains. The next section gives the geometric account.
+\paragraph{Estimating Mutual Information.}
+Mutual information is difficult to estimate reliably for high-dimensional learned
+features, so practical methods commonly optimize variational
+bounds~\citep{poole2019variational}. MINE~\citep{belghazi2018mutual} learns a neural
+critic for this purpose, while Deep InfoMax~\citep{hjelm2019learning} maximizes a
+bound between local and global representations. InfoNCE
+\citep{oord2018representation} supplies the lower bound used by many contrastive
+methods. Under its standard sampling construction, a loss below the
+zero-information value $\log K$ gives a strictly positive lower bound on the mutual
+information between the paired views.
 
-\section{Representation Learning and Geometry}
+Information theory also connects representation learning to generalization.
+Building on classical PAC bounds~\citep{mcallester1999pac},
+\citet{xu2017information} bound generalization error using the information that a
+learned hypothesis retains about its training sample. This literature establishes
+both the promise and the limitation of the information-theoretic view: it can
+state whether dependence remains in principle, but practical detection also
+depends on how that information is encoded and estimated.
+
+\section{Representation Learning, Geometry, and Probing}
 \label{sec:lit:representation}
 
-If \Cref{sec:lit:infotheory} asks \emph{how much} a representation retains, this
-section asks \emph{the arrangement of retained structure}: both how representations
-are learned and the geometric structure they encode. \Cref{ch:background}
-defines the geometric primitives, from the feature spectrum and its effective rank to
-the split between class-discriminative and shift subspaces and the limiting case of
-neural collapse; here we survey the field's use of them.
+The information-theoretic view asks how much dependence a representation retains.
+The geometric view asks how the learned features are arranged and whether a
+downstream method can use the directions in which they vary. \Cref{ch:background}
+defines the feature spectrum and effective rank as well as the class-discriminative
+subspace. It also defines neural collapse. This section reviews how learning
+objectives and architectures produce that geometry and how probing methods examine
+it.
 
-\paragraph{Self-supervised and contrastive representation learning.}
-Modern representations are dominated by self-supervised objectives that learn
-without labels. Pretext-task learning~\citep{gidaris2018unsupervised} gave way to
-instance-discriminative contrastive methods, SimCLR~\citep{chen2020simclr,chen2020simple}
-and MoCo~\citep{he2020momentum}, and then to non-contrastive and masked
-alternatives, among them DINO~\citep{Caron2021dino}, masked
-autoencoding~\citep{he2022masked}, and SimSiam~\citep{chen2021exploring}. The
-supervised contrastive loss~\citep{khosla2020supervised} carries the same
-view-alignment machinery into the labeled setting, the paradigm transfers to language
-through sentence embeddings~\citep{gao2021simcse}, and large-scale self-supervised
-vision features~\citep{oquab2023dinov2} now serve as general-purpose backbones. This
-lineage descends from a long history of unsupervised representation learning, the
-component-analysis and factor
-models~\citep{pearson1901liii,hyvarinen2000independent,tipping1999probabilistic,bartholomew1987latent}
-and autoencoders~\citep{hinton2006reducing,vincent2008extracting,baldi2012autoencoders}.
-We keep it here only as context, since generative latent-variable modeling is
-orthogonal to this dissertation's thesis.
+\paragraph{Architectures and Pretrained Representations.}
+Convolutional networks established the modern visual representation
+pipeline~\citep{lecun1998gradient,krizhevsky2012imagenet,he2016deep}. The
+transformer~\citep{vaswani2017attention} and its vision
+adaptations~\citep{dosovitskiy2020image,Touvron2021deit} extended the same basic
+pipeline to sequence and patch representations. At larger scale, contrastive
+vision--language models~\citep{radford2021learning} and self-supervised vision
+backbones~\citep{oquab2023dinov2} provide general-purpose features. The language
+side developed through pretrained and generative model families
+\citep{radford2018improving,devlin2018bert,brown2020language,raffel2020exploring}.
+These architectures matter here because their intermediate representations are
+the inputs to the detectors studied later in the dissertation.
 
-\paragraph{The geometry of learned features.}
-A second body of work characterizes the \emph{shape} of learned representations.
-Neural collapse~\citep{Papyan2020nc} identifies the equiangular-tight-frame
-geometry to which classifier features converge in the terminal phase of training,
-shown to be the global optimum of the cross-entropy
-objective~\citep{Zhu2021nc} and to persist under
-transfer~\citep{Galanti2022collapse}; the related dimensional or rank
-collapse~\citep{Jing2022rank} describes the loss of feature directions more
-broadly. Crucially for this dissertation, \citet{Haas2022ncood} link
-collapse-adjacent geometry to reduced OOD separability, the geometric
-counterpart of the information-theoretic claim that compressing away nuisance
-directions discards exactly the shift-distinguishing structure. The
-alignment-and-uniformity analysis of contrastive
-learning~\citep{wang2021understanding} reads a contrastive loss directly as two
-geometric properties of the feature sphere. This makes it the clearest bridge
-between the two lenses: a quantity defined by mutual information is realised as a
-geometric arrangement. Together with the sufficiency--invariance
-duality~\citep{achille2018emergence} and the
-compression--collapse link~\citep{shwartz2023compress}, these works justify
-treating information theory and geometry as one analytic frame rather than two.
+\paragraph{Self-Supervised and Contrastive Learning.}
+Self-supervised objectives learn representations without class labels. Early
+methods used pretext tasks~\citep{gidaris2018unsupervised}. Instance
+discrimination later produced SimCLR~\citep{chen2020simclr,chen2020simple}, while
+MoCo~\citep{he2020momentum} introduced a momentum encoder.
+DINO~\citep{Caron2021dino} and SimSiam~\citep{chen2021exploring} remove explicit
+negative pairs. Masked
+autoencoding~\citep{he2022masked} instead reconstructs hidden input patches.
+Supervised contrastive
+learning~\citep{khosla2020supervised} uses labels to define positive groups, while
+the same view-alignment framework has been applied to sentence
+embeddings~\citep{gao2021simcse}. Large-scale self-supervised features now serve as
+general-purpose vision backbones~\citep{oquab2023dinov2}.
 
-\paragraph{Knowledge distillation: a cross-cutting thread.}
-One line of work runs through two later chapters, so we introduce it here rather
-than in either chapter's related work. Knowledge
-distillation~\citep{hinton2015distilling} transfers structure from a teacher
-network to a student. Its representation-level variants, beginning with contrastive
-representation distillation~\citep{tian2020crd} and extending to a language-model
-form~\citep{sun2020codir} and to contrastive distillation across augmented
-views~\citep{zhang2022cds}, cast distillation as a mutual-information objective
-between teacher and student features. \Cref{ch:domain-sensitivity-collapse} builds
-its method on this lineage (distilling a frozen multi-domain teacher to repopulate
-collapsed directions), while \Cref{ch:hallucination-detection} positions its
-layer-pair construction \emph{against} it; both back-reference the introduction
-given here.
+These methods extend a longer lineage of unsupervised representation learning.
+Component analysis and factor models
+\citep{pearson1901liii,hyvarinen2000independent,tipping1999probabilistic,bartholomew1987latent}
+seek low-dimensional explanatory directions, while autoencoders
+\citep{hinton2006reducing,vincent2008extracting,baldi2012autoencoders} learn an
+encoding through reconstruction. Their objectives differ, but all determine which
+features survive compression and therefore which distinctions remain available to
+a detector.
 
-Geometry is the second lens on retained representation structure. Read through alignment
-and uniformity on one side and collapse on the other, it measures the same structure
-that information theory quantifies.
+\paragraph{The Geometry of Learned Features.}
+Neural collapse~\citep{Papyan2020nc} describes an equiangular-tight-frame geometry
+that emerges in the terminal phase of classifier training. Under the assumptions
+of an unconstrained-feature model, this geometry is a global optimum of the
+cross-entropy objective~\citep{Zhu2021nc}; related structure can persist under
+transfer~\citep{Galanti2022collapse}. Dimensional or rank
+collapse~\citep{Jing2022rank} describes the broader loss of feature directions.
+For OOD detection, collapse-adjacent geometry can reduce the separation between
+in-distribution and OOD features~\citep{Haas2022ncood}.
+
+Contrastive learning provides a direct connection between objectives and geometry.
+The alignment-and-uniformity analysis~\citep{wang2021understanding} characterizes
+the same contrastive objective in terms of proximity between positive pairs and
+coverage of the feature space. Thus, InfoNCE and related losses admit complementary
+information-theoretic and geometric readings. Along with the
+sufficiency--invariance connection~\citep{achille2018emergence} and analyses that
+relate compression to collapse~\citep{shwartz2023compress}, this work explains why
+the amount of retained information and its arrangement should be studied together
+without treating them as identical quantities.
+
+\paragraph{Probing Internal Representations.}
+Probing asks what information an intermediate representation makes recoverable.
+Linear classifiers trained on frozen layers provide the canonical diagnostic
+method~\citep{alain2017understanding,belinkov2019analysis}. This approach has
+identified linguistic structure in language models
+\citep{tenney2019bert,hewitt2019structural} and specialized roles for individual
+attention heads~\citep{voita2019analyzing}. Information-theoretic formulations
+help distinguish information encoded by the model from information learned by an
+overly expressive probe~\citep{voita2019information}. Concept- and circuit-level
+interpretability~\citep{kim2018interpretability,olah2020zoom} and gradient-based
+saliency~\citep{selvaraju2017grad} provide related ways to locate influential
+features. These methods establish the methodological basis for asking where a
+detectable signal resides inside a network.
+
+\paragraph{Knowledge Distillation.}
+Knowledge distillation~\citep{hinton2015distilling} transfers behavior or
+representations from a teacher network to a student. Contrastive representation
+distillation~\citep{tian2020crd} applies this idea to learned features, and
+\citet{sun2020codir} extend it to language models. Contrastive distillation across
+augmented views~\citep{zhang2022cds} provides a within-network variant. These
+methods express teacher--student or view agreement through a mutual-information
+objective. The same lineage supports two distinct uses later in the dissertation:
+transferring domain-sensitive features to a visual student and distinguishing
+cross-network distillation from cross-layer views within one language model.
 
 \section{Out-of-Distribution Detection}
 \label{sec:lit:ood}
 
-Out-of-distribution (OOD) detection asks whether a test input came from the
-training distribution. Two of this dissertation's contributions work in this setting: the label blindness
-impossibility result (\Cref{ch:label-blindness}) and the single-domain diagnosis
-(\Cref{ch:domain-sensitivity-collapse}). Read through the representation lens, every
-method here is implicitly a bet about which structure the representation kept.
+OOD detection identifies inputs that fall outside the distributional or semantic
+scope represented by the training data. The literature differs both in which OOD
+regime it evaluates and in which part of a trained model supplies the detection
+signal. These distinctions are central to the label-blindness analysis of
+\Cref{ch:label-blindness} and the single-domain analysis of
+\Cref{ch:domain-sensitivity-collapse}.
 
-\paragraph{Post-hoc scorers.}
-The dominant paradigm attaches a scoring function to a trained classifier. The
-logit- and softmax-family scorers begin with maximum softmax
-probability~\citep{hendrycks2016baseline} and extend through input
-preprocessing~\citep{liang2017enhancing} to the energy
-score~\citep{liu2020energy} and the generalized-entropy score~\citep{liu2023gen}.
-Activation shaping~\citep{sun2021react,xuscaling} and logit
-sparsification~\citep{Sun2022dice} refine them further, and large-label-space variants
-carry the family to many classes~\citep{huang2021mos}. The distance- or
-feature-family scorers instead measure proximity to the training manifold: the
-class-conditional Mahalanobis detector~\citep{lee2018simple}, self-supervised
-outlier scoring~\citep{sehwag2021ssd}, the residual-space ViM
-score~\citep{Wang2022vim}, the decision-boundary distance of
-fDBD~\citep{liu2024fdbd}, and nearest-neighbour guidance~\citep{park2023nnguide}.
-These scorers excel on multi-domain benchmarks but, as
-\Cref{ch:domain-sensitivity-collapse} shows, the distance family degrades sharply
-when the training data is single-domain, a failure of the representation, not of
-the scorer.
+\paragraph{Problem Framing and Benchmarks.}
+The generalized-OOD taxonomy~\citep{yang2021generalized} organizes several forms of
+distribution shift, while OpenOOD
+\citep{yang2022openood,zhang2023openood} standardizes evaluation across near- and
+far-OOD settings so that methods can be compared under a common protocol despite
+substantial differences in how much visual or semantic structure the two
+distributions share. The broader open-set framing predates deep
+learning~\citep{drummond2006open}. Adjacent OOD detection, introduced in
+\Cref{ch:label-blindness}, isolates the high-overlap case in which held-out labels
+cannot be separated using incidental dataset differences.
 
-\paragraph{Benchmarks and problem framing.}
-The task has been consolidated under the generalized-OOD
-taxonomy~\citep{yang2021generalized} and the OpenOOD
-benchmarks~\citep{yang2022openood,zhang2023openood}, which standardise the near-
-versus far-OOD distinction; the broader open-set framing predates deep
-learning~\citep{drummond2006open}. \Cref{ch:label-blindness} adds the
-\emph{adjacent}-OOD regime to this vocabulary.
+\paragraph{Post-Hoc Scorers.}
+The dominant paradigm attaches a scoring function to a trained classifier. Output-
+and logit-based methods begin with maximum softmax
+probability~\citep{hendrycks2016baseline} and input
+preprocessing~\citep{liang2017enhancing}. Later examples include the energy
+score~\citep{liu2020energy} and generalized entropy~\citep{liu2023gen}.
+Activation shaping~\citep{sun2021react,xuscaling} changes the intermediate
+features, whereas logit sparsification~\citep{Sun2022dice} changes how they reach
+the output. Related methods adapt the scoring framework to large label
+spaces~\citep{huang2021mos}.
 
-\paragraph{Unlabeled, self-supervised, and zero-shot detection.}
-A growing literature detects OOD inputs without OOD labels, the setting
-\Cref{ch:label-blindness} analyzes. Self-supervised auxiliary tasks improve
-robustness and OOD sensitivity~\citep{hendrycks2019using,mohseni2020self},
-contrasting shifted instances sharpens the score~\citep{tack2020csi}, and
-likelihood-based detectors operate fully unsupervised~\citep{xiao2020likelihood};
-recent work pushes unsupervised and training-data-free
-detection further~\citep{liu2023unsupervised,du2024and,du2024does}.
-Vision--language models enable zero-shot detection from text
-alone~\citep{esmaeilpour2022zero,wang2023clipn}. \Cref{ch:label-blindness} shows
-this entire unsupervised family inherits a structural limit: when the surrogate task is independent of the label-relevant
-features, no amount of representation quality can recover the discarded signal.
+Feature-based methods instead measure the position of a test representation
+relative to the training features. This family includes the class-conditional
+Mahalanobis detector~\citep{lee2018simple}, self-supervised outlier
+scoring~\citep{sehwag2021ssd}, the residual-space ViM
+score~\citep{Wang2022vim}, the decision-boundary distance used by
+fDBD~\citep{liu2024fdbd}, and nearest-neighbor
+guidance~\citep{park2023nnguide}. Both families depend on the representation:
+output-based methods see only directions used by the classifier head, while
+feature-based methods can use only distinctions that remain in the feature space.
 
-\paragraph{Single-domain detection, collapse, and transfer.}
-The setting closest to \Cref{ch:domain-sensitivity-collapse} concerns features that
-have lost rank. Neural collapse harms OOD separability~\citep{Haas2022ncood}, and
-neural-collapse geometry has itself been turned into a detector in
-NECO~\citep{BenAmmar2024neco}, the published method nearest this dissertation's
-geometric account and the one \Cref{ch:domain-sensitivity-collapse} positions
-against most directly. Naive fine-tuning of pretrained features distorts the
-geometry that supplies strong OOD baselines~\citep{Kumar2022lp}, contrastive
-training can partially preserve it~\citep{Winkens2020contrastive}, and the problem
-is acute in specialized single domains such as medical
-imaging~\citep{Berger2021medood,zhou2022rethinking}. Orthogonal to the scorer
-question, ensemble and Bayesian
-methods~\citep{lakshminarayanan2017simple,daxberger2019bayesian,pmlr-v235-xu24ae}
-and the theory of learning under domain
-shift~\citep{ben2010theory,vyas2018out,katz2022training} bound what any detector
-can achieve when train and test distributions differ.
+\paragraph{Unlabeled, Self-Supervised, and Zero-Shot Detection.}
+A growing literature trains OOD detectors without using in-distribution class
+labels. Self-supervised auxiliary tasks can improve robustness and OOD
+sensitivity~\citep{hendrycks2019using,mohseni2020self}, while contrasting shifted
+instances sharpens the learned score~\citep{tack2020csi}. Likelihood-based methods
+can operate without class supervision~\citep{xiao2020likelihood}, and more recent
+work studies unsupervised or training-data-free detection
+\citep{liu2023unsupervised,du2024and,du2024does}. Vision--language models provide a
+different access regime by enabling zero-shot detection from text
+\citep{esmaeilpour2022zero,wang2023clipn}.
 
-OOD detection succeeds or fails according to whether the representation retained the
-shift-distinguishing directions. \Cref{ch:label-blindness,ch:domain-sensitivity-collapse}
-both study this.
+These methods should not be treated as one interchangeable family. Some learn from
+in-distribution inputs, whereas others depend on a pretrained model or textual
+class descriptions. A surrogate task introduces another source of supervision.
+They nevertheless share a limitation when their score depends on a representation
+learned without the target labels. If the surrogate task is independent of the
+label-relevant features, high performance on that task cannot recover the
+discarded label signal. Against this family, \Cref{ch:label-blindness} formalizes
+the condition as a limitation theorem and introduces the Adjacent OOD benchmark
+rather than another unlabeled score.
+
+\paragraph{Single-Domain Detection, Collapse, and Transfer.}
+Single-domain training presents a different problem. The labels can be available
+even though the learned features lose directions that distinguish one domain from
+another. Neural collapse can harm OOD separability~\citep{Haas2022ncood}, while
+NECO~\citep{BenAmmar2024neco} turns neural-collapse geometry into a detection
+score. Unlike collapse-based scorers such as NECO,
+\Cref{ch:domain-sensitivity-collapse} identifies the suppression of directions
+orthogonal to the class-discriminative subspace and restores them during training
+rather than proposing another scorer. Pretrained features often provide strong OOD
+baselines, but naive fine-tuning can distort their geometry~\citep{Kumar2022lp};
+contrastive training can preserve some of that structure~\citep{Winkens2020contrastive}.
+The problem is particularly important in specialized single domains such as medical
+imaging~\citep{Berger2021medood,zhou2022rethinking}.
+
+Ensemble and Bayesian methods provide an adjacent approach by estimating epistemic
+uncertainty across models or parameter distributions
+\citep{lakshminarayanan2017simple,daxberger2019bayesian,pmlr-v235-xu24ae}.
+Theoretical work on domain adaptation and OOD learning instead characterizes how
+distribution shift changes the attainable error
+\citep{ben2010theory,vyas2018out,katz2022training}. These approaches broaden the
+uncertainty analysis, but they do not remove the need for a representation that
+responds to the shift being detected.
 
 \section{Hallucination Detection}
 \label{sec:lit:hallucination}
 
-Hallucination detection asks whether a language model's generation is unsupported
-by fact, and the language-domain case of the same question: does the
-model's internal representation retain the signal that separates a faithful answer
-from a fabricated one? This section positions \Cref{ch:hallucination-detection}.
+Hallucination detection asks whether a language model's generation is faithful to
+the relevant evidence or factual reference. It provides the language-model
+counterpart to the representation question: which observable signals distinguish
+unsupported generations from faithful ones? Existing methods read those signals
+from the output distribution or from repeated generations. A separate family
+examines the model's internal activations.
 
-\paragraph{Definitions, taxonomy, and evaluation.}
-Surveys organise the phenomenon and its sources~\citep{ji2022survey}, and recent
-benchmarks separate detection from generation quality~\citep{bang2025hallulens}.
-Evaluation rests on factuality and faithfulness measures. These run from atomic-fact
-scoring~\citep{min2023factscore} and curated hallucination
-benchmarks~\citep{li2023halueval} through truthfulness
-probes~\citep{lin2021truthfulqa,lin2022truthfulqa} to fact
-verification~\citep{thorne2018fever} and the tool- or retrieval-augmented
-checkers~\citep{peng2023check,chern2023factool} that supply the operational labels
-detectors are scored against.
+\paragraph{Definitions, Taxonomy, and Evaluation.}
+Surveys organize hallucinations by their form and source~\citep{ji2022survey}, while
+recent benchmarks distinguish detection from overall generation
+quality~\citep{bang2025hallulens}. Evaluation targets are not uniform. Atomic-fact
+scoring~\citep{min2023factscore} measures factual precision, curated hallucination
+benchmarks~\citep{li2023halueval} test recognition or generation, and truthfulness
+benchmarks~\citep{lin2021truthfulqa,lin2022truthfulqa} evaluate susceptibility to
+common misconceptions. Fact verification~\citep{thorne2018fever} and tool- or
+retrieval-augmented checkers~\citep{peng2023check,chern2023factool} introduce
+external evidence. These resources operationalize related but distinct targets, so
+generation correctness should not automatically be equated with factual support.
 
-\paragraph{Sampling- and consistency-based detection.}
-One family detects hallucination from output behavior by resampling the model.
-SelfCheckGPT~\citep{manakul2023selfcheckgpt} scores the consistency of repeated
-generations; semantic entropy~\citep{farquhar2024detecting} clusters samples by
-meaning before measuring uncertainty, and its probe form~\citep{kossen2024semantic}
-recovers much of the signal from a single pass; energy-based refinements push the
-idea beyond entropy~\citep{ma2025semantic}. These methods are accurate but pay a
-multiplicative inference cost, the comparison \Cref{ch:hallucination-detection}
-makes explicit.
+\paragraph{Output-Space Confidence Signals.}
+The least expensive detectors use information already present in the output
+distribution. Token likelihood and predictive entropy can correlate with model
+correctness, as can explicit self-evaluation scores such as
+$P(\mathrm{true})$~\citep{kadavath2022language}. These signals require no access to
+hidden states and no additional generations. Their limitation is that they
+compress the model's uncertainty into a scalar that may not expose distinctions
+still encoded in intermediate activations.
 
-\paragraph{Internal-state probing.}
-\Cref{ch:hallucination-detection} belongs to the probing family, reading the model's
-own activations; the paradigm is introduced in \Cref{sec:lit:architectures}. Linear and shallow probes recover truthfulness from
-hidden states~\citep{azaria2023internal}, truth-correlated directions can be
-identified and even steered~\citep{li2023iti}, and true and false statements
-separate geometrically in activation space~\citep{marks2024geometry}; models are
-moreover partially calibrated about their own
-correctness~\citep{kadavath2022language}, and latent knowledge can be elicited
-without labels~\citep{burns2023discovering}. Recent probes exploit richer internal
-structure: layer-wise divergence~\citep{zhang2025icr} and cross-layer
-attention~\citep{suresh2025clap}, the full activation tensor read as an
-image~\citep{barshalom2025actvit}, eigen-analysis of the internal-state
-covariance~\citep{chen2024inside}, and unlabeled or unsupervised signals read
-straight from the internal state, whether from in-the-wild
-generations~\citep{du2024haloscope}, attention maps
-alone~\citep{chuang2024lookback}, or real-time monitoring~\citep{su2024mind}.
-The detector of \Cref{ch:hallucination-detection} is nearest to
-EigenScore~\citep{chen2024inside} and the
-activation-tensor classifier~\citep{barshalom2025actvit}; it derives its probe from
-an information-theoretic feasibility argument over cross-layer activation pairs, not
-from score engineering.
+\paragraph{Sampling- and Consistency-Based Detection.}
+Sampling methods estimate uncertainty from variation across several generations.
+SelfCheckGPT~\citep{manakul2023selfcheckgpt} measures the consistency of repeated
+answers. Semantic entropy~\citep{farquhar2024detecting} first groups samples by
+meaning and then measures uncertainty over the resulting clusters. Energy-based
+refinements extend the approach beyond entropy~\citep{ma2025semantic}. These methods
+can recover signals that a single output score misses, but they require several
+forward passes. SEP~\citep{kossen2024semantic} transfers the semantic-entropy signal
+into a single-pass activation probe, linking the sampling and internal-state
+families.
 
-Hallucination is detectable when the label-relevant signal survives in the model's
-intermediate representations. \Cref{ch:hallucination-detection} measures that
-structural loss across layers.
+\paragraph{Single-Layer Activation Probes.}
+Internal-state methods apply the probing methodology of
+\Cref{sec:lit:representation} to language-model activations. Linear and shallow
+probes recover truthfulness from hidden states~\citep{azaria2023internal}, while
+truth-correlated directions can be identified and manipulated
+\citep{li2023iti}. True and false statements also separate geometrically in
+activation space~\citep{marks2024geometry}. Other work elicits latent knowledge
+without labeled truthfulness examples~\citep{burns2023discovering}. Together,
+these results show that internal representations can retain distinctions that are
+not explicit in the generated text or its scalar confidence.
 
-\section{Architectures and Foundation Models}
-\label{sec:lit:architectures}
+\paragraph{Multi-Layer and Unsupervised Internal Signals.}
+Recent probes use relationships across layers or larger activation structures.
+Examples include layer-wise divergence~\citep{zhang2025icr}, cross-layer
+attention~\citep{suresh2025clap}, ACT-ViT's classification of the full activation
+tensor~\citep{barshalom2025actvit}, and EigenScore's analysis of internal-state
+covariance~\citep{chen2024inside}. Other methods reduce the need for labeled probe
+data. HaloScope learns from in-the-wild generations~\citep{du2024haloscope}, while
+Lookback Lens uses attention maps alone~\citep{chuang2024lookback}. MIND monitors
+internal states in real time~\citep{su2024mind}. This literature establishes
+several ways to exploit internal state, but it leaves open how the choice of layers
+and training objective should follow from a statement about the information
+available between layers. Among these methods, ACT-ViT is the closest compute-matched
+baseline; \Cref{ch:hallucination-detection} instead derives a one-class contrastive
+probe from cross-layer dependence and treats layer pairs from one frozen forward
+pass as its views.
 
-The three contributions share a substrate of deep architectures and pretrained
-models, plus the interpretability tools for reading their internals.
+\section{Synthesis}
 
-\paragraph{Backbones.}
-Convolutional networks established deep visual
-representations~\citep{lecun1998gradient,krizhevsky2012imagenet,he2016deep}, and the
-transformer~\citep{vaswani2017attention} and its vision
-adaptation~\citep{dosovitskiy2020image,Touvron2021deit} now dominate both
-modalities. Foundation models pretrained at scale provide the representations the
-detection methods of this dissertation probe. These span contrastive vision--language
-models~\citep{radford2021learning} and large self-supervised vision
-backbones~\citep{oquab2023dinov2} on the vision side, and on the language side the
-modern language-model
-lineage~\citep{radford2018improving,devlin2018bert,brown2020language,raffel2020exploring}.
+Across the OOD and hallucination literatures, detectors differ in what they can
+observe. Some use classifier outputs or learned features; others use hidden
+activations or repeated model behavior. They also differ in whether they can change
+the representation or must operate on a frozen model. When a detector is restricted
+to a representation that lacks the needed signal, improving the scorer alone cannot
+recover it; the representation or the detector's inputs must change. When the needed
+signal remains available, detector design determines whether it can be extracted.
 
-\paragraph{Probing internal representations.}
-Probing a network's intermediate layers is itself a methodology;
-\Cref{sec:lit:representation,sec:lit:hallucination} both apply it. Linear classifiers
-trained on frozen layers diagnose what each layer
-encodes~\citep{alain2017understanding,belinkov2019analysis}; probing has uncovered
-linguistic structure in language models~\citep{tenney2019bert,hewitt2019structural}
-and the roles of individual attention heads~\citep{voita2019analyzing}, with an
-information-theoretic formulation guarding against probes that merely
-memorise~\citep{voita2019information}. Concept- and circuit-level
-interpretability~\citep{kim2018interpretability,olah2020zoom} and gradient-based
-saliency~\citep{selvaraju2017grad} complete the toolkit the detection chapters use
-to establish \emph{where} in a network the shift-distinguishing signal resides.
-
-The OOD and hallucination chapters interrogate these architectures' internal
-representations. The question throughout: what structure do those representations
-preserve?
+The results chapters study each case separately. \Cref{ch:label-blindness} analyzes
+a representation that lacks the target distinction,
+\Cref{ch:domain-sensitivity-collapse} studies directions suppressed by
+single-domain training, and \Cref{ch:hallucination-detection} uses cross-layer
+dependence to extract a signal retained in a frozen language model. The common
+question is therefore not which detector is universally best, but whether the
+representation available in a given setting contains the distinction that the
+detector must make.

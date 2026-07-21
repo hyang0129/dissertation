@@ -13,29 +13,26 @@
 % \linespread{1.25} pushed the final sentence onto a second page). Scoped to this
 % environment's group, so it does not affect any other page.
 \linespread{1.12}\selectfont
-A model deployed in the open world meets inputs its training never covered and is
-asked for outputs it has no grounds to give. To be trusted, it has to flag those
-cases. Two literatures study that flagging apart: out-of-distribution (OOD)
-detection for inputs, hallucination detection for the generations of large language
-models. This dissertation shows they answer to a single condition. Detection
-succeeds only when the model's learned representation has kept the structure that
-distinguishes it. When the structure is never learned or is suppressed, detection
-can prove impossible.
+Models deployed outside controlled settings encounter inputs unlike their training
+data and may generate outputs unsupported by what they learned. A reliable system
+should recognize these cases. Out-of-distribution detection and hallucination
+detection are usually studied separately, but both depend on the same condition:
+the model's representation must retain the information that distinguishes an
+anomalous case from an ordinary one. If training never captures that information,
+or later suppresses it, no downstream detector can recover it.
 
-The condition becomes usable through two measurements. Mutual information quantifies
-how much of the relevant distinction a representation has retained, and feature-space
-geometry exposes the same loss as variance thinned along the directions a shift
-moves through. The two track one quantity, and each study took up the one that
-read more cleanly. The first proves that label-free detection must fail once the
-self- or unsupervised objective shares nothing with the features that fix the label,
-and it contributes the Adjacent OOD benchmark to construct the feature overlap that
-brings the failure out. The second identifies domain-sensitivity collapse: training
-on a single domain folds the representation into a class-aligned subspace and
-suppresses the shift directions, a loss that Teacher-Guided Training reverses by
-distilling a frozen multi-domain teacher, at no inference cost. The third derives a
-hallucination detector from a feasibility argument: a contrastive probe over
-cross-layer activations matches or, in the mean, outperforms the strongest
-engineered probe, and the parity is the result a correct principle predicts.
+We study this condition from two complementary perspectives. Mutual information
+measures how much information about the relevant distinction remains in a
+representation, while feature-space geometry shows whether the directions needed to
+detect a shift retain sufficient variation. The first study proves that unlabeled
+detection must fail when the self-supervised or unsupervised objective is independent
+of the label-relevant features. It also introduces the Adjacent OOD benchmark to
+evaluate this high-overlap regime. The second study identifies domain-sensitivity
+collapse, in which single-domain training suppresses shift-sensitive directions, and
+introduces Teacher-Guided Training to restore them without adding inference cost. The
+third study develops a hallucination detector from cross-layer activations. Its
+contrastive probe reaches parity with the strongest engineered probe and outperforms
+it in the mean, consistent with the study's feasibility argument.
 
 The unifying representation-structure framework is the central contribution. The
 dissertation establishes the limit of what detection can reach and shows principled

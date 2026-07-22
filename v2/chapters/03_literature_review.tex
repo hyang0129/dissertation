@@ -271,13 +271,12 @@ external evidence. These resources operationalize related but distinct targets, 
 generation correctness should not automatically be equated with factual support.
 
 \paragraph{Output-Space Confidence Signals.}
-The least expensive detectors use information already present in the output
-distribution. Token likelihood and predictive entropy can correlate with model
-correctness, as can explicit self-evaluation scores such as
-$P(\mathrm{true})$~\citep{kadavath2022language}. These signals require no access to
-hidden states and no additional generations. Their limitation is that they
-compress the model's uncertainty into a scalar that may not expose distinctions
-still encoded in intermediate activations.
+Output-space detectors use signals from the model's predictions. Token likelihood
+and predictive entropy are available from the generation pass, whereas explicit
+self-evaluation scores such as $P(\mathrm{true})$~\citep{kadavath2022language}
+require an additional evaluation pass but not repeated stochastic sampling. These
+methods require no hidden-state access, but compress the model's uncertainty into a
+scalar that may omit distinctions retained in intermediate activations.
 
 \paragraph{Sampling- and Consistency-Based Detection.}
 Sampling methods estimate uncertainty from variation across several generations.

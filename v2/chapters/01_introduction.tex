@@ -92,8 +92,9 @@ Teacher-Guided Training restores that sensitivity by distilling knowledge from a
 frozen multi-domain teacher without changing the model's inference-time cost.
 
 \paragraph{Hallucination in large language models: structure retained.}
-A language model's intermediate activations may preserve information about an
-unsupported generation even when the final output does not reveal the failure.
+A language model's intermediate activations may preserve information associated
+with a generation that the benchmark marks incorrect, even when the final output
+does not reveal that error.
 \Cref{ch:hallucination-detection} asks whether the dependence between activations
 at different layers provides enough signal for detection. It develops a
 contrastive probe over cross-layer activation pairs to read out that signal from
@@ -136,8 +137,9 @@ into a common framework.
   activations. A feasibility-by-trainability argument motivates a one-class
   contrastive probe over cross-layer activation pairs. The resulting detector
   matches or, in the mean, outperforms the strongest engineered probe in the
-  comparison. An ablation also confirms a falsifiable prediction of the argument:
-  symmetric contrastive supervision should fail. Proofs appear in
+  comparison. An ablation supports a conditional prediction of the argument: when
+  hallucinated examples lack coherent latent structure, supervising both classes
+  symmetrically degrades detection. Proofs appear in
   \Cref{app:mi-hallucination-proofs}.
 
   \item \textbf{A common framework for detectability.}

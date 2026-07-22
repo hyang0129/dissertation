@@ -1,0 +1,23 @@
+# source_commit: placeholder
+# generated: 2026-07-22T00:00:00Z
+# generator: ported from HalluLens results/loss_decomposition_table.csv (hyang0129/HalluLens). Controlled 2x2 loss-decomposition series: {saplma (neither), saplma_logprob_recon (+recon), contrastive (+contrastive), contrastive_logprob_recon (+both)} x {hotpotqa, popqa} x 2 models, 5 seeds. KNN-AUROC for the contrastive rows, native AUROC for the saplma rows.
+# NOTE: this is a SEPARATE controlled ablation series (clean-key extraction), not the memmap re-run used for data/hallu_headline.csv. Absolute AUROCs are NOT directly comparable to the headline tables (Qwen/hotpotqa differs by up to ~12 pts); both cells of each channel pair shift together, so only the WITHIN-SERIES deltas (gain over the saplma baseline) are used in the chapter.
+# key_schema: model:dataset:method
+# default_precision: 3
+model,dataset,method,auroc_mean,auroc_std,n_seeds
+Llama-3.1-8B-Instruct,hotpotqa,saplma,0.6935,0.0028,5
+Llama-3.1-8B-Instruct,hotpotqa,saplma_logprob_recon,0.6962,0.0016,5
+Llama-3.1-8B-Instruct,hotpotqa,contrastive,0.8521,0.0027,5
+Llama-3.1-8B-Instruct,hotpotqa,contrastive_logprob_recon,0.8525,0.0015,5
+Llama-3.1-8B-Instruct,popqa,saplma,0.6904,0.0029,5
+Llama-3.1-8B-Instruct,popqa,saplma_logprob_recon,0.6928,0.0042,5
+Llama-3.1-8B-Instruct,popqa,contrastive,0.8623,0.0029,5
+Llama-3.1-8B-Instruct,popqa,contrastive_logprob_recon,0.8562,0.0024,5
+Qwen3-8B,hotpotqa,saplma,0.6986,0.0036,5
+Qwen3-8B,hotpotqa,saplma_logprob_recon,0.6992,0.0046,5
+Qwen3-8B,hotpotqa,contrastive,0.7537,0.0018,5
+Qwen3-8B,hotpotqa,contrastive_logprob_recon,0.7527,0.0009,5
+Qwen3-8B,popqa,saplma,0.8063,0.0049,5
+Qwen3-8B,popqa,saplma_logprob_recon,0.8005,0.0063,5
+Qwen3-8B,popqa,contrastive,0.9083,0.0042,5
+Qwen3-8B,popqa,contrastive_logprob_recon,0.9169,0.0020,5

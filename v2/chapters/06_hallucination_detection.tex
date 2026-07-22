@@ -339,8 +339,9 @@ is set by the data, not the bound. What it does predict is a specific failure
 mode: \Cref{cor:hd:symcon} states that supervising both classes symmetrically,
 when the hallucinated class lacks coherent latent structure, injects gradient
 noise negatively correlated with the truthful-class signal. The symmetric-scheme
-ablation of \Cref{sec:hd:ablations} confirms this, with an AUROC drop of roughly
-ten points. The prediction came before the test, not after it.
+ablation of \Cref{sec:hd:ablations} confirms this: relabeling the hallucinated side
+as a second cluster substantially degrades detection. The prediction came before
+the test, not after it.
 
 \subsection{The Detector: Supervised Contrast over Layer Pairs with Logprob Reconstruction}
 \label{subsec:hd:detector}
@@ -573,11 +574,11 @@ relabels the hallucinated side as a second mutual-positive cluster, must
 structure, because the hallucinated-anchor gradient then becomes noise negatively
 correlated with the truthful-cluster signal. This is a prediction made before the
 measurement, and it is confirmed: replacing the asymmetric scheme with symmetric
-supervision drops AUROC by roughly ten points on both models, far outside the
-seed-to-seed band of \Cref{sec:hd:results}. A wrong account of \emph{why} the loss
-is well-posed would not have forecast a specific, large, reproducible failure of a
-natural variant; that it did is the chapter's clearest instance of theory
-predicting experiment rather than rationalizing it. The direction of the one-class
+supervision substantially degrades detection on both models, falling well below
+both asymmetric anchors. A wrong account of \emph{why} the loss is well-posed
+would not have forecast the failure of this natural variant; that it did is the
+chapter's clearest instance of theory predicting experiment rather than
+rationalizing it. The direction of the one-class
 anchor, by contrast, is a secondary choice: anchoring on the hallucinated rather
 than the truthful side performs comparably, so the load-bearing decision is that
 \emph{one} class is left as the unlabeled outlier, not which one.
@@ -586,11 +587,66 @@ than the truthful side performs comparably, so the load-bearing decision is that
 The two supervision channels invite a $2\times 2$ attribution: present or absent
 contrastive structure, crossed with present or absent logprob reconstruction. The
 cell with neither is the single-layer supervised multilayer-perceptron probe
-(SAPLMA) of \Cref{sec:hd:setup}; the full method is the cell with both; the two
-single-channel cells isolate each contribution. We frame this matrix here as the
-structure the design anticipates, but we do not resolve its cells numerically in
-this chapter. We therefore treat an exhaustive per-cell attribution, together
-with matched-parameter and scorer sweeps, as future work.
+(SAPLMA) of \Cref{sec:hd:setup}, the full method is the cell with both, and the two
+single-channel cells isolate each contribution. \Cref{tab:hd:ablation} resolves the
+matrix on the two datasets for which all four cells were trained, HotpotQA and
+PopQA, as a controlled series over five seeds. The reading is the same on both
+models: the asymmetric contrastive channel carries essentially all of the signal,
+while logprob reconstruction contributes almost nothing on its own and almost
+nothing on top of contrast. Added to the SAPLMA baseline, the contrastive channel
+raises KNN-AUROC by
+\resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:popqa:contrastive:auroc_mean}{Llama-3.1-8B-Instruct:popqa:saplma:auroc_mean}
+on Llama-3.1-8B-Instruct PopQA, whereas reconstruction alone raises it by only
+\resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:popqa:saplma_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:saplma:auroc_mean};
+adding reconstruction on top of the contrastive detector then moves it by
+\resdelta{hallu_ablation}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:contrastive:auroc_mean}
+at most and is inconsistent in sign across the four cells. The contrastive
+structure the feasibility argument prescribes, not the reconstruction channel, is
+what carries the label-relevant signal; reconstruction is a minor complementary
+term. Two caveats bound the claim. The full grid exists only for these two
+datasets, so a per-dataset attribution across all five, with matched-parameter and
+scorer sweeps, remains future work. And this is a self-contained ablation series
+whose clean-key extraction differs from the memmap re-run behind
+\Cref{tab:hd:headline-llama,tab:hd:headline-qwen}: its absolute AUROCs are not
+directly comparable to the headline tables, so only the within-series deltas are
+reported here.
+
+\begin{table}[t]
+  \centering
+  \caption{Channel attribution from a controlled $2\times2$ loss-decomposition
+  series (its own five-seed runs on the two datasets for which all four cells were
+  trained). Each entry is the gain in KNN-AUROC over the SAPLMA ``neither''
+  baseline from adding the named channel(s). Adding the asymmetric contrastive
+  channel accounts for essentially all of the improvement ($+$both $\approx$
+  $+$contrastive); adding logprob reconstruction changes AUROC by less than one
+  point and is inconsistent in sign. Absolute AUROCs from this series are not
+  directly comparable to the headline tables and are omitted; the within-series
+  contrast is the object of study.}
+  \label{tab:hd:ablation}
+  \begin{tabular}{l cc cc}
+    \toprule
+     & \multicolumn{2}{c}{Llama-3.1-8B-Instruct} & \multicolumn{2}{c}{Qwen3-8B} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}
+    Added over SAPLMA baseline & HotpotQA & PopQA & HotpotQA & PopQA \\
+    \midrule
+    $+$ reconstruction only
+      & \resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:hotpotqa:saplma_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:hotpotqa:saplma:auroc_mean}
+      & \resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:popqa:saplma_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:saplma:auroc_mean}
+      & \resdelta{hallu_ablation}{Qwen3-8B:hotpotqa:saplma_logprob_recon:auroc_mean}{Qwen3-8B:hotpotqa:saplma:auroc_mean}
+      & \resdelta{hallu_ablation}{Qwen3-8B:popqa:saplma_logprob_recon:auroc_mean}{Qwen3-8B:popqa:saplma:auroc_mean} \\
+    $+$ contrastive only
+      & \resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:hotpotqa:contrastive:auroc_mean}{Llama-3.1-8B-Instruct:hotpotqa:saplma:auroc_mean}
+      & \resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:popqa:contrastive:auroc_mean}{Llama-3.1-8B-Instruct:popqa:saplma:auroc_mean}
+      & \resdelta{hallu_ablation}{Qwen3-8B:hotpotqa:contrastive:auroc_mean}{Qwen3-8B:hotpotqa:saplma:auroc_mean}
+      & \resdelta{hallu_ablation}{Qwen3-8B:popqa:contrastive:auroc_mean}{Qwen3-8B:popqa:saplma:auroc_mean} \\
+    \textbf{$+$ both (Contrastive+Recon)}
+      & \textbf{\resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:hotpotqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:hotpotqa:saplma:auroc_mean}}
+      & \textbf{\resdelta{hallu_ablation}{Llama-3.1-8B-Instruct:popqa:contrastive_logprob_recon:auroc_mean}{Llama-3.1-8B-Instruct:popqa:saplma:auroc_mean}}
+      & \textbf{\resdelta{hallu_ablation}{Qwen3-8B:hotpotqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:hotpotqa:saplma:auroc_mean}}
+      & \textbf{\resdelta{hallu_ablation}{Qwen3-8B:popqa:contrastive_logprob_recon:auroc_mean}{Qwen3-8B:popqa:saplma:auroc_mean}} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \paragraph{Supervised structure, not capacity or augmentation.}
 Two controls bound what the result can be attributed to. A label-free variant of
@@ -684,9 +740,11 @@ will not find it here. The evaluation spans two open-weights models at the
 eight-billion-parameter scale and five short-answer question-answering benchmarks;
 we do not test larger or closed models, long-form generation, or multilingual
 settings, and the single-pass white-box access the method requires is unavailable
-for API-only models. The channel attribution of \Cref{sec:hd:ablations} is left as
-a framework rather than resolved numerically, so which of the two supervision
-channels carries how much of the signal is not settled here. Finally, the main
+for API-only models. The channel attribution of \Cref{sec:hd:ablations} is
+resolved on only two of the five datasets (\Cref{tab:hd:ablation}) and from a
+separate ablation series whose absolute scores are not headline-comparable; it
+identifies the contrastive channel as load-bearing, but a full per-dataset
+attribution with matched-parameter and scorer sweeps is not settled here. Finally, the main
 text reports AUROC alone; complementary metrics (AUPRC, expected calibration
 error, and FPR@95) are not reported here. Contemporaneous probes such as ICR
 Probe are discussed in related work but are not reproduced in the evaluation.

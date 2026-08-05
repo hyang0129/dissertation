@@ -3,6 +3,8 @@
 **Title (working):** What Representations Preserve: Information-Theoretic and
 Geometric Conditions for Out-of-Distribution and Hallucination Detection
 **Author:** Hong Yang
+**Defense deck plan:** [08_defense_slides.md](08_defense_slides.md) — 36-slide,
+v1-based defense narrative with a short-talk cut path and backup bank.
 
 This is the plan for what the **final, defendable** dissertation should contain.
 It carries over the completed v1 material, drops the proposal-only scaffolding,

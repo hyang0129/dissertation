@@ -44,7 +44,7 @@ evidence.
 
 ### Introduction and overview — slides 1–7
 
-1. **Title** — final dissertation title, defense type, author, RIT, August 7, 2026.
+1. **Title** — final dissertation title, defense type, author, RIT, August 5, 2026.
 2. **Why confidence can be misleading** — explain unfamiliar inputs and unsupported answers before introducing specialist terminology.
 3. **Two lenses tell us what a detector can recover** — define a representation, then introduce information theory as presence and geometry as accessibility.
 4. **Presentation Roadmap** — failure → recovery → detection, followed by synthesis.

@@ -1,4 +1,8 @@
-\documentclass[aspectratio=169]{beamer}
+\ifdefined\MacBookSlides
+  \documentclass[aspectratio=1610]{beamer}
+\else
+  \documentclass[aspectratio=169]{beamer}
+\fi
 
 % The final-defense deck is intentionally based on the v1 proposal deck.
 % Preserve its Madrid theme, typography, footer, and slide-layout vocabulary.
@@ -27,7 +31,7 @@
 \subtitle{PhD Dissertation Defense}
 \author{Hong Yang}
 \institute{Rochester Institute of Technology}
-\date{August 7, 2026}
+\date{August 5, 2026}
 
 \setbeamertemplate{navigation symbols}{}
 
@@ -404,7 +408,7 @@
 % 18
 \begin{frame}{Empirical Demonstration of DSC}
 \begin{center}
-  \includegraphics[height=0.69\textheight]{defense_dsc_geometry.pdf}
+  \includegraphics[width=\textwidth,height=0.69\textheight,keepaspectratio]{defense_dsc_geometry.pdf}
 \end{center}
 \vspace{-0.1cm}
 \begin{center}
@@ -440,7 +444,7 @@
 % 20
 \begin{frame}{Implementation and Validation}
 \begin{center}
-  \includegraphics[height=0.69\textheight]{defense_dsc_fpr95.pdf}
+  \includegraphics[width=\textwidth,height=0.69\textheight,keepaspectratio]{defense_dsc_fpr95.pdf}
 \end{center}
 \vspace{-0.1cm}
 \begin{center}

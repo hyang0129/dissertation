@@ -3,3 +3,6 @@
 
 # Transient scheduler lock
 .claude/scheduled_tasks.lock
+
+# macOS Finder metadata
+.DS_Store

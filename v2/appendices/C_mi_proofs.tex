@@ -268,7 +268,8 @@ temperature or weight rescaling recovers the asymmetric objective.
 \Cref{cor:hd:symcon} makes a falsifiable prediction: relabelling the hallucinated
 side as a mutual-positive cluster should \emph{degrade} detection rather than
 leave it unchanged. The Variant~$4$ ablation of \Cref{sec:hd:ablations}, which
-supervises both classes symmetrically, confirms it---an AUROC drop of roughly ten
-points relative to the one-class asymmetric scheme, on both supported models.
+supervises both classes symmetrically, confirms it: relative to the one-class
+asymmetric scheme, symmetric supervision substantially degrades detection on both
+supported models, falling well below both asymmetric anchors.
 Theory predicted the failure mode; the ablation observed it.
 \end{remark}

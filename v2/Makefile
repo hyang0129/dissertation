@@ -24,13 +24,15 @@
 PYTHON   ?= python3
 PAPER_DIR = $(CURDIR)
 MAIN      = main
+SLIDES    = defense_slides
+SLIDES_MACBOOK = defense_slides_macbook
 
 # All figure renderer scripts (none yet — drop *.py into figures_src/)
 FIGURE_SCRIPTS := $(wildcard figures_src/*.py)
 # Sentinel file: figures are up to date when this exists
 FIGURES_STAMP  := generated/.figures_stamp
 
-.PHONY: deps check-deps figures values lint check-refs voice voice-profile paper clean
+.PHONY: deps check-deps figures values lint check-refs voice voice-profile paper slides slides-macbook clean
 
 # ONLINE=1 makes check-refs resolve arXiv/DOI titles (needs network)
 CHECKREFS_FLAGS := $(if $(ONLINE),--online,)
@@ -104,9 +106,24 @@ paper: figures values lint check-refs
 	latexmk -pdf -interaction=nonstopmode $(MAIN).tex
 
 # ---------------------------------------------------------------------------
+# slides: dissertation-defense Beamer deck. Reuses generated figures/values but
+# is intentionally outside the dissertation prose lint gate.
+# ---------------------------------------------------------------------------
+slides: figures values
+	latexmk -pdf -interaction=nonstopmode $(SLIDES).tex
+
+# 16:10 rendering for MacBook displays. The wrapper inputs the same slide source.
+slides-macbook: figures values
+	latexmk -pdf -interaction=nonstopmode $(SLIDES_MACBOOK).tex
+
+# ---------------------------------------------------------------------------
 # clean: remove generated/ and latexmk byproducts
 # ---------------------------------------------------------------------------
 clean:
 	rm -rf generated/
 	latexmk -C $(MAIN).tex 2>/dev/null || true
+	latexmk -C $(SLIDES).tex 2>/dev/null || true
+	latexmk -C $(SLIDES_MACBOOK).tex 2>/dev/null || true
 	rm -f $(MAIN).bbl $(MAIN).run.xml
+	rm -f $(SLIDES).bbl $(SLIDES).run.xml
+	rm -f $(SLIDES_MACBOOK).bbl $(SLIDES_MACBOOK).run.xml
